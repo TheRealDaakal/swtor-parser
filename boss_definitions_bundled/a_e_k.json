@@ -78,6 +78,11 @@
       "id": "a&e_k_rad",
       "name": "Radiance Stacks",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Positive Polarization Shift",
+        "target": "local_player"
+      },
       "reset_on": {
         "type": "combat_end"
       }

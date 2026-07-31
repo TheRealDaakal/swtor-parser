@@ -100,6 +100,10 @@
       "id": "SCYVA_K_p_c",
       "name": "Purge Counter",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Anomalous Entropy"
+      },
       "reset_on": {
         "type": "combat_end"
       }
@@ -120,6 +124,10 @@
       "id": "SCYVA_K_p_c2",
       "name": "Purge Counter",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Unstable Acceleration"
+      },
       "reset_on": {
         "type": "combat_end"
       }

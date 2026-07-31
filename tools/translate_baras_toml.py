@@ -270,16 +270,43 @@ def translate_counter(c, ctx_prefix: str):
     if "initial_value" in c:
         out["initial_value"] = c["initial_value"]
     inc = c.get("increment_on")
+    dec = c.get("decrement_on")
+    rst = c.get("reset_on")
+
+    stacks = c.get("track_effect_stacks")
+    if stacks and stacks.get("effects"):
+        # BARAS's stack-count shorthand: the counter mirrors the game's own
+        # stack number for one specific effect on one target. Whatever
+        # increment_on the source carries alongside this is never a
+        # complete condition on its own -- sometimes missing (no effects
+        # list), sometimes a different, equally incomplete type entirely
+        # (seen: {"type": "ability_cast"} with no abilities list) -- so it
+        # must be REPLACED, not merged into: track_effect_stacks is the
+        # only real source of truth here for which effect/target this is.
+        # reset_on/decrement_on are left out of the source entirely,
+        # implicitly relying on "stacks go back to 0 once the effect is
+        # fully gone". Our engine has no separate stack-tracking concept,
+        # but a plain increment-on-apply / reset-on-remove counter (both
+        # scoped to this exact effect id and target) produces the identical
+        # observable count, since SWTOR logs a fresh ApplyEffect for every
+        # stack gained and a single RemoveEffect only when the whole stack
+        # finally clears.
+        inc = {"type": "effect_applied", "effects": stacks["effects"]}
+        if stacks.get("target"):
+            inc["target"] = stacks["target"]
+        if rst is None and dec is None:
+            rst = {"type": "effect_removed", "effects": stacks["effects"]}
+            if stacks.get("target"):
+                rst["target"] = stacks["target"]
+
     if inc:
         tc = translate_condition(inc, ctx + " increment_on")
         if tc is not None:
             out["increment_on"] = tc
-    dec = c.get("decrement_on")
     if dec:
         tc = translate_condition(dec, ctx + " decrement_on")
         if tc is not None:
             out["decrement_on"] = tc
-    rst = c.get("reset_on")
     if rst:
         tc = translate_condition(rst, ctx + " reset_on")
         if tc is not None:

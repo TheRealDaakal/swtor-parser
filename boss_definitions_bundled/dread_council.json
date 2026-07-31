@@ -185,6 +185,10 @@
       "id": "dread_council_bts",
       "name": "Bestia Tank Swap",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Corrupted"
+      },
       "reset_on": {
         "type": "combat_end"
       }

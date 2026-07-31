@@ -89,7 +89,17 @@
     {
       "id": "dominique_p2_stacks",
       "name": "p2 stacks",
-      "initial_value": 0
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Shadow Resonance",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Shadow Resonance",
+        "target": "local_player"
+      }
     }
   ],
   "timers": [

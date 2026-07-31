@@ -59,7 +59,17 @@
   "counters": [
     {
       "id": "ip_cpt_stacks",
-      "name": "Stacks"
+      "name": "Stacks",
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Escalating Exposure",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Escalating Exposure",
+        "target": "local_player"
+      }
     },
     {
       "id": "ip_cpt_intrusion_death",

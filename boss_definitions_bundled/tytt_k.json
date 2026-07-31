@@ -68,6 +68,10 @@
       "id": "TYTT_K_rage_counter",
       "name": "Rage Counter",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Rage"
+      },
       "reset_on": {
         "type": "combat_end"
       }

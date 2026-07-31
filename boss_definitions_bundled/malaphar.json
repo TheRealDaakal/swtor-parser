@@ -14,7 +14,17 @@
   "counters": [
     {
       "id": "malaphar_savagery",
-      "name": "Savagery"
+      "name": "Savagery",
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Savagery",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Savagery",
+        "target": "local_player"
+      }
     }
   ],
   "timers": [

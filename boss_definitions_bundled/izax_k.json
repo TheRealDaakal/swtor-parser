@@ -223,6 +223,10 @@
       "id": "IZAX_K_o_c",
       "name": "Omnicannon Charge",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Omnicannon Charge"
+      },
       "reset_on": {
         "type": "combat_end"
       }

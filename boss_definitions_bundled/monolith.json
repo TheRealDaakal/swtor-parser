@@ -76,6 +76,11 @@
       "id": "monolith_bw",
       "name": "Bite Wounds Stacks",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Bite Wounds",
+        "target": "local_player"
+      },
       "reset_on": {
         "type": "combat_end"
       }

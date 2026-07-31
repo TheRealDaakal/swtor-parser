@@ -93,6 +93,10 @@
       "id": "raptus_dfc",
       "name": "DPS Fail Count",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Curse of the Weakling"
+      },
       "reset_on": {
         "type": "combat_end"
       }
@@ -101,6 +105,10 @@
       "id": "raptus_tfc",
       "name": "Tank Fail Count",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Curse of the Coward"
+      },
       "reset_on": {
         "type": "combat_end"
       }

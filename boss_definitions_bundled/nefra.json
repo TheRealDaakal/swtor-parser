@@ -50,13 +50,26 @@
       "id": "nefra_curse_stacks_local",
       "name": "Curse Stacks - Local",
       "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Nefra's Curse",
+        "target": "local_player"
+      },
       "reset_on": {
         "type": "combat_end"
       }
     },
     {
       "id": "nefra_twin_stacks",
-      "name": "Twin stacks"
+      "name": "Twin stacks",
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Nightmare Twin Attack"
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Nightmare Twin Attack"
+      }
     }
   ],
   "timers": [
