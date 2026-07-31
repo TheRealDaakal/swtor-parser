@@ -38,6 +38,7 @@ DAMAGE_BAR = "#c2453c"
 HEAL_BAR = "#2f8f63"
 TAKEN_BAR = "#8d3b57"
 ABSORBED_BAR = "#3170b8"  # same blue family as boss timers -- reads as "defence", not damage
+THREAT_BAR = "#d9a53a"    # amber -- "you might pull this", distinct from damage/heal/defence colours
 PANEL = "#15171d"        # cool charcoal, not flat black -- reads as "app", not "hole in the screen"
 PANEL_EDGE = "#33363e"
 LOCK_EDGE = "#4a9eff"  # panel border while locked -- the visual "don't touch"
@@ -94,13 +95,15 @@ FONT_SMALL = ("Segoe UI", 9)
 # to get "dim slab, no window edges" -- which is what BARAS actually does.
 PANEL_ALPHA = 0.85
 
-KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR, "absorbed": ABSORBED_BAR}
+KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
+                "absorbed": ABSORBED_BAR, "threat": THREAT_BAR}
 KIND_TITLES = {
     "dps": "Damage", "hps": "Effective Healing", "taken": "Damage Taken",
     # Raw absorbed magnitude, not a percentage -- see gui.py's
     # _refresh_bar_overlays for why (bars need a comparable quantity; the
     # live table's "Mitigated" column already carries the per-person %).
     "absorbed": "Shield Absorbed",
+    "threat": "Threat",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
@@ -111,6 +114,7 @@ AVAILABLE_OVERLAYS = [
     ("hps",       "Effective Healing", "Metrics"),
     ("taken",     "Damage Taken",    "Metrics"),
     ("absorbed",  "Shield Absorbed", "Metrics"),
+    ("threat",    "Threat",          "Metrics"),
     ("timers",    "Timers",          "Encounter"),
     ("cooldowns", "Cooldowns",       "Effects"),
     ("hots",      "HoTs expiring",   "Effects"),

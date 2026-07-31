@@ -391,6 +391,13 @@ class MeterWindow:
                               key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
+            elif kind == "threat":
+                # Same reasoning as "absorbed": reads PlayerStats directly
+                # since the compact snapshot() tuple doesn't carry threat.
+                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                data = sorted(((p.name, p.threat) for p in entities), key=lambda r: -r[1])
+                data = [r for r in data if r[1] > 0]
+                o.render(data, total=sum(r[1] for r in data))
             elif kind == "hots":
                 o.render(self.hot_tracker.expiring(within_seconds=o.within_seconds))
             elif kind == "cooldowns":

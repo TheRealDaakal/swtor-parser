@@ -42,6 +42,10 @@ class PlayerStats:
     # at all -- e.g. a real tank pull where this was 43% of all raw incoming
     # damage, entirely invisible before this field existed.
     damage_absorbed: float = 0.0
+    # Running threat total -- see CombatEvent.threat_delta. Can go negative
+    # (threat dumps like Chaff Flare log a large negative ModifyThreat), so
+    # this is a signed running sum, not a monotonic counter.
+    threat: float = 0.0
     deaths: int = 0
     damage_by_ability: Dict[str, float] = field(default_factory=dict)
     healing_by_ability: Dict[str, float] = field(default_factory=dict)
@@ -57,6 +61,9 @@ class PlayerStats:
 
     def hps(self, duration: float) -> float:
         return self.healing_done / duration if duration > 0 else 0.0
+
+    def tps(self, duration: float) -> float:
+        return self.threat / duration if duration > 0 else 0.0
 
     def mitigation_pct(self) -> float:
         """What fraction of RAW incoming damage (taken + absorbed) the
@@ -79,6 +86,7 @@ class PlayerStats:
             "healing_done": self.healing_done,
             "damage_taken": self.damage_taken,
             "damage_absorbed": self.damage_absorbed,
+            "threat": self.threat,
             "deaths": self.deaths,
             "damage_by_ability": self.damage_by_ability,
             "healing_by_ability": self.healing_by_ability,
@@ -93,6 +101,7 @@ class PlayerStats:
             healing_done=d.get("healing_done", 0.0),
             damage_taken=d.get("damage_taken", 0.0),
             damage_absorbed=d.get("damage_absorbed", 0.0),
+            threat=d.get("threat", 0.0),
             deaths=d.get("deaths", 0),
             damage_by_ability=dict(d.get("damage_by_ability", {})),
             healing_by_ability=dict(d.get("healing_by_ability", {})),
@@ -193,6 +202,9 @@ class Encounter:
                 p.healing_by_ability[ability_key] = (
                     p.healing_by_ability.get(ability_key, 0.0) + event.amount
                 )
+
+        if event.is_threat_modified and event.source:
+            self._get(event.source).threat += event.threat_delta
 
     def snapshot(self, players_only: bool = True):
         """Returns list of (name, dps, hps, damage_taken, mitigated_pct, deaths)
