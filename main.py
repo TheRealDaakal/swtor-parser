@@ -25,6 +25,7 @@ from boss_definitions import load_definitions
 from boss_intelligence import BossEncounterState
 from cooldowns import register_defensive_cooldowns
 from dots_hots import register_dots_hots, HotTracker
+from alacrity import register_alacrity_buffs
 from taunt_tracker import TauntTracker
 from gui import MeterWindow
 
@@ -102,6 +103,8 @@ def main():
     register_defensive_cooldowns(timer_engine)
     # Same for personal DoT/HoT uptime tracking.
     register_dots_hots(timer_engine)
+    # Same for personal alacrity-burst-buff uptime -- see alacrity.py.
+    register_alacrity_buffs(timer_engine)
     # Per-person HoT expiry, for the "who needs a re-Probe" overlay -- see
     # dots_hots.HotTracker. Separate from the category rules above: those
     # answer "is one of my HoTs running", this answers "on whom".
