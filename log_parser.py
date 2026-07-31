@@ -67,6 +67,12 @@ ABILITY_ACTIVATE_KEYWORDS = ("abilityactivate",)
 # directly and StarParse's own threat number is presumably built from it,
 # but nothing in this project touched it before now.
 THREAT_MODIFIED_KEYWORDS = ("modifythreat",)
+# The log's own interrupt event -- source is whoever's cast GOT interrupted,
+# not whoever performed the interrupt (SWTOR doesn't attribute the other
+# side without correlating a separate per-class interrupt-ability id list,
+# which this project doesn't have), so this can only answer "how often was
+# I interrupted", not "how many interrupts did I land".
+ABILITY_INTERRUPT_KEYWORDS = ("abilityinterrupt",)
 
 
 @dataclass
@@ -138,6 +144,10 @@ class CombatEvent:
     # damage/heal at all).
     is_threat_modified: bool = False
     threat_delta: float = 0.0
+    # True for the log's own AbilityInterrupt event. See
+    # ABILITY_INTERRUPT_KEYWORDS -- source is the player who GOT
+    # interrupted, not the interrupter.
+    is_interrupted: bool = False
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -411,6 +421,9 @@ def _classify(event: CombatEvent, tail: str) -> None:
     )
     event.is_threat_modified = any(
         k in effect_name_tight for k in THREAT_MODIFIED_KEYWORDS
+    )
+    event.is_interrupted = any(
+        k in effect_name_tight for k in ABILITY_INTERRUPT_KEYWORDS
     )
 
     if event.is_damage or event.is_heal:

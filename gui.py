@@ -543,7 +543,7 @@ class MeterWindow:
             name = tree.item(item, "values")[0]
             player = encounter.player(name)
             if player:
-                self._show_ability_breakdown(player)
+                self._show_ability_breakdown(player, duration=encounter.duration())
 
         tree.bind("<Double-Button-1>", on_double_click)
         ttk.Label(win, text="(double-click a player for ability breakdown)", foreground="#666").pack(
@@ -554,21 +554,25 @@ class MeterWindow:
             command=lambda: self._upload_encounter(encounter),
         ).pack(anchor="w", padx=8, pady=(6, 8))
 
-    def _show_ability_breakdown(self, player):
+    def _show_ability_breakdown(self, player, duration=None):
         win = tk.Toplevel(self.root)
         win.title(f"{player.name} — ability breakdown")
         win.geometry("420x400")
 
         dmg_rows, heal_rows = player.ability_breakdown()
+        if duration is None:
+            duration = self.tracker.current.duration()
 
         summary = ttk.Frame(win)
         summary.pack(fill="x", padx=8, pady=(8, 0))
-        stat_parts = []
+        stat_parts = [f"APM {player.apm(duration):.1f}"]
         if player.damage_attempts > 0:
             stat_parts.append(f"Accuracy {player.accuracy_pct():.1f}%")
             stat_parts.append(f"Crit {player.crit_pct():.1f}%")
         if player.heal_casts > 0:
             stat_parts.append(f"Heal Crit {player.heal_crit_pct():.1f}%")
+        if player.times_interrupted > 0:
+            stat_parts.append(f"Interrupted {player.times_interrupted}x")
         ttk.Label(summary, text="   |   ".join(stat_parts) or "No attacks/heals yet",
                   foreground=ACCENT, font=("", 10, "bold")).pack(anchor="w")
 

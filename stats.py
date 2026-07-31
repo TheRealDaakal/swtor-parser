@@ -60,6 +60,14 @@ class PlayerStats:
     damage_crits: int = 0
     heal_casts: int = 0
     heal_crits: int = 0
+    # Every actual ability activation (see CombatEvent.is_ability_activate),
+    # for APM -- deliberately NOT damage_attempts/heal_casts, which are per
+    # TICK (a channelled/AoE ability produces many); this is per CAST.
+    ability_casts: int = 0
+    # How often THIS player's own cast got interrupted -- see
+    # CombatEvent.is_interrupted for why this can't be "interrupts I landed
+    # on someone else" instead.
+    times_interrupted: int = 0
     # True once this entity has been seen with SWTOR's '@' player marker.
     # Without it, NPCs are indistinguishable from players downstream, and any
     # "deaths" total silently counts every add and trash mob that died --
@@ -75,6 +83,9 @@ class PlayerStats:
 
     def tps(self, duration: float) -> float:
         return self.threat / duration if duration > 0 else 0.0
+
+    def apm(self, duration: float) -> float:
+        return (60.0 * self.ability_casts / duration) if duration > 0 else 0.0
 
     def mitigation_pct(self) -> float:
         """What fraction of RAW incoming damage (taken + absorbed) the
@@ -122,6 +133,8 @@ class PlayerStats:
             "damage_crits": self.damage_crits,
             "heal_casts": self.heal_casts,
             "heal_crits": self.heal_crits,
+            "ability_casts": self.ability_casts,
+            "times_interrupted": self.times_interrupted,
         }
 
     @classmethod
@@ -142,6 +155,8 @@ class PlayerStats:
             damage_crits=d.get("damage_crits", 0),
             heal_casts=d.get("heal_casts", 0),
             heal_crits=d.get("heal_crits", 0),
+            ability_casts=d.get("ability_casts", 0),
+            times_interrupted=d.get("times_interrupted", 0),
         )
 
 
@@ -266,6 +281,12 @@ class Encounter:
 
         if event.is_threat_modified and event.source:
             self._get(event.source).threat += event.threat_delta
+
+        if event.is_ability_activate and event.source:
+            self._get(event.source).ability_casts += 1
+
+        if event.is_interrupted and event.source:
+            self._get(event.source).times_interrupted += 1
 
     def snapshot(self, players_only: bool = True):
         """Returns list of (name, dps, hps, damage_taken, mitigated_pct, deaths)
