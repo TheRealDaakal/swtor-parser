@@ -89,8 +89,17 @@ def session_datetime(basename: str):
     return f"{y}-{mo}-{d}", f"{h}:{mi}:{s}"
 
 
-def scan_file(path: str, definitions) -> List[dict]:
-    """Replays one log file and returns a summary per encounter."""
+def replay_pulls(path: str, definitions) -> List[dict]:
+    """Replays one log file and splits it into real per-pull Encounter
+    objects (see NEW_PULL_MIN_GAP_SECONDS/MIN_ENCOUNTER_SECONDS above for
+    why this, and not StatsTracker's live wall-clock rollover, is what
+    replay needs). Returns one dict per pull:
+        {"encounter": Encounter, "boss_name": str|None, "boss_id": str|None,
+         "phases": [str, ...], "first_ts": str|None}
+    Used both by scan_file() (which reduces these to corpus summary rows)
+    and by anything that wants the full Encounter back -- e.g. importing
+    an old session log into history exactly as if it had been captured
+    live."""
     boss_state = BossEncounterState(definitions)
     current = Encounter()
     boss_name = None
@@ -102,40 +111,12 @@ def scan_file(path: str, definitions) -> List[dict]:
     def flush():
         if not current.players or current.duration() < MIN_ENCOUNTER_SECONDS:
             return
-        players, npcs = [], []
-        for p in current.players.values():
-            dmg_rows, heal_rows = p.ability_breakdown()
-            row = {
-                "name": p.name,
-                "damage": round(p.damage_done),
-                "healing": round(p.healing_done),
-                "taken": round(p.damage_taken),
-                "absorbed": round(p.damage_absorbed),
-                "mitigated_pct": round(p.mitigation_pct(), 1),
-                "deaths": p.deaths,
-                "top_damage": [[a, round(v)] for a, v in dmg_rows[:8]],
-                "top_healing": [[a, round(v)] for a, v in heal_rows[:8]],
-            }
-            (players if p.is_player else npcs).append(row)
-        players.sort(key=lambda r: -r["damage"])
-        npcs.sort(key=lambda r: -r["damage"])
         out.append({
-            "boss": boss_name,
+            "encounter": current,
+            "boss_name": boss_name,
             "boss_id": boss_id,
             "phases": phases[:],
-            "duration": round(current.duration(), 1),
-            "start_ts": first_ts,
-            "start_line": current.start_line,
-            "end_line": current.end_line,
-            "players": players,
-            # NPC rows are kept but summarised only -- useful for "how much
-            # add damage went out" without bloating the index.
-            "npc_count": len(npcs),
-            "npc_damage": round(sum(n["damage"] for n in npcs)),
-            # Deaths that matter for raid analysis are PLAYER deaths. NPC
-            # deaths (add spawns dying) are counted separately, never mixed in.
-            "deaths": sum(p["deaths"] for p in players),
-            "npc_deaths": sum(n["deaths"] for n in npcs),
+            "first_ts": first_ts,
         })
 
     last_enter_combat = None
@@ -159,6 +140,7 @@ def scan_file(path: str, definitions) -> List[dict]:
             if new_pull or (current.players and current.past_trailing_window(now)):
                 flush()
                 current = Encounter()
+                current.log_path = path
                 boss_name = boss_id = None
                 phases = []
                 first_ts = None
@@ -173,6 +155,49 @@ def scan_file(path: str, definitions) -> List[dict]:
             if change is not None and change.phase_name not in phases:
                 phases.append(change.phase_name)
     flush()
+    return out
+
+
+def scan_file(path: str, definitions) -> List[dict]:
+    """Replays one log file and returns a summary per encounter."""
+    out: List[dict] = []
+    for pull in replay_pulls(path, definitions):
+        current = pull["encounter"]
+        players, npcs = [], []
+        for p in current.players.values():
+            dmg_rows, heal_rows = p.ability_breakdown()
+            row = {
+                "name": p.name,
+                "damage": round(p.damage_done),
+                "healing": round(p.healing_done),
+                "taken": round(p.damage_taken),
+                "absorbed": round(p.damage_absorbed),
+                "mitigated_pct": round(p.mitigation_pct(), 1),
+                "deaths": p.deaths,
+                "top_damage": [[a, round(v)] for a, v in dmg_rows[:8]],
+                "top_healing": [[a, round(v)] for a, v in heal_rows[:8]],
+            }
+            (players if p.is_player else npcs).append(row)
+        players.sort(key=lambda r: -r["damage"])
+        npcs.sort(key=lambda r: -r["damage"])
+        out.append({
+            "boss": pull["boss_name"],
+            "boss_id": pull["boss_id"],
+            "phases": pull["phases"],
+            "duration": round(current.duration(), 1),
+            "start_ts": pull["first_ts"],
+            "start_line": current.start_line,
+            "end_line": current.end_line,
+            "players": players,
+            # NPC rows are kept but summarised only -- useful for "how much
+            # add damage went out" without bloating the index.
+            "npc_count": len(npcs),
+            "npc_damage": round(sum(n["damage"] for n in npcs)),
+            # Deaths that matter for raid analysis are PLAYER deaths. NPC
+            # deaths (add spawns dying) are counted separately, never mixed in.
+            "deaths": sum(p["deaths"] for p in players),
+            "npc_deaths": sum(n["deaths"] for n in npcs),
+        })
     return out
 
 
