@@ -38,8 +38,8 @@ DAMAGE_BAR = "#c2453c"
 HEAL_BAR = "#2f8f63"
 TAKEN_BAR = "#8d3b57"
 ABSORBED_BAR = "#3170b8"  # same blue family as boss timers -- reads as "defence", not damage
-PANEL = "#141414"
-PANEL_EDGE = "#2e2e2c"
+PANEL = "#15171d"        # cool charcoal, not flat black -- reads as "app", not "hole in the screen"
+PANEL_EDGE = "#33363e"
 LOCK_EDGE = "#4a9eff"  # panel border while locked -- the visual "don't touch"
 
 # ---- Win32: true click-through while locked ---------------------------
@@ -69,19 +69,30 @@ def _set_clickthrough(win: tk.Toplevel, enable: bool) -> None:
         pass  # visual lock indicator still applies; worst case it stays draggable
 
 TEXT = "#ffffff"
-TEXT_DIM = "#b9b6ad"
+TEXT_DIM = "#9a9890"
 OUTLINE = "#000000"
+DIVIDER = "#3a3d44"
 
-ROW_H = 18
-BAR_H = 14
-PAD_X = 7
+ROW_H = 32
+PAD_X = 16
+PAD_TOP = 14
+PAD_BOTTOM = 12
+# Rounded-card chrome -- a flat-rectangle panel with a 1px border is what
+# reads as a dated Windows utility; a rounded card with a coloured left
+# accent stripe is the actual visual language BARAS/modern overlays use.
+CORNER_RADIUS = 14
+STRIPE_W = 4
+HEADER_H = 34
+TRACK_H = 3
+FONT_TITLE = ("Segoe UI", 12, "bold")
+FONT = ("Segoe UI", 10)
+FONT_VALUE = ("Segoe UI", 10, "bold")
+FONT_SMALL = ("Segoe UI", 9)
 # Window alpha applies to everything NOT punched out by the colour key, so
 # the panel reads as translucent while the region around it stays fully
 # absent. Tk can't do per-pixel alpha, and this combination is the only way
 # to get "dim slab, no window edges" -- which is what BARAS actually does.
-PANEL_ALPHA = 0.82
-FONT = ("Segoe UI", 9, "bold")
-FONT_SMALL = ("Segoe UI", 8, "bold")
+PANEL_ALPHA = 0.85
 
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR, "absorbed": ABSORBED_BAR}
 KIND_TITLES = {
@@ -218,15 +229,38 @@ class BarOverlay:
                                     anchor=anchor, font=font)
         self.canvas.create_text(x, y, text=s, fill=fill, anchor=anchor, font=font)
 
+    def _rounded_rect(self, x1, y1, x2, y2, radius, **kwargs):
+        """Smoothed 12-point polygon -- Canvas has no native rounded-rect
+        primitive. A flat rectangle with a 1px border is the exact "old
+        Windows utility" look this is meant to replace."""
+        points = [
+            x1 + radius, y1,  x2 - radius, y1,  x2, y1,
+            x2, y1 + radius,  x2, y2 - radius,  x2, y2,
+            x2 - radius, y2,  x1 + radius, y2,  x1, y2,
+            x1, y2 - radius,  x1, y1 + radius,  x1, y1,
+        ]
+        return self.canvas.create_polygon(points, smooth=True, **kwargs)
+
+    def content_x(self):
+        """Left edge for text/tracks -- clears the accent stripe."""
+        return PAD_X + STRIPE_W + 6
+
     def _panel(self, rows_drawn, has_total):
-        """Dim slab sized to the content actually drawn. Sizing it to
-        max_rows instead would leave a dead translucent block hanging below
-        a short raid, which reads as a broken window."""
-        h = 4 + ROW_H + rows_drawn * ROW_H + (ROW_H if has_total else 0) + 4
+        """Rounded card sized to the content actually drawn, with a
+        coloured left accent stripe (rounded-cap line, not a hard-edged
+        block) so each overlay reads at a glance even before the title is
+        legible. Sizing to max_rows instead would leave a dead translucent
+        block hanging below a short raid, which reads as a broken window."""
+        h = PAD_TOP + HEADER_H + rows_drawn * ROW_H + (ROW_H if has_total else 0) + PAD_BOTTOM
         edge = LOCK_EDGE if self.locked else PANEL_EDGE
         width = 2 if self.locked else 1
-        self.canvas.create_rectangle(0, 0, self.width, h,
-                                     fill=PANEL, outline=edge, width=width)
+        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
+                           fill=PANEL, outline=edge, width=width)
+        stripe_colour = KIND_COLOURS.get(self.kind, DAMAGE_BAR)
+        self.canvas.create_line(6, 12, 6, h - 12, fill=stripe_colour,
+                                width=STRIPE_W, capstyle=tk.ROUND)
+        self.canvas.create_line(self.content_x(), PAD_TOP + HEADER_H - 6,
+                                self.width - PAD_X, PAD_TOP + HEADER_H - 6, fill=DIVIDER)
         return h
 
     def render(self, rows, total=None, subtitle=None):
@@ -237,32 +271,38 @@ class BarOverlay:
         colour = KIND_COLOURS.get(self.kind, DAMAGE_BAR)
         rows = rows[: self.max_rows]
         self._panel(len(rows), total is not None)
+        cx = self.content_x()
 
-        y = 5
         head = KIND_TITLES.get(self.kind, self.kind.upper())
         if self.locked:
             head = f"\U0001F512 {head}"
-        self._text(PAD_X, y + 6, head, fill=TEXT_DIM, font=FONT_SMALL)
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
         if subtitle:
-            self._text(self.width - PAD_X, y + 6, subtitle[:26],
+            self._text(self.width - PAD_X, PAD_TOP + 12, subtitle[:26],
                        fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
-        y += ROW_H
 
+        y = PAD_TOP + HEADER_H
         top = max((v for _n, v in rows), default=0) or 1
+        track_w = self.width - PAD_X - cx
         for name, value in rows:
+            self._text(cx, y + 12, name[:18], font=FONT)
+            self._text(self.width - PAD_X, y + 12, compact(value),
+                       fill=colour, anchor="e", font=FONT_VALUE)
+            # Thin rounded-cap meter, not a full-height block -- shows the
+            # same relative-magnitude comparison without the flat-rectangle
+            # "old utility app" look.
+            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
+                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
             frac = max(0.0, min(1.0, value / top))
-            bar_w = int((self.width - PAD_X * 2) * frac)
-            if bar_w > 0:
-                c.create_rectangle(PAD_X, y, PAD_X + bar_w, y + BAR_H,
-                                   fill=colour, outline="")
-            self._text(PAD_X + 5, y + BAR_H / 2, name[:18])
-            self._text(self.width - PAD_X - 4, y + BAR_H / 2,
-                       compact(value), anchor="e")
+            if frac > 0:
+                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
+                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
             y += ROW_H
 
         if total is not None:
-            self._text(PAD_X + 5, y + BAR_H / 2, "Total", fill=TEXT_DIM, font=FONT_SMALL)
-            self._text(self.width - PAD_X - 4, y + BAR_H / 2, compact(total),
+            c.create_line(cx, y + 2, self.width - PAD_X, y + 2, fill=DIVIDER)
+            self._text(cx, y + ROW_H / 2 + 3, "Total", fill=TEXT_DIM, font=FONT_SMALL)
+            self._text(self.width - PAD_X, y + ROW_H / 2 + 3, compact(total),
                        fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
 
 
@@ -290,34 +330,36 @@ class HotOverlay(BarOverlay):
         c = self.canvas
         c.delete("all")
         rows = rows[: self.max_rows]
-        self._panel(len(rows), False)
+        self._panel(max(len(rows), 1), False)
+        cx = self.content_x()
 
-        y = 5
         head = "\U0001F512 HoTs expiring" if self.locked else "HoTs expiring"
-        self._text(PAD_X, y + 6, head, fill=TEXT_DIM, font=FONT_SMALL)
-        y += ROW_H
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
 
+        y = PAD_TOP + HEADER_H
         if not rows:
-            self._text(PAD_X + 5, y + BAR_H / 2, "all covered", fill=TEXT_DIM,
-                       font=FONT_SMALL)
+            self._text(cx, y + 12, "all covered", fill=TEXT_DIM, font=FONT_SMALL)
             return
 
+        track_w = self.width - PAD_X - cx
         for r in rows:
             remaining, duration = r["remaining"], max(r["duration"], 0.001)
             if remaining <= self.URGENT:
-                colour = "#c2453c"
+                colour = "#e2564a"
             elif remaining <= self.SOON:
-                colour = "#b8871f"
+                colour = "#d9a53a"
             else:
-                colour = "#2f8f63"
-            bar_w = int((self.width - PAD_X * 2) * max(0.0, min(1.0, remaining / duration)))
-            if bar_w > 0:
-                c.create_rectangle(PAD_X, y, PAD_X + bar_w, y + BAR_H,
-                                   fill=colour, outline="")
+                colour = "#3aa876"
             # person first -- you re-target by name, not by buff name
-            self._text(PAD_X + 5, y + BAR_H / 2, r["target"][:14])
-            self._text(self.width - PAD_X - 4, y + BAR_H / 2,
-                       f"{remaining:.1f}s", anchor="e")
+            self._text(cx, y + 12, r["target"][:14], font=FONT)
+            self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
+                       fill=colour, anchor="e", font=FONT_VALUE)
+            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
+                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
+            frac = max(0.0, min(1.0, remaining / duration))
+            if frac > 0:
+                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
+                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
             y += ROW_H
 
 
@@ -336,22 +378,24 @@ class TimerOverlay(BarOverlay):
         c.delete("all")
         timers = timers[: self.max_rows]
         self._panel(len(timers), False)
+        cx = self.content_x()
 
-        y = 5
         head = "\U0001F512 Timers" if self.locked else "Timers"
-        self._text(PAD_X, y + 6, head, fill=TEXT_DIM, font=FONT_SMALL)
-        y += ROW_H
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
 
-        palette = {"boss": "#3170b8", "cooldown": "#b8871f",
-                   "dot": "#2f8f63", "hot": "#2f8f63"}
+        y = PAD_TOP + HEADER_H
+        track_w = self.width - PAD_X - cx
+        palette = {"boss": "#3170b8", "cooldown": "#d9a53a",
+                   "dot": "#3aa876", "hot": "#3aa876"}
         for label, remaining, total_s, category in timers:
-            frac = max(0.0, min(1.0, remaining / total_s)) if total_s else 0
             colour = palette.get(category, "#3170b8")
-            bar_w = int((self.width - PAD_X * 2) * frac)
-            if bar_w > 0:
-                c.create_rectangle(PAD_X, y, PAD_X + bar_w, y + BAR_H,
-                                   fill=colour, outline="")
-            self._text(PAD_X + 5, y + BAR_H / 2, label[:20])
-            self._text(self.width - PAD_X - 4, y + BAR_H / 2,
-                       f"{remaining:.1f}s", anchor="e")
+            self._text(cx, y + 12, label[:20], font=FONT)
+            self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
+                       fill=colour, anchor="e", font=FONT_VALUE)
+            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
+                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
+            frac = max(0.0, min(1.0, remaining / total_s)) if total_s else 0
+            if frac > 0:
+                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
+                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
             y += ROW_H
