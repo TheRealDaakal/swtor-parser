@@ -1,0 +1,147 @@
+{
+  "id": "bulo",
+  "name": "Quartermaster Bulo",
+  "boss_names": [
+    "Quartermaster Bulo"
+  ],
+  "boss_npc_ids": [
+    "3371446248144896",
+    "3468697192628224",
+    "3468701487595520",
+    "3468705782562816"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "bulo_shotgun_blast_1st",
+      "label": "Shotgun Blast",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bulo_volley_1st",
+      "label": "Volley",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bulo_pirates_1st",
+      "label": "Pirates",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bulo_carts_scatter_1st",
+      "label": "Carts + Scatter",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bulo_relocate_barrage_1st",
+      "label": "Relocate + Barrage",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bulo_shotgun_blast",
+      "label": "Shotgun Blast",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Shotgun Blast"
+      }
+    },
+    {
+      "id": "bulo_gcd",
+      "label": "GCD",
+      "duration_seconds": 4.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Barrel Throw"
+      }
+    },
+    {
+      "id": "bulo_volley",
+      "label": "Volley",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Volley"
+      }
+    },
+    {
+      "id": "bulo_pirates",
+      "label": "Pirates",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391757148487680"
+      }
+    },
+    {
+      "id": "bulo_carts",
+      "label": "Carts",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3466880421462016"
+      }
+    },
+    {
+      "id": "bulo_loadlifters",
+      "label": "Loadlifters",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3420554904207360"
+      }
+    },
+    {
+      "id": "bulo_relocated",
+      "label": "Relocated",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3457169500405760"
+      }
+    },
+    {
+      "id": "bulo_scatter_blaster_end",
+      "label": "Scatter Blaster END",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+      }
+    },
+    {
+      "id": "bulo_barrage_carts_delay",
+      "label": "Barrage/Carts Delay",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+      }
+    },
+    {
+      "id": "bulo_mass_barrage_end",
+      "label": "Mass Barrage END",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mass Barrage"
+      }
+    }
+  ]
+}

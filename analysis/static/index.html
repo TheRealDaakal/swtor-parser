@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corpus — SWTOR log analytics</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">Corpus<em>swtor log analytics</em></div>
+  <nav class="tabs" role="tablist">
+    <div class="tab active" data-view="overview" role="tab" tabindex="0">Overview</div>
+    <div class="tab" data-view="trends" role="tab" tabindex="0">Trends</div>
+    <div class="tab" data-view="pulls" role="tab" tabindex="0">Pulls</div>
+    <div class="tab" data-view="deaths" role="tab" tabindex="0">Deaths</div>
+  </nav>
+  <div class="spacer"></div>
+  <div class="status" id="status">loading…</div>
+  <button id="rebuild" class="ghost">Rescan</button>
+</header>
+
+<main>
+  <!-- ============================ overview ============================ -->
+  <section class="view active" id="view-overview" role="tabpanel">
+    <div class="hero">
+      <div class="label">Boss pulls on record</div>
+      <div class="value" id="hero-value">—</div>
+      <div class="note" id="hero-note"></div>
+    </div>
+
+    <div class="tiles" id="ov-tiles"></div>
+
+    <div class="panel">
+      <h2>Bosses</h2>
+      <p class="sub">Every boss encounter across your whole log history. Click a row to see its pulls.</p>
+      <div class="tw"><table id="ov-bosses">
+        <thead><tr>
+          <th>Boss</th><th>Pulls</th><th>Time spent</th><th>Median pull</th>
+          <th>Longest</th><th>Deaths / pull</th><th>First</th><th>Last</th>
+        </tr></thead><tbody></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h2>Characters</h2>
+      <p class="sub">Real players only — NPCs and adds are tracked separately and never counted here.</p>
+      <div class="tw"><table id="ov-players">
+        <thead><tr>
+          <th>Character</th><th>Role</th><th>Encounters</th>
+          <th>Damage</th><th>Healing</th><th>Deaths</th>
+        </tr></thead><tbody></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ============================= trends ============================= -->
+  <section class="view" id="view-trends" role="tabpanel">
+    <div class="filters">
+      <label class="fld"><span>Character</span><select id="tr-player"></select></label>
+      <label class="fld"><span>Boss</span><select id="tr-boss"></select></label>
+      <label class="fld"><span>Metric</span><select id="tr-metric">
+        <option value="hps">Healing per second</option>
+        <option value="dps">Damage per second</option>
+        <option value="dtps">Damage taken per second</option>
+        <option value="deaths">Deaths</option>
+      </select></label>
+    </div>
+
+    <div class="panel">
+      <h2>Performance over time
+        <div class="viewtoggle">
+          <button id="tr-vchart" class="on">Chart</button>
+          <button id="tr-vtable">Table</button>
+        </div>
+      </h2>
+      <p class="sub" id="tr-sub">One point per pull, oldest to newest.</p>
+      <div id="tr-chartbox" class="chart-wrap"></div>
+      <div id="tr-tablebox" style="display:none" class="tw"></div>
+      <div class="legend" id="tr-legend"></div>
+    </div>
+
+    <div class="panel">
+      <h2>By raid night</h2>
+      <p class="sub">Each session averaged, so a single bad pull doesn't dominate.</p>
+      <div class="tw"><table id="tr-nights">
+        <thead><tr><th>Date</th><th>Pulls</th><th>Average</th><th>Best</th>
+          <th>Avg duration</th><th>Deaths</th></tr></thead><tbody></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ============================== pulls ============================= -->
+  <section class="view" id="view-pulls" role="tabpanel">
+    <div class="filters">
+      <label class="fld"><span>Boss</span><select id="pl-boss"></select></label>
+    </div>
+    <div class="panel">
+      <h2>Pull history</h2>
+      <p class="sub">Newest first. Click a pull for its full breakdown.</p>
+      <div class="tw"><table id="pl-table">
+        <thead><tr><th>Date</th><th>Time</th><th>Boss</th><th>Duration</th>
+          <th>Deaths</th><th>Players</th><th>Phases reached</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <!-- ============================= deaths ============================= -->
+  <section class="view" id="view-deaths" role="tabpanel">
+    <div class="filters">
+      <label class="fld"><span>Boss</span><select id="df-boss"></select></label>
+      <label class="fld"><span>Pull</span><select id="df-pull"></select></label>
+      <button id="df-run">Reconstruct</button>
+    </div>
+    <div id="df-out">
+      <div class="panel"><div class="empty">
+        Pick a pull and hit Reconstruct.<br>
+        This re-reads the raw log and rebuilds the seconds before each death —
+        what hit them, how hard, and whether a defensive was up.
+      </div></div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal"><div class="modal-inner">
+  <div class="modal-head">
+    <div style="flex:1"><h3 id="m-title"></h3><div class="sub" id="m-sub"></div></div>
+    <button onclick="closeModal()">Close</button>
+  </div>
+  <div id="m-body"></div>
+</div></div>
+
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+{
+  "id": "the_terror_from_beyond",
+  "name": "The Terror From Beyond",
+  "boss_names": [
+    "The Terror From Beyond",
+    "Grasping Tentacle",
+    "Tunneling Tentacle"
+  ],
+  "boss_npc_ids": [
+    "2938887206862848",
+    "2938891501830144",
+    "2938895796797440",
+    "2978340776443904",
+    "2988545618739200",
+    "3025220344479744",
+    "3025224639447040",
+    "3025228934414336",
+    "3025233229381632",
+    "302523752434898",
+    "3025241819316224",
+    "3025258999185408",
+    "3025263294152704",
+    "3025267589120000",
+    "3025271884087296",
+    "3025276179054592",
+    "3025280474021888",
+    "3025284768989184",
+    "3025289063956480",
+    "3025293358923776"
+  ],
+  "phases": [
+    {
+      "id": "tfb_phase2",
+      "name": "Grasping Tentacles (1st)"
+    },
+    {
+      "id": "tfb_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "grasping_death_count",
+        "value": 6
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_p1_intermission",
+      "name": "Add Dodge",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "the_terror_from_beyond_tunneling_death",
+            "value": 2
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "the_terror_from_beyond_tunneling_death",
+            "value": 4
+          }
+        ]
+      },
+      "end_trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase1"
+      }
+    },
+    {
+      "id": "tfb_phase1",
+      "name": "Tunneling Tentacles",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "combat_start"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "the_terror_from_beyond_p1int"
+          }
+        ]
+      },
+      "end_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p1_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tfb_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Terror (P2)"
+        ]
+      }
+    },
+    {
+      "id": "tfb_phase2",
+      "name": "Grasping Tentacles",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3025233229381632,
+          3025241819316224
+        ]
+      },
+      "end_trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p2_intermission"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_p2t",
+      "name": "P2 Transistion",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Pulled into the Beyond"
+      },
+      "end_trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase2"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "the_terror_from_beyond_p2tc",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "the_terror_from_beyond_p2_intermission",
+      "name": "Hypergate Irregularities",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "grasping_death_count",
+            "value": 2
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "grasping_death_count",
+            "value": 4
+          }
+        ]
+      },
+      "end_trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase2"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_phase2_1",
+      "name": "Grasping Tentacles",
+      "start_trigger": {
+        "type": "timer_expires",
+        "timer_id": "the_terror_from_beyond_p2_tentacles"
+      },
+      "end_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "tfb_burn"
+          }
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "grasping_death_count",
+      "name": "Grasping Death",
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Grasping Tentacle"
+        ]
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_tunneling_death",
+      "name": "Tunneling Death",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3025258999185408,
+          3025271884087296,
+          3025267589120000,
+          3025280474021888
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_vdz_state",
+      "name": "Void Zone Active",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "the_terror_from_beyond_vdz2"
+      },
+      "decrement_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "the_terror_from_beyond_vdz2"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "the_terror_from_beyond_vdz_check"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_p2tc",
+      "name": "P2 Transition Blocker",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p2t"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "tfb_tunneling_slam_first",
+      "label": "Tunneling Slam",
+      "duration_seconds": 15.5,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3025258999185408,
+          3025271884087296,
+          3025267589120000,
+          3025280474021888
+        ]
+      }
+    },
+    {
+      "id": "tfb_tunneling_slam",
+      "label": "Tunneling Slam",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Slam"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p1_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tfb_void_disturbance_debuff",
+      "label": "Void Disturbance",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Void Disturbance",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_1st_adds",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "tfb_tunneling_slam_first"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_p1int",
+      "label": "Intermission",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p1_intermission"
+      }
+    },
+    {
+      "id": "tfb_adds",
+      "label": "Adds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3025903244279808"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p1_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_vdz",
+      "label": "Void Disturbance",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase1"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "the_terror_from_beyond_vdz_state",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "the_terror_from_beyond_vdz1",
+      "label": "Void Disturbance Setup",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "the_terror_from_beyond_vdz"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "the_terror_from_beyond_vdz2"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p2t"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_vdz2",
+      "label": "Void Disturbance",
+      "duration_seconds": 35.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "the_terror_from_beyond_vdz1"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p1_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_vdz_check",
+      "label": "Void Disturbance Check",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p1_intermission"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "the_terror_from_beyond_vdz_state",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "the_terror_from_beyond_bspwn",
+      "label": "Hypergate Beacon",
+      "duration_seconds": 26.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase1"
+      }
+    },
+    {
+      "id": "tfb_grasping_slam",
+      "label": "Grasping Slam",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Slam"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "tfb_burn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tfb_faded_reality",
+      "label": "Faded Reality",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_burn"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_p2_tentacles",
+      "label": "Tentacles",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_p2_intermission"
+      }
+    },
+    {
+      "id": "tfb_spit_pool_first",
+      "label": "Spit Pool + Scream",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "tfb_phase2"
+      }
+    },
+    {
+      "id": "tfb_spit_pool",
+      "label": "Spit Pool + Scream",
+      "duration_seconds": 28.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Faded Reality"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "the_terror_from_beyond_p2_intermission"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "tfb_burn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_spit_pool_p2int",
+      "label": "Spit Pool + Scream",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "the_terror_from_beyond_phase2_1"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_inconsistency",
+      "label": "Run to inconsistency",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Inconsistency",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_tentacle_under_10",
+      "label": "Tentacle Sub-10%",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Tunneling Tentacle"
+        ]
+      }
+    },
+    {
+      "id": "the_terror_from_beyond_enraged_tentacle",
+      "label": "Tentacle Enrage",
+      "duration_seconds": 70.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Tunneling Tentacle"
+        ]
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Tunneling Tentacle"
+        ]
+      }
+    }
+  ]
+}

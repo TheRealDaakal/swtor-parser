@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# combat logs, corpus cache, and any exported/scratch artifacts a run might
+# drop in the project folder -- never intended to be committed, and could be
+# large or personal (settings/credentials live outside this folder entirely,
+# in %APPDATA%\swtor-parser\, so there's nothing sensitive to catch here)
+*.txt
+corpus_index.json

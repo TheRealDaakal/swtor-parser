@@ -1,0 +1,97 @@
+{
+  "id": "soa",
+  "name": "Soa",
+  "boss_names": ["Soa"],
+  "phases": [
+    { "id": "p1", "name": "Top Platform" },
+    {
+      "id": "p2",
+      "name": "Transition (falling)",
+      "start_trigger": { "type": "ability_cast", "keyword": "Slam" },
+      "conditions": [{ "type": "phase_active", "phase_ids": ["p1"] }]
+    },
+    {
+      "id": "p4",
+      "name": "Middle Platform",
+      "start_trigger": { "type": "ability_cast", "keyword": "Mind Trap" }
+    },
+    {
+      "id": "p5",
+      "name": "Transition (falling)",
+      "start_trigger": { "type": "ability_cast", "keyword": "Slam" },
+      "conditions": [{ "type": "phase_active", "phase_ids": ["p4"] }]
+    },
+    {
+      "id": "p6",
+      "name": "Ground",
+      "start_trigger": { "type": "ability_cast", "keyword": "Pylon" }
+    }
+  ],
+  "timers": [
+    {
+      "id": "soa_transition",
+      "label": "Platforms",
+      "duration_seconds": 115.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          { "type": "phase_ended", "phase_id": "p1" },
+          { "type": "phase_ended", "phase_id": "p4" }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          { "type": "phase_ended", "phase_id": "p2" },
+          { "type": "phase_ended", "phase_id": "p5" }
+        ]
+      }
+    },
+    {
+      "id": "soa_mind_trap_p4",
+      "label": "Mind Trap",
+      "duration_seconds": 38.0,
+      "trigger": { "type": "ability_cast", "keyword": "Mind Trap" },
+      "phases": ["p4"],
+      "cancel_trigger": { "type": "phase_ended", "phase_id": "p4" }
+    },
+    {
+      "id": "soa_ball_lightning",
+      "label": "Ball Lightning",
+      "duration_seconds": 19.0,
+      "trigger": { "type": "ability_cast", "keyword": "Ball Lightning" },
+      "phases": ["p4"],
+      "cancel_trigger": { "type": "phase_ended", "phase_id": "p4" }
+    },
+    {
+      "id": "soa_force_cyclone",
+      "label": "Force Cyclone",
+      "duration_seconds": 38.0,
+      "trigger": { "type": "ability_cast", "keyword": "Force Cyclone" },
+      "phases": ["p4"],
+      "cancel_trigger": { "type": "phase_ended", "phase_id": "p4" }
+    },
+    {
+      "label": "Mind Trap (Ground)",
+      "duration_seconds": 23.0,
+      "trigger": { "type": "ability_cast", "keyword": "Mind Trap" },
+      "phases": ["p6"]
+    },
+    {
+      "label": "Pylon Drops",
+      "duration_seconds": 20.0,
+      "trigger": { "type": "ability_cast", "keyword": "Pylon" },
+      "phases": ["p6"]
+    },
+    {
+      "label": "75% - Transition incoming",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 75.0 }
+    },
+    {
+      "label": "30% - Final transition incoming",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 30.0 }
+    }
+  ]
+}

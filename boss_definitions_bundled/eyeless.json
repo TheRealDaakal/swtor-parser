@@ -1,0 +1,39 @@
+{
+  "id": "eyeless",
+  "name": "The Eyeless",
+  "boss_names": [
+    "The Eyeless"
+  ],
+  "boss_npc_ids": [
+    "3319090596806656",
+    "3328372021133312",
+    "3328376316100608",
+    "3328380611067904"
+  ],
+  "phases": [
+    {
+      "id": "eyeless_kite",
+      "name": "The Eyeless"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "eyeless_crush_1st",
+      "label": "Crush",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "eyeless_crush",
+      "label": "Crush",
+      "duration_seconds": 35.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Crush"
+      }
+    }
+  ]
+}

@@ -1,0 +1,615 @@
+{
+  "id": "nahut_k",
+  "name": "NAHUT",
+  "boss_names": [
+    "Nahut"
+  ],
+  "boss_npc_ids": [
+    "4108011664572416",
+    "4122949560827904",
+    "4122953855795200",
+    "4122958150762496"
+  ],
+  "phases": [
+    {
+      "id": "nahut_k_p1_i",
+      "name": "Phase 1 (Intermission)",
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_ps_c",
+          "operator": "lt",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p1_p",
+      "name": "Phase 1 (Pursuit)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Pursuit"
+      }
+    },
+    {
+      "id": "nahut_k_p2",
+      "name": "Phase 2 (Couplings)",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "nahut_k_p2_mm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "nahut_k_p2_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_p3",
+      "name": "Phase 3 (Turrets)",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "nahut_k_p3_t1"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "nahut_k_p3_t2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_p4",
+      "name": "Phase 4 (Burn)",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4133047028940800"
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "nahut_k_t_d",
+            "value": 5
+          }
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "nahut_k_ps_c",
+      "name": "Pursuit Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Pursuit"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "nahut_k_r_p2_c",
+      "name": "Railgun Counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "nahut_k_r_p2"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_gsw_p2"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_gsw_p2_d"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_t_d",
+      "name": "Turrets Death Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          4132746381230080
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "nahut_k_h_c",
+      "name": "Has Candle",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Candle",
+        "target": "local_player"
+      },
+      "decrement_on": {
+        "type": "effect_removed",
+        "keyword": "Candle",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "nahut_k_h_b",
+      "name": "Has Power Cell",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Spare Power Cell",
+        "target": "local_player"
+      },
+      "decrement_on": {
+        "type": "effect_removed",
+        "keyword": "Spare Power Cell",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "nahut_k_md",
+      "label": "Mass Distortion",
+      "duration_seconds": 12.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mass Distortion"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "nahut_k_p1_i"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "nahut_k_p2"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "nahut_k_p4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_md_p",
+      "label": "Mass Distortion",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p1_p"
+      }
+    },
+    {
+      "id": "nahut_k_es",
+      "label": "Energized Slice",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Energized Slice"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "nahut_k_p1_i"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "nahut_k_p2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_adds_p2_1st",
+      "label": "Adds",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p2"
+      }
+    },
+    {
+      "id": "nahut_k_r_p2_c",
+      "label": "Railgun",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Railgun Snipe"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "nahut_k_r_p2_c",
+            "value": 2
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_p3_t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_gsw_p2",
+      "label": "Gravitic Shockwave",
+      "duration_seconds": 2.5,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nahut_k_r_p2_c",
+        "value": 2
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "nahut_k_gsw_p2_1st",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_p3_t"
+      }
+    },
+    {
+      "id": "nahut_k_r_p2_1st",
+      "label": "Railgun",
+      "duration_seconds": 6.5,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_adds_p2_1st"
+      }
+    },
+    {
+      "id": "nahut_k_gsw_p2_1st",
+      "label": "GSW cooldown",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p2"
+      }
+    },
+    {
+      "id": "nahut_k_gsw_p2_d",
+      "label": "Gravitic Shockwave",
+      "duration_seconds": 4.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nahut_k_r_p2_c",
+        "value": 2
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "nahut_k_gsw_p2_1st",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_p3_t"
+      }
+    },
+    {
+      "id": "nahut_k_r_p2_sw",
+      "label": "Railgun",
+      "duration_seconds": 4.5,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_gsw_p2"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_gsw_p2_d"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_p3_t"
+      }
+    },
+    {
+      "id": "nahut_k_p3_t",
+      "label": "Spaghettification check",
+      "duration_seconds": 67.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p2"
+      }
+    },
+    {
+      "id": "nahut_k_p2_gcd",
+      "label": "GCD",
+      "duration_seconds": 5.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Railgun Snipe"
+      }
+    },
+    {
+      "id": "nahut_k_p3_t1",
+      "label": "Phase 3 (1st trigger)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_p3_t"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "nahut_k_p2_gcd",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p3_t2",
+      "label": "Phase 3 (2nd trigger)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nahut_k_p2_gcd"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "nahut_k_p3_t",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p3_adds_1st",
+      "label": "Turrets",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p3"
+      }
+    },
+    {
+      "id": "nahut_k_p3_md_1st",
+      "label": "Mass Distortion",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p3"
+      }
+    },
+    {
+      "id": "nahut_k_p3_gsw_1st",
+      "label": "Gravitic Shockwave",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p3"
+      }
+    },
+    {
+      "id": "nahut_k_p3_adds",
+      "label": "Turrets",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4134120770764800"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p4"
+      }
+    },
+    {
+      "id": "nahut_k_p4_dis",
+      "label": "Discharge",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Discharge"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "nahut_k_p4_dis"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Oppressive Gravity"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_cn_pw",
+      "label": "Candle",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nahut_k_h_c",
+        "value": 1
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_h_b",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_cn_n_pw",
+      "label": "Candle",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nahut_k_h_c",
+        "value": 1
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_h_b",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_sup_cd",
+      "label": "Suppression Cooldown",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Candle Suppressed",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "nahut_k_sup_off",
+      "label": "Reveal",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Suppression Burst"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_h_c",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_sup",
+      "label": "Suppressed",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Candle Suppressed"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "nahut_k_p2"
+      }
+    },
+    {
+      "id": "nahut_k_p2_mm",
+      "label": "Phase 2 (MM)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Pursuit"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_ps_c",
+          "operator": "gte",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p2_vm",
+      "label": "Phase 2 (VM)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Pursuit"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_ps_c",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p1_int_mm",
+      "label": "Phase 1 (Intermission MM)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Pursuit"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_ps_c",
+          "operator": "lt",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "nahut_k_p1_int_vm",
+      "label": "Phase 1 (Intermission VM)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Pursuit"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nahut_k_ps_c",
+          "operator": "lt",
+          "value": 2
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "gharj",
+  "name": "Gharj",
+  "boss_names": ["Gharj"],
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ],
+  "timers": [
+    {
+      "label": "Platform Collapse",
+      "duration_seconds": 5.0,
+      "trigger": { "type": "ability_cast", "keyword": "Leaping Smash" }
+    },
+    {
+      "label": "Jump",
+      "duration_seconds": 34.0,
+      "trigger": { "type": "ability_cast", "keyword": "Leaping Smash" }
+    },
+    {
+      "label": "Pulverizing Slam",
+      "duration_seconds": 14.0,
+      "trigger": { "type": "ability_cast", "keyword": "Pulverizing Slam" }
+    },
+    {
+      "label": "95% - Platform Soon",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 95.0 }
+    },
+    {
+      "label": "70% - Platform Soon",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 70.0 }
+    },
+    {
+      "label": "50% - Platform Soon",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 50.0 }
+    },
+    {
+      "label": "30% - Platform Soon",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 30.0 }
+    },
+    {
+      "label": "10% - Final Platform",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 10.0 }
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "id": "golden_fury",
+  "name": "Golden Fury",
+  "boss_names": [
+    "Golden Fury"
+  ],
+  "boss_npc_ids": [
+    "3210174521147392",
+    "3232735984353280",
+    "3232800408862720",
+    "3232817588731904"
+  ],
+  "phases": [
+    {
+      "id": "golden_fury_phases_intro",
+      "name": "Intro"
+    },
+    {
+      "id": "golden_fury_phases_lasers_adds",
+      "name": "Lasers and Adds",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Golden Fury"
+        ]
+      }
+    },
+    {
+      "id": "golden_fury_phases_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Radiation Leak"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "golden_fury_massive_lasers_counter",
+      "name": "Massive Lasers Counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Massive Lasers"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "golden_fury_satellite_strike",
+      "label": "Satellite Strike",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Satellite Strike"
+      }
+    },
+    {
+      "id": "golden_fury_isotope_release",
+      "label": "Isotope Release",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Isotope Release"
+      }
+    },
+    {
+      "id": "golden_fury_isotope5_shielding",
+      "label": "Isotope-5 Shielding",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Isotope-5 Shielding"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "golden_fury_phases_burn"
+      }
+    },
+    {
+      "id": "golden_fury_lasers_alert",
+      "label": "Laser incoming!",
+      "duration_seconds": 0.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Isotope-5 Shielding"
+      }
+    },
+    {
+      "id": "golden_fury_massive_larsers",
+      "label": "Massive Lasers",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Isotope-5 Shielding"
+      }
+    },
+    {
+      "id": "golden_fury_1st_add_spawn",
+      "label": "Add Spawn",
+      "duration_seconds": 13.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Isotope-5 Shielding"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "golden_fury_massive_lasers_counter",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "golden_fury_add_spawn_sm",
+      "label": "Add Spawn",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3259081313746944"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "golden_fury_massive_lasers_counter",
+          "operator": "gt",
+          "value": 0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "golden_fury_phases_burn"
+      }
+    },
+    {
+      "id": "golden_fury_add_spawn_vm_decreasing",
+      "label": "Add Spawn",
+      "duration_seconds": 44.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3259081313746944"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "golden_fury_massive_lasers_counter",
+          "operator": "lte",
+          "value": 8
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "golden_fury_phases_burn"
+      }
+    },
+    {
+      "id": "golden_fury_add_spawn_vm",
+      "label": "Add Spawn",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3259081313746944"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "golden_fury_massive_lasers_counter",
+          "operator": "gt",
+          "value": 8
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "golden_fury_phases_burn"
+      }
+    },
+    {
+      "id": "golden_fury_enrage",
+      "label": "Enrage",
+      "duration_seconds": 540.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    }
+  ]
+}

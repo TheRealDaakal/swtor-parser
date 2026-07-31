@@ -1,0 +1,254 @@
+{
+  "id": "dread_guard",
+  "name": "The Dread Guard",
+  "boss_names": [
+    "Heirad",
+    "Ciphas",
+    "Kel'sara"
+  ],
+  "boss_npc_ids": [
+    "2831414240215040",
+    "2831418535182336",
+    "2831422830149632",
+    "2938002443599872",
+    "2938006738567168",
+    "2938011033534464",
+    "3013327580037120",
+    "3013331875004416",
+    "3013336169971712",
+    "3013374824677376",
+    "3013379119644672",
+    "3013387709579264",
+    "3013409184415744",
+    "3013413479383040",
+    "3013417774350336"
+  ],
+  "phases": [
+    {
+      "id": "dg_heirad",
+      "name": "Heirad"
+    },
+    {
+      "id": "dg_ciphas",
+      "name": "Ciphas",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Heirad"
+        ]
+      }
+    },
+    {
+      "id": "dg_kelsara",
+      "name": "Kel'sara",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Ciphas"
+        ]
+      }
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "dg_barrier_cs",
+      "label": "Ciphas Barrier",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dg_barrier",
+      "label": "Ciphas Barrier",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Lightning Field"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_applied",
+            "keyword": "Empowered Barrier"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "dg_ciphas"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dg_choke_cs",
+      "label": "Choke",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dg_ciphas"
+      }
+    },
+    {
+      "id": "dg_choke",
+      "label": "Choke",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Stunned"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dg_kelsara"
+      }
+    },
+    {
+      "id": "dg_doom_hm",
+      "label": "Doom on you",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Doom",
+        "target": "local_player"
+      },
+      "warn_seconds_before": 3.0,
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dg_kelsara"
+      }
+    },
+    {
+      "id": "dg_doom_nim",
+      "label": "Doom on you",
+      "duration_seconds": 34.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Doom",
+        "target": "local_player"
+      },
+      "warn_seconds_before": 3.0,
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dg_kelsara"
+      }
+    },
+    {
+      "id": "dg_doom_sm",
+      "label": "Doom",
+      "duration_seconds": 34.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Doom"
+      },
+      "warn_seconds_before": 3.0
+    },
+    {
+      "id": "dg_vitality_ext",
+      "label": "Dropping circle",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Vitality Extraction",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "dg_circle_tracker_not_displayed",
+      "label": "Circle tracker, not displayed",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Vitality Extraction"
+      }
+    },
+    {
+      "id": "dg_at_12_circles",
+      "label": "At 12 circles",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dg_circle_tracker_not_displayed"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "dg_ciphas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dg_take_kelsara_away",
+      "label": "Take kelsara away",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Kel'sara"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "dg_ciphas"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dg_adds",
+      "label": "Adds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3013344759906304
+        ]
+      }
+    },
+    {
+      "id": "dg_1st_leech_soon",
+      "label": "1st leech soon",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dg_kelsara"
+      }
+    },
+    {
+      "id": "dg_leech",
+      "label": "Leech",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Mark of Death"
+      },
+      "cancel_trigger": {
+        "type": "effect_removed",
+        "keyword": "Mark of Death"
+      }
+    },
+    {
+      "id": "dg_wither",
+      "label": "Wither",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Force Leech"
+      }
+    },
+    {
+      "id": "dg_overload",
+      "label": "Overload + marked",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Force Leech"
+      }
+    }
+  ]
+}

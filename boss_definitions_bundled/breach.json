@@ -1,0 +1,15 @@
+{
+  "id": "breach",
+  "name": "According To Plan",
+  "boss_names": ["Delicious Rampaging Charger", "Warden Enforcer"],
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ],
+  "timers": [
+    {
+      "label": "Flare Duration",
+      "duration_seconds": 20.0,
+      "trigger": { "type": "ability_cast", "keyword": "Flare" }
+    }
+  ]
+}

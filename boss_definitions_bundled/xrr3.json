@@ -1,0 +1,30 @@
+{
+  "id": "xrr3",
+  "name": "Annihilation Droid XRR-3",
+  "boss_names": ["Annihilation Droid XRR-3"],
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ],
+  "timers": [
+    {
+      "label": "95% - Swipe Active",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 95.0 }
+    },
+    {
+      "label": "75%",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 75.0 }
+    },
+    {
+      "label": "40% - Groundfire Active",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 40.0 }
+    },
+    {
+      "label": "10% - Burn Phase",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 10.0 }
+    }
+  ]
+}

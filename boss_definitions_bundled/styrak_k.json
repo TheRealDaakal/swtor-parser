@@ -1,0 +1,941 @@
+{
+  "id": "Styrak_k",
+  "name": "Dread Master Styrak",
+  "boss_names": [
+    "Kell Dragon",
+    "Dread Master Styrak"
+  ],
+  "boss_npc_ids": [
+    "3066945951760384",
+    "3067057620910080",
+    "3147154466013184",
+    "3152407211016192",
+    "3152441570754560",
+    "3152445865721856",
+    "3225679353085952"
+  ],
+  "phases": [
+    {
+      "id": "styrak_dread_guards",
+      "name": "Dread Guards"
+    },
+    {
+      "id": "Styrak_k_p1",
+      "name": "Kell Dragon",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3067057620910080
+        ]
+      }
+    },
+    {
+      "id": "styrak_phase_sm",
+      "name": "Styrak (SM)",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Kell Dragon"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p2_int",
+      "name": "Mass Force Storm",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          3067057620910080
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p2_stk",
+      "name": "Styrak",
+      "start_trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_p2_cnd"
+      }
+    },
+    {
+      "id": "Styrak_k_p2_cmf",
+      "name": "Chained Manifestation",
+      "start_trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_p2_cmf_t"
+      },
+      "end_trigger": {
+        "type": "entity_death",
+        "selector": [
+          3147154466013184
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk_r",
+            "Styrak_k_p2_stk",
+            "Styrak_k_p2_cmf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_p2_lmf",
+      "name": "Lightning Manifestation",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_p2_lmf_t"
+          },
+          {
+            "type": "phase_ended",
+            "phase_id": "Styrak_k_p2_cmf"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p2_stk_r",
+      "name": " Styrak",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_st_lmf_rvl"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_8m"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_16m"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p3_gst",
+      "name": "Kell Dragon Ghost",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3225679353085952
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p3_stk",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          3225679353085952
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "Styrak_k_lmf_d_c",
+      "name": "LMF Death Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3142326922772480
+        ]
+      },
+      "reset_on": {
+        "type": "effect_applied",
+        "keyword": "Nightmare Manifestation"
+      }
+    },
+    {
+      "id": "Styrak_k_2nd_thb",
+      "name": "MM 2nd Thunder Blast",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "Styrak_k_abl_seq",
+      "name": "Abilities Sequence",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_nm_fp"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_fp_nm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_fl_fp"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_fl_nm"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_st_lmf_rvl"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_8m"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_16m"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_chained_appears",
+      "name": "Chained Appears",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "npc_appears",
+        "selector": [
+          "Chained Manifestation"
+        ]
+      },
+      "decrement_on": {
+        "type": "entity_death",
+        "selector": [
+          "Chained Manifestation"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "Styrak_k_kd_fer",
+      "label": "Ferocity",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_aa",
+      "label": "Melee Attack",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_hds_1st",
+      "label": "Head Swipe",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Head Swipe"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_lsl_1st",
+      "label": "Leap Slam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Leap Slam"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_vpl_1st",
+      "label": "Vomit Pool",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Vomit Pool"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_sps_1st",
+      "label": "Spines",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Spines"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_ccl_1st",
+      "label": "Charge Clone",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_hbt_1st",
+      "label": "Headbutt",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Headbutt"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_skb_1st",
+      "label": "Knockback Clone",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
+      }
+    },
+    {
+      "id": "Styrak_k_gcd_1_5",
+      "label": "GCD 1.5s",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Ferocity"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_hds",
+      "label": "Head Swipe",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Head Swipe"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_lsl",
+      "label": "Leap Slam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leap Slam"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_vpl",
+      "label": "Vomit Pool",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vomit Pool"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_vpl_vm",
+      "label": "Vomit Pool",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vomit Pool"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_vpl_16m",
+      "label": "Vomit Pool",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vomit Pool"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_sps",
+      "label": "Spines",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spines"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_ccl",
+      "label": "Charge Clone",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3141656907874304"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_hbt",
+      "label": "Headbutt",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Headbutt"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Summon"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_int"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_kd_smn",
+      "label": "Choke Clone",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Summon"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Headbutt"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_int"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_kd_skb",
+      "label": "Knockback Clone",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_smn_hb",
+      "label": "Choke Clone",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Headbutt"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Summon"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_int"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_kd_hbt_sm",
+      "label": "Headbutt",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Summon"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Headbutt"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_int"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_st_cmf_1st",
+      "label": "Chained Manifestation",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_p2_cnd"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_stk_r"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3255757009059840"
+      }
+    },
+    {
+      "id": "Styrak_k_st_lmf_1st",
+      "label": "Lightning Manifestation",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_p2_cnd"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "Styrak_k_st_fpnm_lmf"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3255757009059840"
+      }
+    },
+    {
+      "id": "Styrak_k_p2_cmf_t",
+      "label": "Phase 2 CMF trigger",
+      "duration_seconds": 1.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Chained Manifestation"
+      }
+    },
+    {
+      "id": "Styrak_k_st_cmf_rvl",
+      "label": "Styrak Reveals",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_p2_cmf_t"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          3147154466013184
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_p2_lmf_t",
+      "label": "Phase 2 LMF trigger",
+      "duration_seconds": 1.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Lightning Manifestation"
+      }
+    },
+    {
+      "id": "Styrak_k_st_lmf_rvl",
+      "label": "Styrak Reveals",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_p2_lmf_t"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_8m"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "Styrak_k_st_lmf_end_16m"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_st_lmf_end_8m",
+      "label": "Styrak",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "Styrak_k_lmf_d_c",
+        "value": 4
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_lmf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_lmf_end_16m",
+      "label": "Styrak",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "Styrak_k_lmf_d_c",
+        "value": 8
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_lmf"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_stw",
+      "label": "Saber Throw",
+      "duration_seconds": 4.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Saber Throw"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_kbk_1st",
+      "label": "Headdbutt + Spines",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p1"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_kbk",
+      "label": "Headbutt + Spines",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spines"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_kd_chk",
+      "label": "Choke Clone",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Headbutt"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_int"
+      }
+    },
+    {
+      "id": "Styrak_k_st_thb_t_1st_mm",
+      "label": "Thundering Blast",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_stk"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "Styrak_k_p2_stk_r"
+          }
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_st_thb_t_1st_vm",
+      "label": "Thundering Blast",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_stk"
+      }
+    },
+    {
+      "id": "Styrak_k_st_thb_t_2nd_mm",
+      "label": "Thundering Blast 2nd NiM",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "Styrak_k_2nd_thb",
+        "value": 1
+      }
+    },
+    {
+      "id": "Styrak_k_st_flg_t_1st",
+      "label": "Force Lightning",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_stk"
+      }
+    },
+    {
+      "id": "Styrak_k_st_fpnm_1st",
+      "label": "Pull or Nightmare",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Lightning"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_nm_fp",
+      "label": "Nightmare Manifestation",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Pull"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_fp_nm",
+      "label": "Force Pull",
+      "duration_seconds": 3.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Nightmare Manifestation"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_tb_nm",
+      "label": "Thundering Blast",
+      "duration_seconds": 3.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Nightmare Manifestation"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_tb_fp",
+      "label": "Thundering Blast",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Pull"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_fpnm_lmf",
+      "label": "Pull or Nightmare",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_stk_r"
+      }
+    },
+    {
+      "id": "Styrak_k_st_fl_fp",
+      "label": "Force Lightning",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Pull"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk_r"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_fl_nm",
+      "label": "Force Lightning",
+      "duration_seconds": 3.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Nightmare Manifestation"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "Styrak_k_p2_stk_r"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "Styrak_k_st_tb_fl",
+      "label": "Thundering Blast",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Lightning"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "Styrak_k_abl_seq",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    }
+  ]
+}

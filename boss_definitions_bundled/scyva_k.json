@@ -1,0 +1,815 @@
+{
+  "id": "SCYVA_K",
+  "name": "SCYVA",
+  "boss_names": [
+    "SCYVA",
+    "Omega Protocol Droid"
+  ],
+  "boss_npc_ids": [
+    "4108140513591296",
+    "4126527268585472"
+  ],
+  "phases": [
+    {
+      "id": "SCYVA_K_p1",
+      "name": "Phase 1"
+    },
+    {
+      "id": "SCYVA_K_p2",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "Ambient Reinforcement"
+      }
+    },
+    {
+      "id": "SCYVA_K_p3",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p3_t"
+      }
+    },
+    {
+      "id": "SCYVA_K_p4_i",
+      "name": "Phase 4 (intro)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Gravity Distortion Module"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_e",
+      "name": "Phase 4 (Expansion)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Atomic Excitation"
+      }
+    },
+    {
+      "id": "SCYVA_K_p4_c",
+      "name": "Phase 4 (Contraction)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Atomic Compression"
+      }
+    },
+    {
+      "id": "SCYVA_K_p4_s",
+      "name": "Phase 4 (Ignition)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Stabilizing Field"
+      }
+    },
+    {
+      "id": "SCYVA_K_p5_i",
+      "name": "Phase 5 (intro)",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Initialize Extinction Protocols"
+      }
+    },
+    {
+      "id": "SCYVA_K_p5_e",
+      "name": "Phase 5 (Expansion)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Mass Synthesis"
+      }
+    },
+    {
+      "id": "SCYVA_K_p5_c",
+      "name": "Phase 5 (Contraction)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Atomic Destruction"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "SCYVA_K_p_c",
+      "name": "Purge Counter",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_p_m",
+      "name": "Purge Max",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "SCYVA_K_p_i"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_p_c2",
+      "name": "Purge Counter",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_e_p",
+      "name": "Extinction Permission",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "SCYVA"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_l_g_s",
+      "name": "Low Gravity State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Escape Velocity",
+        "target": "local_player"
+      },
+      "decrement_on": {
+        "type": "effect_removed",
+        "keyword": "Escape Velocity",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_s_g_s",
+      "name": "Strong Gravity State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Amplify Gravity",
+        "target": "local_player"
+      },
+      "decrement_on": {
+        "type": "effect_removed",
+        "keyword": "Amplify Gravity",
+        "target": "local_player"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "SCYVA_K_rad_s_s",
+      "name": "Radiance State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "SCYVA_K_rad_s"
+      },
+      "decrement_on": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_rad_s"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "SCYVA_K_p_i",
+      "label": "Purge Increment",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_changes",
+            "counter_id": "SCYVA_K_p_c"
+          },
+          {
+            "type": "counter_changes",
+            "counter_id": "SCYVA_K_p_c2"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p3_t",
+      "label": "Phase 3",
+      "duration_seconds": 98.5,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p2"
+      }
+    },
+    {
+      "id": "SCYVA_K_p4_t",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t2",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 42.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t3",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t4",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t5",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t6",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t7",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_t8",
+      "label": "Gravity Module (p4 intro)",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p3"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_p_m",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_igs",
+      "label": "Ignite Core (Shield)",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p4_e"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "SCYVA_K_e_e"
+      }
+    },
+    {
+      "id": "SCYVA_K_e_c",
+      "label": "Extinction Protocol",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Atomic Scattering"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p4_c"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_e_p",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_e_e",
+      "label": "Extinction Protocol",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "SCYVA_K_e_p"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p4_e"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p5_a_1st",
+      "label": "Atomic",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p5_i"
+      }
+    },
+    {
+      "id": "SCYVA_K_p5_a_e",
+      "label": "Atomic",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p5_e"
+      }
+    },
+    {
+      "id": "SCYVA_K_p5_a_c",
+      "label": "Atomic",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Atomic Scattering"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p5_e"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p1_beam",
+      "label": "Beam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_applied",
+            "keyword": "Immobilized"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "SCYVA_K_p1_beam"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "SCYVA_K_p1_beam_2nd"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p2"
+      }
+    },
+    {
+      "id": "SCYVA_K_p1_beam_2nd",
+      "label": "Beam",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p1"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "SCYVA_K_p1_beam"
+      }
+    },
+    {
+      "id": "SCYVA_K_s_g",
+      "label": "Strong Gravity",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Amplify Gravity",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "SCYVA_K_l_g",
+      "label": "Low Gravity",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Escape Velocity",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "SCYVA_K_n_g",
+      "label": "Normal Gravity",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "SCYVA_K_l_g_s",
+            "value": 0
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "SCYVA_K_s_g_s",
+            "value": 0
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_l_g_s",
+          "operator": "eq",
+          "value": 0
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_s_g_s",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p2_beam_1st",
+      "label": "Beam",
+      "duration_seconds": 14.5,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p2"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_2nd",
+      "label": "Beam (Red Catalyst)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_1st"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_3rd",
+      "label": "Beam (Double Catalyst)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_2nd"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_4th",
+      "label": "Beam (Red Catalyst)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_3rd"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_5th",
+      "label": "Beam",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_4th"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_6th",
+      "label": "Beam (Double Catalyst)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_5th"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_beam_7th",
+      "label": "Beam",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_6th"
+      }
+    },
+    {
+      "id": "SCYVA_K_p2_ds",
+      "label": "Destack",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_p2_beam_7th"
+      }
+    },
+    {
+      "id": "SCYVA_K_df_m",
+      "label": "Deflection Module",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Deflection Field Module",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "SCYVA_K_gr_m",
+      "label": "Gravity Module",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Gravity Distortion Module",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "SCYVA_K_uph",
+      "label": "Upheaval",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Upheaval"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "SCYVA_K_e_e"
+      }
+    },
+    {
+      "id": "SCYVA_K_rad_s",
+      "label": "Radiance Setup",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Radiance"
+      }
+    },
+    {
+      "id": "SCYVA_K_rad",
+      "label": "Radiance",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "SCYVA_K_rad_s_s",
+            "value": 0
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "Upheaval"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "SCYVA_K_rad_s_s",
+          "operator": "eq",
+          "value": 0
+        },
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p4_e",
+            "SCYVA_K_p4_c",
+            "SCYVA_K_p5_e",
+            "SCYVA_K_p5_c"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "SCYVA_K_p4_s"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "SCYVA_K_p5_i"
+          }
+        ]
+      }
+    },
+    {
+      "id": "SCYVA_K_rad_c",
+      "label": "Radiance",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Atomic Scattering"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p4_s",
+            "SCYVA_K_p5_i",
+            "SCYVA_K_p5_c"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_upg_e",
+      "label": "Upheaval",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Atomic Scattering"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p4_c"
+          ]
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "SCYVA_K_rad_s",
+          "operator": "gte",
+          "value": 1.1
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_r_t_a",
+      "label": "Red Turret Activation",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Dampening Field"
+      }
+    },
+    {
+      "id": "SCYVA_K_b_t_a",
+      "label": "Blue Turret Activation",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Dampening Field"
+      }
+    },
+    {
+      "id": "SCYVA_K_o_v",
+      "label": "Don't interrupt",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Vindictive"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_o_v_c",
+      "label": "Can interrupt",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Vindictive"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "SCYVA_K_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SCYVA_K_p4_a_c",
+      "label": "Atomic",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "SCYVA_K_p4_c"
+      }
+    }
+  ]
+}

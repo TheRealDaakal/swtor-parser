@@ -1,0 +1,101 @@
+{
+  "id": "karagga",
+  "name": "Karagga the Unyielding",
+  "boss_names": [
+    "Karagga the Unyielding"
+  ],
+  "boss_npc_ids": [
+    "2740043105959936",
+    "2761191524925440",
+    "2761200114860032",
+    "2761208704794624"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "unstable_energy_cs",
+      "label": "Unstable Energy",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "unstable_energy",
+      "label": "Unstable Energy",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unstable Energy"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "burning_oil",
+      "label": "Burning Oil",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Burning Oil"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "mouse_droids",
+      "label": "Mouse Droids",
+      "duration_seconds": 59.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2778268314894336"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "tunneling_drill",
+      "label": "Tunneling Drill",
+      "duration_seconds": 24.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Tunneling Drill"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "cluster_bombs",
+      "label": "Cluster Bombs",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Cluster Bombs"
+      },
+      "cancel_trigger": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "cluster_bombs_soon",
+      "label": "Cluster Bombs Soon",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "cluster_bombs"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "cluster_bombs"
+      }
+    }
+  ]
+}

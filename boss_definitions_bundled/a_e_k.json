@@ -1,0 +1,824 @@
+{
+  "id": "a&e_k",
+  "name": "AIVELA & ESNE",
+  "boss_names": [
+    "AIVELA",
+    "Nexus",
+    "ESNE"
+  ],
+  "boss_npc_ids": [
+    "4088525397950464",
+    "4088538282852352",
+    "4101564918661120"
+  ],
+  "phases": [
+    {
+      "id": "a&e_k_p1",
+      "name": "Phase 1"
+    },
+    {
+      "id": "a&e_k_p2",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_applied",
+            "keyword": "Emergency Shielding"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "a&e_k_p2_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "a&e_k_p2_mm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_p3",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "timer_started",
+        "timer_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_p4",
+      "name": "Phase 4",
+      "start_trigger": {
+        "type": "timer_started",
+        "timer_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_phase_5",
+      "name": "Phase 5",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "entity_death",
+            "selector": [
+              4101564918661120
+            ]
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Empowered Shield"
+          }
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "a&e_k_rad",
+      "name": "Radiance Stacks",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "a&e_k_p5_gcd_c",
+      "name": "Phase 2 initial GCD check",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "a&e_k_p5_gcd_c1"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "a&e_k_p5_gcd_c2"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "a&e_k_a_p3_c",
+      "name": "AIVELA p3 check",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 72.0,
+        "selector": [
+          "AIVELA"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "a&e_k_e_p3_c",
+      "name": "ESNE p3 check",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 72.0,
+        "selector": [
+          "ESNE"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "a&e_k_a_p4_c",
+      "name": "AIVELA p4 check",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 42.7,
+        "selector": [
+          "AIVELA"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "a&e_k_e_p4_c",
+      "name": "ESNE p4 check",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 42.7,
+        "selector": [
+          "ESNE"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "a&e_k_p2_vm",
+      "label": "Phase 2",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Nexus"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_p2_mm",
+      "label": "Phase 2",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 33.3,
+        "selector": [
+          "Nexus"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_cf_1st",
+      "label": "Beams",
+      "duration_seconds": 39.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p2"
+      }
+    },
+    {
+      "id": "a&e_k_cf_mm",
+      "label": "Beams",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_mm"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p2"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_cf_vm",
+      "label": "Beams",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_vm"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p2"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_jmp_1st",
+      "label": "Jump",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p2"
+      }
+    },
+    {
+      "id": "a&e_k_inv",
+      "label": "Invulnerability Ends",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_jmp_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_jmp"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p2"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_jmp",
+      "label": "Jump",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_inv"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p2"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_syn_1st",
+      "label": "Synergy Protocol",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_syn_e",
+      "label": "Synergy Ends",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "System Shock"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_syn",
+      "label": "Synergy Protocol",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_syn_e"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_inv_p2",
+      "label": "Invulnerability Ends",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      }
+    },
+    {
+      "id": "a&e_k_cf_p3_1st",
+      "label": "Beam",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p3"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_cf_p3_mm",
+      "label": "Beam",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_p3_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_p3_mm"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_cf_p3_vm",
+      "label": "Beam",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_p3_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_cf_p3_vm"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_rad_h",
+      "label": "High Stacks",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "a&e_k_rad"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_rad",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p4_1st",
+      "label": "Purification",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_pf_p4_1st_vm",
+      "label": "Purification",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_pf_gcd_init_p4",
+      "label": "Repository Cache p4 initial GCD",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_pf_gcd_p4",
+      "label": "Purification GCD",
+      "duration_seconds": 27.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_pf_gcd_init_p4"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_pf_p4_cd"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_p5_gcd_c1"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_pf_p5_cd"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_pf_gcd_init_p4_vm"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_p5_gcd_c2"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "a&e_k_pf_p5_cd_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_pf_p4_cd",
+      "label": "Purification Cooldown",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p4"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_phase_5"
+      }
+    },
+    {
+      "id": "a&e_k_pf_p4",
+      "label": "Purification",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_p4"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_phase_5"
+      }
+    },
+    {
+      "id": "a&e_k_a_es",
+      "label": "AIVELA Shield",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Empowered Shield"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          4088525397950464
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_e_es",
+      "label": "ESNE Shield",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Empowered Shield"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          4088538282852352
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_p5_gcd_c1",
+      "label": "GCD check p5 1st trigger",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_phase_5"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "a&e_k_pf_gcd_p4",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_p5_gcd_c2",
+      "label": "GCD check p5 2nd trigger",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_phase_5"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p5_cd",
+      "label": "Purification Cooldown",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p5",
+      "label": "Purification",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_gcd_init_p4_vm",
+      "label": "Repository Cache p4 initial GCD",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_p4"
+      }
+    },
+    {
+      "id": "a&e_k_pf_p5_1st_c1",
+      "label": "Purification",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "a&e_k_phase_5"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "a&e_k_pf_gcd_p4",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p5_1st_c2",
+      "label": "Purification",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "a&e_k_phase_5"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p5_cd_vm",
+      "label": "Purification Cooldown",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_pf_p5_vm",
+      "label": "Purification",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "a&e_k_pf_gcd_p4"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_p5_gcd_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_p3",
+      "label": "Phase 3",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "a&e_k_a_p3_c",
+            "value": 1
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "a&e_k_e_p3_c",
+            "value": 1
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_a_p3_c",
+          "operator": "gte",
+          "value": 1
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_e_p3_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "a&e_k_p4",
+      "label": "Phase 4",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "a&e_k_a_p4_c",
+            "value": 1
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "a&e_k_e_p4_c",
+            "value": 1
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_a_p4_c",
+          "operator": "gte",
+          "value": 1
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "a&e_k_e_p4_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    }
+  ]
+}

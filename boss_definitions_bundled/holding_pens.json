@@ -1,0 +1,8 @@
+{
+  "id": "holding_pens",
+  "name": "Lights Out",
+  "boss_names": ["Czerka Pursuit Droid", "Czerka Warden Droid"],
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ]
+}

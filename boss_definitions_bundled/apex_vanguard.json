@@ -1,0 +1,585 @@
+{
+  "id": "apex_vanguard",
+  "name": "Apex Vanguard",
+  "boss_names": [
+    "Apex Vanguard"
+  ],
+  "boss_npc_ids": [
+    "4282872668094464",
+    "4350020186800128"
+  ],
+  "phases": [
+    {
+      "id": "apex_start",
+      "name": "Apex Start"
+    },
+    {
+      "id": "apex_transformer",
+      "name": "Transformer",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Power Transformer"
+        ]
+      },
+      "end_trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Power Transformer"
+        ]
+      }
+    },
+    {
+      "id": "apex_phase_1",
+      "name": "Apex Phase 1",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "apex_transformer"
+      },
+      "end_trigger": {
+        "type": "hp_below",
+        "percent": 59.0
+      }
+    },
+    {
+      "id": "apex_main_2",
+      "name": "Apex Phase 2",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "apex_phase_1"
+      }
+    },
+    {
+      "id": "apex_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Last Ditch Effort"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "apex_voltinator_active",
+      "name": "Voltinator Active",
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Charged Barrier"
+      },
+      "decrement_on": {
+        "type": "effect_removed",
+        "keyword": "Charged Barrier"
+      }
+    },
+    {
+      "id": "apex_vanguard_zone_ready",
+      "name": "zone ready",
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "apex_vanguard_zone_defense"
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "Darkness Overdrive"
+          }
+        ]
+      },
+      "decrement_on": {
+        "type": "ability_cast",
+        "keyword": "Zone Defense"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets_ready",
+      "name": "rockets ready",
+      "increment_on": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_rockets_cd_not_displayed"
+      },
+      "reset_on": {
+        "type": "ability_cast",
+        "keyword": "Rocket Salvo"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "apex_photo_hp",
+      "label": "Photogensis HP threshold",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 94.0,
+        "selector": [
+          "Apex Vanguard"
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_acid",
+      "label": "Acid Blast",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "apex_vanguard_acid_blast",
+      "label": "Acid Blast",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acid Blast"
+      }
+    },
+    {
+      "id": "apex_vanguard_contagion",
+      "label": "Contagion",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Contagion"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_contagion",
+      "label": "Contagion",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "apex_vanguard_2nd_deluge",
+      "label": "Acid Deluge",
+      "duration_seconds": 122.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acid Deluge"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_bloodlust",
+      "label": "Bloodlust",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Darkness Overdrive"
+      }
+    },
+    {
+      "id": "apex_vanguard_bloodlust",
+      "label": "Bloodlust",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Blood Lust"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_red_venom",
+      "label": "Red Venom",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Darkness Overdrive"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_mass_target",
+      "label": "Mass Target Lock",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_1st_red_venom"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_voltinator",
+      "label": "Voltinator",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_1st_mass_target"
+      }
+    },
+    {
+      "id": "apex_vanguard_venom_or_target",
+      "label": "Venom OR Target",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_1st_voltinator"
+      }
+    },
+    {
+      "id": "apex_vanguard_first_venom_or_target_part_2",
+      "label": "Venom OR Target Part 2",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "apex_vanguard_venom_or_target"
+          },
+          {
+            "type": "hp_below",
+            "percent": 59.0,
+            "selector": [
+              "Apex Vanguard"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_venom_or_volt_split",
+      "label": "Venom OR Voltinator",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_first_venom_or_target_part_2"
+      }
+    },
+    {
+      "id": "apex_vanguard_venom_or_volt_part_2",
+      "label": "Venom OR Voltinator",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_venom_or_volt_split"
+      }
+    },
+    {
+      "id": "apex_vanguard_target_or_volt_split",
+      "label": "Target OR Volt",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_venom_or_volt_part_2"
+      }
+    },
+    {
+      "id": "apex_vanguard_target_or_volt_part_2",
+      "label": "Target OR Volt",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_target_or_volt_split"
+      }
+    },
+    {
+      "id": "apex_vanguard_ultraviolence",
+      "label": "ULTRAVIOLENCE",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Ultra Violence"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_deluge",
+      "label": "Acid Deluge",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_target_or_volt_part_2"
+      }
+    },
+    {
+      "id": "apex_vanguard_zone_defense",
+      "label": "Zone Defense",
+      "duration_seconds": 325.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Zone Defense"
+      }
+    },
+    {
+      "id": "apex_vanguard_zone",
+      "label": "Zone defense",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "[handler_emp]"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "apex_vanguard_zone_ready",
+          "operator": "eq",
+          "value": 1
+        }
+      ],
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Caustic Fumes"
+      }
+    },
+    {
+      "id": "apex_vanguard_target_lock_p3",
+      "label": "Mass Target Lock",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acid Deluge"
+      }
+    },
+    {
+      "id": "apex_vanguard_voltinator_p3",
+      "label": "Voltinator",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_target_lock_p3"
+      }
+    },
+    {
+      "id": "apex_vanguard_red_venom_p4",
+      "label": "Red Venom",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_voltinator_p3"
+      }
+    },
+    {
+      "id": "apex_vanguard_target_and_venom",
+      "label": "Target AND Venom",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "apex_vanguard_red_venom_p4"
+          },
+          {
+            "type": "hp_below",
+            "percent": 16.0,
+            "selector": [
+              "Apex Vanguard"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_target_lock_p4",
+      "label": "Mass Target Lock",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_target_and_venom"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_rockets",
+      "label": "Rocket salvo",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets",
+      "label": "Rocket salvo",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rocket Salvo"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Photogenesis"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Caustic Fumes"
+          }
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_rocket_after_photogenesis",
+      "label": "Rocket salvo",
+      "duration_seconds": 12.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Darkness Overdrive"
+      }
+    },
+    {
+      "id": "apex_vanguard_rocket_after_volt",
+      "label": "Rocket salvo",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Charged Barrier"
+      },
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Mass Target Lock"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets_cd_not_displayed",
+      "label": "Rockets cd (not displayed)",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rocket Salvo"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets_after_zone",
+      "label": "Rocket salvo",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Zone Defense"
+      },
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Caustic Fumes"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets_after_broken_mass_or_zone",
+      "label": "Rocket salvo",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Catastrophic Overload"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "apex_vanguard_zone_ready",
+          "operator": "eq",
+          "value": 0
+        },
+        {
+          "type": "any_of",
+          "conditions": [
+            {
+              "type": "timer_time_remaining",
+              "timer_id": "apex_vanguard_rockets_cd_not_displayed",
+              "operator": "lt",
+              "value": 10.0
+            },
+            {
+              "type": "counter_compare",
+              "counter_id": "apex_vanguard_rockets_ready",
+              "operator": "eq",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "apex_voltinator_active",
+          "operator": "eq",
+          "value": 0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Caustic Fumes"
+      }
+    },
+    {
+      "id": "apex_vanguard_rockets_after_broken_mass_or_zone_alt",
+      "label": "Rocket salvo",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Catastrophic Overload"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "apex_vanguard_zone_ready",
+          "operator": "eq",
+          "value": 0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "apex_vanguard_rockets_cd_not_displayed",
+          "operator": "gte",
+          "value": 10.0
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "apex_voltinator_active",
+          "operator": "eq",
+          "value": 0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Caustic Fumes"
+      }
+    },
+    {
+      "id": "apex_vanguard_1st_flare",
+      "label": "1st Flare",
+      "duration_seconds": 2.5,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          4297557161279488
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_flare",
+      "label": "Flare Ends",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Ignite Neutralizer Flare"
+      }
+    },
+    {
+      "id": "apex_vanguard_flares_crafted",
+      "label": "Flares ready!",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Using"
+      }
+    },
+    {
+      "id": "apex_vanguard_bombardment",
+      "label": "Bombardment",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Mass Target Lock",
+        "target": "local_player"
+      },
+      "cancel_trigger": {
+        "type": "effect_removed",
+        "keyword": "Mass Target Lock"
+      }
+    },
+    {
+      "id": "apex_vanguard_last_ditch",
+      "label": "Last ditch",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "apex_burn"
+      }
+    }
+  ]
+}

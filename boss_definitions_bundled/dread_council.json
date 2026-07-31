@@ -1,0 +1,676 @@
+{
+  "id": "dread_council",
+  "name": "Dread Council",
+  "boss_names": [
+    "Dread Master Bestia",
+    "Dread Master Tyrans",
+    "Dread Master Calphayus",
+    "Dread Master Raptus",
+    "Dread Master Brontes"
+  ],
+  "boss_npc_ids": [
+    "3273984850264064",
+    "3273989145231360",
+    "3273993440198656",
+    "3273997735165952",
+    "3274019210002432"
+  ],
+  "phases": [
+    {
+      "id": "dread_council_p2_brontes_styrak",
+      "name": "Phase 2 (Transition)"
+    },
+    {
+      "id": "dread_council_p1",
+      "name": "P1 Council",
+      "start_trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dread_council_p2",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3274019210002432,
+          3303830578003968
+        ]
+      }
+    },
+    {
+      "id": "dread_council_p3",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_p3_t"
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "dread_council_p3_c",
+            "value": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_p4",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Dread Master Bestia",
+          "Dread Master Tyrans",
+          "Dread Master Calphayus",
+          "Dread Master Raptus"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "dread_council_bes_se",
+      "name": "Bestia Siphon Energy",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Bestia"
+        ]
+      },
+      "reset_on": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_se_bes"
+      }
+    },
+    {
+      "id": "dread_council_cal_se",
+      "name": "Calphayus Siphon Energy",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      },
+      "reset_on": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_se_cal"
+      }
+    },
+    {
+      "id": "dread_council_rap_se",
+      "name": "Raptus Siphon Energy",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Raptus"
+        ]
+      },
+      "reset_on": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_se_rap"
+      }
+    },
+    {
+      "id": "dread_council_tyr_se",
+      "name": "Tyrans Siphon Energy",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Tyrans"
+        ]
+      },
+      "reset_on": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_se_tyr"
+      }
+    },
+    {
+      "id": "dread_council_p2_fail",
+      "name": "Phase 2 fail",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_cal"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_bes"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_rap"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_tyr"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "timer_started",
+        "timer_id": "dread_council_p1_reset"
+      }
+    },
+    {
+      "id": "dread_council_p3_c",
+      "name": "Phase 3 counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3303830578003968,
+          3274019210002432
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "dread_council_bts",
+      "name": "Bestia Tank Swap",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "dread_council_tyr_t",
+      "name": "Tyrans Target",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "dread_council_tyr_ts"
+      },
+      "reset_on": {
+        "type": "timer_started",
+        "timer_id": "dread_council_tyr_to"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "dread_council_enrage",
+      "label": "Enrage",
+      "duration_seconds": 700.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dread_council_calp",
+      "label": "Calphayus",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dread_council_rap",
+      "label": "Raptus",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_calp"
+      }
+    },
+    {
+      "id": "dread_council_tyr",
+      "label": "Tyrans",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_rap"
+      }
+    },
+    {
+      "id": "dread_council_1st_deathmark",
+      "label": "Death Mark",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dread_council_deathmarks",
+      "label": "Death Mark",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Imminent Death"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "dread_council_se_tyr"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "dread_council_p4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_1st_p3_deathmark",
+      "label": "Death Mark",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Fury of the Masters"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p4"
+      }
+    },
+    {
+      "id": "dread_council_se_cal",
+      "label": "Calphayus Heals",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_cal_se",
+        "value": 1
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      }
+    },
+    {
+      "id": "dread_council_se_bes",
+      "label": "Bestia Heals",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_bes_se",
+        "value": 1
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      }
+    },
+    {
+      "id": "dread_council_se_rap",
+      "label": "Raptus Heals",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_rap_se",
+        "value": 1
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      }
+    },
+    {
+      "id": "dread_council_se_tyr",
+      "label": "Tyrans Heals",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_tyr_se",
+        "value": 1
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      }
+    },
+    {
+      "id": "dread_council_p1_failed",
+      "label": "Phase 2 transition failed",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_p2_fail",
+        "value": 1
+      }
+    },
+    {
+      "id": "dread_council_p1_reset",
+      "label": "Phase 1 reset",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_cal"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_bes"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_rap"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_tyr"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "dread_council_se_cal",
+            "operator": "gte",
+            "value": 0.0
+          }
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "dread_council_se_bes",
+            "operator": "gte",
+            "value": 0.0
+          }
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "dread_council_se_rap",
+            "operator": "gte",
+            "value": 0.0
+          }
+        },
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "dread_council_se_tyr",
+            "operator": "gte",
+            "value": 0.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "dread_council_p3_t",
+      "label": "Masters Returns",
+      "duration_seconds": 150.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p3"
+      }
+    },
+    {
+      "id": "dread_council_p2_rea",
+      "label": "Reaches",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_p2_beam",
+      "label": "Beam",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 26.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_p2_tp",
+      "label": "Teleport",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3322870168027136"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "dread_council_p2_beam"
+      }
+    },
+    {
+      "id": "dread_council_p2_tp_1st",
+      "label": "Teleport",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2"
+      }
+    },
+    {
+      "id": "dread_council_p1_bts",
+      "label": "Bestia Tank Swap",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_bts",
+        "value": 3
+      }
+    },
+    {
+      "id": "dread_council_p1_bts_vm",
+      "label": "Bestia Tank Swap",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dread_council_bts",
+        "value": 5
+      }
+    },
+    {
+      "id": "dread_council_fp_1st",
+      "label": "Force Push",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "combat_start"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Fury of the Masters"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_fc",
+      "label": "Force Carry",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Force Cyclone"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "dread_council_se_cal"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "dread_council_p4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_fc_1st",
+      "label": "Force Carry + WW",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "combat_start"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Fury of the Masters"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_fc_1st_vm",
+      "label": "Force Carry",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_calp"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Fury of the Masters"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_cp_1st",
+      "label": "Crystal Projection",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_fc_1st"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_fc_1st_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_ww",
+      "label": "Whirlwind",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Whirlwind"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "dread_council_se_rap"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "dread_council_p4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_ds",
+      "label": "Deadly Slash",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Deadly Slash"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "dread_council_se_rap"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "dread_council_p4"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_dm_1st_vm",
+      "label": "Death Mark",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_tyr"
+      }
+    },
+    {
+      "id": "dread_council_ww_1st_vm",
+      "label": "Whirlwind",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dread_council_se_rap"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Fury of the Masters"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dread_council_dm_d",
+      "label": "Cleanse Death Mark",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Imminent Death",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "dread_council_p2_bsa",
+      "label": "Brontes & Styrak spawns",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dread_council_p2_brontes_styrak"
+      }
+    }
+  ]
+}

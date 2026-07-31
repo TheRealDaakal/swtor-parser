@@ -1,0 +1,543 @@
+{
+  "id": "TYTT_K",
+  "name": "TYTH",
+  "boss_names": [
+    "TYTH"
+  ],
+  "boss_npc_ids": [
+    "4078415044935680",
+    "4078419339902976",
+    "4078423634870272",
+    "4078427929837568"
+  ],
+  "phases": [
+    {
+      "id": "TYTT_K_p1",
+      "name": "Phase 1"
+    },
+    {
+      "id": "TYTT_K_p2",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_p2_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_p2_mm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_p3",
+      "name": "Phase 3 (Burn)",
+      "start_trigger": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_p3"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "TYTT_K_a_w_c",
+      "name": "Adds Wave Counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "[spawn_adds]"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_p2_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_p2_mm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_rage_counter",
+      "name": "Rage Counter",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "TYTT_K_l_r_s",
+      "name": "Low Rage State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_l_r"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_m_r"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_h_r"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_m_r_s",
+      "name": "Medium Rage State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_m_r"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_l_r"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_h_r"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_h_r_s",
+      "name": "High Rage State",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_h_r"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_l_r"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_m_r"
+          }
+        ]
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "TYTT_K_inv_1st_mm",
+      "label": "Inversion",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "TYTT_K_p1"
+      }
+    },
+    {
+      "id": "TYTT_K_p2_vm",
+      "label": "Phase 2",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "TYTH"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "TYTT_K_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_p2_mm",
+      "label": "Phase 2",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "TYTH"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "TYTT_K_p1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_adds_d_mm",
+      "label": "Adds (Double)",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "TYTT_K_a_w_c",
+        "value": 1
+      }
+    },
+    {
+      "id": "TYTT_K_adds_d_vm",
+      "label": "Adds (Double)",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "TYTT_K_a_w_c",
+        "value": 1
+      }
+    },
+    {
+      "id": "TYTT_K_adds_mm",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "TYTT_K_a_w_c"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_a_w_c",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_adds_vm",
+      "label": "Adds",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "TYTT_K_a_w_c"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_a_w_c",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_adds_s_mm",
+      "label": "Adds Setup",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_d_mm"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_mm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_adds_s_vm_p1",
+      "label": "Adds Setup",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_d_vm"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_vm"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "any_of",
+          "conditions": [
+            {
+              "type": "phase_active",
+              "phase_ids": [
+                "TYTT_K_p1"
+              ]
+            },
+            {
+              "type": "all_of",
+              "conditions": [
+                {
+                  "type": "phase_active",
+                  "phase_ids": [
+                    "TYTT_K_p2"
+                  ]
+                },
+                {
+                  "type": "counter_compare",
+                  "counter_id": "TYTT_K_a_w_c",
+                  "operator": "eq",
+                  "value": 0
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_adds_s_vm_p2",
+      "label": "Adds Setup",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_d_vm"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "TYTT_K_adds_vm"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "TYTT_K_p2"
+          ]
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_a_w_c",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_inv",
+      "label": "Inversion",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Inversion Resonance (Short Wave)"
+      }
+    },
+    {
+      "id": "TYTT_K_l_r",
+      "label": "Low Rage",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "TYTT_K_rage_counter"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_rage_counter",
+          "operator": "lt",
+          "value": 3
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_l_r_s",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_m_r",
+      "label": "Medium Rage",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "TYTT_K_rage_counter"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_rage_counter",
+          "operator": "gte",
+          "value": 3
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_rage_counter",
+          "operator": "lt",
+          "value": 6
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_m_r_s",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_h_r",
+      "label": "High Rage",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "TYTT_K_rage_counter"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_rage_counter",
+          "operator": "gte",
+          "value": 6
+        },
+        {
+          "type": "counter_compare",
+          "counter_id": "TYTT_K_h_r_s",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_ew",
+      "label": "Energy Wave",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Energy Wave"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_ew_i"
+      }
+    },
+    {
+      "id": "TYTT_K_sw",
+      "label": "Sweep",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Sweep"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_ew_i"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "TYTT_K_sw_i"
+          }
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_p3",
+      "label": "Phase 3 (Burn)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "TYTH"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "TYTT_K_p2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_ew_i",
+      "label": "Energy Wave",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Inversion"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "TYTT_K_ew",
+            "operator": "gte",
+            "value": 9.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "TYTT_K_sw_i",
+      "label": "Sweep",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Inversion"
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "TYTT_K_ew",
+          "operator": "gte",
+          "value": 9.1
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "TYTT_K_ew_i"
+      }
+    },
+    {
+      "id": "TYTT_K_s_u",
+      "label": "Shield UP",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Aivela's Grace"
+      }
+    },
+    {
+      "id": "TYTT_K_s_d",
+      "label": "Shield Down",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Aivela's Grace"
+      }
+    }
+  ]
+}

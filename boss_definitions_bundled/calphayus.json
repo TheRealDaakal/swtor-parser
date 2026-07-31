@@ -1,0 +1,326 @@
+{
+  "id": "calphayus",
+  "name": "Calphayus",
+  "boss_names": [
+    "Dread Master Calphayus"
+  ],
+  "boss_npc_ids": [
+    "3273946195558400",
+    "3284949901770752",
+    "3284954196738048"
+  ],
+  "phases": [
+    {
+      "id": "calphayus_present",
+      "name": "Present"
+    },
+    {
+      "id": "calphayus_p2t",
+      "name": "Tree phase transition",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_p3t",
+      "name": "Crystal phase transition",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_p2",
+      "name": "Tree Phase",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Visions of the Future"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "calphayus_p2t"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "calphayus_main",
+      "name": "Present",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3300648007237632"
+      }
+    },
+    {
+      "id": "calphayus_p3",
+      "name": "Crystal Phase",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Visions of the Future"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "calphayus_p3t"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "calphayus_p4",
+      "name": "Final Phase",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "calphayus_p3c",
+      "name": "Crystal Phase End Counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Temporal Disruption"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "calphayus_p3c_s",
+      "name": "Crystal Phase End Counter Safety",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3285422348173312
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "calphayus_enrage",
+      "label": "Enrage",
+      "duration_seconds": 540.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "calphayus_in_1st",
+      "label": "Inevitability + Distorted Perceptions",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 97.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_tree",
+      "label": "Tree",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "calphayus_p2"
+      }
+    },
+    {
+      "id": "calphayus_p_adds1",
+      "label": "Adds (Past)",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "calphayus_tree"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "calphayus_tree_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calphayus_p_adds2",
+      "label": "Adds (Past)",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_p_adds1"
+      }
+    },
+    {
+      "id": "calphayus_p_adds3",
+      "label": "Adds (Past)",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_p_adds2"
+      }
+    },
+    {
+      "id": "calphayus_tree_vm",
+      "label": "Tree",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "calphayus_p2"
+      }
+    },
+    {
+      "id": "calphayus_ps",
+      "label": "Plant Seed",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Pure Seed"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "calphayus_p2_tp"
+          },
+          {
+            "type": "any_phase_change"
+          }
+        ]
+      }
+    },
+    {
+      "id": "calphayus_dp_m",
+      "label": "Distorted Perceptions",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "calphayus_main"
+      }
+    },
+    {
+      "id": "calphayus_in_m",
+      "label": "Inevitability",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "calphayus_main"
+      }
+    },
+    {
+      "id": "calphayus_p2_tp",
+      "label": "Teleport",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Pure Seed"
+      }
+    },
+    {
+      "id": "calphayus_p3_tp",
+      "label": "Teleport",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "calphayus_p3c",
+            "value": 3
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "calphayus_p3c_s",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "calphayus_p4_add",
+      "label": "Guardian of Knowledge",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          3350598476890112
+        ]
+      }
+    },
+    {
+      "id": "calphayus_p4_he",
+      "label": "Seed of knowledge expires",
+      "duration_seconds": 25.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Weight of Knowledge"
+      },
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "Mental Exhaustion"
+      }
+    },
+    {
+      "id": "calphayus_p4_hd",
+      "label": "Holocron Drop",
+      "duration_seconds": 6.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Mental Exhaustion"
+      }
+    },
+    {
+      "id": "calphayus_p4_ve",
+      "label": "Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Backlash"
+      }
+    },
+    {
+      "id": "calphayus_p2_def",
+      "label": "Dread Defiler",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3319155021316096"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "any_phase_change"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Intangible Vision"
+          }
+        ]
+      }
+    }
+  ]
+}

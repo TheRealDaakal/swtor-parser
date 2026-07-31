@@ -1,0 +1,99 @@
+{
+  "id": "zorn_toth",
+  "name": "Zorn & Toth",
+  "boss_names": ["Zorn", "Toth", "Handler Murdok"],
+  "phases": [
+    { "id": "zt_main", "name": "Main" },
+    {
+      "id": "zorn_toth_murdok",
+      "name": "Handler Murdok",
+      "start_trigger": { "type": "npc_appears", "selector": ["Handler Murdok"] }
+    }
+  ],
+  "timers": [
+    {
+      "id": "zorn_toth_drouks_enrage",
+      "label": "Drouks Enrage",
+      "duration_seconds": 310.0,
+      "warn_seconds_before": 30.0,
+      "trigger": { "type": "combat_start" },
+      "cancel_trigger": { "type": "phase_entered", "phase_id": "zorn_toth_murdok" }
+    },
+    {
+      "label": "Shriek",
+      "duration_seconds": 45.0,
+      "trigger": { "type": "ability_cast", "keyword": "Shriek" }
+    },
+    {
+      "label": "Baradium Heave",
+      "duration_seconds": 13.0,
+      "trigger": { "type": "effect_applied", "keyword": "Baradium Heave" }
+    },
+    {
+      "label": "Ground Shatter",
+      "duration_seconds": 20.0,
+      "trigger": { "type": "effect_applied", "keyword": "Ground Shatter" }
+    },
+    {
+      "label": "Smash",
+      "duration_seconds": 15.0,
+      "trigger": { "type": "ability_cast", "keyword": "Smash" }
+    },
+    {
+      "label": "Use Medpack!",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "effect_applied", "keyword": "Baradium Poisoning", "target": "local_player" }
+    },
+    {
+      "label": "Weakened",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "effect_applied", "keyword": "Weakened", "target": "local_player" }
+    },
+    {
+      "label": "Fearful",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "effect_applied", "keyword": "Fearful", "target": "local_player" }
+    },
+    {
+      "label": "Jump",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          { "type": "hp_below", "percent": 90.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 70.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 50.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 30.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 10.0, "selector": ["Toth"] }
+        ]
+      }
+    },
+    {
+      "label": "Berserk",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          { "type": "hp_below", "percent": 80.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 40.0, "selector": ["Toth"] }
+        ]
+      }
+    },
+    {
+      "label": "Shatter + Sonic",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          { "type": "hp_below", "percent": 60.0, "selector": ["Toth"] },
+          { "type": "hp_below", "percent": 20.0, "selector": ["Toth"] }
+        ]
+      }
+    },
+    {
+      "label": "Soft Enrage",
+      "duration_seconds": 3.0,
+      "trigger": { "type": "hp_below", "percent": 5.0, "selector": ["Toth"] }
+    }
+  ]
+}

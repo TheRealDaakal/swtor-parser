@@ -1,0 +1,31 @@
+{
+  "id": "dreadful",
+  "name": "Dreadful Entity",
+  "boss_names": [
+    "Dreadful Entity"
+  ],
+  "boss_npc_ids": [
+    "3057806261354496"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "dreadful_awakening",
+      "label": "Dreadful Awakening",
+      "duration_seconds": 35.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "combat_start"
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "Dreadful Awakening"
+          }
+        ]
+      }
+    }
+  ]
+}

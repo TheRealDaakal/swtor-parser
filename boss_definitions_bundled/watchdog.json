@@ -1,0 +1,255 @@
+{
+  "id": "watchdog",
+  "name": "Watchdog",
+  "boss_names": [
+    "Watchdog"
+  ],
+  "boss_npc_ids": [
+    "4466177577320448",
+    "4494700455133184"
+  ],
+  "phases": [
+    {
+      "id": "wd_main",
+      "name": "Watchdog"
+    },
+    {
+      "id": "wd_stalker",
+      "name": "Stalker Protocol",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Stalker Protocol"
+      }
+    },
+    {
+      "id": "wd_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Hair Trigger Protocol"
+      }
+    },
+    {
+      "id": "wd_beams",
+      "name": "Polarized Beam",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Polarized Beam"
+      },
+      "end_trigger": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "watchdog_colors_going_out",
+      "name": "Colors going out",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "PMX4 Polarized Proximity Bombs"
+      }
+    },
+    {
+      "id": "wd_deguass_counter",
+      "name": "Degausses",
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      }
+    },
+    {
+      "id": "wd_beam_counter",
+      "name": "Polarized Beam",
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Polarized Beam"
+      },
+      "reset_on": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "watchdog_bombs_1st",
+      "label": "Color Bombs",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "watchdog_wd_protocol_cs",
+      "label": "Watchdog Protocol",
+      "duration_seconds": 28.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "watchdog_wd_protocol_swap",
+      "label": "WD Protocol Swap",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Watchdog Protocol"
+      }
+    },
+    {
+      "id": "watchdog_wd_protocol_end",
+      "label": "WD Protocol END",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_wd_protocol_swap"
+      }
+    },
+    {
+      "id": "watchdog_degauss_1st",
+      "label": "Degauss",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "warn_seconds_before": 3.0
+    },
+    {
+      "id": "watchdog_stalker_protocol",
+      "label": "Stalker Protocol",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "wd_deguass_counter",
+            "value": 1
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "wd_deguass_counter",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "watchdog_invert",
+      "label": "Invert",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Stalker Protocol"
+      }
+    },
+    {
+      "id": "watchdog_stalker_ending",
+      "label": "Stalker ending",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_invert"
+      }
+    },
+    {
+      "id": "watchdog_avoid_circles",
+      "label": "Avoid circles",
+      "duration_seconds": 34.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_stalker_protocol"
+      }
+    },
+    {
+      "id": "watchdog_bombs_2nd",
+      "label": "Color Bombs",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Invert"
+      }
+    },
+    {
+      "id": "watchdog_bombs_3rd",
+      "label": "Color Bombs",
+      "duration_seconds": 9.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "wd_deguass_counter",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "watchdog_degauss",
+      "label": "Degauss",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "wd_beam_counter",
+        "value": 4
+      },
+      "warn_seconds_before": 3.0
+    },
+    {
+      "id": "watchdog_1st_beam",
+      "label": "Beam",
+      "duration_seconds": 11.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "PMX4 Polarized Proximity Bombs"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "watchdog_colors_going_out",
+          "operator": "gt",
+          "value": 1
+        }
+      ],
+      "cancel_trigger": {
+        "type": "effect_applied",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4511772950134784"
+      }
+    },
+    {
+      "id": "watchdog_missiles_pb",
+      "label": "Missiles + Beam",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Polarized Beam"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "wd_beam_counter",
+          "operator": "lt",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": "watchdog_burn_soon",
+      "label": "Burn soon",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 18.0,
+        "selector": [
+          "Watchdog"
+        ]
+      }
+    }
+  ]
+}

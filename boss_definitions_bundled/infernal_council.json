@@ -1,0 +1,8 @@
+{
+  "id": "infernal_council",
+  "name": "Infernal Council",
+  "boss_names": ["Infernal Council"],
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ]
+}

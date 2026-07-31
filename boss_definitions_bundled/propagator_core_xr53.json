@@ -1,0 +1,229 @@
+{
+  "id": "propagator_core_xr53",
+  "name": "Propagator Core XR-53",
+  "boss_names": [
+    "Propagator Core XR-53",
+    "Defender Construct",
+    "Rampaging Construct",
+    "Supplicant Construct"
+  ],
+  "boss_npc_ids": [
+    "4824927605620736",
+    "4831241207545856",
+    "4831533265321984",
+    "4831722243883008",
+    "4847325860069376"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "propagator_core_xr53_lethal_strike",
+      "label": "Lethal Strike",
+      "duration_seconds": 31.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Lethal Strike"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_lethal_strike_rc",
+      "label": "Lethal Strike",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Recovery Protocol"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_cleanse_flood_add",
+      "label": "Cleanse Flood Add",
+      "duration_seconds": 28.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "propagator_core_xr53_lethal_strike_rc"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_clean_target",
+      "label": "Clean Duty",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Accompanied by the Collection Droid",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_collection_droid_selfdestruct",
+      "label": "Cleaning Ends",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Collecting"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_1st_prime_directive",
+      "label": "1st Prime Directive",
+      "duration_seconds": 120.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_prime_directive",
+      "label": "Prime Directive",
+      "duration_seconds": 90.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "propagator_core_xr53_cleanse_flood_add"
+      }
+    },
+    {
+      "id": "propagator_core_xr53_prepare_for_harvest",
+      "label": "Prepare for Harvest",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Prepare for Harvest"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_hungering_bite",
+      "label": "Hungering Bite",
+      "duration_seconds": 22.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4825975577640960"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_acidic_rocketry",
+      "label": "Acidic Rocketry",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acidic Rocketry"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_extraneous_expulsion",
+      "label": "Extraneous Expulsion",
+      "duration_seconds": 26.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Extraneous Expulsion"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_hunting_grounds",
+      "label": "Hunting Grounds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Hunting Grounds"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    },
+    {
+      "id": "propagator_core_xr53_prey_seeker",
+      "label": "Prey Seeker",
+      "duration_seconds": 46.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Prey Seeker"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_1st_prime_directive"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "propagator_core_xr53_prime_directive"
+          }
+        ]
+      }
+    }
+  ]
+}

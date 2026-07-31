@@ -1,0 +1,19 @@
+{
+  "id": "pylons",
+  "name": "Pylons",
+  "boss_names": [],
+  "encounter_trigger": {
+    "type": "ability_cast",
+    "keyword": "REPLACE_WITH_REAL_ABILITY_NAME"
+  },
+  "phases": [
+    { "id": "main", "name": "Main" }
+  ],
+  "timers": [
+    {
+      "label": "Next Wave",
+      "duration_seconds": 27.0,
+      "trigger": { "type": "npc_appears", "selector": ["Adds"] }
+    }
+  ]
+}

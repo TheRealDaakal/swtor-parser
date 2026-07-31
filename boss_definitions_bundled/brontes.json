@@ -1,0 +1,193 @@
+{
+  "id": "brontes",
+  "name": "Dread Master Brontes",
+  "boss_names": [
+    "Dread Master Brontes",
+    "Right Hand of Brontes",
+    "Left Hand of Brontes"
+  ],
+  "boss_npc_ids": [
+    "3273937605623808",
+    "3275625527771136",
+    "3277721471811584",
+    "3303529930293248",
+    "3303538520227840",
+    "3303547110162432"
+  ],
+  "phases": [
+    {
+      "id": "hands",
+      "name": "Hands"
+    },
+    {
+      "id": "reaches",
+      "name": "Reaches",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Reach of Brontes"
+        ]
+      }
+    },
+    {
+      "id": "kebus",
+      "name": "Kephess",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 99.9,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "clock",
+      "name": "Clock",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Droids"
+        ]
+      }
+    },
+    {
+      "id": "fingers",
+      "name": "Fingers",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "brontes_droid_deaths",
+        "value": 6
+      }
+    },
+    {
+      "id": "burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Fire and Forget"
+      }
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "brontes_clone_1st",
+      "label": "Kephess Clone",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 96.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "brontes_clone",
+      "label": "Kephess Clone",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[dispense_corrupted_clone]"
+      },
+      "cancel_trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_cant_clone"
+      }
+    },
+    {
+      "id": "brontes_cant_clone",
+      "label": "Brontes Below 52% - No More Clones",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 52.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kebus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "brontes_reaches_active",
+      "label": "Reaches Active",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "brontes_hand_deaths_p1",
+        "value": 2
+      }
+    },
+    {
+      "id": "brontes_hands_finger_spawn",
+      "label": "Finger Spawn",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Finger"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "hands"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "hands"
+      }
+    },
+    {
+      "id": "brontes_enraged_finger",
+      "label": "Enraged finger",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Focused Incineration"
+      }
+    },
+    {
+      "id": "brontes_fingers_knock_1st",
+      "label": "Fingers Knockback 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3303572879966208"
+      }
+    },
+    {
+      "id": "brontes_fingers_knock",
+      "label": "Fingers Knockback",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_fingers_knock_1st"
+      },
+      "cancel_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "finger_deaths",
+        "value": 6
+      }
+    },
+    {
+      "id": "brontes_arcing_assault",
+      "label": "Arcing Assault",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Arcing Assault"
+      }
+    }
+  ]
+}

@@ -1,0 +1,268 @@
+{
+  "id": "ip_cpt",
+  "name": "IP-CPT",
+  "boss_names": [
+    "IP-CPT"
+  ],
+  "boss_npc_ids": [
+    "4467247024177152",
+    "4494653210492928"
+  ],
+  "phases": [
+    {
+      "id": "ip_main",
+      "name": "IP-CPT",
+      "end_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Intrusion ID Unit"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "ip_cpt_bomb_phase",
+          "operator": "lte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "ip_bombs",
+      "name": "Bombs",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "ip_main"
+      },
+      "end_trigger": {
+        "type": "effect_removed",
+        "keyword": "Observation Mode"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "ip_cpt_bomb_phase",
+          "operator": "lt",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Disproportionate Intrusion Response"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "ip_cpt_stacks",
+      "name": "Stacks"
+    },
+    {
+      "id": "ip_cpt_intrusion_death",
+      "name": "Intrusion death",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Intrusion ID Unit"
+        ]
+      }
+    },
+    {
+      "id": "ip_cpt_big_bombs",
+      "name": "Big bombs",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Positional Adjustment Grenade: Major"
+      }
+    },
+    {
+      "id": "ip_cpt_bomb_phase",
+      "name": "Bomb Phases",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "phase_entered",
+        "phase_id": "ip_bombs"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "ip_cpt_big_grenade",
+      "label": "Grenade explosion",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Positional Adjustment Grenade: Major",
+        "target": "local_player"
+      },
+      "warn_seconds_before": 3.0
+    },
+    {
+      "id": "ip_cpt_back_wall_not_safe",
+      "label": "Back wall not safe",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "ip_cpt_big_bombs",
+            "value": 6
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "ip_cpt_big_bombs",
+            "value": 18
+          }
+        ]
+      }
+    },
+    {
+      "id": "ip_cpt_side_wall_not_safe",
+      "label": "Side wall not safe",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "counter_reaches",
+            "counter_id": "ip_cpt_big_bombs",
+            "value": 8
+          },
+          {
+            "type": "counter_reaches",
+            "counter_id": "ip_cpt_big_bombs",
+            "value": 16
+          }
+        ]
+      }
+    },
+    {
+      "id": "ip_cpt_exit_not_safe",
+      "label": "Exit not safe",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "ip_cpt_big_bombs",
+        "value": 10
+      }
+    },
+    {
+      "id": "ip_cpt_entrance_not_safe",
+      "label": "Entrance not safe",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "ip_cpt_big_bombs",
+        "value": 20
+      }
+    },
+    {
+      "id": "ip_cpt_at_4_stacks",
+      "label": "At 4 stacks!",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "ip_cpt_stacks",
+        "value": 4
+      }
+    },
+    {
+      "id": "ip_cpt_1st_intrusion_units",
+      "label": "Intrusion Units",
+      "duration_seconds": 68.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "ip_cpt_big_bombs",
+        "value": 1
+      }
+    },
+    {
+      "id": "ip_cpt_1st_droids",
+      "label": "Droids",
+      "duration_seconds": 16,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_1st_intrusion_units"
+      }
+    },
+    {
+      "id": "ip_cpt_2nd_intrusion_units",
+      "label": "Intrusion Units",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_1st_intrusion_units"
+      }
+    },
+    {
+      "id": "ip_cpt_3rd_intrusion_units",
+      "label": "Intrusion Units",
+      "duration_seconds": 101.5,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_2nd_intrusion_units"
+      }
+    },
+    {
+      "id": "ip_cpt_4th_intrusion_units",
+      "label": "Intrusion Units",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_3rd_intrusion_units"
+      }
+    },
+    {
+      "id": "ip_cpt_2nd_droids",
+      "label": "Droids",
+      "duration_seconds": 6.5,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_4th_intrusion_units"
+      }
+    },
+    {
+      "id": "ip_cpt_leave_consoles",
+      "label": "Leave consoles",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_bomb_explosion"
+      }
+    },
+    {
+      "id": "ip_cpt_boss_returning",
+      "label": "Boss returning",
+      "duration_seconds": 44.5,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "ip_cpt_2nd_intrusion_units"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "ip_cpt_4th_intrusion_units"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ip_cpt_boss_returning_burn_start",
+      "label": "Burn start",
+      "duration_seconds": 102.5,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_4th_intrusion_units"
+      }
+    }
+  ]
+}

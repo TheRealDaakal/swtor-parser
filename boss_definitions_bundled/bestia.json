@@ -1,0 +1,458 @@
+{
+  "id": "bestia",
+  "name": "Bestia",
+  "boss_names": [
+    "Dread Master Bestia",
+    "Dread Monster"
+  ],
+  "boss_npc_ids": [
+    "3273941900591104",
+    "3291675820556288",
+    "3303581469900800",
+    "3303585764868096",
+    "3303590059835392"
+  ],
+  "phases": [
+    {
+      "id": "bestisa_main",
+      "name": "Bestia"
+    },
+    {
+      "id": "bestia_plus_monsters",
+      "name": "Bestia and Monsters",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "hp_below",
+            "percent": 60.0,
+            "selector": [
+              "Dread Master Bestia"
+            ]
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "bestia_phase_3"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bestia_phase_3_vm",
+      "name": "Bestia and Monsters",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "hp_below",
+            "percent": 50.0,
+            "selector": [
+              "Dread Master Bestia"
+            ]
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "bestia_phase_3_vm"
+          }
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "bestia_a_c",
+      "name": "Assault Count",
+      "initial_value": 0
+    },
+    {
+      "id": "bestia_a_d",
+      "name": "Adds Death Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3292079547482112,
+          3291675820556288,
+          3292083842449408
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "bestia_tac",
+      "name": "Tentacles Alive Counter",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "npc_appears",
+        "selector": [
+          3292083842449408
+        ]
+      },
+      "decrement_on": {
+        "type": "entity_death",
+        "selector": [
+          3292083842449408
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "bestia_coming_down",
+      "label": "Bestia Enters Fight",
+      "duration_seconds": 120.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "bestisa_main"
+      }
+    },
+    {
+      "id": "bestia_dread_strike",
+      "label": "Dread Strike",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Dread Strike"
+      }
+    },
+    {
+      "id": "bestia_tentacle_cs",
+      "label": "Tentacle Spawn",
+      "duration_seconds": 16.5,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bestia_dread_monster",
+      "label": "Dread Monster Spawn",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_tentacle_cs"
+      }
+    },
+    {
+      "id": "bestia_cs",
+      "label": "Combusting Seed",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[ranged_aoe_targeter]"
+      }
+    },
+    {
+      "id": "bestia_dp",
+      "label": "Dread Pool",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[ranged_aoe_targeter]"
+      }
+    },
+    {
+      "id": "bestia_ds",
+      "label": "Dread Scream",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "bestia_a_c",
+        "value": 2
+      }
+    },
+    {
+      "id": "bestia_sd",
+      "label": "Swelling Despair",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Swelling Despair"
+      }
+    },
+    {
+      "id": "bestia_sd_swap",
+      "label": "Tank Swap",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Swelling Despair"
+      }
+    },
+    {
+      "id": "bestia_te",
+      "label": "Tentacle Explosion",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "bestisa_main"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "bestia_tac",
+          "operator": "gte",
+          "value": 1
+        }
+      ],
+      "cancel_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "bestia_tac",
+        "value": 0
+      }
+    },
+    {
+      "id": "bestia_add3",
+      "label": "Larva",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_dread_monster"
+      }
+    },
+    {
+      "id": "bestia_add4",
+      "label": "Dread Monster",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add3"
+      }
+    },
+    {
+      "id": "bestia_add5",
+      "label": "Tentacle",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add4"
+      }
+    },
+    {
+      "id": "bestia_add6",
+      "label": "Larva",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add5"
+      }
+    },
+    {
+      "id": "bestia_phase_3",
+      "label": "Monsters",
+      "duration_seconds": 180.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "bestia_plus_monsters"
+      }
+    },
+    {
+      "id": "bestia_phase_3_vm",
+      "label": "Monsters",
+      "duration_seconds": 240.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "bestia_phase_3_vm"
+      }
+    },
+    {
+      "id": "bestia_se",
+      "label": "Soft Enrage",
+      "duration_seconds": 480.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "bestia_se_adds",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "bestia_se"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "bestia_se_adds"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bestia_add7",
+      "label": "Monster + Larva",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "bestia_plus_monsters"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "bestia_phase_3_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bestia_add8",
+      "label": "Monster + Tentacle",
+      "duration_seconds": 49.5,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "bestia_plus_monsters"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "bestia_phase_3_vm"
+          }
+        ]
+      }
+    },
+    {
+      "id": "bestia_add9",
+      "label": "Monster + Larva",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add8"
+      }
+    },
+    {
+      "id": "bestia_add10",
+      "label": "Monster + Tentacle",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add9"
+      }
+    },
+    {
+      "id": "bestia_add11",
+      "label": "Monster + Larva",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add10"
+      }
+    },
+    {
+      "id": "bestia_add12",
+      "label": "Larva + Tentacle",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_add11"
+      }
+    },
+    {
+      "id": "bestia_cs_d",
+      "label": "Seed Explosion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Combusting Seed",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "bestia_pm1",
+      "label": "Pulverize: Monstrosity 1",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverize"
+      }
+    },
+    {
+      "id": "bestia_pm2",
+      "label": "Pulverize: Monstrosity 2",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverize"
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm1",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "id": "bestia_pm3",
+      "label": "Pulverize: Monstrosity 3",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverize"
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm1",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm2",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "id": "bestia_pm4",
+      "label": "Pulverize: Monstrosity 4",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverize"
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm1",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm2",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "bestia_pm3",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ]
+    }
+  ]
+}

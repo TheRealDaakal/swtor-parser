@@ -1,0 +1,263 @@
+/* ============================================================================
+   Design tokens.
+
+   Palette is the dataviz reference instance's DARK column, used verbatim
+   against its own documented dark surface (#1a1a19). That matters: those
+   hexes were validated as a set against that exact surface, so reusing both
+   unchanged keeps the published CVD/contrast results valid. Substituting a
+   different surface (the cold blue-grey this UI started with) would have
+   invalidated them and required re-running the validator, which needs Node
+   and isn't available here.
+
+   Charts here are single-series, so the all-pairs 3-slot cap never binds.
+   ========================================================================= */
+:root {
+  color-scheme: dark;
+
+  /* surfaces */
+  --plane:      #0d0d0d;   /* page */
+  --surface:    #1a1a19;   /* cards + chart surface (validator's surface) */
+  --surface-2:  #232321;   /* raised: inputs, hover */
+  --surface-3:  #2c2c2a;
+
+  /* ink */
+  --ink:        #ffffff;
+  --ink-2:      #c3c2b7;
+  --ink-muted:  #898781;
+  --grid:       #2c2c2a;   /* hairline gridline */
+  --baseline:   #383835;   /* axis rule */
+  --hairline:   rgba(255,255,255,.10);
+
+  /* categorical series (dark column, fixed order — never cycled) */
+  --s1: #3987e5;
+  --s2: #d95926;
+  --s3: #199e70;
+
+  /* status — reserved, never used for a series */
+  --good:     #0ca30c;
+  --warning:  #fab219;
+  --serious:  #ec835a;
+  --critical: #d03b3b;
+
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--plane);
+  color: var(--ink-2);
+  font: 400 13px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------------------------------------------------------- header */
+header {
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 20px; height: 52px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  position: sticky; top: 0; z-index: 30;
+}
+.brand {
+  font-weight: 650; font-size: 14px; letter-spacing: .14em;
+  color: var(--ink); text-transform: uppercase;
+}
+.brand em {
+  font-style: normal; font-weight: 400; font-size: 11px; letter-spacing: .04em;
+  color: var(--ink-muted); text-transform: none; margin-left: 9px;
+}
+.tabs { display: flex; gap: 2px; }
+.tab {
+  padding: 7px 14px; border-radius: 7px; cursor: pointer; user-select: none;
+  color: var(--ink-muted); font-size: 12.5px; white-space: nowrap;
+  transition: background .12s, color .12s;
+}
+.tab:hover { background: var(--surface-2); color: var(--ink-2); }
+.tab.active { background: var(--surface-2); color: var(--ink); }
+.spacer { flex: 1; }
+.status { color: var(--ink-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+button {
+  background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--hairline); border-radius: 7px;
+  padding: 6px 13px; font: inherit; font-size: 12px; cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+}
+button:hover:not(:disabled) { background: var(--surface-3); color: var(--ink); }
+button:disabled { opacity: .45; cursor: default; }
+button.ghost { background: transparent; }
+button.on { background: var(--surface-3); color: var(--ink); border-color: var(--hairline); }
+
+select {
+  background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--hairline); border-radius: 7px;
+  padding: 6px 10px; font: inherit; font-size: 12px; cursor: pointer;
+  max-width: 300px;
+}
+select:focus-visible, button:focus-visible {
+  outline: 2px solid var(--s1); outline-offset: 1px;
+}
+label.fld { display: inline-flex; align-items: center; gap: 7px; }
+label.fld > span { color: var(--ink-muted); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .07em; }
+
+/* ---------------------------------------------------------------- layout */
+/* Full width with generous gutters: this is a data dashboard, and tables of
+   8-9 numeric columns read better with room than boxed into a text-column
+   measure. Capped only so it doesn't sprawl on an ultrawide. */
+main { padding: 22px 24px 60px; max-width: 2100px; margin: 0 auto; }
+.view { display: none; animation: fade .18s ease-out; }
+.view.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+/* filter row sits ABOVE the cards it scopes, never inside one */
+.filters {
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  padding: 12px 14px; margin-bottom: 16px;
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+.panel {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px;
+}
+.panel > h2 {
+  margin: 0 0 3px; font-size: 13px; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.panel > .sub { margin: 0 0 14px; color: var(--ink-muted); font-size: 11.5px; }
+.panel > h2 + .tw, .panel > h2 + div { margin-top: 12px; }
+
+/* ------------------------------------------------------------ stat tiles */
+.hero { margin-bottom: 18px; }
+.hero .label { color: var(--ink-muted); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .09em; }
+.hero .value {
+  font-size: 52px; font-weight: 600; color: var(--ink); line-height: 1.05;
+  margin-top: 4px; /* proportional figures, not tabular, at display size */
+}
+.hero .note { color: var(--ink-muted); font-size: 12px; margin-top: 5px; }
+
+.tiles { display: grid; gap: 12px; margin-bottom: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.tile {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius); padding: 13px 15px;
+}
+.tile .label { color: var(--ink-muted); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .07em; }
+.tile .value { font-size: 25px; font-weight: 600; color: var(--ink); margin-top: 3px; }
+.tile .delta { font-size: 11.5px; margin-top: 3px; color: var(--ink-muted); }
+
+/* ---------------------------------------------------------------- tables */
+.tw { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th {
+  text-align: right; padding: 8px 10px; white-space: nowrap;
+  color: var(--ink-muted); font-weight: 500; font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 1px solid var(--hairline);
+  position: sticky; top: 0; background: var(--surface);
+}
+th:first-child, td:first-child { text-align: left; }
+td {
+  padding: 7px 10px; text-align: right; white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,.045);
+  font-variant-numeric: tabular-nums;   /* columns align; hero/tiles don't */
+}
+td:first-child { font-variant-numeric: normal; }
+tbody tr:last-child td { border-bottom: none; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--surface-2); }
+.name { color: var(--ink); }
+.dim { color: var(--ink-muted); }
+.good { color: var(--good); }
+.warning { color: var(--warning); }
+.critical { color: var(--critical); }
+.accent { color: var(--s1); }
+
+.pill {
+  display: inline-block; padding: 2px 8px; border-radius: 11px;
+  background: var(--surface-2); border: 1px solid var(--hairline);
+  font-size: 10.5px; color: var(--ink-muted); margin: 0 4px 3px 0;
+  letter-spacing: .02em;
+}
+
+/* meter: fill = series, track = lighter step of the same ramp */
+.meter { height: 5px; border-radius: 3px; background: rgba(57,135,229,.18); overflow: hidden; }
+.meter > i { display: block; height: 100%; border-radius: 3px; background: var(--s1); }
+.meter.heal { background: rgba(25,158,112,.18); }
+.meter.heal > i { background: var(--s3); }
+
+/* ---------------------------------------------------------------- chart */
+/* The SVG is drawn at the container's own pixel width (see lineChart), so it
+   must NOT be rescaled by CSS -- that's what shrank text and squashed the
+   plot. max-width guards the moment between a resize and the redraw. */
+.chart-wrap { position: relative; min-height: 300px; }
+.chart-wrap svg { display: block; max-width: 100%; overflow: visible; }
+svg text { fill: var(--ink-muted); font-size: 10.5px;
+  font-family: var(--font); font-variant-numeric: tabular-nums; }
+svg .gridline { stroke: var(--grid); stroke-width: 1; }
+svg .axis { stroke: var(--baseline); stroke-width: 1; }
+
+.tooltip {
+  position: absolute; pointer-events: none; opacity: 0;
+  transform: translate(-50%, -100%);
+  background: var(--surface-2); border: 1px solid var(--hairline);
+  border-radius: 8px; padding: 8px 11px; font-size: 12px; color: var(--ink-2);
+  box-shadow: 0 8px 22px rgba(0,0,0,.5); white-space: nowrap; z-index: 5;
+  transition: opacity .1s;
+}
+.tooltip.show { opacity: 1; }
+.tooltip .t-title { color: var(--ink); font-weight: 600; margin-bottom: 3px; }
+.tooltip .t-row { color: var(--ink-muted); }
+.tooltip .t-row b { color: var(--ink); font-weight: 600; }
+
+.legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px;
+  color: var(--ink-muted); font-size: 11.5px; }
+.legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  margin-right: 6px; vertical-align: -1px; }
+
+.viewtoggle { display: flex; gap: 4px; margin-left: auto; }
+
+/* ---------------------------------------------------------------- states */
+.empty { color: var(--ink-muted); padding: 40px 20px; text-align: center; font-size: 12.5px; }
+.loading { color: var(--ink-muted); padding: 40px 20px; text-align: center; }
+.stale { opacity: .45; transition: opacity .15s; }   /* hold render on refetch */
+
+/* ---------------------------------------------------------------- modal */
+.modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,.72);
+  display: none; align-items: flex-start; justify-content: center;
+  z-index: 60; overflow-y: auto; padding: 48px 18px;
+}
+.modal.open { display: flex; }
+.modal-inner {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: 12px; width: min(1060px, 100%); padding: 20px 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.6);
+}
+.modal-head { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.modal-head h3 { margin: 0 0 3px; font-size: 16px; color: var(--ink); font-weight: 600; }
+.modal-head .sub { color: var(--ink-muted); font-size: 12px; }
+
+.death {
+  border: 1px solid var(--hairline); border-radius: var(--radius);
+  padding: 14px 16px; margin-bottom: 12px; background: var(--surface);
+}
+.death .who { color: var(--ink); font-weight: 600; font-size: 13px; }
+.death .when { color: var(--ink-muted); font-size: 11.5px; }
+.callout {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 8px 11px; border-radius: 8px; margin: 9px 0;
+  background: rgba(250,178,25,.09); border: 1px solid rgba(250,178,25,.28);
+  color: var(--ink-2); font-size: 12px;
+}
+.callout .ico { color: var(--warning); font-weight: 700; }
+.callout.crit { background: rgba(208,59,59,.09); border-color: rgba(208,59,59,.30); }
+.callout.crit .ico { color: var(--critical); }

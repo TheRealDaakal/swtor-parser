@@ -1,0 +1,77 @@
+{
+  "id": "malaphar",
+  "name": "Malaphar the Savage",
+  "boss_names": [
+    "Malaphar the Savage"
+  ],
+  "boss_npc_ids": [
+    "3431245077807104",
+    "3469277013213184",
+    "3469281308180480",
+    "3469285603147776"
+  ],
+  "phases": [],
+  "counters": [
+    {
+      "id": "malaphar_savagery",
+      "name": "Savagery"
+    }
+  ],
+  "timers": [
+    {
+      "id": "mal_adds_cs",
+      "label": "Adds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "mal_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3469470286741504"
+      }
+    },
+    {
+      "id": "mal_hammer_smash",
+      "label": "Hammer Smash",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Hammer Smash"
+      }
+    },
+    {
+      "id": "mal_spear_toss",
+      "label": "Spear Toss",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spear Toss"
+      }
+    },
+    {
+      "id": "mal_spear_fixate",
+      "label": "Spear Fixate",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Spear Toss",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "mal_savagery",
+      "label": "Drop stacks!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "malaphar_savagery",
+        "value": 10
+      }
+    }
+  ]
+}

@@ -1,0 +1,318 @@
+{
+  "id": "dominique",
+  "name": "Lady Dominique",
+  "boss_names": [
+    "Lady Dominique",
+    "Watchdog"
+  ],
+  "boss_npc_ids": [
+    "4466199052156928",
+    "4488524292161536",
+    "4608014577303552"
+  ],
+  "phases": [
+    {
+      "id": "dominique_aria",
+      "name": "Aria"
+    },
+    {
+      "id": "dominique_dom_generators",
+      "name": "Dom Generators",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Separate"
+      }
+    },
+    {
+      "id": "dominique_watchdog",
+      "name": "Watchdog",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Watchdog"
+        ]
+      }
+    },
+    {
+      "id": "dominique_dom_attractors",
+      "name": "Dom+Attractors",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "hp_below",
+            "percent": 1.0,
+            "selector": [
+              "Watchdog"
+            ]
+          },
+          {
+            "type": "npc_appears",
+            "selector": [
+              "Attractors"
+            ]
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "dom_attractor_appearance",
+          "operator": "lt",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "dominique_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Lady Dominique"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "dom_attractor_appearance",
+      "name": "Attractor Spawns",
+      "increment_on": {
+        "type": "npc_appears",
+        "selector": [
+          "Attractors"
+        ]
+      }
+    },
+    {
+      "id": "dominique_p2_stacks",
+      "name": "p2 stacks",
+      "initial_value": 0
+    }
+  ],
+  "timers": [
+    {
+      "id": "dominique_orange_circle",
+      "label": "Orange on you",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Disquiet",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "dominique_yellow_circle",
+      "label": "Yellow on you",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Tremor",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "dominique_aria_spawned",
+      "label": "ARIA spawned",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Out of Sight"
+      }
+    },
+    {
+      "id": "dominique_incite",
+      "label": "Incite",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Out of Sight"
+      }
+    },
+    {
+      "id": "dominique_kick",
+      "label": "Kick",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Incite"
+      }
+    },
+    {
+      "id": "dominique_1st_detonator_spawn",
+      "label": "Detonator Spawn",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dominique_dom_generators"
+      }
+    },
+    {
+      "id": "dominique_next_detonator_spawn",
+      "label": "Detonator Spawn",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[spawn_p2_detonator]"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "dominique_dom_generators"
+      }
+    },
+    {
+      "id": "dominique_tank_swap",
+      "label": "Tank swap",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "dominique_p2_stacks",
+        "value": 5
+      }
+    },
+    {
+      "id": "dominique_watchdog_appears",
+      "label": "Watchdog appears",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dominique_watchdog"
+      }
+    },
+    {
+      "id": "dominique_wd_colors",
+      "label": "Wd colors",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dominique_watchdog"
+      }
+    },
+    {
+      "id": "dominique_wd_beam",
+      "label": "Wd beam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Negative PMX4 Bomb"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "dominique_dom_attractors"
+      }
+    },
+    {
+      "id": "dominique_1st_recursive",
+      "label": "Recursive",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unify"
+      }
+    },
+    {
+      "id": "dominique_recursives",
+      "label": "Recursives",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_applied",
+            "keyword": "Recursive Blast"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Force Barrier"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Unify"
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "Force Barrier"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dominique_rec_after_2nd_unify",
+      "label": "Recursive",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unify"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "dominique_recursives"
+      }
+    },
+    {
+      "id": "dominique_rec_after_3rd_unify",
+      "label": "Recursive",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unify"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "dominique_recursives"
+      }
+    },
+    {
+      "id": "dominique_burn_start",
+      "label": "BURN",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "dominique_burn"
+      }
+    },
+    {
+      "id": "dominique_1st_monstrosities",
+      "label": "Monstrosities",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Deploy Attractor"
+      }
+    },
+    {
+      "id": "dominique_monstrosities",
+      "label": "Monstrosities",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "dominique_1st_monstrosities"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "dominique_monstrosities"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dominique_targeted_by_reaper",
+      "label": "Repear on You!",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Grey Reaper"
+      }
+    }
+  ]
+}

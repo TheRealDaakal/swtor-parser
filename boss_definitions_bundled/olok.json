@@ -1,0 +1,158 @@
+{
+  "id": "olok",
+  "name": "Olok the Shadow",
+  "boss_names": [
+    "Olok the Shadow"
+  ],
+  "boss_npc_ids": [
+    "3016445726294016",
+    "3154662068846592",
+    "3154674953748480",
+    "3154679248715776"
+  ],
+  "phases": [
+    {
+      "id": "olok_wealthy_buyer",
+      "name": "Wealthy buyer"
+    },
+    {
+      "id": "olok_droids",
+      "name": "Droids",
+      "start_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Wealthy Buyer"
+        ]
+      }
+    },
+    {
+      "id": "olok_olok",
+      "name": "Olok",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_untranslatable_trigger"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "olok_buyer_dead",
+      "name": "Wealthy Buyer Dead",
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Wealthy Buyer"
+        ]
+      }
+    },
+    {
+      "id": "olok_droid_wave",
+      "name": "Droid Wave",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_started",
+        "timer_id": "olok_w2"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "olok_contamination_removed",
+      "name": "Contamination Removed",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_removed",
+        "keyword": "Contamination"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "olok_the_shadow_stealthed",
+      "label": "Stealthed",
+      "duration_seconds": 5.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Escape"
+      }
+    },
+    {
+      "id": "olok_the_shadow_flashbang",
+      "label": "Flashbang",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[flash_gate]"
+      }
+    },
+    {
+      "id": "olok_the_shadow_flashbang_2",
+      "label": "Flashbang",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[flash_gate]"
+      }
+    },
+    {
+      "id": "olok_the_shadow_stealth",
+      "label": "Stealth",
+      "duration_seconds": 4.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[flash_gate]"
+      }
+    },
+    {
+      "id": "olok_w2",
+      "label": "Next Wave",
+      "duration_seconds": 57.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Droid Adds"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "olok_buyer_dead",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "olok_wave",
+      "label": "Next Wave",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Droid Adds"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "olok_contamination_removed",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "olok_olok_enters",
+      "label": "Olok Enters",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "olok_wave"
+      }
+    }
+  ]
+}

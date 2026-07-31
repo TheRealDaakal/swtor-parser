@@ -1,0 +1,500 @@
+{
+  "id": "raptus",
+  "name": "Raptus",
+  "boss_names": [
+    "Dread Master Raptus"
+  ],
+  "boss_npc_ids": [
+    "3273950490525696",
+    "3302902865068032",
+    "3303555700097024",
+    "3303559995064320"
+  ],
+  "phases": [
+    {
+      "id": "raptus_challenges",
+      "name": "Challenges"
+    },
+    {
+      "id": "raptus_int",
+      "name": "Intro",
+      "start_trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "raptus_p1_t",
+      "name": "Phase 1 (Intermission)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Dread Barrier"
+      }
+    },
+    {
+      "id": "raptus_p1",
+      "name": "Phase 1",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_removed",
+            "keyword": "Dread Barrier"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "raptus_c_p"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_sc",
+          "operator": "lt",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "raptus_p2",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "Spinning Attack"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_sc",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    }
+  ],
+  "counters": [
+    {
+      "id": "raptus_dps_add_death",
+      "name": "Cursed Captive Death",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          3289511157039104,
+          3355490444640256
+        ]
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Spinning Attack"
+      }
+    },
+    {
+      "id": "raptus_dfc",
+      "name": "DPS Fail Count",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "raptus_tfc",
+      "name": "Tank Fail Count",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "raptus_hfc",
+      "name": "Heal Fail Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Curse of the Incompetent"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "raptus_cpc",
+      "name": "Challenge Pass Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "raptus_t_chal_p"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "raptus_h_chal_p"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "raptus_dps_chal_p_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "raptus_dps_chal_p"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "effect_removed",
+        "keyword": "Spinning Attack"
+      }
+    },
+    {
+      "id": "raptus_sc",
+      "name": "Spin Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "effect_applied",
+        "keyword": "Spinning Attack"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "raptus_as",
+      "name": "Allow NIM Spin",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Dread Master Raptus"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "raptus_enrage",
+      "label": "Enrage",
+      "duration_seconds": 450.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "raptus_void_alert",
+      "label": "Move Out",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Into The Void",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "raptus_spinning_ending",
+      "label": "Driving Thrust",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Spinning Attack"
+      }
+    },
+    {
+      "id": "raptus_shield",
+      "label": "Shield",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "raptus_p1_t"
+      }
+    },
+    {
+      "id": "raptus_sa",
+      "label": "Spinning Attack",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_spinning_ending"
+      }
+    },
+    {
+      "id": "raptus_chal",
+      "label": "Challenges",
+      "duration_seconds": 47.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_shield"
+      }
+    },
+    {
+      "id": "raptus_t_s",
+      "label": "Teleport + Shield",
+      "duration_seconds": 105.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_shield"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_sc",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "raptus_c_p",
+      "label": "Challenge Passed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "raptus_cpc",
+        "value": 3
+      }
+    },
+    {
+      "id": "raptus_c_e",
+      "label": "Challenges Ends",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_chal"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "raptus_c_p"
+      }
+    },
+    {
+      "id": "raptus_c_f",
+      "label": "Challenge Failed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_c_e"
+      }
+    },
+    {
+      "id": "raptus_dps_chal",
+      "label": "DPS Challenge",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3289511157039104,
+          3355490444640256
+        ]
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "raptus_dps_chal_p"
+      }
+    },
+    {
+      "id": "raptus_dps_chal_p",
+      "label": "DPS Passed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "raptus_dps_add_death",
+        "value": 2
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "raptus_dps_chal",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "id": "raptus_dps_chal_f",
+      "label": "DPS Failed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "raptus_dfc"
+      }
+    },
+    {
+      "id": "raptus_dps_chal_p_vm",
+      "label": "DPS Passed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "raptus_dps_add_death",
+        "value": 1
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "raptus_dps_chal",
+          "operator": "gte",
+          "value": 0.0
+        }
+      ]
+    },
+    {
+      "id": "raptus_h_chal",
+      "label": "Heal Challenge",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3289335063379968
+        ]
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "raptus_h_chal_f"
+      }
+    },
+    {
+      "id": "raptus_h_chal_f",
+      "label": "Heal Failed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "raptus_hfc"
+      }
+    },
+    {
+      "id": "raptus_h_chal_p",
+      "label": "Heal Passed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_h_chal"
+      }
+    },
+    {
+      "id": "raptus_t_chal",
+      "label": "Tank Challenge",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3289498272137216
+        ]
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "raptus_t_chal_f"
+      }
+    },
+    {
+      "id": "raptus_t_chal_f",
+      "label": "Tank Failed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "raptus_tfc"
+      }
+    },
+    {
+      "id": "raptus_t_chal_p",
+      "label": "Tank Passed",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_t_chal"
+      }
+    },
+    {
+      "id": "raptus_ns1",
+      "label": "Spinning Attack",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "raptus_as"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_sc",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "raptus_ns2",
+      "label": "Spinning Attack",
+      "duration_seconds": 5.5,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Spinning Attack"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_as",
+          "operator": "gte",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "raptus_dt1",
+      "label": "Driving Thrust",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Spinning Attack"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "raptus_sc",
+          "operator": "gte",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "raptus_dt",
+      "label": "Driving Thrust",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Driving Thrust"
+      },
+      "cancel_trigger": {
+        "type": "ability_cast",
+        "keyword": "Spinning Attack"
+      }
+    },
+    {
+      "id": "raptus_ditv",
+      "label": "Drop In The Void",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Into The Void"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "raptus_challenges"
+      }
+    },
+    {
+      "id": "raptus_ds",
+      "label": "Deadly Slash",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Deadly Slash"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "raptus_challenges"
+      }
+    }
+  ]
+}

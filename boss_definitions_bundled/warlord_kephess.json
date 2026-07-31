@@ -1,0 +1,264 @@
+{
+  "id": "warlord_kephess",
+  "name": "Warlord Kephess",
+  "boss_names": [
+    "Warlord Kephess",
+    "Warstrider Battlewalker"
+  ],
+  "boss_npc_ids": [
+    "2749629472964608",
+    "2794185463693312",
+    "2800357331697664",
+    "2876528576692224",
+    "2876532871659520",
+    "2876550051528704",
+    "2876562936430592",
+    "2876588706234368",
+    "2876593001201664",
+    "3618127694790656"
+  ],
+  "phases": [
+    {
+      "id": "wk_droids",
+      "name": "Siege Droids"
+    },
+    {
+      "id": "walker_burn",
+      "name": "Walker Burn",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "War Machine"
+      },
+      "end_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "entity_death",
+            "selector": [
+              "Warstrider Battlewalker"
+            ]
+          },
+          {
+            "type": "effect_applied",
+            "keyword": "War Machine"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wk_trandos",
+      "name": "Trandoshans",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "walker_burn"
+      },
+      "end_trigger": {
+        "type": "entity_death",
+        "selector": []
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "walker_burns",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "wk_pulsar",
+      "name": "Pulsar Droids",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "walker_burn"
+      },
+      "end_trigger": {
+        "type": "entity_death",
+        "selector": []
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "walker_burns",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "wk_kephess",
+      "name": "Kephess",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "walker_burn"
+      },
+      "end_trigger": {
+        "type": "effect_removed",
+        "keyword": "War Machine"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "walker_burns",
+          "operator": "gte",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "wk_kephess_burn",
+      "name": "Kephess Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 59.0,
+        "selector": [
+          "Warlord Kephess"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "walker_burns",
+      "name": "Walker Burns",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "phase_ended",
+        "phase_id": "walker_burn"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "wk_trando_spawns",
+      "name": "Trando Warrior Spawns",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "npc_appears",
+        "selector": [
+          "Trandoshan Warrior"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "wk_mighty_leap",
+      "label": "Mighty Leap",
+      "duration_seconds": 40,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mighty Leap"
+      }
+    },
+    {
+      "id": "warlord_kephess_dot_is_on_you",
+      "label": "Savage dot is on you",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Savage Wounding",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "wk_savage_slash",
+      "label": "Savage Slash",
+      "duration_seconds": 18,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Savage Arcing Slash"
+      }
+    },
+    {
+      "id": "wk_breath_pull",
+      "label": "Breath Pull",
+      "duration_seconds": 6,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Breath of the Masters"
+      }
+    },
+    {
+      "id": "warlord_kephess_bomb",
+      "label": "You have the bomb",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Baradium Explosive Pack",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "wk_trandos",
+      "label": "Next Trandos",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "wk_trando_spawns",
+        "value": 1
+      }
+    },
+    {
+      "id": "warlord_kephess_walker_enrage",
+      "label": "Walker Enrage",
+      "duration_seconds": 450.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Warstrider Battlewalker"
+        ]
+      }
+    },
+    {
+      "id": "warlord_kephess_walker_enrage_16",
+      "label": "Walker Enrage",
+      "duration_seconds": 510.0,
+      "trigger": {
+        "type": "combat_start"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Warstrider Battlewalker"
+        ]
+      }
+    },
+    {
+      "id": "wk_baradium_countdown",
+      "label": "Bomber Countdown",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Baradium Bomber"
+        ]
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Baradium Bomber"
+        ]
+      }
+    },
+    {
+      "id": "warlord_kephess_pull_in_soon",
+      "label": "Pull in soon",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 63.0,
+        "selector": [
+          "Warlord Kephess"
+        ]
+      }
+    }
+  ]
+}

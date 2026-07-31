@@ -1,0 +1,131 @@
+{
+  "id": "sword_squadron",
+  "name": "Sword Squadron",
+  "boss_names": [
+    "Sword Squadron Unit 1",
+    "Sword Squadron Unit 2"
+  ],
+  "boss_npc_ids": [
+    "3447784996864000",
+    "3447789291831296",
+    "3468765912104960",
+    "3468770207072256",
+    "3468774502039552"
+  ],
+  "phases": [],
+  "counters": [
+    {
+      "id": "rain_damage",
+      "name": "Rain of Missiles Damage",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "timer_expires",
+        "timer_id": "ss_rain_of_missiles"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "ss_shield_cs",
+      "label": "Shield",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "ss_shield",
+      "label": "Shield",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Emergency Shielding"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "ss_shield_cs"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "ss_shield"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ss_gravity_cs",
+      "label": "Gravity",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "ss_gravity",
+      "label": "Gravity",
+      "duration_seconds": 35.5,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Gravity Missile"
+      }
+    },
+    {
+      "id": "sword_squadron_gravity_dmg",
+      "label": "Gravity dmg",
+      "duration_seconds": 4.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Gravity Missile"
+      }
+    },
+    {
+      "id": "ss_shield_down",
+      "label": "Unit 1 Shield Down",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Emergency Shielding"
+      }
+    },
+    {
+      "id": "sword_squadron_rapid_fire_1st",
+      "label": "Rapid Fire",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "sword_squadron_rapid_fire",
+      "label": "Rapid fire",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rapid Fire"
+      }
+    },
+    {
+      "id": "sword_squadron_grenade Explodes",
+      "label": "Grenade Explodes",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Huge Grenade",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "ss_rain_of_missiles",
+      "label": "Rain of Missiles",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "rain_damage",
+        "value": 1
+      }
+    }
+  ]
+}

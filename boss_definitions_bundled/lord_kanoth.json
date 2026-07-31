@@ -1,0 +1,636 @@
+{
+  "id": "kanoth",
+  "name": "Lord Kanoth",
+  "boss_names": [
+    "Lord Kanoth"
+  ],
+  "boss_npc_ids": [
+    "4466190462222336",
+    "4494876548792320"
+  ],
+  "phases": [
+    {
+      "id": "kanoth_p1",
+      "name": "Phase 1"
+    },
+    {
+      "id": "kanoth_p2",
+      "name": "Phase 2 (opener)",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 72.5,
+        "selector": [
+          "Kanoth"
+        ]
+      }
+    },
+    {
+      "id": "kanoth_p3",
+      "name": "Phase 3 (Apparitions)",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "hp_below",
+            "percent": 48.7,
+            "selector": [
+              "Kanoth"
+            ]
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4602418234916864"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kanoth_p4",
+      "name": "Phase 4 (pre burn intermission)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Nihrotic Barrier"
+      }
+    },
+    {
+      "id": "kanoth_p5",
+      "name": "Phase 5 (burn)",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "Nihrotic Barrier"
+      }
+    },
+    {
+      "id": "kanoth_p2_1",
+      "name": "Phase 2",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "Surging Growth"
+      }
+    },
+    {
+      "id": "kanoth_p3_1",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "timer_expires",
+        "timer_id": "kanoth_p3"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "kanoth_p3_f_b",
+      "name": "Fortify Ground Blocker",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_expires",
+        "timer_id": "kanoth_p3"
+      },
+      "reset_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "kanoth_gs_p3_2nd"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p5"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kanoth_cg_b",
+      "name": "Creeping Growth Blocker",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Creeping Growth"
+      },
+      "reset_on": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "kanoth_gs_p1_1st",
+      "label": "Growth Seed",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_soe_p1_1st",
+      "label": "Seed of Echoes",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_lg_p1_1st",
+      "label": "Lateral Growth",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_vg_p1_1st",
+      "label": "Vertical Growth",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_dg_p1_1st",
+      "label": "Directional Growth",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_fp_r_p1_1st",
+      "label": "Fire Probe + Repel",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p1"
+      }
+    },
+    {
+      "id": "kanoth_fg",
+      "label": "Fortify Ground",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Growth Seed"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "kanoth_p3_f_b",
+          "operator": "lte",
+          "value": 0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_gs",
+      "label": "Growth Seed",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Fortify Ground"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_soe",
+      "label": "Seed of Echoes",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Seed of Echoes"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_vg",
+      "label": "Vertical Growth",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vertical Growth"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_lg",
+      "label": "Lateral Growth",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Lateral Growth"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_dg",
+      "label": "Directional Growth",
+      "duration_seconds": 46.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Directional Growth"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_abduct",
+      "label": "Abduct",
+      "duration_seconds": 27.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Repel"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_repel",
+      "label": "Repel",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Abduct"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "kanoth_p_s"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "kanoth_abduct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kanoth_repel_n",
+      "label": "Repel",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kanoth_abduct"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "kanoth_repel"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "kanoth_p_s"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kanoth_burn_stun",
+      "label": "Shield Down",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Choking Growth"
+      }
+    },
+    {
+      "id": "kanoth_fp_p2_1st",
+      "label": "Fire Probe",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p2"
+      }
+    },
+    {
+      "id": "kanoth_p2_rng_g",
+      "label": "Random Growth",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p2_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3"
+      }
+    },
+    {
+      "id": "kanoth_gs_p2_1st",
+      "label": "Growth Seed",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p2_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3"
+      }
+    },
+    {
+      "id": "kanoth_repel_p2_1st",
+      "label": "Repel",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p2_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3"
+      }
+    },
+    {
+      "id": "kanoth_beckon_p2_1st",
+      "label": "Monstrosity + SoE",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p2_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3"
+      }
+    },
+    {
+      "id": "kanoth_beckon",
+      "label": "Monstrosity",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Beckon"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p2_1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_dg_p2",
+      "label": "Directional Growth",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vertical Growth"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p2_1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_lg_vg_p2",
+      "label": "Random Growth",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Directional Growth"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "kanoth_p2_1"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_p3",
+      "label": "Kanoth Reveals",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Shock Apparition Wave"
+      },
+      "cancel_trigger": {
+        "type": "timer_started",
+        "timer_id": "kanoth_p_s"
+      }
+    },
+    {
+      "id": "kanoth_soe_p3_1st",
+      "label": "Seed of Echoes",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_cg_p3_1st",
+      "label": "Creeping Growth",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_gs_p3_2nd",
+      "label": "Growth Seed",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Growth Seed"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "kanoth_p3_f_b",
+          "operator": "gt",
+          "value": 0
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_repel_p3_1st",
+      "label": "Repel",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_beckon_p3",
+      "label": "Monstrosity",
+      "duration_seconds": 67.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_apparitions",
+      "label": "Apparitions",
+      "duration_seconds": 90.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p3_1"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    },
+    {
+      "id": "kanoth_gs_b_1st",
+      "label": "Growth Seed ",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p5"
+      }
+    },
+    {
+      "id": "kanoth_p_s",
+      "label": "Phase Swap",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p2"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p3"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p4"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p5"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p2_1"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "kanoth_p3_1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "kanoth_p3_cg",
+      "label": "Creeping Growth",
+      "duration_seconds": 28.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Creeping Growth"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "kanoth_cg_b",
+          "operator": "lte",
+          "value": 1
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "kanoth_p4"
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "underlurker",
+  "name": "The Underlurker",
+  "boss_names": [
+    "The Underlurker"
+  ],
+  "boss_npc_ids": [
+    "3411402328899584",
+    "3462263331618816",
+    "3462267626586112",
+    "3462271921553408"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "ul_adds",
+      "label": "Adds Spawn",
+      "duration_seconds": 52,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3512467204341760"
+      }
+    },
+    {
+      "id": "ul_collapse",
+      "label": "Collapse",
+      "duration_seconds": 17.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3512467204341760"
+      }
+    },
+    {
+      "id": "ul_rage_storm",
+      "label": "Rage Storm",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Collapse"
+      }
+    },
+    {
+      "id": "ul_leap",
+      "label": "Leap",
+      "duration_seconds": 9,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rage Storm"
+      }
+    },
+    {
+      "id": "ul_devastation",
+      "label": "Cross",
+      "duration_seconds": 8,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Devastation"
+      }
+    },
+    {
+      "id": "ul_adds_hp",
+      "label": "Adds Spawn",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "The Underlurker"
+        ]
+      }
+    }
+  ]
+}

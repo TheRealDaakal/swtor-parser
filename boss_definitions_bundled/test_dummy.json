@@ -1,0 +1,23 @@
+{
+  "id": "test_dummy",
+  "name": "Test Dummy Boss",
+  "boss_names": ["Elite Training Dummy"],
+  "phases": [
+    { "id": "p1", "name": "Phase 1" },
+    {
+      "id": "p2",
+      "name": "Phase 2 (Enrage)",
+      "trigger": { "type": "hp_below", "percent": 50 }
+    }
+  ],
+  "timers": [
+    {
+      "keyword": "Massive Slam",
+      "label": "Slam incoming",
+      "duration_seconds": 15,
+      "warn_seconds_before": 3,
+      "voice_alert": true,
+      "phases": ["p2"]
+    }
+  ]
+}

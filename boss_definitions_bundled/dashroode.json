@@ -1,0 +1,78 @@
+{
+  "id": "dashroode",
+  "name": "Dash'Roode",
+  "boss_names": [
+    "Dash'Roode"
+  ],
+  "boss_npc_ids": [
+    "3058837053505536",
+    "3153558262251520",
+    "3153571147153408",
+    "3153575442120704"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "dash_xuvvas_1st",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dash_roode_xuvvas",
+      "label": "Adds",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3121285877989376"
+      }
+    },
+    {
+      "id": "dash_roode_updraft_1st",
+      "label": "Updraft",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "dash_groundshatter",
+      "label": "Groundshatter",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Groundshatter"
+      }
+    },
+    {
+      "id": "dash_roode_updraft",
+      "label": "Updraft",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Updraft"
+      }
+    },
+    {
+      "id": "dash_roode_kick",
+      "label": "Kick",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Gutwrenching Kick"
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "Groundshatter"
+          }
+        ]
+      }
+    }
+  ]
+}

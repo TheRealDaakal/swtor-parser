@@ -1,0 +1,1122 @@
+{
+  "id": "IZAX_K",
+  "name": "IZAX",
+  "boss_names": [
+    "IZAX"
+  ],
+  "boss_npc_ids": [
+    "4108097563918336"
+  ],
+  "phases": [
+    {
+      "id": "IZAX_K_p1",
+      "name": "Phase 1"
+    },
+    {
+      "id": "IZAX_K_p2_a",
+      "name": "Phase 2 (Anchors)",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Drone Launch"
+      }
+    },
+    {
+      "id": "IZAX_K_p2_sd",
+      "name": "Phase 2 (Shield down)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Feedback Overload"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_t",
+      "name": "Phase 3 (Transition)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Damaged Deflector Shield"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p2_a",
+            "IZAX_K_p2_sd"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p3",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p3_init"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p3_rep"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_p3_int",
+      "name": "Phase 3 (Intermission)",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_untranslatable_trigger"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_t",
+      "name": "Phase 4 (Transition)",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_applied",
+            "keyword": "Missile Launcher Damage"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_mm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_vm"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p3",
+            "IZAX_K_p3_int"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p4",
+      "name": "Phase 4",
+      "start_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p4_init"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p4_im"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_p4_int",
+      "name": "Phase 4 (Intermission)",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "[p4_reposition]"
+      }
+    },
+    {
+      "id": "IZAX_K_p5_t",
+      "name": "Phase 5 (Transition)",
+      "start_trigger": {
+        "type": "timer_started",
+        "timer_id": "IZAX_K_p5"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_t",
+      "name": "Phase 6 (Transition)",
+      "start_trigger": {
+        "type": "timer_started",
+        "timer_id": "IZAX_K_p6"
+      }
+    },
+    {
+      "id": "IZAX_K_p5",
+      "name": "Phase 5",
+      "start_trigger": {
+        "type": "counter_changes",
+        "counter_id": "IZAX_K_o_c"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5_t"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p6",
+      "name": "Phase 6 (Burn)",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Combat Protocol: Survival"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_w",
+      "name": "GG",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 1e-08,
+        "selector": [
+          "IZAX"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "IZAX_K_p_c",
+      "name": "Phase",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p2"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p3_mm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p3_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_mm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_vm"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p5"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p6"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "IZAX_K_o_c",
+      "name": "Omnicannon Charge",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "IZAX_K_mv_c",
+      "name": "Missile Volley Count",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p5_1st_mv"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p5_mv"
+          }
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "IZAX_K_p3_mm",
+      "label": "Phase 3",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p3_vm",
+      "label": "Phase 3",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p3_init",
+      "label": "Reposition",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p3_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_adds_init",
+      "label": "Tether Drones",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_p3_init"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_rep",
+      "label": "Reposition",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p3_int"
+      }
+    },
+    {
+      "id": "IZAX_K_t_d_1",
+      "label": "Tether Drone 1",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          4164821196996608
+        ]
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_t_d_2",
+      "label": "Tether Drone 2",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          4164821196996608
+        ]
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_1",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_t_d_3",
+      "label": "Tether Drone 3",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          4164821196996608
+        ]
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_2",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_1",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_t_d_4",
+      "label": "Tether Drone 4",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          4164821196996608
+        ]
+      },
+      "conditions": [
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_3",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_2",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "timer_time_remaining",
+          "timer_id": "IZAX_K_t_d_1",
+          "operator": "gte",
+          "value": 0.0
+        },
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_init",
+      "label": "Reposition",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[p4_initial_reposition]"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_mm",
+      "label": "Phase 4",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p4_vm",
+      "label": "Phase 4",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p2",
+      "label": "Phase 2",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 97.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p5",
+      "label": "Phase 5",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 35.0,
+        "selector": [
+          "IZAX"
+        ]
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_p_c",
+          "operator": "eq",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p6",
+      "label": "Phase 6",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "IZAX_K_o_c",
+        "value": 0
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p5"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p1_slam_1st",
+      "label": "Power Slam",
+      "duration_seconds": 26.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p1"
+      }
+    },
+    {
+      "id": "IZAX_K_p1_ic_1st",
+      "label": "Induction Cascade",
+      "duration_seconds": 38.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p1"
+      }
+    },
+    {
+      "id": "IZAX_K_p1_slam",
+      "label": "Power Slam",
+      "duration_seconds": 39.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Power Slam (Binding Shockwave)"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "IZAX_K_p1"
+      }
+    },
+    {
+      "id": "IZAX_K_ic_8m",
+      "label": "Induction Cascade",
+      "duration_seconds": 34.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Induction Cascade"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p2_ic_a"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p2_sd"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_int"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p4_t"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_ic_im"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p5_t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_ic_16m",
+      "label": "Induction Cascade",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Induction Cascade"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p2_a"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p2_sd"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_int"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p4_t"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_ic_im"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p5_t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_ic_16m_mm",
+      "label": "Induction Cascade",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Induction Cascade"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p1",
+            "IZAX_K_p3_t",
+            "IZAX_K_p3",
+            "IZAX_K_p3_int",
+            "IZAX_K_p4_t",
+            "IZAX_K_p4",
+            "IZAX_K_p4_int"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p2_a"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p4_t"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p5_t"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_int"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_ic_im"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_ic_16m_mm_p2",
+      "label": "Induction Cascade",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Induction Cascade"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "IZAX_K_p2_a",
+            "IZAX_K_p2_sd"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_t"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p2_sd"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_p2_hc",
+      "label": "Hull Cutters",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p2_a"
+      }
+    },
+    {
+      "id": "IZAX_K_p2_sv_1st",
+      "label": "Explosion",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Saturation Volley"
+      }
+    },
+    {
+      "id": "IZAX_K_p2_sv_2nd",
+      "label": "Explosion",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_p2_sv_1st"
+      }
+    },
+    {
+      "id": "IZAX_K_p2_ic_a",
+      "label": "Induction Cascade",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p2_a"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "IZAX_K_ic_8m",
+            "operator": "gt",
+            "value": 23.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p2_kb",
+      "label": "Knockback",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p2_sd"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p3_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_ic_1st",
+      "label": "Induction Cascade",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_t"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p3_int"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_p3_sd",
+      "label": "Shield Down",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Damaged Deflector Shield"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_it",
+      "label": "Interrupt",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Damaged Deflector Shield"
+      }
+    },
+    {
+      "id": "IZAX_K_p3_adds",
+      "label": "Tether Drones",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_p3_rep"
+      }
+    },
+    {
+      "id": "IZAX_K_ic_self",
+      "label": "Move Out",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Induction Cascade",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_ic_1st",
+      "label": "Induction Cascade",
+      "duration_seconds": 54.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_hc_1st",
+      "label": "Hull Cutters",
+      "duration_seconds": 38.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_rep_1st",
+      "label": "Reposition",
+      "duration_seconds": 80.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_rep_1st_vm",
+      "label": "Reposition",
+      "duration_seconds": 120.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_hc",
+      "label": "Hull Cutters",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Drone Launch"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "IZAX_K_p4_hc_im"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "IZAX_K_p5_t"
+          }
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_p4_rep",
+      "label": "Reposition",
+      "duration_seconds": 80.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_int"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p5_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_im",
+      "label": "Reposition",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_int"
+      }
+    },
+    {
+      "id": "IZAX_K_p4_hc_im",
+      "label": "Hull Cutters",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_int"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "timer_time_remaining",
+            "timer_id": "IZAX_K_p4_hc",
+            "operator": "gt",
+            "value": 10.0
+          }
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p4_ic_im",
+      "label": "Induction Cascade",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p4_int"
+      },
+      "conditions": [
+        {
+          "type": "not",
+          "condition": {
+            "type": "all_of",
+            "conditions": [
+              {
+                "type": "timer_time_remaining",
+                "timer_id": "IZAX_K_ic_8m",
+                "operator": "gt",
+                "value": 10.0
+              },
+              {
+                "type": "timer_time_remaining",
+                "timer_id": "IZAX_K_ic_16m_mm",
+                "operator": "gt",
+                "value": 10.0
+              },
+              {
+                "type": "timer_time_remaining",
+                "timer_id": "IZAX_K_ic_16m",
+                "operator": "gt",
+                "value": 10.0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p5_hc",
+      "label": "Hull Cutter",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "[p5_event_manager]"
+          },
+          {
+            "type": "timer_expires",
+            "timer_id": "IZAX_K_p5_hc"
+          }
+        ]
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p5_1st_mv",
+      "label": "Missile Volley",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[p5_event_manager]"
+      }
+    },
+    {
+      "id": "IZAX_K_p5_mv",
+      "label": "Missile Volley",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "counter_changes",
+        "counter_id": "IZAX_K_mv_c"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "IZAX_K_mv_c",
+          "operator": "lt",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": "IZAX_K_p5_scyva",
+      "label": "SCYVA",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "IZAX_K_mv_c",
+        "value": 4
+      }
+    },
+    {
+      "id": "IZAX_K_p5_p6_t",
+      "label": "Phase 5 ends",
+      "duration_seconds": 115.5,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p5"
+      }
+    },
+    {
+      "id": "IZAX_K_p5_truck",
+      "label": "Explosion",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_t"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_rad",
+      "label": "Radiation",
+      "duration_seconds": 28.1,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_w"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_rad_vm",
+      "label": "Radiation",
+      "duration_seconds": 31.4,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_w"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_wipe",
+      "label": "Wipe",
+      "duration_seconds": 21.9,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_p6_rad"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_w"
+      }
+    },
+    {
+      "id": "IZAX_K_p6_wipe_vm",
+      "label": "Wipe",
+      "duration_seconds": 24.6,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_p6_rad_vm"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "IZAX_K_p6_w"
+      }
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "id": "thrasher",
+  "name": "Thrasher",
+  "boss_names": [
+    "Thrasher"
+  ],
+  "boss_npc_ids": [
+    "3045819007631360",
+    "3154563284598784",
+    "3154567579566080",
+    "3154571874533376"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "thrasher_double_wave",
+      "label": "Double Wave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Thrasher"
+        ]
+      }
+    },
+    {
+      "id": "thrasher_adds_1st",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "thrasher_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spawn Adds"
+      }
+    },
+    {
+      "id": "thrasher_firebug",
+      "label": "Firebug",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Spawn Hazard"
+          },
+          {
+            "type": "ability_cast",
+            "keyword": "Spawn Adds"
+          }
+        ]
+      }
+    },
+    {
+      "id": "thrasher_knockback_180",
+      "label": "Knockback 180",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Head Butt"
+      }
+    },
+    {
+      "id": "thrasher_knockback_360",
+      "label": "Knockback 360",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spawn Adds"
+      }
+    }
+  ]
+}

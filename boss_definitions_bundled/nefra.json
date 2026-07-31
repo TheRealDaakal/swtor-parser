@@ -1,0 +1,203 @@
+{
+  "id": "nefra",
+  "name": "Nefra, Who Bars the Way",
+  "boss_names": [
+    "Nefra, Who Bars the Way"
+  ],
+  "boss_npc_ids": [
+    "3266533082005504",
+    "3303031714086912",
+    "3303036009054208",
+    "3303040304021504"
+  ],
+  "phases": [],
+  "counters": [
+    {
+      "id": "nefra_twin_attack_count",
+      "name": "Twin Attacks",
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Twin Attack"
+      },
+      "reset_on": {
+        "type": "ability_cast",
+        "keyword": "Nightmare Twin Attack"
+      }
+    },
+    {
+      "id": "nefra_rng_add_gate",
+      "name": "rng_add_gate",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "timer_expires",
+        "timer_id": "nefra_rng_add"
+      },
+      "decrement_on": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "timer_started",
+            "timer_id": "nefra_dps_add"
+          },
+          {
+            "type": "timer_started",
+            "timer_id": "nefra_tank_add"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nefra_curse_stacks_local",
+      "name": "Curse Stacks - Local",
+      "initial_value": 0,
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "nefra_twin_stacks",
+      "name": "Twin stacks"
+    }
+  ],
+  "timers": [
+    {
+      "id": "nefra_voice_cs",
+      "label": "Voice",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "nefra_voice",
+      "label": "Voice",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Voice of the Masters"
+      }
+    },
+    {
+      "id": "nefra_local_taunt",
+      "label": "3 Stacks - Taunt!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nefra_curse_stacks_local",
+        "value": 3
+      }
+    },
+    {
+      "id": "nefra_dps_add_1st",
+      "label": "DPS Add",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "nefra_tank_add_1st",
+      "label": "Tank Add",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "nefra_dps_add_vm",
+      "label": "DPS Add",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308460552749056"
+      }
+    },
+    {
+      "id": "nefra_tank_add_vm",
+      "label": "Tank Add",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308164200005632"
+      }
+    },
+    {
+      "id": "nefra_tank_add",
+      "label": "Tank Add",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308460552749056"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nefra_rng_add_gate",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "nefra_dps_add",
+      "label": "Tank Add",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308164200005632"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nefra_rng_add_gate",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "nefra_rng_add",
+      "label": "RNG Add",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Twin Attack"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nefra_twin_attack_count",
+          "operator": "eq",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "id": "nefra_turn_boss",
+      "label": "Turn boss",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "counter_reaches",
+        "counter_id": "nefra_twin_stacks",
+        "value": 14
+      }
+    },
+    {
+      "id": "nefra_raid_cleave",
+      "label": "Raid Cleave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Twin Attack"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nefra_twin_attack_count",
+          "operator": "eq",
+          "value": 15
+        }
+      ]
+    }
+  ]
+}

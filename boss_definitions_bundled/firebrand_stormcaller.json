@@ -1,0 +1,286 @@
+{
+  "id": "firebrand_stormcaller",
+  "name": "Firebrand & Stormcaller",
+  "boss_names": [
+    "Firebrand Battle Tank",
+    "Stormcaller Blast Tank"
+  ],
+  "boss_npc_ids": [
+    "2808827007205376",
+    "2808831302172672",
+    "2876434087411712",
+    "2876438382379008",
+    "2876459857215488",
+    "2876464152182784",
+    "2876481332051968",
+    "2876485627019264"
+  ],
+  "phases": [
+    {
+      "id": "fs_tanks",
+      "name": "Tanks",
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "fs_defensive_systems_ct",
+          "operator": "lte",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "id": "fs_shield",
+      "name": "Defensive Systems",
+      "start_trigger": {
+        "type": "effect_applied",
+        "keyword": "Defensive Systems"
+      },
+      "end_trigger": {
+        "type": "effect_removed",
+        "keyword": "Defensive Systems"
+      }
+    },
+    {
+      "id": "fs_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "phase_ended",
+        "phase_id": "fs_shield"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "fs_defensive_systems_ct",
+          "operator": "eq",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "id": "fs_soft_enrage",
+      "name": "Soft Enrage",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "fs_defensive_systems_ct",
+        "value": 5
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "fs_defensive_systems_ct",
+      "name": "Defensive Systems",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "firebrand_stormcaller_enrage",
+      "label": "Enrage",
+      "duration_seconds": 380.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_enrage_16",
+      "label": "Enrage",
+      "duration_seconds": 460.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "fs_firebrand_cleave_cs",
+      "label": "Firebrand Cleave",
+      "duration_seconds": 10,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "fs_storm_cleave_cs",
+      "label": "Storm Cleave",
+      "duration_seconds": 5,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "fs_targeted_missile_cs",
+      "label": "Targeted Missile",
+      "duration_seconds": 15,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "fs_incinerate_armor_cs",
+      "label": "Incinerate Armor",
+      "duration_seconds": 22,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "fs_double_destruction_cs",
+      "label": "Double Destruction",
+      "duration_seconds": 15,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_targeted_by_missile",
+      "label": "Cleanse and move",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Targeted (Any)",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "fs_mortar_volley",
+      "label": "Mortar Volley",
+      "duration_seconds": 25,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mortar Volley"
+      }
+    },
+    {
+      "id": "fs_double_destruction_ps",
+      "label": "Double Destruction",
+      "duration_seconds": 15,
+      "trigger": {
+        "type": "phase_ended",
+        "phase_id": "fs_shield"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_firebrand_cleave",
+      "label": "Firebrand Cleave",
+      "duration_seconds": 10,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Missile Barrage"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_densive_systems",
+      "label": "Defensive Systems",
+      "duration_seconds": 25,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Defensive Systems"
+      }
+    },
+    {
+      "id": "fs_storm_cleave",
+      "label": "Storm Cleave",
+      "duration_seconds": 10,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Electric Discharge"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_targeted_missile",
+      "label": "Targeted Missile",
+      "duration_seconds": 16,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Targeted"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_incinerate_armor_ps",
+      "label": "Incinerate Armor",
+      "duration_seconds": 26,
+      "trigger": {
+        "type": "phase_ended",
+        "phase_id": "fs_shield"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_incinerate_armor",
+      "label": "Incinerate Armor",
+      "duration_seconds": 46,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Incinerate Armor"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_incinerate_armor_vm",
+      "label": "Incinerate Armor",
+      "duration_seconds": 49,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Incinerate Armor"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_double_destruction",
+      "label": "Double Destruction",
+      "duration_seconds": 20,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Double Destruction"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    },
+    {
+      "id": "fs_double_destruction_vm",
+      "label": "Double Destruction",
+      "duration_seconds": 30,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Double Destruction"
+      },
+      "cancel_trigger": {
+        "type": "phase_entered",
+        "phase_id": "fs_shield"
+      }
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+{
+  "id": "torque",
+  "name": "Torque",
+  "boss_names": [
+    "Torque"
+  ],
+  "boss_npc_ids": [
+    "3397005598523392",
+    "3468710077530112",
+    "3468714372497408",
+    "3468718667464704"
+  ],
+  "phases": [],
+  "counters": [],
+  "timers": [
+    {
+      "id": "torque_laser_turret_1st",
+      "label": "Laser Turret",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "torque_vents_knockback_1st",
+      "label": "Vents + Knockback",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "torque_jump_to_console_1st",
+      "label": "Jump to Console",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "torque_side_turrets_1st",
+      "label": "Side Turrets",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "torque_magnetic_clamp",
+      "label": "Magnetic Clamp",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Magnetic Clamp"
+      }
+    },
+    {
+      "id": "torque_cleanse",
+      "label": "Cleanse",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Magnetic Clamp"
+      }
+    },
+    {
+      "id": "torque_flame_turret",
+      "label": "Flame Turret",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3406531835985920"
+      }
+    },
+    {
+      "id": "torque_laser_turret",
+      "label": "Laser Turret",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Summon Flame Turret"
+      }
+    },
+    {
+      "id": "torque_tank_swap",
+      "label": "Tank Swap",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Sick of You!"
+      }
+    },
+    {
+      "id": "torque_knockback",
+      "label": "Knockback",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Sick of You!"
+      }
+    },
+    {
+      "id": "torque_vents",
+      "label": "Vents",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Floor Vents"
+      }
+    },
+    {
+      "id": "torque_jump_to_console",
+      "label": "Jump to Console",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3412583444905984"
+      }
+    },
+    {
+      "id": "torque_side_turrets",
+      "label": "Side Turrets",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3513382032375808"
+      }
+    },
+    {
+      "id": "torque_magnetic_hp",
+      "label": "Magnetic",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Torque"
+        ]
+      }
+    }
+  ]
+}

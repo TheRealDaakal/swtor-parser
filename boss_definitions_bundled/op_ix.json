@@ -1,0 +1,232 @@
+{
+  "id": "op_ix",
+  "name": "Operator IX",
+  "boss_names": [
+    "Operator IX",
+    "Data Core"
+  ],
+  "boss_npc_ids": [
+    "2836314797899776",
+    "2836319092867072",
+    "2940596603846656",
+    "2942606648541184",
+    "2994837745827840",
+    "2994850630729728",
+    "2994859220664320",
+    "2994867810598912",
+    "2994872105566208",
+    "2994876400533504",
+    "3725128215035904"
+  ],
+  "phases": [
+    {
+      "id": "op_ix_intermission",
+      "name": "Intermission"
+    },
+    {
+      "id": "op_ix_blue",
+      "name": "Blue",
+      "start_trigger": {
+        "type": "ability_cast",
+        "keyword": "Deactivating..."
+      }
+    },
+    {
+      "id": "op_ix_orange",
+      "name": "Orange",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "op_ix_core_deaths",
+        "value": 2
+      }
+    },
+    {
+      "id": "op_ix_purple",
+      "name": "Purple",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "op_ix_core_deaths",
+        "value": 4
+      }
+    },
+    {
+      "id": "op_ix_yellow",
+      "name": "Yellow",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "op_ix_core_deaths",
+        "value": 6
+      },
+      "end_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "op_ix_core_deaths",
+        "value": 8
+      }
+    },
+    {
+      "id": "op_ix_main",
+      "name": "Operator IX",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Operator IX"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "op_ix_core_deaths",
+      "name": "Data Cores Destroyed",
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Data Core"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "op_ix_blue_cd",
+      "label": "Blue Scalene",
+      "duration_seconds": 70.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "op_ix_blue"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "op_ix_blue"
+      }
+    },
+    {
+      "id": "op_ix_orange_cd",
+      "label": "Orange Scalene",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "op_ix_orange"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "op_ix_orange"
+      }
+    },
+    {
+      "id": "op_ix_purple_scalene",
+      "label": "Purple Scalene",
+      "duration_seconds": 55.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "op_ix_purple"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "op_ix_purple"
+      }
+    },
+    {
+      "id": "op_ix_yellow_scalene",
+      "label": "Yellow Scalene",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "op_ix_yellow"
+      },
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "op_ix_yellow"
+      }
+    },
+    {
+      "id": "op_ix_core_under_10",
+      "label": "Core Sub-10%",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Data Core"
+        ]
+      }
+    },
+    {
+      "id": "op_ix_adds",
+      "label": "Adds Incoming!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "hp_below",
+            "percent": 90.0,
+            "selector": [
+              "Operator IX"
+            ]
+          },
+          {
+            "type": "hp_below",
+            "percent": 70.0,
+            "selector": [
+              "Operator IX"
+            ]
+          },
+          {
+            "type": "hp_below",
+            "percent": 50.0,
+            "selector": [
+              "Operator IX"
+            ]
+          },
+          {
+            "type": "hp_below",
+            "percent": 30.0,
+            "selector": [
+              "Operator IX"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "op_ix_blue_deletion",
+      "label": "Blue Deletion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Blue Deletion Protocol"
+      }
+    },
+    {
+      "id": "op_ix_orange_deletion",
+      "label": "Orange Deletion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Orange Deletion Protocol"
+      }
+    },
+    {
+      "id": "op_ix_purple_deletion",
+      "label": "Purple Deletion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Purple Deletion Protocol"
+      }
+    },
+    {
+      "id": "op_ix_yellow_deletion",
+      "label": "Yellow Deletion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Yellow Deletion Protocol"
+      }
+    }
+  ]
+}

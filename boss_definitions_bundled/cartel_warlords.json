@@ -1,0 +1,203 @@
+{
+  "id": "cartel_warlords",
+  "name": "Cartel Warlords",
+  "boss_names": [
+    "Captain Horic",
+    "Vilus Garr",
+    "Tu'chuk",
+    "Sunder"
+  ],
+  "boss_npc_ids": [
+    "3032753717116928",
+    "3032766602018816",
+    "3032770896986112",
+    "3032779486920704",
+    "3054400352288768",
+    "3054404647256064",
+    "3054408942223360",
+    "3054413237190656",
+    "3156895451840512",
+    "3156899746807808",
+    "3156904041775104"
+  ],
+  "phases": [
+    {
+      "id": "cartel_warlords_4_bosses",
+      "name": "4 Warlords"
+    },
+    {
+      "id": "cartel_warlords_3_bosses",
+      "name": "3 Warlords",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "cartel_warlords_boss_deaths",
+        "value": 1
+      }
+    },
+    {
+      "id": "cartel_warlords_2_bosses",
+      "name": "2 Warlords",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "cartel_warlords_boss_deaths",
+        "value": 2
+      }
+    },
+    {
+      "id": "cartel_warlords_1_boss",
+      "name": "1 Warlord",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "cartel_warlords_boss_deaths",
+        "value": 3
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "cartel_warlords_boss_deaths",
+      "name": "Boss deaths",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Horic",
+          "Sunder",
+          "Garr",
+          "Tuchuk"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "cartel_warlords_horic_spray",
+      "label": "Horic Spray",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spray and Pray"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Horic"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_horic_grenade",
+      "label": "Horic Grenade",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrosive Grenade"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Horic"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_cleanse_destroy_armor",
+      "label": "Cleanse (destroy armor)",
+      "duration_seconds": 6.3,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Destroy Armor (Any)"
+      }
+    },
+    {
+      "id": "cartel_warlords_garr_tp",
+      "label": "Garr TP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3128772005986304"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Garr"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_garr_shivve",
+      "label": "Garr Shiv",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Surprise Shivving"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Garr"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_sunder_fixate",
+      "label": "Sunder Fixate",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Fixate"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Sunder"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_sunder_root",
+      "label": "Sunder Root",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Undeniable"
+      },
+      "cancel_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Sunder"
+        ]
+      }
+    },
+    {
+      "id": "cartel_warlords_sunder_the_end_vm",
+      "label": "Sunder The End",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "The End"
+      }
+    },
+    {
+      "id": "cartel_warlords_sunder_the_end_8m",
+      "label": "Sunder The End",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "The End"
+      }
+    },
+    {
+      "id": "cartel_warlords_sunder_the_end_16m",
+      "label": "Sunder The End",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "The End"
+      }
+    }
+  ]
+}

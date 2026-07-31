@@ -1,0 +1,299 @@
+{
+  "id": "revan",
+  "name": "Revan",
+  "boss_names": [
+    "Revan",
+    "HK-47",
+    "Machine Core"
+  ],
+  "boss_npc_ids": [
+    "3431605855059968",
+    "3444310368321536",
+    "3447583133401088"
+  ],
+  "phases": [
+    {
+      "id": "revan_p1",
+      "name": "Floor 1 - Revan"
+    },
+    {
+      "id": "revan_hk47",
+      "name": "HK-47",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "Revan"
+        ]
+      }
+    },
+    {
+      "id": "revan_foci",
+      "name": "Foci",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "revan_p3",
+      "name": "Floor 2 - Revan",
+      "start_trigger": {
+        "type": "counter_reaches",
+        "counter_id": "foci_deaths",
+        "value": 4
+      }
+    },
+    {
+      "id": "revan_resonance",
+      "name": "Resonance",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 28.1,
+        "selector": [
+          "Revan"
+        ]
+      }
+    },
+    {
+      "id": "revan_p4",
+      "name": "Floor 3 - Revan",
+      "start_trigger": {
+        "type": "effect_removed",
+        "keyword": "Resonance"
+      }
+    },
+    {
+      "id": "revan_core",
+      "name": "Core",
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          3447583133401088
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "foci_deaths",
+      "name": "Foci Deaths",
+      "initial_value": 0,
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Machine Focus"
+        ]
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "rev_impel",
+      "label": "Impel",
+      "duration_seconds": 20,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Impel"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_blades",
+      "label": "Blades Spawn",
+      "duration_seconds": 60,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Wield"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_overcharge",
+      "label": "Saber Overcharge",
+      "duration_seconds": 16,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Saber Overcharge"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_heave",
+      "label": "Heave",
+      "duration_seconds": 30,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Heave"
+      },
+      "cancel_trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "phase_ended",
+            "phase_id": "revan_p1"
+          },
+          {
+            "type": "phase_ended",
+            "phase_id": "revan_p3"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rev_trail",
+      "label": "Trail of Agony",
+      "duration_seconds": 32,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Trail of Agony"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_corruption_alert",
+      "label": "Move out and wait for cleanse!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Essence Corruption",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "rev_killshot",
+      "label": "Killshot",
+      "duration_seconds": 5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Imbue"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_force_imbue",
+      "label": "Force Imbue",
+      "duration_seconds": 40,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "rev_killshot"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_grenades",
+      "label": "Spread!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Handful of Grenades"
+      }
+    },
+    {
+      "id": "rev_reactive_hp",
+      "label": "Reactive Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "rev_aberration_p3",
+      "label": "Force Aberration",
+      "duration_seconds": 23.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
+      },
+      "cancel_trigger": {
+        "type": "any_phase_change"
+      }
+    },
+    {
+      "id": "rev_push_p3",
+      "label": "Push",
+      "duration_seconds": 9.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Shatter"
+      },
+      "conditions": [
+        {
+          "type": "phase_active",
+          "phase_ids": [
+            "revan_p3"
+          ]
+        }
+      ],
+      "cancel_trigger": {
+        "type": "phase_ended",
+        "phase_id": "revan_p3"
+      }
+    },
+    {
+      "id": "rev_unstable",
+      "label": "Unstable Aberration",
+      "duration_seconds": 40,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unstable Aberration"
+      }
+    },
+    {
+      "id": "rev_push_p4",
+      "label": "Push",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Resonance"
+      }
+    },
+    {
+      "id": "rev_heave_p4",
+      "label": "Heave",
+      "duration_seconds": 25,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Resonance"
+      }
+    },
+    {
+      "id": "rev_corruption_cs",
+      "label": "Essence Corruption Start",
+      "duration_seconds": 10,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "rev_cleanse_pools_cs",
+      "label": "Cleanse Pools",
+      "duration_seconds": 50,
+      "trigger": {
+        "type": "combat_start"
+      }
+    }
+  ]
+}

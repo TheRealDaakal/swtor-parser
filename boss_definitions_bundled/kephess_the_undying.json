@@ -1,0 +1,256 @@
+{
+  "id": "kephess_the_undying",
+  "name": "Kephess",
+  "boss_names": [
+    "Kephess"
+  ],
+  "boss_npc_ids": [
+    "2831409945247744",
+    "2937620191510528",
+    "3013121421606912",
+    "3013134306508800",
+    "3013138601476096"
+  ],
+  "phases": [
+    {
+      "id": "kephess_main",
+      "name": "Main"
+    },
+    {
+      "id": "kephess_cascade",
+      "name": "Cascade",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Kephess"
+        ]
+      }
+    },
+    {
+      "id": "kephess_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Kephess"
+        ]
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": "overcharge_count",
+      "name": "Overcharges",
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Overcharge"
+      },
+      "reset_on": {
+        "type": "combat_end"
+      }
+    },
+    {
+      "id": "nanites_count",
+      "name": "Nanites",
+      "increment_on": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "reset_on": {
+        "type": "counter_reaches",
+        "counter_id": "nanites_count",
+        "value": 4
+      }
+    }
+  ],
+  "timers": [
+    {
+      "id": "kephess_invulnerable",
+      "label": "Invulnerable",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3008070540066816"
+      }
+    },
+    {
+      "id": "kephess_first_nanites",
+      "label": "1st Nanites + Jump",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3008070540066816"
+      }
+    },
+    {
+      "id": "kephess_cascade_jump",
+      "label": "Cascade Jump!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "phase_entered",
+        "phase_id": "kephess_cascade"
+      }
+    },
+    {
+      "id": "kephess_targeted",
+      "label": "Targeted by boss!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Overcharge",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "kephess_sphere_target",
+      "label": "Targeted by sphere!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Pulsating Energy",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "kephess_nanites_alert",
+      "label": "Nanites dropped!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_removed",
+        "keyword": "Corrupted Nanites",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "kephess_the_undying_cleanse_feet",
+      "label": "Cleanse Feet",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "effect_applied",
+        "keyword": "Ignored",
+        "target": "local_player"
+      }
+    },
+    {
+      "id": "kephess_laser_blast",
+      "label": "Laser Blast",
+      "duration_seconds": 4.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Overcharge"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "overcharge_count",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "kephess_nanites_1",
+      "label": "Corrupted Nanites",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "kephess_nanites_2_mm",
+      "label": "Corrupted Nanites",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "kephess_nanites_2_vm",
+      "label": "Nanites + Jump",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "id": "kephess_nanites_3",
+      "label": "Nanites + Jump",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "kephess_jump_1",
+      "label": "Jump!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 0
+        }
+      ]
+    },
+    {
+      "id": "kephess_jump_3",
+      "label": "Jump!",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "conditions": [
+        {
+          "type": "counter_compare",
+          "counter_id": "nanites_count",
+          "operator": "eq",
+          "value": 2
+        }
+      ]
+    }
+  ]
+}

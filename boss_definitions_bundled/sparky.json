@@ -1,0 +1,137 @@
+{
+  "id": "sparky",
+  "name": "Sparky",
+  "boss_names": [
+    "Sparky"
+  ],
+  "boss_npc_ids": [
+    "3367555007774720",
+    "3458110098243584",
+    "3458114393210880",
+    "3458122983145472"
+  ],
+  "phases": [
+    {
+      "id": "sparky_p2",
+      "name": "Phase 2"
+    },
+    {
+      "id": "sparky_p3",
+      "name": "Phase 3",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 60.1,
+        "selector": [
+          "Sparky"
+        ]
+      }
+    },
+    {
+      "id": "sparky_burn",
+      "name": "Burn",
+      "start_trigger": {
+        "type": "hp_below",
+        "percent": 25.1,
+        "selector": [
+          "Sparky"
+        ]
+      }
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "sparky_brutalize",
+      "label": "Brutalize",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "effect_removed",
+            "keyword": "Rampage!"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "sparky_burn"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sparky_shoulder_throw",
+      "label": "Shoulder Throw",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Body Slam"
+      }
+    },
+    {
+      "id": "sparky_rampage_end",
+      "label": "Rampage END",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rampage!"
+      }
+    },
+    {
+      "id": "sparky_rampage_p2",
+      "label": "Rampage",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Rampage!"
+          },
+          {
+            "type": "phase_entered",
+            "phase_id": "sparky_p2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "sparky_rampage_p3",
+      "label": "Rampage P3",
+      "duration_seconds": 46.0,
+      "trigger": {
+        "type": "any_of",
+        "conditions": [
+          {
+            "type": "ability_cast",
+            "keyword": "Rampage!"
+          },
+          {
+            "type": "hp_below",
+            "percent": 25.0,
+            "selector": [
+              "Sparky"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "sparky_forceful_roar_adds",
+      "label": "Forceful Roar (Adds)",
+      "duration_seconds": 40.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Forceful Roar"
+      }
+    },
+    {
+      "id": "sparky_roar_adds",
+      "label": "Roar (Adds)",
+      "duration_seconds": 17.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Roar"
+      }
+    }
+  ]
+}
