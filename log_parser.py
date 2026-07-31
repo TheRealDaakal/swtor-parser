@@ -62,6 +62,11 @@ EFFECT_REMOVED_KEYWORDS = ("removeeffect",)
 # as distinct from the damage ticks / effect applications that ability then
 # produces (all of which carry the SAME ability name in the log line).
 ABILITY_ACTIVATE_KEYWORDS = ("abilityactivate",)
+# The log's own threat-generation event -- e.g. "[Event {id}: ModifyThreat
+# {id}] <406.0>". Neither BARAS nor ORBS's public docs mention reading this
+# directly and StarParse's own threat number is presumably built from it,
+# but nothing in this project touched it before now.
+THREAT_MODIFIED_KEYWORDS = ("modifythreat",)
 
 
 @dataclass
@@ -125,6 +130,14 @@ class CombatEvent:
     # *after* landing; this is an attack that never landed in the first
     # place. Heals have no equivalent -- they don't roll to hit.
     avoidance: Optional[str] = None
+    # True only for the log's own threat-generation event (source generated/
+    # lost threat_delta points on target). Distinct from is_damage/is_heal --
+    # a single ability cast can log ITS OWN separate ModifyThreat line, not
+    # derived from the damage/heal amount, so this can't be inferred from
+    # amount alone (e.g. Chaff Flare logs a large NEGATIVE delta with no
+    # damage/heal at all).
+    is_threat_modified: bool = False
+    threat_delta: float = 0.0
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -168,6 +181,17 @@ def _first_balanced_paren(text: str) -> Optional[str]:
 
 
 SHIELD_ABSORBED_RE = re.compile(r"-shield\b.*?\((\d+(?:\.\d+)?)\s+absorbed", re.DOTALL)
+
+# The trailing "<N>" value SWTOR appends to most lines, outside any paren
+# group -- e.g. "... ModifyThreat {id}] <406.0>" or "... Damage {id}]
+# (1878 energy {id}) <1878.0>". Only ModifyThreat's use of it is read today;
+# for damage/heal lines it duplicates the paren amount and isn't needed.
+ANGLE_VALUE_RE = re.compile(r"<(-?\d+(?:\.\d+)?)>")
+
+
+def _extract_angle_value(tail: str) -> float:
+    match = ANGLE_VALUE_RE.search(tail)
+    return float(match.group(1)) if match else 0.0
 
 
 def _extract_amount(tail: str) -> float:
@@ -385,6 +409,9 @@ def _classify(event: CombatEvent, tail: str) -> None:
     event.is_ability_activate = any(
         k in effect_name_tight for k in ABILITY_ACTIVATE_KEYWORDS
     )
+    event.is_threat_modified = any(
+        k in effect_name_tight for k in THREAT_MODIFIED_KEYWORDS
+    )
 
     if event.is_damage or event.is_heal:
         event.amount = _extract_amount(tail)
@@ -395,3 +422,5 @@ def _classify(event: CombatEvent, tail: str) -> None:
         # to scan the tail on every heal tick too.
         event.shield_absorbed = _extract_shield_absorbed(tail)
         event.avoidance = _extract_avoidance(tail)
+    if event.is_threat_modified:
+        event.threat_delta = _extract_angle_value(tail)
