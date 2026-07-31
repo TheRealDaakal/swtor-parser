@@ -22,12 +22,33 @@ storage.py) and reloaded as ordinary Encounter objects.
 import threading
 import time
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from log_parser import CombatEvent
 
 ENCOUNTER_GAP_SECONDS = 8.0        # inactivity fallback for ending a fight
 TRAILING_CAPTURE_SECONDS = 4.0     # StarParse-style post-ExitCombat grace window
+BURST_WINDOW_SECONDS = 10.0        # ORBS/StarParse's own "burst" window width
+
+
+def _max_window_sum(events: List[Tuple[float, float]], window_seconds: float) -> float:
+    """Max sum of `amount` over any window_seconds-wide sliding window across
+    `events` (assumed already in chronological order, which every caller here
+    guarantees by only ever appending as the log streams in). Two-pointer
+    scan, O(n) -- fine to recompute on every GUI refresh tick even for a
+    several-thousand-event pull; no need for incremental caching."""
+    if not events:
+        return 0.0
+    best = 0.0
+    running = 0.0
+    left = 0
+    for right in range(len(events)):
+        running += events[right][1]
+        while events[right][0] - events[left][0] > window_seconds:
+            running -= events[left][1]
+            left += 1
+        best = max(best, running)
+    return best
 
 
 @dataclass
@@ -55,6 +76,12 @@ class PlayerStats:
     # they actually spent their output on.
     damage_by_target: Dict[str, float] = field(default_factory=dict)
     healing_by_target: Dict[str, float] = field(default_factory=dict)
+    # (timestamp, amount) per landed hit/heal, in arrival order -- the raw
+    # material burst_dps()/burst_hps() slide a window over. Not aggregated
+    # away like everything else above because "best 10s window" genuinely
+    # needs the individual timestamps, not just a running total.
+    damage_events: List[Tuple[float, float]] = field(default_factory=list)
+    heal_events: List[Tuple[float, float]] = field(default_factory=list)
     # Outgoing-attack accuracy/crit tallies. damage_attempts counts every
     # damage tick this entity dealt regardless of outcome (landed or not);
     # damage_avoided is the subset the target's defense roll stopped
@@ -92,6 +119,15 @@ class PlayerStats:
 
     def apm(self, duration: float) -> float:
         return (60.0 * self.ability_casts / duration) if duration > 0 else 0.0
+
+    def burst_dps(self, window_seconds: float = BURST_WINDOW_SECONDS) -> float:
+        """Best `window_seconds`-wide stretch of this fight, not the whole-
+        pull average -- answers "how hard did my cooldown window actually
+        hit" rather than diluting it across every quiet moment too."""
+        return _max_window_sum(self.damage_events, window_seconds) / window_seconds
+
+    def burst_hps(self, window_seconds: float = BURST_WINDOW_SECONDS) -> float:
+        return _max_window_sum(self.heal_events, window_seconds) / window_seconds
 
     def mitigation_pct(self) -> float:
         """What fraction of RAW incoming damage (taken + absorbed) the
@@ -148,6 +184,8 @@ class PlayerStats:
             "damage_by_ability": self.damage_by_ability,
             "healing_by_ability": self.healing_by_ability,
             "damage_by_target": self.damage_by_target,
+            "damage_events": self.damage_events,
+            "heal_events": self.heal_events,
             "healing_by_target": self.healing_by_target,
             "is_player": self.is_player,
             "damage_attempts": self.damage_attempts,
@@ -172,6 +210,8 @@ class PlayerStats:
             damage_by_ability=dict(d.get("damage_by_ability", {})),
             healing_by_ability=dict(d.get("healing_by_ability", {})),
             damage_by_target=dict(d.get("damage_by_target", {})),
+            damage_events=[tuple(x) for x in d.get("damage_events", [])],
+            heal_events=[tuple(x) for x in d.get("heal_events", [])],
             healing_by_target=dict(d.get("healing_by_target", {})),
             is_player=d.get("is_player", False),
             damage_attempts=d.get("damage_attempts", 0),
@@ -273,6 +313,7 @@ class Encounter:
                     p.damage_by_target[event.target] = (
                         p.damage_by_target.get(event.target, 0.0) + event.amount
                     )
+                p.damage_events.append((now, event.amount))
             if event.target:
                 self._get(event.target).damage_taken += event.amount
 
@@ -305,6 +346,7 @@ class Encounter:
                     p.healing_by_target[event.target] = (
                         p.healing_by_target.get(event.target, 0.0) + event.amount
                     )
+                p.heal_events.append((now, event.amount))
         if event.is_heal and event.source:
             p = self._get(event.source)
             p.heal_casts += 1

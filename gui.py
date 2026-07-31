@@ -567,6 +567,10 @@ class MeterWindow:
         summary = ttk.Frame(win)
         summary.pack(fill="x", padx=8, pady=(8, 0))
         stat_parts = [f"APM {player.apm(duration):.1f}"]
+        if player.damage_events:
+            stat_parts.append(f"Burst DPS {player.burst_dps():,.0f}")
+        if player.heal_events:
+            stat_parts.append(f"Burst EHPS {player.burst_hps():,.0f}")
         if player.damage_attempts > 0:
             stat_parts.append(f"Accuracy {player.accuracy_pct():.1f}%")
             stat_parts.append(f"Crit {player.crit_pct():.1f}%")
