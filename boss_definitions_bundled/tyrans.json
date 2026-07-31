@@ -10,7 +10,12 @@
     "3303413966176256",
     "3303418261143552"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "tyrans_sc",

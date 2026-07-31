@@ -7,7 +7,12 @@
   "boss_npc_ids": [
     "3057806261354496"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [],
   "timers": [
     {

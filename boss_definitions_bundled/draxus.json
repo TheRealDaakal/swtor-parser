@@ -10,7 +10,12 @@
     "3303401081274368",
     "3303405376241664"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "draxus_subteroth_count",

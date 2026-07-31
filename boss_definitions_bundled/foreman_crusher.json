@@ -1,0 +1,21 @@
+{
+  "id": "foreman_crusher",
+  "name": "Foreman Crusher",
+  "boss_names": [
+    "Foreman Crusher"
+  ],
+  "boss_npc_ids": [
+    "2739875602235392",
+    "2739888487137280",
+    "2760637474144256",
+    "2760693308719104"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

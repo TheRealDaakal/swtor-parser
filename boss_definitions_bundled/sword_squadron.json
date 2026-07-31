@@ -12,7 +12,12 @@
     "3468770207072256",
     "3468774502039552"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "rain_damage",

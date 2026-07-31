@@ -10,7 +10,12 @@
     "3469281308180480",
     "3469285603147776"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "malaphar_savagery",

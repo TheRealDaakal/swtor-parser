@@ -1,0 +1,21 @@
+{
+  "id": "bonethrasher",
+  "name": "Bonethrasher",
+  "boss_names": [
+    "Bonethrasher"
+  ],
+  "boss_npc_ids": [
+    "2271801476382720",
+    "2624474125959168",
+    "2624491305828352",
+    "2624508485697536"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

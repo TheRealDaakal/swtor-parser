@@ -10,7 +10,12 @@
     "3570951774011392",
     "3570956068978688"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "monolith_pae",

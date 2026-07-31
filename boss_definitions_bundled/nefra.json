@@ -10,7 +10,12 @@
     "3303036009054208",
     "3303040304021504"
   ],
-  "phases": [],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
   "counters": [
     {
       "id": "nefra_twin_attack_count",

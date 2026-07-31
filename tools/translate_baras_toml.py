@@ -399,6 +399,24 @@ def translate_boss(b, real_boss_names=None):
             ))
     phases_src = b.get("phases", [])
     phases = [translate_phase(p, ctx_prefix, i == 0) for i, p in enumerate(phases_src)]
+    if not phases:
+        # BARAS doesn't require a phase machine for a fight whose timers are
+        # all just HP-threshold/ability-cast triggered globally (no add
+        # waves, no mechanic rotation) -- Karagga the Unyielding's own real
+        # data is exactly this: 7 timers, zero phases. But our engine's
+        # match_boss() REQUIRES at least one phase to ever mark a boss
+        # "active" (boss_intelligence.py: "if matched is None or not
+        # matched.phases: return None") -- so translating that shape
+        # literally produces a boss that's recognized in name only and
+        # whose timers can never fire, for anyone, ever. Found this via a
+        # real user report ("no alerts have shown") tracing back through an
+        # empty-but-present Karagga entry; a corpus-wide audit then found
+        # 17 more bosses with the identical defect, some with 20+ dead
+        # timers (Monolith). Synthesizing the same minimal single phase
+        # every other simple single-phase boss in this project already uses
+        # (see xrr3.json) fixes it at the source, for every future
+        # translation, not just this one file.
+        phases = [translate_phase({"id": "main", "name": "Main"}, ctx_prefix, True)]
     counters = [translate_counter(c, ctx_prefix) for c in b.get("counters", [])]
     timers = [translate_timer(t, ctx_prefix) for t in b.get("timer", [])]
     timers = [t for t in timers if t is not None]

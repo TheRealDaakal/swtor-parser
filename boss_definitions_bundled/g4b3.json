@@ -1,0 +1,21 @@
+{
+  "id": "g4b3",
+  "name": "G4-B3 Heavy Fabricator",
+  "boss_names": [
+    "G4-B3 Heavy Fabricator"
+  ],
+  "boss_npc_ids": [
+    "2747344550363136",
+    "2748401112317952",
+    "2760371186171904",
+    "2760375481139200"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}
