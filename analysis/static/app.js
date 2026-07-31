@@ -1,5 +1,5 @@
 'use strict';
-/* Corpus analytics frontend — no dependencies, no CDN, works fully offline.
+/* DPS corpus-analytics frontend — no dependencies, no CDN, works fully offline.
    Charts are hand-rolled SVG built to the dataviz mark specs:
    2px lines, r>=4 markers with a 2px surface ring, 10% area wash,
    solid hairline gridlines, crosshair tooltip, and a table-view twin so no

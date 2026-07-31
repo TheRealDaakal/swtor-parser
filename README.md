@@ -1,4 +1,4 @@
-# SWTOR Live Parser
+# DPS — Dynamic Parse System
 
 A lightweight, BARAS-style desktop combat log parser for SWTOR. Watches your
 CombatLogs folder live and shows DPS, HPS, damage taken, and deaths per
