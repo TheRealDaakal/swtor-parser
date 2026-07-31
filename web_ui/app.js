@@ -197,6 +197,7 @@ async function openBreakdown(pullNum, name) {
   if (s.crit_pct != null) statParts.push(`Crit ${s.crit_pct}%`);
   if (s.heal_crit_pct != null) statParts.push(`Heal Crit ${s.heal_crit_pct}%`);
   if (s.times_interrupted) statParts.push(`Interrupted ${s.times_interrupted}x`);
+  if (s.cc_casts) statParts.push(`CC Applied ${s.cc_casts}x`);
   if (s.boss_dps != null) statParts.push(`Boss DPS ${fmt(s.boss_dps)}`);
 
   const abilityTable = (rows, keyLabel) => rows.length ? `
@@ -217,6 +218,8 @@ async function openBreakdown(pullNum, name) {
     ${abilityTable(b.healing_by_ability, 'Ability')}
     <h2 style="font-size:13px;margin-top:14px">Damage by target</h2>
     ${abilityTable(b.damage_by_target, 'Target')}
+    <h2 style="font-size:13px;margin-top:14px">Crowd control applied</h2>
+    ${abilityTable(b.cc_by_ability, 'Ability')}
     <div style="margin-top:14px"><button onclick="openPull(${pullNum})">&larr; Back to pull</button></div>`;
   $('#modal').classList.add('open');
 }

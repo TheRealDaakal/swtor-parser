@@ -73,6 +73,15 @@ THREAT_MODIFIED_KEYWORDS = ("modifythreat",)
 # which this project doesn't have), so this can only answer "how often was
 # I interrupted", not "how many interrupts did I land".
 ABILITY_INTERRUPT_KEYWORDS = ("abilityinterrupt",)
+# Hard CC only (stun/mez/sleep/incapacitate) -- deliberately excludes
+# "slowed", which showed up on nearly every high-frequency damage ability in
+# a real corpus scan (a minor movement-slow tacked onto normal attacks, not
+# an intentional crowd-control choice) and would just be noise for "did we
+# lock the add down". Matched against effect_name, same as every other
+# classification here -- never the ability name (see _classify's comment on
+# why: "Death Field" would misclassify against a "death" keyword the same
+# way "Force Storm" would misfire against an ability-name CC check here).
+HARD_CC_KEYWORDS = ("stunned", "incapacitated", "asleep", "sleeping", "lifted")
 
 
 @dataclass
@@ -148,6 +157,12 @@ class CombatEvent:
     # ABILITY_INTERRUPT_KEYWORDS -- source is the player who GOT
     # interrupted, not the interrupter.
     is_interrupted: bool = False
+    # True when a player applied hard CC (stun/mez/sleep) to an NPC -- see
+    # HARD_CC_KEYWORDS. Scoped to player->NPC only: the same effect names
+    # fire in the other direction (a boss stunning a player) and that's a
+    # different question ("was I CC'd") from what this answers ("did we CC
+    # the add").
+    is_hard_cc: bool = False
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -424,6 +439,11 @@ def _classify(event: CombatEvent, tail: str) -> None:
     )
     event.is_interrupted = any(
         k in effect_name_tight for k in ABILITY_INTERRUPT_KEYWORDS
+    )
+    event.is_hard_cc = (
+        event.source_is_player and not event.target_is_player
+        and not event.is_effect_removed
+        and any(k in effect_name_tight for k in HARD_CC_KEYWORDS)
     )
 
     if event.is_damage or event.is_heal:

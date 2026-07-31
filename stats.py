@@ -101,6 +101,9 @@ class PlayerStats:
     # CombatEvent.is_interrupted for why this can't be "interrupts I landed
     # on someone else" instead.
     times_interrupted: int = 0
+    # Hard CC (stun/mez/sleep) landed on an NPC -- see CombatEvent.is_hard_cc.
+    cc_casts: int = 0
+    cc_by_ability: Dict[str, int] = field(default_factory=dict)
     # True once this entity has been seen with SWTOR's '@' player marker.
     # Without it, NPCs are indistinguishable from players downstream, and any
     # "deaths" total silently counts every add and trash mob that died --
@@ -195,6 +198,8 @@ class PlayerStats:
             "heal_crits": self.heal_crits,
             "ability_casts": self.ability_casts,
             "times_interrupted": self.times_interrupted,
+            "cc_casts": self.cc_casts,
+            "cc_by_ability": self.cc_by_ability,
         }
 
     @classmethod
@@ -221,6 +226,8 @@ class PlayerStats:
             heal_crits=d.get("heal_crits", 0),
             ability_casts=d.get("ability_casts", 0),
             times_interrupted=d.get("times_interrupted", 0),
+            cc_casts=d.get("cc_casts", 0),
+            cc_by_ability=dict(d.get("cc_by_ability", {})),
         )
 
 
@@ -361,6 +368,12 @@ class Encounter:
 
         if event.is_interrupted and event.source:
             self._get(event.source).times_interrupted += 1
+
+        if event.is_hard_cc and event.source:
+            p = self._get(event.source)
+            p.cc_casts += 1
+            key = event.ability or event.effect_name or "Unknown"
+            p.cc_by_ability[key] = p.cc_by_ability.get(key, 0) + 1
 
     def snapshot(self, players_only: bool = True):
         """Returns list of (name, dps, hps, damage_taken, mitigated_pct, deaths)
