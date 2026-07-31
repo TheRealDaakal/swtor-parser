@@ -774,46 +774,91 @@ class MeterWindow:
     # ---------- import tab ----------
 
     def _build_import_tab(self):
-        ttk.Label(
-            self.import_tab,
-            text="Import one or more saved .txt log files (e.g. from teammates) "
-                 "and merge them into a single combined encounter. Overlapping "
-                 "events across files are de-duplicated automatically -- this "
-                 "is for filling visibility gaps, not required for normal use, "
-                 "since your own log already includes the whole group's actions.",
-            wraplength=620,
-            foreground="#555",
-        ).pack(fill="x", padx=6, pady=8)
+        # Scrollable: the explanations below are long enough that the whole
+        # tab doesn't reliably fit in the default window height, and unlike
+        # the other tabs this one has no natural way to shrink its content.
+        canvas = tk.Canvas(self.import_tab, bg=BG, highlightthickness=0)
+        scrollbar = ttk.Scrollbar(self.import_tab, orient="vertical", command=canvas.yview)
+        inner = ttk.Frame(canvas)
+        inner.bind(
+            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.create_window((0, 0), window=inner, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
 
-        ttk.Button(self.import_tab, text="Choose Log Files...", command=self._import_logs).pack(
-            anchor="w", padx=6
+        def _on_wheel(event):
+            canvas.yview_scroll(-1 if event.delta > 0 else 1, "units")
+
+        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_wheel))
+        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
+
+        ttk.Label(
+            inner, text="Merge multiple people's logs",
+            foreground=INK, font=("Segoe UI", 10, "bold"),
+        ).pack(anchor="w", padx=6, pady=(8, 0))
+        ttk.Label(
+            inner,
+            text="For filling visibility gaps: pick two or more raiders' saved "
+                 ".txt logs from the SAME fight and this combines them into one "
+                 "encounter, keeping every event either log recorded (duplicates "
+                 "across the overlapping files are detected and only counted "
+                 "once). Not needed for normal use -- your own log already "
+                 "records the whole group's actions, not just yours -- only "
+                 "useful when someone was out of your log's visibility range "
+                 "for part of the fight (e.g. behind a wall, or zoned in late) "
+                 "and a teammate's log covers what yours missed.\n\n"
+                 "Picking a SINGLE file here just re-imports that one log as one "
+                 "big combined encounter (the whole file, not split into "
+                 "individual pulls) -- Parsely upload works for that case, but "
+                 "not when multiple files are actually merged, since events "
+                 "from different files don't share one real line range to "
+                 "point Parsely at.",
+            wraplength=620,
+            foreground="#555", justify="left",
+        ).pack(fill="x", padx=6, pady=(2, 0))
+
+        ttk.Button(inner, text="Choose Log Files...", command=self._import_logs).pack(
+            anchor="w", padx=6, pady=(6, 0)
         )
 
         self.import_result_var = tk.StringVar(value="")
-        ttk.Label(self.import_tab, textvariable=self.import_result_var, foreground="#333").pack(
+        ttk.Label(inner, textvariable=self.import_result_var, foreground="#333").pack(
             anchor="w", padx=6, pady=(8, 0)
         )
 
-        ttk.Separator(self.import_tab).pack(fill="x", padx=6, pady=10)
+        ttk.Separator(inner).pack(fill="x", padx=6, pady=10)
 
         ttk.Label(
-            self.import_tab,
-            text="Load an old session log (e.g. from a previous night, or one "
-                 "you weren't running the app for) and split it into its "
-                 "individual pulls -- each real fight is added to History "
-                 "exactly as if it had been captured live, boss recognition "
-                 "and all. Trivial slivers (looting, stray aggro) are skipped.",
+            inner, text="Import an old session log",
+            foreground=INK, font=("Segoe UI", 10, "bold"),
+        ).pack(anchor="w", padx=6)
+        ttk.Label(
+            inner,
+            text="For backfilling History: pick ONE of your own saved .txt logs "
+                 "(a previous night, or a session you weren't running the app "
+                 "for) and this replays it exactly like the live tailer would "
+                 "have -- splitting it into its real individual pulls using the "
+                 "same combat-start detection the corpus browser uses, with "
+                 "boss/phase recognition applied to each one. Trivial slivers "
+                 "(looting, a stray pull that never did damage) are skipped "
+                 "automatically. Each real pull is added to History as its own "
+                 "entry, Parsely upload included, same as if it had been "
+                 "captured live. Re-importing the same file is harmless -- "
+                 "pulls already in History (same file, same lines) are "
+                 "detected and skipped instead of duplicated.",
             wraplength=620,
-            foreground="#555",
-        ).pack(fill="x", padx=6)
+            foreground="#555", justify="left",
+        ).pack(fill="x", padx=6, pady=(2, 0))
 
         ttk.Button(
-            self.import_tab, text="Load Old Session Log(s)...",
+            inner, text="Load Old Session Log(s)...",
             command=self._load_past_session,
         ).pack(anchor="w", padx=6, pady=(6, 0))
 
         self.past_session_result_var = tk.StringVar(value="")
-        ttk.Label(self.import_tab, textvariable=self.past_session_result_var, foreground="#333").pack(
+        ttk.Label(inner, textvariable=self.past_session_result_var, foreground="#333").pack(
             anchor="w", padx=6, pady=(8, 0)
         )
 
