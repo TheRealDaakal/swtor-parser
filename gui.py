@@ -543,9 +543,20 @@ class MeterWindow:
     def _show_ability_breakdown(self, player):
         win = tk.Toplevel(self.root)
         win.title(f"{player.name} — ability breakdown")
-        win.geometry("420x360")
+        win.geometry("420x400")
 
         dmg_rows, heal_rows = player.ability_breakdown()
+
+        summary = ttk.Frame(win)
+        summary.pack(fill="x", padx=8, pady=(8, 0))
+        stat_parts = []
+        if player.damage_attempts > 0:
+            stat_parts.append(f"Accuracy {player.accuracy_pct():.1f}%")
+            stat_parts.append(f"Crit {player.crit_pct():.1f}%")
+        if player.heal_casts > 0:
+            stat_parts.append(f"Heal Crit {player.heal_crit_pct():.1f}%")
+        ttk.Label(summary, text="   |   ".join(stat_parts) or "No attacks/heals yet",
+                  foreground=ACCENT, font=("", 10, "bold")).pack(anchor="w")
 
         ttk.Label(win, text="Damage by ability", font=("", 10, "bold")).pack(
             anchor="w", padx=8, pady=(8, 0)

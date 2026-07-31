@@ -115,6 +115,16 @@ class CombatEvent:
     # only ever mentions inside a nested "(N absorbed {id})" group tagged
     # with a sibling "-shield" marker -- see _extract_amount_and_shield.
     shield_absorbed: float = 0.0
+    # True when the value group's leading number carries SWTOR's own crit
+    # marker (a literal trailing '*', e.g. '9578*') -- applies to both damage
+    # and heals, since both can crit.
+    is_critical: bool = False
+    # Set to "miss"/"dodge"/"parry"/"deflect"/"resist" when a damage attempt
+    # didn't land at all (accuracy/defense roll failed), else None. Distinct
+    # from shield_absorbed: that's a hit that got partially/fully mitigated
+    # *after* landing; this is an attack that never landed in the first
+    # place. Heals have no equivalent -- they don't roll to hit.
+    avoidance: Optional[str] = None
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -172,6 +182,35 @@ def _extract_amount(tail: str) -> float:
         return 0.0
     match = LEADING_NUMBER_RE.match(group)
     return float(match.group(1)) if match else 0.0
+
+
+def _extract_is_critical(tail: str) -> bool:
+    """The leading number in the value group carries the crit marker
+    directly, e.g. '9578* energy {id}' -> True, '9578 energy {id}' -> False.
+    """
+    group = _first_balanced_paren(tail)
+    if group is None:
+        return False
+    match = LEADING_NUMBER_RE.match(group)
+    if not match:
+        return False
+    return group[match.end():match.end() + 1] == "*"
+
+
+AVOIDANCE_RE = re.compile(r"-(miss|dodge|parry|deflect|resist)\b")
+
+
+def _extract_avoidance(tail: str) -> Optional[str]:
+    """Pulls the defense-roll outcome out of the same value group
+    `_extract_amount` reads, e.g. '(0 -dodge {id})' -> "dodge". Always
+    accompanies a 0 amount -- the attack never landed, as opposed to a
+    landed hit that got shielded down to 0 (see _extract_shield_absorbed).
+    """
+    group = _first_balanced_paren(tail)
+    if group is None:
+        return None
+    match = AVOIDANCE_RE.search(group)
+    return match.group(1) if match else None
 
 
 def _extract_shield_absorbed(tail: str) -> float:
@@ -349,7 +388,10 @@ def _classify(event: CombatEvent, tail: str) -> None:
 
     if event.is_damage or event.is_heal:
         event.amount = _extract_amount(tail)
+        event.is_critical = _extract_is_critical(tail)
     if event.is_damage:
-        # Shield Chance mitigation only ever applies to incoming damage, not
-        # healing -- no need to scan the tail on every heal tick too.
+        # Shield Chance mitigation and avoidance (miss/dodge/parry/deflect/
+        # resist) only ever apply to incoming damage, not healing -- no need
+        # to scan the tail on every heal tick too.
         event.shield_absorbed = _extract_shield_absorbed(tail)
+        event.avoidance = _extract_avoidance(tail)
