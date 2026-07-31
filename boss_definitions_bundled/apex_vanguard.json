@@ -117,7 +117,8 @@
         "selector": [
           "Apex Vanguard"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "apex_vanguard_1st_acid",
@@ -538,7 +539,8 @@
         "selector": [
           4297557161279488
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "apex_vanguard_flare",
@@ -579,7 +581,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "apex_burn"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

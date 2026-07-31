@@ -239,6 +239,7 @@
         "type": "ability_cast",
         "keyword": "Exposed Power"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -256,6 +257,7 @@
         "type": "ability_cast",
         "keyword": "Exposed Power"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -273,6 +275,7 @@
         "type": "ability_cast",
         "keyword": "Exposed Power"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -290,6 +293,7 @@
         "type": "ability_cast",
         "keyword": "Exposed Power"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -307,7 +311,8 @@
         "type": "counter_reaches",
         "counter_id": "monolith_bw",
         "value": 3
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "monolith_cursed",
@@ -317,7 +322,8 @@
         "type": "effect_applied",
         "keyword": "Curse of the Monolith",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "monolith_kite",
@@ -327,7 +333,8 @@
         "type": "effect_applied",
         "keyword": "Lingering Destruction",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

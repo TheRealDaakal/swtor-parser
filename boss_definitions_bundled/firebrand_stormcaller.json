@@ -145,7 +145,8 @@
         "type": "effect_applied",
         "keyword": "Targeted (Any)",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "fs_mortar_volley",

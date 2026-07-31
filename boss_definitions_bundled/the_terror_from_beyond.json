@@ -407,6 +407,7 @@
         "type": "phase_entered",
         "phase_id": "the_terror_from_beyond_p1_intermission"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -454,7 +455,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "tfb_burn"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "the_terror_from_beyond_p2_tentacles",
@@ -513,7 +515,8 @@
         "type": "effect_applied",
         "keyword": "Inconsistency",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "the_terror_from_beyond_tentacle_under_10",
@@ -525,7 +528,8 @@
         "selector": [
           "Tunneling Tentacle"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "the_terror_from_beyond_enraged_tentacle",

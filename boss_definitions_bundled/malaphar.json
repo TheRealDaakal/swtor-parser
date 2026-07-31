@@ -71,7 +71,8 @@
         "type": "counter_reaches",
         "counter_id": "malaphar_savagery",
         "value": 10
-      }
+      },
+      "is_alert": true
     }
   ]
 }

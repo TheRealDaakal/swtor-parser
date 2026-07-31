@@ -325,6 +325,8 @@ class MeterWindow:
         y = pos["y"] if pos else 180 + 150 * len(self.bar_overlays)
         if key == "timers":
             o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+        elif key == "alerts":
+            o = ov.AlertOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
         elif key == "hots":
             o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
         elif key in ("cooldowns", "dots"):
@@ -399,7 +401,9 @@ class MeterWindow:
                 o.render(self.timer_engine.snapshot("dot"))
             elif kind == "timers":
                 o.render([t for t in self.timer_engine.snapshot()
-                          if t[3] not in ("cooldown", "dot", "hot")])
+                          if t[3] not in ("cooldown", "dot", "hot") and not t[4]])
+            elif kind == "alerts":
+                o.render([t for t in self.timer_engine.snapshot() if t[4]])
 
     def _drag_start(self, event):
         self._drag_offset = (event.x, event.y)
@@ -439,6 +443,9 @@ class MeterWindow:
             foreground=INK_MUTED,
         )
         self.hint_label.pack(anchor="w", padx=4)
+
+        self.alert_list_frame = ttk.Frame(self.live_tab)
+        self.alert_list_frame.pack(fill="x", padx=4, pady=(4, 0))
 
         self._section(self.live_tab, "Active Timers")
         self.timer_list_frame = ttk.Frame(self.live_tab)
@@ -907,6 +914,7 @@ class MeterWindow:
                 values=(name, f"{dps:,.0f}", f"{hps:,.0f}", f"{taken:,.0f}", mit_text, deaths),
             )
 
+        self._refresh_alerts()
         self._refresh_timers()
         self._refresh_cooldowns()
         self._refresh_dots_hots()
@@ -924,8 +932,8 @@ class MeterWindow:
     def _refresh_timers(self):
         for child in self.timer_list_frame.winfo_children():
             child.destroy()
-        for label, remaining, total, category in self.timer_engine.snapshot():
-            if category in self._OWN_PANEL_CATEGORIES:
+        for label, remaining, total, category, is_alert in self.timer_engine.snapshot():
+            if category in self._OWN_PANEL_CATEGORIES or is_alert:
                 continue
             self._timer_row(self.timer_list_frame, label, remaining, total, "Boss")
 
@@ -945,7 +953,7 @@ class MeterWindow:
             child.destroy()
         rows = self.timer_engine.snapshot("dot") + self.timer_engine.snapshot("hot")
         rows.sort(key=lambda r: r[1])  # soonest-expiring first, across both
-        for label, remaining, total, category in rows:
+        for label, remaining, total, category, _is_alert in rows:
             tag = "DoT" if category == "dot" else "HoT"
             self._timer_row(self.dot_hot_list_frame, f"{tag}  {label}",
                             remaining, total, "Dot", width=32)
@@ -953,8 +961,21 @@ class MeterWindow:
     def _refresh_cooldowns(self):
         for child in self.cooldown_list_frame.winfo_children():
             child.destroy()
-        for label, remaining, total, _category in self.timer_engine.snapshot("cooldown"):
+        for label, remaining, total, _category, _is_alert in self.timer_engine.snapshot("cooldown"):
             self._timer_row(self.cooldown_list_frame, label, remaining, total, "Cooldown")
+
+    def _refresh_alerts(self):
+        # Alert-flagged boss timers skip the numeric countdown entirely --
+        # just a bold callout for as long as it's active (e.g. "Move Out",
+        # "Spread!"), matching BARAS's own is_alert display mode.
+        for child in self.alert_list_frame.winfo_children():
+            child.destroy()
+        rows = [r for r in self.timer_engine.snapshot() if r[4]]
+        if not rows:
+            return
+        for label, _remaining, _total, _category, _is_alert in rows:
+            ttk.Label(self.alert_list_frame, text=label.upper(), foreground=CRITICAL,
+                      font=("Segoe UI", 11, "bold")).pack(anchor="w", pady=1)
 
     def _refresh_taunts(self):
         # tick() here (rather than only on the reader thread) is what lets a

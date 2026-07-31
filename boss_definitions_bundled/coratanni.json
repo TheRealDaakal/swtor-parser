@@ -89,7 +89,8 @@
         "type": "effect_applied",
         "keyword": "Double Down",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_multi_charge_1st",
@@ -124,7 +125,8 @@
         "type": "effect_applied",
         "keyword": "Split City",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_split_removed",
@@ -134,7 +136,8 @@
         "type": "effect_removed",
         "keyword": "Split City",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_dcd_pearl_is_loose",
@@ -143,7 +146,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Taunt Immunity"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_phase_2_hp",
@@ -155,7 +159,8 @@
         "selector": [
           "Coratanni"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_phase_3_hp",
@@ -167,7 +172,8 @@
         "selector": [
           "Coratanni"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_jet_boost_1st",
@@ -221,7 +227,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Hostage"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "coratanni_jet_boost",

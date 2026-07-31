@@ -259,6 +259,7 @@ class BossEncounterState:
                     t.label, t.duration_seconds, t.warn_seconds_before, t.voice_alert,
                     repeat_interval_seconds=t.repeat_interval_seconds,
                     repeat_count=t.repeat_count, definition_id=t.id, category="boss",
+                    is_alert=t.is_alert,
                 )
 
     def status_text(self) -> str:

@@ -261,6 +261,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -281,6 +282,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -465,6 +467,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -485,6 +488,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -505,6 +509,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -525,6 +530,7 @@
           "IZAX"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -543,6 +549,7 @@
         "counter_id": "IZAX_K_o_c",
         "value": 0
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -832,7 +839,8 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Damaged Deflector Shield"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "IZAX_K_p3_adds",
@@ -851,7 +859,8 @@
         "type": "effect_applied",
         "keyword": "Induction Cascade",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "IZAX_K_p4_ic_1st",

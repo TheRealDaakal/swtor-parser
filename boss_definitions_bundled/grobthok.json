@@ -40,7 +40,8 @@
         "selector": [
           "Grob'thok"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "grobthok_adds",
@@ -61,7 +62,8 @@
         "selector": [
           "Grob'thok"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "grobthok_lava_dot",
@@ -80,7 +82,8 @@
         "type": "effect_applied",
         "keyword": "Mining Droid",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "grobthok_overhead_smash",

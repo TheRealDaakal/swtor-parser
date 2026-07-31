@@ -345,7 +345,8 @@
         "type": "counter_reaches",
         "counter_id": "dread_council_p2_fail",
         "value": 1
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_p1_reset",
@@ -372,6 +373,7 @@
           }
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "not",
@@ -434,7 +436,8 @@
         "selector": [
           "Dread Master Brontes"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_p2_beam",
@@ -446,7 +449,8 @@
         "selector": [
           "Dread Master Brontes"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_p2_tp",
@@ -478,7 +482,8 @@
         "type": "counter_reaches",
         "counter_id": "dread_council_bts",
         "value": 3
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_p1_bts_vm",
@@ -488,7 +493,8 @@
         "type": "counter_reaches",
         "counter_id": "dread_council_bts",
         "value": 5
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_fp_1st",
@@ -661,7 +667,8 @@
         "type": "effect_applied",
         "keyword": "Imminent Death",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dread_council_p2_bsa",

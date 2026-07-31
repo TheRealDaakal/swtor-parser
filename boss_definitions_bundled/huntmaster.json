@@ -317,7 +317,8 @@
         "type": "effect_applied",
         "keyword": "Firestorm Grenade",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

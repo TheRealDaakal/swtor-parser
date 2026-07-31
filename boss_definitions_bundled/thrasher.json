@@ -23,7 +23,8 @@
         "selector": [
           "Thrasher"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "thrasher_adds_1st",

@@ -398,6 +398,11 @@ class BossTimerDef:
     # Legacy simple form, kept for backward compatibility with definitions
     # that don't need a Condition at all -- just a keyword match.
     keyword: str = ""
+    # BARAS's own display-mode flag: render as a brief callout (e.g. "Move
+    # Out", "Spread!") instead of a numeric countdown bar -- the timing data
+    # is identical either way, this only changes how the GUI/overlay shows
+    # it. See timers.py's ActiveTimer.is_alert for where it actually lands.
+    is_alert: bool = False
 
     def active_in(self, phase_id: Optional[str]) -> bool:
         return not self.phases or phase_id in self.phases
@@ -501,6 +506,7 @@ def _load_one(path: Path) -> Optional[BossDefinition]:
             repeat_interval_seconds=t.get("repeat_interval_seconds"),
             repeat_count=t.get("repeat_count", 0),
             cancel_trigger=_load_condition(t.get("cancel_trigger")),
+            is_alert=t.get("is_alert", False),
         )
         for t in data.get("timers", [])
     ]

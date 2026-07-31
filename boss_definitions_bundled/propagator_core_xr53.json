@@ -65,7 +65,8 @@
         "type": "effect_applied",
         "keyword": "Accompanied by the Collection Droid",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "propagator_core_xr53_collection_droid_selfdestruct",
@@ -74,7 +75,8 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Collecting"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "propagator_core_xr53_1st_prime_directive",

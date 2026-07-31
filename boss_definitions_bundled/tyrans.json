@@ -179,7 +179,8 @@
         "type": "effect_applied",
         "keyword": "Simplification",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "tyrans_jd",
@@ -189,7 +190,8 @@
         "type": "effect_applied",
         "keyword": "Marked for Death",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "tyrans_ind",
@@ -199,7 +201,8 @@
         "type": "effect_applied",
         "keyword": "Inferno",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "tyrans_ine",
@@ -209,7 +212,8 @@
         "type": "effect_removed",
         "keyword": "Inferno",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "tyrans_afd",
@@ -219,7 +223,8 @@
         "type": "effect_applied",
         "keyword": "Affliction",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

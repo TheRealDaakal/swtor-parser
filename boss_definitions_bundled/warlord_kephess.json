@@ -191,7 +191,8 @@
         "type": "effect_applied",
         "keyword": "Baradium Explosive Pack",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "wk_trandos",
@@ -258,7 +259,8 @@
         "selector": [
           "Warlord Kephess"
         ]
-      }
+      },
+      "is_alert": true
     }
   ]
 }

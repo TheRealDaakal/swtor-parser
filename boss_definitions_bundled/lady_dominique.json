@@ -101,7 +101,8 @@
         "type": "effect_applied",
         "keyword": "Disquiet",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_yellow_circle",
@@ -111,7 +112,8 @@
         "type": "effect_applied",
         "keyword": "Tremor",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_aria_spawned",
@@ -120,7 +122,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Out of Sight"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_incite",
@@ -170,7 +173,8 @@
         "type": "counter_reaches",
         "counter_id": "dominique_p2_stacks",
         "value": 5
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_watchdog_appears",
@@ -179,7 +183,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dominique_watchdog"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_wd_colors",
@@ -276,7 +281,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dominique_burn"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dominique_1st_monstrosities",
@@ -312,7 +318,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Grey Reaper"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

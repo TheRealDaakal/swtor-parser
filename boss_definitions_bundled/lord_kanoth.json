@@ -609,7 +609,8 @@
             "phase_id": "kanoth_p3_1"
           }
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kanoth_p3_cg",

@@ -120,7 +120,8 @@
             ]
           }
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "draxus_w1",
@@ -254,7 +255,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Emergency Shielding"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "draxus_shield_off",
@@ -263,7 +265,8 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Emergency Shielding"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

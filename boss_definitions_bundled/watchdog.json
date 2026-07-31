@@ -249,7 +249,8 @@
         "selector": [
           "Watchdog"
         ]
-      }
+      },
+      "is_alert": true
     }
   ]
 }

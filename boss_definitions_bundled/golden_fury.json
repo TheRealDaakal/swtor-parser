@@ -85,7 +85,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Isotope-5 Shielding"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "golden_fury_massive_larsers",

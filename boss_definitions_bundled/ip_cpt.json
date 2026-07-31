@@ -171,7 +171,8 @@
         "type": "counter_reaches",
         "counter_id": "ip_cpt_stacks",
         "value": 4
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "ip_cpt_1st_intrusion_units",
@@ -235,7 +236,8 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_bomb_explosion"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "ip_cpt_boss_returning",

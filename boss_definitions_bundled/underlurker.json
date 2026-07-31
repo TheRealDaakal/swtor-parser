@@ -68,7 +68,8 @@
         "selector": [
           "The Underlurker"
         ]
-      }
+      },
+      "is_alert": true
     }
   ]
 }

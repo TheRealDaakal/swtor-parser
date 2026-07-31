@@ -160,6 +160,7 @@
           "TYTH"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -180,6 +181,7 @@
           "TYTH"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -358,6 +360,7 @@
         "type": "counter_changes",
         "counter_id": "TYTT_K_rage_counter"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -381,6 +384,7 @@
         "type": "counter_changes",
         "counter_id": "TYTT_K_rage_counter"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -410,6 +414,7 @@
         "type": "counter_changes",
         "counter_id": "TYTT_K_rage_counter"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -471,6 +476,7 @@
           "TYTH"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -528,7 +534,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Aivela's Grace"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "TYTT_K_s_d",
@@ -537,7 +544,8 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Aivela's Grace"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

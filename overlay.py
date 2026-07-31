@@ -94,13 +94,15 @@ FONT_SMALL = ("Segoe UI", 9)
 # to get "dim slab, no window edges" -- which is what BARAS actually does.
 PANEL_ALPHA = 0.85
 
-KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR, "absorbed": ABSORBED_BAR}
+KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
+                "absorbed": ABSORBED_BAR, "alerts": "#ff7a68"}
 KIND_TITLES = {
     "dps": "Damage", "hps": "Effective Healing", "taken": "Damage Taken",
     # Raw absorbed magnitude, not a percentage -- see gui.py's
     # _refresh_bar_overlays for why (bars need a comparable quantity; the
     # live table's "Mitigated" column already carries the per-person %).
     "absorbed": "Shield Absorbed",
+    "alerts": "Alerts",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
@@ -112,6 +114,7 @@ AVAILABLE_OVERLAYS = [
     ("taken",     "Damage Taken",    "Metrics"),
     ("absorbed",  "Shield Absorbed", "Metrics"),
     ("timers",    "Timers",          "Encounter"),
+    ("alerts",    "Mechanic Alerts (Stack/Move/Spread)", "Encounter"),
     ("cooldowns", "Cooldowns",       "Effects"),
     ("hots",      "HoTs expiring",   "Effects"),
     ("dots",      "DoT tracker",     "Effects"),
@@ -372,7 +375,9 @@ class TimerOverlay(BarOverlay):
                          rows=rows, on_close=on_close, on_move=on_move)
 
     def render(self, timers, total=None, subtitle=None):
-        """timers: list of (label, remaining, total_seconds, category)."""
+        """timers: list of (label, remaining, total_seconds, category,
+        is_alert). Caller filters out is_alert rows before this (they go to
+        AlertOverlay instead), but tolerate them here too just in case."""
         self._last_render = ((timers,), {"total": total, "subtitle": subtitle})
         c = self.canvas
         c.delete("all")
@@ -387,7 +392,8 @@ class TimerOverlay(BarOverlay):
         track_w = self.width - PAD_X - cx
         palette = {"boss": "#3170b8", "cooldown": "#d9a53a",
                    "dot": "#3aa876", "hot": "#3aa876"}
-        for label, remaining, total_s, category in timers:
+        for row in timers:
+            label, remaining, total_s, category = row[0], row[1], row[2], row[3]
             colour = palette.get(category, "#3170b8")
             self._text(cx, y + 12, label[:20], font=FONT)
             self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
@@ -398,4 +404,38 @@ class TimerOverlay(BarOverlay):
             if frac > 0:
                 c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
                               fill=colour, width=TRACK_H, capstyle=tk.ROUND)
+            y += ROW_H
+
+
+class AlertOverlay(BarOverlay):
+    """Brief callouts ("Move Out", "Spread!") instead of a numeric
+    countdown -- BARAS's is_alert display mode. No track meter: the whole
+    point is a fast, unambiguous glance, not a duration to read."""
+
+    def __init__(self, root, x=40, y=20, width=260, rows=4, on_close=None,
+                 on_move=None):
+        super().__init__(root, kind="alerts", x=x, y=y, width=width,
+                         rows=rows, on_close=on_close, on_move=on_move)
+
+    def render(self, timers, total=None, subtitle=None):
+        """timers: list of (label, remaining, total_seconds, category,
+        is_alert) -- pass only the is_alert=True ones in."""
+        self._last_render = ((timers,), {"total": total, "subtitle": subtitle})
+        c = self.canvas
+        c.delete("all")
+        timers = timers[: self.max_rows]
+        self._panel(max(len(timers), 1), False)
+        cx = self.content_x()
+
+        head = "\U0001F512 Alerts" if self.locked else "Alerts"
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
+
+        y = PAD_TOP + HEADER_H
+        if not timers:
+            self._text(cx, y + 12, "nothing pending", fill=TEXT_DIM, font=FONT_SMALL)
+            return
+        for row in timers:
+            label = row[0]
+            self._text(cx, y + 14, label.upper()[:24], fill="#ff7a68",
+                       font=("Segoe UI", 13, "bold"))
             y += ROW_H

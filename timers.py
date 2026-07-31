@@ -72,6 +72,10 @@ class TimerRule:
     # re-trigger your own cooldown display. Ignored (permissive) until the
     # local player has actually been detected.
     only_local_player: bool = False
+    # See boss_definitions.BossTimerDef.is_alert -- same flag, threaded
+    # through the legacy keyword path too so a manually/boss-registered
+    # TimerRule can request the callout display instead of a countdown.
+    is_alert: bool = False
 
     def armed_for(self, boss_id: Optional[str], phase_id: Optional[str]) -> bool:
         if self.required_boss is None:
@@ -99,6 +103,7 @@ class ActiveTimer:
     # timers not tied to a boss definition (e.g. manual Timers-tab rules).
     definition_id: Optional[str] = None
     category: str = "custom"
+    is_alert: bool = False
 
     def remaining(self, now: Optional[float] = None) -> float:
         now = now if now is not None else time.time()
@@ -139,6 +144,7 @@ class TimerEngine:
         self, label: str, duration_seconds: float, warn_seconds_before: float = 0.0,
         voice_alert: bool = True, repeat_interval_seconds: Optional[float] = None,
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
+        is_alert: bool = False,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
@@ -158,6 +164,7 @@ class TimerEngine:
                     repeats_remaining=repeat_count,
                     definition_id=definition_id,
                     category=category,
+                    is_alert=is_alert,
                 )
             )
             if definition_id:
@@ -231,7 +238,7 @@ class TimerEngine:
 
                 self.start_timer(
                     rule.label, rule.duration_seconds, rule.warn_seconds_before, rule.voice_alert,
-                    category=rule.category,
+                    category=rule.category, is_alert=rule.is_alert,
                 )
 
             self._prune_and_warn()
@@ -270,13 +277,14 @@ class TimerEngine:
         self.active = still_active
 
     def snapshot(self, category: Optional[str] = None):
-        """Returns list of (label, remaining_seconds, total_seconds, category)
-        sorted soonest-expiring first. Pass category to filter (e.g.
-        "cooldown" for the personal-cooldowns panel vs everything else)."""
+        """Returns list of (label, remaining_seconds, total_seconds, category,
+        is_alert) sorted soonest-expiring first. Pass category to filter
+        (e.g. "cooldown" for the personal-cooldowns panel vs everything
+        else)."""
         with self._lock:
             now = time.time()
             rows = [
-                (t.label, t.remaining(now), t.duration_seconds, t.category)
+                (t.label, t.remaining(now), t.duration_seconds, t.category, t.is_alert)
                 for t in self.active
                 if category is None or t.category == category
             ]

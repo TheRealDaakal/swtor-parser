@@ -166,7 +166,8 @@
         "type": "counter_reaches",
         "counter_id": "bestia_a_c",
         "value": 2
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "bestia_sd",
@@ -184,7 +185,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Swelling Despair"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "bestia_te",
@@ -310,7 +312,8 @@
             "phase_id": "bestia_phase_3_vm"
           }
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "bestia_add8",

@@ -210,6 +210,7 @@
           }
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -385,6 +386,7 @@
         "type": "ability_cast",
         "keyword": "Atomic Scattering"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -408,6 +410,7 @@
         "type": "counter_changes",
         "counter_id": "SCYVA_K_e_p"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -499,7 +502,8 @@
         "type": "effect_applied",
         "keyword": "Amplify Gravity",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "SCYVA_K_l_g",
@@ -509,7 +513,8 @@
         "type": "effect_applied",
         "keyword": "Escape Velocity",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "SCYVA_K_n_g",
@@ -530,6 +535,7 @@
           }
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -625,7 +631,8 @@
         "type": "effect_applied",
         "keyword": "Deflection Field Module",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "SCYVA_K_gr_m",
@@ -635,7 +642,8 @@
         "type": "effect_applied",
         "keyword": "Gravity Distortion Module",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "SCYVA_K_uph",
@@ -776,6 +784,7 @@
         "type": "effect_applied",
         "keyword": "Vindictive"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -793,6 +802,7 @@
         "type": "effect_removed",
         "keyword": "Vindictive"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",

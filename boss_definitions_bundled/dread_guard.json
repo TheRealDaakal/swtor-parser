@@ -151,7 +151,8 @@
         "type": "effect_applied",
         "keyword": "Vitality Extraction",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dg_circle_tracker_not_displayed",
@@ -170,6 +171,7 @@
         "type": "timer_expires",
         "timer_id": "dg_circle_tracker_not_displayed"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -190,6 +192,7 @@
           "Kel'sara"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -208,7 +211,8 @@
         "selector": [
           3013344759906304
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dg_1st_leech_soon",
@@ -217,7 +221,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dg_kelsara"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "dg_leech",

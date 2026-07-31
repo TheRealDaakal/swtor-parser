@@ -135,7 +135,8 @@
         "selector": [
           "Dread Master Calphayus"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "calphayus_tree",

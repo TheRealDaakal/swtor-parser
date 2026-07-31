@@ -91,7 +91,8 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kephess_cascade"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kephess_targeted",
@@ -101,7 +102,8 @@
         "type": "effect_applied",
         "keyword": "Overcharge",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kephess_sphere_target",
@@ -111,7 +113,8 @@
         "type": "effect_applied",
         "keyword": "Pulsating Energy",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kephess_nanites_alert",
@@ -121,7 +124,8 @@
         "type": "effect_removed",
         "keyword": "Corrupted Nanites",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kephess_the_undying_cleanse_feet",
@@ -131,7 +135,8 @@
         "type": "effect_applied",
         "keyword": "Ignored",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "kephess_laser_blast",
@@ -226,6 +231,7 @@
         "type": "ability_cast",
         "keyword": "Corrupted Nanites"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -243,6 +249,7 @@
         "type": "ability_cast",
         "keyword": "Corrupted Nanites"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",

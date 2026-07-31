@@ -85,7 +85,8 @@
         "type": "counter_reaches",
         "counter_id": "nefra_curse_stacks_local",
         "value": 3
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "nefra_dps_add_1st",
@@ -180,7 +181,8 @@
         "type": "counter_reaches",
         "counter_id": "nefra_twin_stacks",
         "value": 14
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "nefra_raid_cleave",
@@ -190,6 +192,7 @@
         "type": "ability_cast",
         "keyword": "Twin Attack"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",

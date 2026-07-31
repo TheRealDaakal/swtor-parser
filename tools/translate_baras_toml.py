@@ -303,6 +303,8 @@ def translate_timer(t, ctx_prefix: str):
     }
     if t.get("alert_on") == "countdown" and t.get("alert_countdown_secs"):
         out["warn_seconds_before"] = t["alert_countdown_secs"]
+    if t.get("is_alert"):
+        out["is_alert"] = True
 
     conds = translate_conditions_list(t.get("conditions"), ctx)
     if conds:

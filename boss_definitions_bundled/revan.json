@@ -172,7 +172,8 @@
         "type": "effect_applied",
         "keyword": "Essence Corruption",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "rev_killshot",
@@ -205,7 +206,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Handful of Grenades"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "rev_reactive_hp",
@@ -217,7 +219,8 @@
         "selector": [
           "HK-47"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "rev_aberration_p3",

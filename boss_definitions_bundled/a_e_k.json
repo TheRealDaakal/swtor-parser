@@ -176,6 +176,7 @@
           "Nexus"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -196,6 +197,7 @@
           "Nexus"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -443,6 +445,7 @@
         "type": "counter_changes",
         "counter_id": "a&e_k_rad"
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -771,6 +774,7 @@
           }
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",
@@ -805,6 +809,7 @@
           }
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "counter_compare",

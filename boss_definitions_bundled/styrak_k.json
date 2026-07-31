@@ -651,6 +651,7 @@
         "counter_id": "Styrak_k_lmf_d_c",
         "value": 4
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -669,6 +670,7 @@
         "counter_id": "Styrak_k_lmf_d_c",
         "value": 8
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -738,7 +740,8 @@
             "phase_id": "Styrak_k_p2_stk_r"
           }
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "Styrak_k_st_thb_t_1st_vm",

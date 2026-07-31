@@ -80,7 +80,8 @@
         "selector": [
           "Dread Master Brontes"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "brontes_clone",
@@ -106,6 +107,7 @@
           "Dread Master Brontes"
         ]
       },
+      "is_alert": true,
       "conditions": [
         {
           "type": "phase_active",
@@ -155,7 +157,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Focused Incineration"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "brontes_fingers_knock_1st",

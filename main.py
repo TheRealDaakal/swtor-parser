@@ -95,6 +95,7 @@ def main():
                 keyword=t.keyword, label=t.label, duration_seconds=t.duration_seconds,
                 warn_seconds_before=t.warn_seconds_before, voice_alert=t.voice_alert,
                 required_boss=boss.id, required_phases=t.phases, category="boss",
+                is_alert=t.is_alert,
             ))
     # Personal defensive cooldowns aren't boss-scoped -- register once,
     # always active (trash fights need them tracked too, not just bosses).

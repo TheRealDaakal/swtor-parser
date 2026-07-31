@@ -61,7 +61,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Magnetic Clamp"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "torque_flame_turret",
@@ -88,7 +89,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Sick of You!"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "torque_knockback",
@@ -136,7 +138,8 @@
         "selector": [
           "Torque"
         ]
-      }
+      },
+      "is_alert": true
     }
   ]
 }

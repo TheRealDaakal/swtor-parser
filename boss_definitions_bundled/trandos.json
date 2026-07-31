@@ -214,7 +214,8 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "trandos_caustic_plume"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "trandos_cleanse_hissy_tank",
@@ -223,7 +224,8 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Venom of Hissyphis (Any)"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "trandos_irradiated_fire_blast_1st",

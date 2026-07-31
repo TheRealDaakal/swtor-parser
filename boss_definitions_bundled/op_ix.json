@@ -152,7 +152,8 @@
         "selector": [
           "Data Core"
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "op_ix_adds",
@@ -190,7 +191,8 @@
             ]
           }
         ]
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "op_ix_blue_deletion",
@@ -199,7 +201,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Blue Deletion Protocol"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "op_ix_orange_deletion",
@@ -208,7 +211,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Orange Deletion Protocol"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "op_ix_purple_deletion",
@@ -217,7 +221,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Purple Deletion Protocol"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "op_ix_yellow_deletion",
@@ -226,7 +231,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Yellow Deletion Protocol"
-      }
+      },
+      "is_alert": true
     }
   ]
 }

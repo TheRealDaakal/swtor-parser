@@ -87,7 +87,8 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "[flash_gate]"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "olok_the_shadow_flashbang_2",
