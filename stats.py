@@ -45,6 +45,17 @@ class PlayerStats:
     deaths: int = 0
     damage_by_ability: Dict[str, float] = field(default_factory=dict)
     healing_by_ability: Dict[str, float] = field(default_factory=dict)
+    # Outgoing-attack accuracy/crit tallies. damage_attempts counts every
+    # damage tick this entity dealt regardless of outcome (landed or not);
+    # damage_avoided is the subset the target's defense roll stopped
+    # (miss/dodge/parry/deflect/resist -- see CombatEvent.avoidance);
+    # damage_crits is the subset of LANDED hits that crit. Heals don't roll
+    # to hit, so there's no heal_avoided -- only a crit tally.
+    damage_attempts: int = 0
+    damage_avoided: int = 0
+    damage_crits: int = 0
+    heal_casts: int = 0
+    heal_crits: int = 0
     # True once this entity has been seen with SWTOR's '@' player marker.
     # Without it, NPCs are indistinguishable from players downstream, and any
     # "deaths" total silently counts every add and trash mob that died --
@@ -65,6 +76,21 @@ class PlayerStats:
         raw = self.damage_taken + self.damage_absorbed
         return (100.0 * self.damage_absorbed / raw) if raw > 0 else 0.0
 
+    def accuracy_pct(self) -> float:
+        """% of outgoing attacks that landed at all (weren't missed/dodged/
+        parried/deflected/resisted). 0 with no attempts yet, not a crash."""
+        return (100.0 * (self.damage_attempts - self.damage_avoided) / self.damage_attempts
+                if self.damage_attempts > 0 else 0.0)
+
+    def crit_pct(self) -> float:
+        """% of LANDED damage hits that crit -- a hit that never landed
+        can't crit, so avoided attempts are excluded from the denominator."""
+        landed = self.damage_attempts - self.damage_avoided
+        return (100.0 * self.damage_crits / landed) if landed > 0 else 0.0
+
+    def heal_crit_pct(self) -> float:
+        return (100.0 * self.heal_crits / self.heal_casts) if self.heal_casts > 0 else 0.0
+
     def ability_breakdown(self):
         """Returns (damage_rows, healing_rows), each a list of (ability, amount)
         sorted descending by amount."""
@@ -83,6 +109,11 @@ class PlayerStats:
             "damage_by_ability": self.damage_by_ability,
             "healing_by_ability": self.healing_by_ability,
             "is_player": self.is_player,
+            "damage_attempts": self.damage_attempts,
+            "damage_avoided": self.damage_avoided,
+            "damage_crits": self.damage_crits,
+            "heal_casts": self.heal_casts,
+            "heal_crits": self.heal_crits,
         }
 
     @classmethod
@@ -97,6 +128,11 @@ class PlayerStats:
             damage_by_ability=dict(d.get("damage_by_ability", {})),
             healing_by_ability=dict(d.get("healing_by_ability", {})),
             is_player=d.get("is_player", False),
+            damage_attempts=d.get("damage_attempts", 0),
+            damage_avoided=d.get("damage_avoided", 0),
+            damage_crits=d.get("damage_crits", 0),
+            heal_casts=d.get("heal_casts", 0),
+            heal_crits=d.get("heal_crits", 0),
         )
 
 
@@ -170,7 +206,15 @@ class Encounter:
 
         ability_key = event.ability or event.effect_name or "Unknown"
 
-        if event.is_damage and event.amount:
+        # Environmental damage (falling, etc.) logs is_damage=True with an
+        # EMPTY ability field -- it's not an attack (no accuracy roll, can't
+        # crit, no attacker "dealt" it in any meaningful sense), so it must
+        # not count toward damage_done/damage_taken/attempts. Found this via
+        # the accuracy% validation below: a player's own fall damage was
+        # silently inflating their damage_done total.
+        is_attack = event.is_damage and event.ability is not None
+
+        if is_attack and event.amount:
             if event.source:
                 p = self._get(event.source)
                 p.damage_done += event.amount
@@ -183,8 +227,20 @@ class Encounter:
         # Separate condition from the amount check above: a fully-shielded
         # hit can log a 0 post-mitigation amount with the entire hit
         # absorbed, and that's still real mitigation worth counting.
-        if event.is_damage and event.shield_absorbed and event.target:
+        if is_attack and event.shield_absorbed and event.target:
             self._get(event.target).damage_absorbed += event.shield_absorbed
+
+        # Accuracy/crit tallies key off is_attack alone, not amount>0: a
+        # miss/dodge/parry/deflect/resist logs a 0 amount too, and needs to
+        # count as an ATTEMPT (so accuracy% has the right denominator)
+        # without counting as a landed hit that could crit.
+        if is_attack and event.source:
+            p = self._get(event.source)
+            p.damage_attempts += 1
+            if event.avoidance:
+                p.damage_avoided += 1
+            elif event.is_critical:
+                p.damage_crits += 1
 
         if event.is_heal and event.amount:
             if event.source:
@@ -193,6 +249,11 @@ class Encounter:
                 p.healing_by_ability[ability_key] = (
                     p.healing_by_ability.get(ability_key, 0.0) + event.amount
                 )
+        if event.is_heal and event.source:
+            p = self._get(event.source)
+            p.heal_casts += 1
+            if event.is_critical:
+                p.heal_crits += 1
 
     def snapshot(self, players_only: bool = True):
         """Returns list of (name, dps, hps, damage_taken, mitigated_pct, deaths)
