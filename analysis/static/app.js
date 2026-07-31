@@ -281,6 +281,151 @@ function lineChart(box, pts, unit) {
   return { slope, first: b0, last: b0 + slope * (n - 1) };
 }
 
+/* -------------------------------------------------------------- timeline
+   StarParse has this ("adjustable timeline intervals ... recalculation of
+   all personal values"), neither BARAS nor ORBS does. Total raid damage as
+   the area (the only series that's always meaningful regardless of comp),
+   an optional single highlighted player line on top -- more than that
+   would need a categorical palette past the validated 3-colour cap this
+   design system caps at everywhere else. Drag across it to select a
+   range; the summary table below recalculates from the SAME bucket
+   arrays already in memory, no second network round-trip. */
+function timelineChart(box, summaryEl, tl, totalDuration) {
+  const names = Object.keys(tl.players);
+  const n = tl.duration > 0 ? Math.max(1, Math.ceil(tl.duration / tl.bucket_seconds)) : 1;
+  const totalDmg = new Array(n).fill(0);
+  names.forEach(name => tl.players[name].damage.forEach((v, i) => { totalDmg[i] += v; }));
+
+  const H = 220, pad = { l: 60, r: 16, t: 26, b: 30 };
+  const W = Math.max(560, Math.round(box.clientWidth || 900));
+  const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+  const hiRaw = Math.max(...totalDmg, 1) / tl.bucket_seconds;
+  const mag = Math.pow(10, Math.floor(Math.log10(hiRaw || 1)));
+  const hi = Math.ceil((hiRaw * 1.1) / (mag / 2 || 1)) * (mag / 2 || 1) || 1;
+
+  const X = i => pad.l + (i / Math.max(n - 1, 1)) * iw;
+  const Y = v => pad.t + ih - Math.min(v / hi, 1) * ih;
+
+  let grid = '';
+  for (let k = 0; k <= 3; k++) {
+    const v = hi * k / 3, y = Y(v);
+    grid += `<line class="gridline" x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}"/>
+             <text x="${pad.l - 8}" y="${y + 3.5}" text-anchor="end">${compact(v)}</text>`;
+  }
+
+  const totalLine = totalDmg.map((v, i) =>
+    `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v / tl.bucket_seconds).toFixed(1)}`).join('');
+  const totalArea = `${totalLine}L${X(n - 1).toFixed(1)},${Y(0)}L${X(0).toFixed(1)},${Y(0)}Z`;
+
+  let phaseMarks = '';
+  (tl.phases || []).forEach(p => {
+    const bi = Math.min(n - 1, p.start_offset / tl.bucket_seconds);
+    const x = X(bi);
+    phaseMarks += `<line x1="${x.toFixed(1)}" y1="${pad.t}" x2="${x.toFixed(1)}" y2="${pad.t + ih}"
+        stroke="var(--ink-muted)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+      <text x="${x.toFixed(1)}" y="${pad.t - 8}" text-anchor="start" transform="rotate(0)"
+        style="font-size:9.5px">${esc(p.name)}</text>`;
+  });
+
+  const playerOptions = names
+    .sort((a, b) => tl.players[b].damage.reduce((s, v) => s + v, 0) - tl.players[a].damage.reduce((s, v) => s + v, 0))
+    .map(nm => `<option value="${esc(nm)}">${esc(nm)}</option>`).join('');
+
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <label class="fld"><span>Highlight</span>
+        <select id="tl-player"><option value="">— total raid damage only —</option>${playerOptions}</select>
+      </label>
+      <button id="tl-reset" class="ghost" style="display:none">Clear selection</button>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Damage over time for this pull">
+      ${grid}
+      <path d="${totalArea}" fill="var(--s1)" opacity=".12"/>
+      <path d="${totalLine}" fill="none" stroke="var(--s1)" stroke-width="2"
+            stroke-linejoin="round" stroke-linecap="round" opacity=".55"/>
+      <path id="tl-hl" d="" fill="none" stroke="var(--s2)" stroke-width="2"
+            stroke-linejoin="round" stroke-linecap="round"/>
+      ${phaseMarks}
+      <rect id="tl-sel" x="0" y="${pad.t}" width="0" height="${ih}" fill="var(--s1)" opacity=".14" style="display:none"/>
+      <line class="axis" x1="${pad.l}" y1="${pad.t + ih}" x2="${W - pad.r}" y2="${pad.t + ih}"/>
+      <rect id="tl-hit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}" fill="transparent" style="cursor:crosshair"/>
+    </svg>
+    <div class="tooltip" id="tl-tip"></div>`;
+
+  const svg = box.querySelector('svg'), sel = box.querySelector('#tl-sel'), hit = box.querySelector('#tl-hit');
+  const hl = box.querySelector('#tl-hl'), tip = box.querySelector('#tl-tip'), resetBtn = box.querySelector('#tl-reset');
+  const playerSel = box.querySelector('#tl-player');
+
+  const bucketAt = clientX => {
+    const r = svg.getBoundingClientRect();
+    const sx = (clientX - r.left) / r.width * W;
+    return Math.max(0, Math.min(n - 1, Math.round((sx - pad.l) / iw * (n - 1))));
+  };
+
+  function drawHighlight() {
+    const name = playerSel.value;
+    if (!name) { hl.setAttribute('d', ''); return; }
+    const arr = tl.players[name].damage;
+    hl.setAttribute('d', arr.map((v, i) =>
+      `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v / tl.bucket_seconds).toFixed(1)}`).join(''));
+  }
+  playerSel.onchange = drawHighlight;
+
+  function renderSummary(fromBucket, toBucket) {
+    const lo = Math.min(fromBucket, toBucket), hi2 = Math.max(fromBucket, toBucket);
+    const span = (hi2 - lo + 1) * tl.bucket_seconds;
+    const rows = names.map(name => {
+      const p = tl.players[name];
+      const dmg = p.damage.slice(lo, hi2 + 1).reduce((a, b) => a + b, 0);
+      const heal = p.healing.slice(lo, hi2 + 1).reduce((a, b) => a + b, 0);
+      return { name, dmg, heal };
+    }).filter(r => r.dmg || r.heal).sort((a, b) => b.dmg - a.dmg);
+    if (!rows.length) { summaryEl.innerHTML = ''; return; }
+    summaryEl.innerHTML = `<div class="sub" style="margin:10px 0 6px">
+        Selected ${dur(span)} (${dur(lo * tl.bucket_seconds)}–${dur((hi2 + 1) * tl.bucket_seconds)} into the pull)</div>
+      <div class="tw"><table><thead><tr><th>Player</th><th>DPS</th><th>Damage</th><th>HPS</th><th>Healing</th></tr></thead>
+      <tbody>${rows.map(r => `<tr><td class="name">${esc(r.name)}</td>
+        <td>${fmt(r.dmg / Math.max(span, 1))}</td><td class="dim">${compact(r.dmg)}</td>
+        <td>${fmt(r.heal / Math.max(span, 1))}</td><td class="dim">${compact(r.heal)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+
+  let dragStart = null;
+  hit.addEventListener('mousedown', e => {
+    dragStart = bucketAt(e.clientX);
+    sel.style.display = 'block';
+    resetBtn.style.display = 'inline-block';
+  });
+  hit.addEventListener('mousemove', e => {
+    const b = bucketAt(e.clientX);
+    tip.classList.add('show');
+    const r = svg.getBoundingClientRect();
+    tip.style.left = (X(b) / W * r.width) + 'px';
+    tip.style.top = '4px';
+    const t = b * tl.bucket_seconds;
+    tip.innerHTML = `<div class="t-row">${dur(t)} into the pull</div>`;
+    if (dragStart === null) return;
+    const lo = Math.min(dragStart, b), hi2 = Math.max(dragStart, b);
+    sel.setAttribute('x', X(lo)); sel.setAttribute('width', Math.max(1, X(hi2) - X(lo)));
+  });
+  hit.addEventListener('mouseleave', () => { tip.classList.remove('show'); });
+  window.addEventListener('mouseup', e => {
+    if (dragStart === null) return;
+    const end = bucketAt(e.clientX);
+    if (end === dragStart) {
+      // a plain click, not a drag -- treat as "clear selection"
+      sel.style.display = 'none'; resetBtn.style.display = 'none';
+      summaryEl.innerHTML = '';
+    } else {
+      renderSummary(dragStart, end);
+    }
+    dragStart = null;
+  });
+  resetBtn.onclick = () => {
+    sel.style.display = 'none'; resetBtn.style.display = 'none'; summaryEl.innerHTML = '';
+  };
+}
+
 /* ---------------------------------------------------------------- trends */
 const METRIC = { dps: 'DPS', hps: 'HPS', dtps: 'DTPS', deaths: 'deaths' };
 
@@ -371,7 +516,7 @@ async function loadPulls() {
 }
 $('#pl-boss').addEventListener('change', loadPulls);
 
-function showPull(r) {
+async function showPull(r) {
   const mx = Math.max(...r.players.map(p => p.damage), 1);
   const mh = Math.max(...r.players.map(p => p.healing), 1);
   $('#m-title').textContent = r.boss;
@@ -393,8 +538,28 @@ function showPull(r) {
           title="${compact(p.absorbed)} absorbed of ${compact(p.taken + p.absorbed)} raw incoming"
           >${(p.taken || p.absorbed) ? p.mitigated_pct.toFixed(0) + '%' : '—'}</td>
       <td class="${p.deaths ? 'critical' : 'dim'}">${p.deaths}</td></tr>`).join('')}
-    </tbody></table></div>`;
+    </tbody></table></div>
+    <div class="panel" id="m-timeline-panel" style="margin-top:14px">
+      <h2>Timeline<span class="sub" style="margin-left:8px;font-weight:400">
+        drag across the chart to select a range and recalculate stats for just that slice</span></h2>
+      <div id="m-timeline-box" class="chart-wrap" style="min-height:220px"><div class="loading">Re-reading the log…</div></div>
+      <div id="m-timeline-summary"></div>
+    </div>`;
   $('#modal').classList.add('open');
+
+  const q = new URLSearchParams({ file: r.file, start_line: r.start_line || 0, end_line: r.end_line || 0 });
+  let tl;
+  try {
+    tl = await api('/api/timeline?' + q);
+  } catch {
+    tl = null;
+  }
+  const box = $('#m-timeline-box');
+  if (!tl || tl.error || !Object.keys(tl.players).length) {
+    box.innerHTML = '<div class="empty">No timeline data for this pull.</div>';
+    return;
+  }
+  timelineChart(box, $('#m-timeline-summary'), tl, r.duration);
 }
 window.closeModal = () => $('#modal').classList.remove('open');
 $('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };

@@ -20,7 +20,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from analysis import corpus, forensics
+from analysis import corpus, forensics, timeline
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
@@ -167,6 +167,23 @@ class Handler(BaseHTTPRequestHandler):
             except OSError as exc:
                 return self._json({"error": str(exc)}, 500)
             return self._json({"reports": reports, "summary": forensics.summarize_deaths(reports)})
+
+        if u.path == "/api/timeline":
+            idx = get_index()
+            fname = one("file")
+            try:
+                sl = int(one("start_line", "0")) or None
+                el = int(one("end_line", "0")) or None
+            except ValueError:
+                sl = el = None
+            sess = next((s for s in idx.get("sessions", []) if s.get("file") == fname), None)
+            if not sess or not sess.get("path"):
+                return self._json({"error": "unknown session file"}, 404)
+            try:
+                data = timeline.build_timeline(sess["path"], sl, el)
+            except OSError as exc:
+                return self._json({"error": str(exc)}, 500)
+            return self._json(data)
 
         return self._send(b"not found", "text/plain", 404)
 
