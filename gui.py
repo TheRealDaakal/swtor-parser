@@ -47,9 +47,8 @@ class MeterWindow:
         self.boss_state = boss_state
         self.overlay_mode = False
         self.bar_overlays = []
-        self._overlay_vars = {}   # key -> BooleanVar, built lazily by the picker
+        self._overlay_vars = {}   # key -> BooleanVar, built by _build_overlays_tab
         self._overlays_locked = None  # BooleanVar, created after self.root exists
-        self._picker = None
         if hot_tracker is None:
             # standalone/demo use -- main.py normally supplies the one the
             # background reader thread is actually feeding
@@ -86,17 +85,20 @@ class MeterWindow:
         self.live_tab = ttk.Frame(self.notebook)
         self.history_tab = ttk.Frame(self.notebook)
         self.timers_tab = ttk.Frame(self.notebook)
+        self.overlays_tab = ttk.Frame(self.notebook)
         self.import_tab = ttk.Frame(self.notebook)
         self.parsely_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.live_tab, text="Live")
         self.notebook.add(self.history_tab, text="History")
         self.notebook.add(self.timers_tab, text="Timers")
+        self.notebook.add(self.overlays_tab, text="Overlays")
         self.notebook.add(self.import_tab, text="Import Logs")
         self.notebook.add(self.parsely_tab, text="Parsely")
 
         self._build_live_tab()
         self._build_history_tab()
         self._build_timers_tab()
+        self._build_overlays_tab()
         self._build_import_tab()
         self._build_parsely_tab()
 
@@ -209,7 +211,8 @@ class MeterWindow:
         ttk.Button(self.toolbar, text="Overlay", command=self._toggle_overlay).pack(
             side="right"
         )
-        ttk.Button(self.toolbar, text="Bars", command=self._toggle_bar_overlays).pack(
+        ttk.Button(self.toolbar, text="Bars",
+                   command=lambda: self.notebook.select(self.overlays_tab)).pack(
             side="right", padx=(0, 6)
         )
 
@@ -248,21 +251,14 @@ class MeterWindow:
 
     # ---------- floating bar overlays ----------
 
-    def _toggle_bar_overlays(self):
-        """Open the frame picker -- which floating frames are shown is a
-        per-raider choice (a healer wants HoTs, a dps wants damage), so this
-        is a checklist rather than a fixed set."""
+    def _build_overlays_tab(self):
+        """Which floating frames are shown is a per-raider choice (a healer
+        wants HoTs, a dps wants damage), so this is a checklist rather than
+        a fixed set. Lives in the main window as its own tab -- a second,
+        separate popup window for this was one more thing to lose track of
+        and re-find behind the game."""
         import overlay as ov
-        if getattr(self, "_picker", None) and tk.Toplevel.winfo_exists(self._picker):
-            self._picker.destroy()
-            self._picker = None
-            return
-
-        win = tk.Toplevel(self.root)
-        self._picker = win
-        win.title("Overlay frames")
-        win.configure(bg=BG)
-        win.attributes("-topmost", True)
+        win = self.overlays_tab
 
         # Toolbar row: lock toggle reads the same way the frames themselves
         # do (a filled pill = active), plus Clear all -- one row of actions
