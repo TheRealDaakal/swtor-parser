@@ -64,7 +64,7 @@ class MeterWindow:
         self._history_rows_shown = 0  # how many history rows we've rendered so far
 
         self.root = tk.Tk()
-        self.root.title("SWTOR Live Parser")
+        self.root.title("DPS — Dynamic Parse System")
         self.root.geometry("680x460")
         self.root.attributes("-topmost", True)
         self._overlays_locked = tk.BooleanVar(value=False)
