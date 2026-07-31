@@ -46,7 +46,6 @@ class MeterWindow:
         self.timer_engine = timer_engine
         self.status_queue = status_queue
         self.boss_state = boss_state
-        self.overlay_mode = False
         self.bar_overlays = []
         self._overlay_vars = {}   # key -> BooleanVar, built by _build_overlays_tab
         self._overlays_locked = None  # BooleanVar, created after self.root exists
@@ -60,7 +59,6 @@ class MeterWindow:
             from taunt_tracker import TauntTracker
             taunt_tracker = TauntTracker()
         self.taunt_tracker = taunt_tracker
-        self._drag_offset = (0, 0)
         self._history_rows_shown = 0  # how many history rows we've rendered so far
         # Which character's overlay layout is currently loaded -- None until
         # boss_state identifies the local player from the log. A tank alt
@@ -75,28 +73,23 @@ class MeterWindow:
         self.root.attributes("-topmost", True)
         self._overlays_locked = tk.BooleanVar(value=False)
         self._apply_theme()
-        # stash the real tab layout so overlay mode can hide and restore it
-        self._tab_layout = ttk.Style(self.root).layout("TNotebook.Tab")
 
         self._build_toolbar()
 
         self.notebook = ttk.Notebook(self.root)
         self.notebook.pack(fill="both", expand=True, padx=6, pady=(0, 6))
 
-        self.live_tab = ttk.Frame(self.notebook)
         self.history_tab = ttk.Frame(self.notebook)
         self.timers_tab = ttk.Frame(self.notebook)
         self.overlays_tab = ttk.Frame(self.notebook)
         self.import_tab = ttk.Frame(self.notebook)
         self.parsely_tab = ttk.Frame(self.notebook)
-        self.notebook.add(self.live_tab, text="Live")
         self.notebook.add(self.history_tab, text="History")
         self.notebook.add(self.timers_tab, text="Timers")
         self.notebook.add(self.overlays_tab, text="Overlays")
         self.notebook.add(self.import_tab, text="Import Logs")
         self.notebook.add(self.parsely_tab, text="Parsely")
 
-        self._build_live_tab()
         self._build_history_tab()
         self._build_timers_tab()
         self._build_overlays_tab()
@@ -209,46 +202,10 @@ class MeterWindow:
         ttk.Label(self.toolbar, textvariable=self.status_var, anchor="w").pack(
             side="left", fill="x", expand=True
         )
-        ttk.Button(self.toolbar, text="Overlay", command=self._toggle_overlay).pack(
-            side="right"
-        )
         ttk.Button(self.toolbar, text="Bars",
                    command=lambda: self.notebook.select(self.overlays_tab)).pack(
             side="right", padx=(0, 6)
         )
-
-        self.drag_strip = tk.Label(
-            self.root, text="⠿  drag  ·  double-click to exit overlay",
-            bg=BG_2, fg=INK_MUTED, anchor="w", padx=10, pady=3,
-        )
-        self.drag_strip.bind("<ButtonPress-1>", self._drag_start)
-        self.drag_strip.bind("<B1-Motion>", self._drag_move)
-        self.drag_strip.bind("<Double-Button-1>", lambda e: self._toggle_overlay())
-
-    def _toggle_overlay(self):
-        """Overlay mode isn't just 'borderless + translucent' -- it has to
-        drop the app chrome too. Leaving the tab strip, the toolbar and the
-        watched-folder path on screen means the thing sitting over your game
-        is mostly UI you can't act on mid-pull."""
-        self.overlay_mode = not self.overlay_mode
-        style = ttk.Style(self.root)
-        if self.overlay_mode:
-            self.root.overrideredirect(True)
-            self.root.attributes("-alpha", 0.92)
-            self.toolbar.pack_forget()
-            # hide the notebook's tab row rather than reparenting the frame,
-            # which would lose the geometry of everything inside it
-            style.layout("TNotebook.Tab", [])
-            self.hint_label.pack_forget()
-            self.drag_strip.pack(fill="x", before=self.notebook)
-            self.notebook.select(self.live_tab)
-        else:
-            self.drag_strip.pack_forget()
-            style.layout("TNotebook.Tab", self._tab_layout)
-            self.toolbar.pack(fill="x", padx=8, pady=6, before=self.notebook)
-            self.hint_label.pack(anchor="w", padx=4, after=self.tree)
-            self.root.overrideredirect(False)
-            self.root.attributes("-alpha", 1.0)
 
     # ---------- floating bar overlays ----------
 
@@ -450,80 +407,6 @@ class MeterWindow:
                           if t[3] not in ("cooldown", "dot", "hot") and not t[4]])
             elif kind == "alerts":
                 o.render([t for t in self.timer_engine.snapshot() if t[4]])
-
-    def _drag_start(self, event):
-        self._drag_offset = (event.x, event.y)
-
-    def _drag_move(self, event):
-        x = self.root.winfo_pointerx() - self._drag_offset[0]
-        y = self.root.winfo_pointery() - self._drag_offset[1]
-        self.root.geometry(f"+{x}+{y}")
-
-    # ---------- live tab ----------
-
-    def _build_live_tab(self):
-        self.boss_var = tk.StringVar(value="")
-        ttk.Label(self.live_tab, textvariable=self.boss_var, anchor="w",
-                  foreground=INK, font=("Segoe UI", 11, "bold")).pack(
-            fill="x", padx=4, pady=(6, 0))
-
-        self.duration_var = tk.StringVar(value="Encounter: 0.0s")
-        ttk.Label(self.live_tab, textvariable=self.duration_var, anchor="w",
-                  foreground=INK_MUTED).pack(fill="x", padx=4, pady=(0, 4))
-
-        columns = ("name", "dps", "hps", "taken", "mitigated", "deaths")
-        self.tree = ttk.Treeview(self.live_tab, columns=columns, show="headings", height=8)
-        headings = {
-            "name": "Player", "dps": "DPS", "hps": "HPS", "taken": "Damage Taken",
-            "mitigated": "Mitigated", "deaths": "Deaths",
-        }
-        widths = {"name": 150, "dps": 85, "hps": 85, "taken": 105, "mitigated": 85, "deaths": 60}
-        for col in columns:
-            self.tree.heading(col, text=headings[col])
-            self.tree.column(col, width=widths[col], anchor="center")
-        self.tree.column("name", anchor="w")
-        self.tree.pack(fill="both", expand=True, padx=4, pady=4)
-        self.tree.bind("<Double-Button-1>", self._on_live_row_double_click)
-        self.hint_label = ttk.Label(
-            self.live_tab, text="double-click a player for an ability breakdown",
-            foreground=INK_MUTED,
-        )
-        self.hint_label.pack(anchor="w", padx=4)
-
-        self.alert_list_frame = ttk.Frame(self.live_tab)
-        self.alert_list_frame.pack(fill="x", padx=4, pady=(4, 0))
-
-        self._section(self.live_tab, "Active Timers")
-        self.timer_list_frame = ttk.Frame(self.live_tab)
-        self.timer_list_frame.pack(fill="x", padx=4, pady=(2, 4))
-
-        self._section(self.live_tab, "Cooldowns")
-        self.cooldown_list_frame = ttk.Frame(self.live_tab)
-        self.cooldown_list_frame.pack(fill="x", padx=4, pady=(2, 4))
-
-        self._section(self.live_tab, "DoTs / HoTs")
-        self.dot_hot_list_frame = ttk.Frame(self.live_tab)
-        self.dot_hot_list_frame.pack(fill="x", padx=4, pady=(2, 4))
-
-        self._section(self.live_tab, "Taunts")
-        self.taunt_list_frame = ttk.Frame(self.live_tab)
-        self.taunt_list_frame.pack(fill="x", padx=4, pady=(2, 4))
-
-    def _section(self, parent, text):
-        """Small uppercase section heading — same visual role as the web UI's
-        panel titles, so the two views read as one product."""
-        ttk.Label(parent, text=text.upper(), anchor="w",
-                  foreground=INK_MUTED, font=("Segoe UI", 8)).pack(
-            fill="x", padx=4, pady=(8, 0))
-
-    def _on_live_row_double_click(self, _event):
-        item = self.tree.focus()
-        if not item:
-            return
-        name = self.tree.item(item, "values")[0]
-        player = self.tracker.current.player(name)
-        if player:
-            self._show_ability_breakdown(player)
 
     # ---------- history tab ----------
 
@@ -994,9 +877,28 @@ class MeterWindow:
         ttk.Separator(self.parsely_tab).pack(fill="x", padx=6, pady=6)
 
         ttk.Button(
+            self.parsely_tab, text="Upload a Log File...",
+            command=self._upload_log_file,
+        ).pack(anchor="w", padx=6)
+        ttk.Label(
+            self.parsely_tab,
+            text="Pick any saved .txt log -- old or current, doesn't need to be "
+                 "the one actively being watched -- and send the whole file in "
+                 "one click.",
+            foreground="#666", wraplength=560,
+        ).pack(anchor="w", padx=6, pady=(2, 8))
+
+        ttk.Button(
             self.parsely_tab, text="Upload Current Log (whole file)",
             command=self._upload_current_log,
         ).pack(anchor="w", padx=6)
+        ttk.Label(
+            self.parsely_tab,
+            text="Uploads whichever log the live tailer is currently watching -- "
+                 "only works once at least one line has been written to it this "
+                 "session (i.e. after you've been in combat at least once).",
+            foreground="#666", wraplength=560,
+        ).pack(anchor="w", padx=6, pady=(2, 0))
 
         self.parsely_status_var = tk.StringVar(value="")
         ttk.Label(self.parsely_tab, textvariable=self.parsely_status_var, foreground="#333").pack(
@@ -1005,7 +907,7 @@ class MeterWindow:
 
         ttk.Label(
             self.parsely_tab,
-            text="To upload just one pull instead of the whole session log, use the "
+            text="To upload just one pull instead of a whole file, use the "
                  "History tab -> double-click a pull -> Upload This Pull.",
             foreground="#666", wraplength=560,
         ).pack(anchor="w", padx=6, pady=(10, 0))
@@ -1035,6 +937,18 @@ class MeterWindow:
         if not path:
             messagebox.showinfo("Parsely", "No active log file yet -- get into combat first.")
             return
+        self._upload_file_path(path)
+
+    def _upload_log_file(self):
+        path = filedialog.askopenfilename(
+            title="Select a SWTOR combat log file to upload",
+            filetypes=[("Log files", "*.txt")],
+        )
+        if not path:
+            return
+        self._upload_file_path(path)
+
+    def _upload_file_path(self, path: str):
         notes = simpledialog.askstring("Parsely upload", "Optional note for this upload:") or None
         settings = self._current_parsely_settings()
         self.parsely_status_var.set("Uploading...")
@@ -1105,122 +1019,24 @@ class MeterWindow:
             self.status_var.set(latest)
 
     def _refresh(self):
+        """Drives all state forward on a fixed cadence -- this keeps running
+        even though the live meter/timers/taunts display itself moved to the
+        pywebview page (see live_server.py): timers still need to expire and
+        taunts still need to resolve to a miss even between log events, and
+        the floating bar overlays and History tab still render from here."""
         self._drain_status()
         self.timer_engine.tick()
+        # tick()'d here (not just on the reader thread) so a taunt that got
+        # no reply at all still flips from pending to a visible miss --
+        # otherwise a genuinely failed taunt with no further log lines would
+        # sit unresolved until the next unrelated event.
+        self.taunt_tracker.tick()
         self._maybe_reload_layout_for_character()
 
-        rows, duration = self.tracker.snapshot()
-        self.duration_var.set(f"Encounter: {duration:.1f}s")
-        if self.boss_state is not None:
-            self.boss_var.set(self.boss_state.status_text())
-        self.tree.delete(*self.tree.get_children())
-        for name, dps, hps, taken, mitigated, deaths in rows:
-            # blank rather than "0%" when nothing has hit this entity yet --
-            # a dps who's taken zero damage isn't "mitigating 0%", there's
-            # just no data. Checking taken OR mitigated (not just taken)
-            # matters for the edge case of a hit that was 100% absorbed:
-            # taken stays 0 but mitigated_pct is a real 100, not "no data".
-            mit_text = f"{mitigated:.0f}%" if (taken > 0 or mitigated > 0) else "—"
-            self.tree.insert(
-                "", "end",
-                values=(name, f"{dps:,.0f}", f"{hps:,.0f}", f"{taken:,.0f}", mit_text, deaths),
-            )
-
-        self._refresh_alerts()
-        self._refresh_timers()
-        self._refresh_cooldowns()
-        self._refresh_dots_hots()
-        self._refresh_taunts()
         self._refresh_history()
         self._refresh_bar_overlays()
 
         self.root.after(REFRESH_MS, self._refresh)
-
-    # Categories that have their own dedicated panel below the meter, and so
-    # must be excluded from the general "Active Timers" list (which shows boss
-    # mechanics and manual Timers-tab rules).
-    _OWN_PANEL_CATEGORIES = ("cooldown", "dot", "hot")
-
-    def _refresh_timers(self):
-        for child in self.timer_list_frame.winfo_children():
-            child.destroy()
-        for label, remaining, total, category, is_alert in self.timer_engine.snapshot():
-            if category in self._OWN_PANEL_CATEGORIES or is_alert:
-                continue
-            self._timer_row(self.timer_list_frame, label, remaining, total, "Boss")
-
-    def _timer_row(self, parent, label, remaining, total, style_name, width=30):
-        row = ttk.Frame(parent)
-        row.pack(fill="x", pady=1)
-        ttk.Label(row, text=label, width=width, anchor="w",
-                  foreground=INK).pack(side="left")
-        ttk.Label(row, text=f"{remaining:4.1f}s", width=6, anchor="e",
-                  foreground=INK_MUTED).pack(side="left", padx=(0, 8))
-        ttk.Progressbar(row, maximum=total, value=remaining, length=180,
-                        style=f"{style_name}.Horizontal.TProgressbar"
-                        ).pack(side="left", fill="x", expand=True)
-
-    def _refresh_dots_hots(self):
-        for child in self.dot_hot_list_frame.winfo_children():
-            child.destroy()
-        rows = self.timer_engine.snapshot("dot") + self.timer_engine.snapshot("hot")
-        rows.sort(key=lambda r: r[1])  # soonest-expiring first, across both
-        for label, remaining, total, category, _is_alert in rows:
-            tag = "DoT" if category == "dot" else "HoT"
-            self._timer_row(self.dot_hot_list_frame, f"{tag}  {label}",
-                            remaining, total, "Dot", width=32)
-
-    def _refresh_cooldowns(self):
-        for child in self.cooldown_list_frame.winfo_children():
-            child.destroy()
-        for label, remaining, total, _category, _is_alert in self.timer_engine.snapshot("cooldown"):
-            self._timer_row(self.cooldown_list_frame, label, remaining, total, "Cooldown")
-
-    def _refresh_alerts(self):
-        # Alert-flagged boss timers skip the numeric countdown entirely --
-        # just a bold callout for as long as it's active (e.g. "Move Out",
-        # "Spread!"), matching BARAS's own is_alert display mode.
-        for child in self.alert_list_frame.winfo_children():
-            child.destroy()
-        rows = [r for r in self.timer_engine.snapshot() if r[4]]
-        if not rows:
-            return
-        for label, _remaining, _total, _category, _is_alert in rows:
-            ttk.Label(self.alert_list_frame, text=label.upper(), foreground=CRITICAL,
-                      font=("Segoe UI", 11, "bold")).pack(anchor="w", pady=1)
-
-    def _refresh_taunts(self):
-        # tick() here (rather than only on the reader thread) is what lets a
-        # taunt that got no reply at all still flip from pending to a
-        # visible miss -- otherwise a genuinely failed taunt with no further
-        # log lines would sit unresolved until the next unrelated event.
-        self.taunt_tracker.tick()
-        for child in self.taunt_list_frame.winfo_children():
-            child.destroy()
-        if not self.taunt_tracker.history:
-            ttk.Label(self.taunt_list_frame, text="no taunts cast yet",
-                      foreground=INK_MUTED).pack(anchor="w")
-            return
-        now = time.time()
-        for result in self.taunt_tracker.history:
-            ago = max(0.0, now - result.at)
-            if result.hit:
-                if result.kind == "aoe":
-                    text = f"landed on {len(result.targets)} targets"
-                else:
-                    text = f"landed on {result.targets[0]}"
-                colour = GOOD
-                mark = "✓"
-            else:
-                text = "no target hit — resisted, out of range, or immune"
-                colour = CRITICAL
-                mark = "✗"
-            row = ttk.Frame(self.taunt_list_frame)
-            row.pack(fill="x", pady=1)
-            ttk.Label(row, text=f"{mark} {text}", foreground=colour, anchor="w").pack(
-                side="left", fill="x", expand=True)
-            ttk.Label(row, text=f"{ago:4.1f}s ago", foreground=INK_MUTED, width=10, anchor="e").pack(
-                side="left")
 
     def _refresh_history(self):
         rows = self.tracker.history_snapshot()
