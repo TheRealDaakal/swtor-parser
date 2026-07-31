@@ -157,6 +157,19 @@ class MeterWindow:
                             background=colour, troughcolor=BG_2,
                             borderwidth=0, thickness=6)
 
+        # Overlay picker: a checkbox rendered as a solid toggle button --
+        # dim/outlined when off, filled accent-blue when on -- reads as a
+        # clean button grid rather than a plain checkbox list. "Toolbutton"
+        # is clam's own flat-toggle variant of Checkbutton, so this reuses
+        # the BooleanVar wiring already in place instead of hand-rolling
+        # button state tracking.
+        style.configure("Overlay.Toolbutton", background=BG_2, foreground=INK_MUTED,
+                        borderwidth=1, relief="flat", anchor="w",
+                        padding=(14, 10), font=("Segoe UI", 9, "bold"))
+        style.map("Overlay.Toolbutton",
+                  background=[("selected", ACCENT), ("active", BG_3)],
+                  foreground=[("selected", INK), ("active", INK)])
+
     # ---------- persistence ----------
 
     def _load_persisted_state(self):
@@ -245,36 +258,36 @@ class MeterWindow:
         win.configure(bg=BG)
         win.attributes("-topmost", True)
 
+        # Toolbar row: lock toggle reads the same way the frames themselves
+        # do (a filled pill = active), plus Clear all -- one row of actions
+        # up top rather than a checkbox buried among the frame buttons.
         controls = ttk.Frame(win)
-        controls.grid(row=0, column=0, columnspan=3, sticky="w", padx=12, pady=(10, 4))
+        controls.grid(row=0, column=0, columnspan=4, sticky="w", padx=12, pady=(12, 4))
         ttk.Checkbutton(
             controls, text="Lock positions", variable=self._overlays_locked,
-            command=self._apply_lock_state,
+            command=self._apply_lock_state, style="Overlay.Toolbutton",
         ).pack(side="left")
+        ttk.Button(controls, text="Clear all", command=self._clear_overlays).pack(
+            side="left", padx=(8, 0))
         ttk.Label(
-            controls, text="   locked frames are click-through and can't be "
-                           "dragged or right-click closed",
+            win, text="Locked frames are click-through and can't be dragged or closed.",
             foreground=INK_MUTED,
-        ).pack(side="left")
+        ).grid(row=1, column=0, columnspan=4, sticky="w", padx=12, pady=(0, 10))
 
-        ttk.Label(win, text="Pick the frames you want on screen.",
-                  foreground=INK_MUTED).grid(row=1, column=0, columnspan=3,
-                                             sticky="w", padx=12, pady=(0, 8))
         for col, group in enumerate(ov.OVERLAY_GROUPS):
             ttk.Label(win, text=group.upper(), foreground=INK_MUTED,
-                      font=("Segoe UI", 8)).grid(row=2, column=col, padx=12,
-                                                 pady=(0, 4), sticky="w")
+                      font=("Segoe UI", 8, "bold")).grid(
+                row=2, column=col, padx=(12, 6), pady=(0, 6), sticky="w")
             row = 3
             for key, label, grp in ov.AVAILABLE_OVERLAYS:
                 if grp != group:
                     continue
                 var = self._overlay_vars.setdefault(key, tk.BooleanVar(value=False))
-                ttk.Checkbutton(win, text=label, variable=var,
-                                command=lambda k=key: self._apply_overlay(k)
-                                ).grid(row=row, column=col, sticky="w", padx=12, pady=1)
+                ttk.Checkbutton(
+                    win, text=label, variable=var, style="Overlay.Toolbutton",
+                    width=20, command=lambda k=key: self._apply_overlay(k),
+                ).grid(row=row, column=col, sticky="ew", padx=(12, 6), pady=3)
                 row += 1
-        ttk.Button(win, text="Clear all", command=self._clear_overlays).grid(
-            row=99, column=0, sticky="w", padx=12, pady=10)
 
     def _restore_overlay_layout(self):
         """Recreates whatever frames were open, where they were, and the
