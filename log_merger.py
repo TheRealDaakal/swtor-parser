@@ -39,8 +39,8 @@ def _dedup_key(event: CombatEvent) -> Tuple:
 def load_events(path: str) -> List[CombatEvent]:
     events = []
     with open(path, "r", encoding="cp1252", errors="replace") as f:
-        for line in f:
-            event = parse_line(line)
+        for i, line in enumerate(f, 1):
+            event = parse_line(line, line_number=i)
             if event is not None:
                 events.append(event)
     return events
@@ -64,6 +64,7 @@ def merge_logs(paths: Iterable[str]) -> Encounter:
     """Parses each path, de-duplicates overlapping events across all of
     them, sorts by timestamp, and replays them into one combined Encounter.
     """
+    paths = list(paths)
     all_events: List[CombatEvent] = []
     for path in paths:
         all_events.extend(load_events(path))
@@ -83,6 +84,14 @@ def merge_logs(paths: Iterable[str]) -> Encounter:
     unique_events.sort(key=lambda e: e.timestamp or "")
 
     encounter = Encounter(label="Merged import")
+    if len(paths) == 1:
+        # A single file has one unambiguous, real line range, so it can be
+        # uploaded to Parsely like any other pull. A true multi-file merge
+        # can't: each file's line numbers are independent of the others',
+        # so there's no single (path, start_line, end_line) that means
+        # anything -- log_path stays unset and the Parsely upload button
+        # correctly refuses those.
+        encounter.log_path = paths[0]
     for event in unique_events:
         encounter.apply(event, at_time=_seconds_of_day(event.timestamp or ""))
 
