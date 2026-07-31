@@ -128,9 +128,34 @@ def main():
         )
         thread.start()
 
-    window = MeterWindow(tracker, timer_engine, status_q, boss_state=boss_state,
-                         hot_tracker=hot_tracker, taunt_tracker=taunt_tracker)
-    window.run()
+    # The live meter is a pywebview page now (see live_server.py); the rest
+    # of the app (History/Timers/Overlays/Import Logs/Parsely, plus the
+    # floating bar overlays) stays Tkinter. pywebview wants the main thread
+    # for its own event loop, so Tk runs on a background thread instead --
+    # confirmed safe on Windows (unlike macOS, Tk has no main-thread
+    # requirement here). Tcl is thread-affine though: the Tk root has to be
+    # BOTH created and mainloop()'d on that same thread, or Tcl raises
+    # "Calling Tcl from different apartment" -- so MeterWindow() itself,
+    # not just .run(), has to happen inside the thread target.
+    import live_server
+    import webview
+
+    def _run_tk():
+        window = MeterWindow(tracker, timer_engine, status_q, boss_state=boss_state,
+                             hot_tracker=hot_tracker, taunt_tracker=taunt_tracker)
+        window.run()
+
+    live_port = 8766
+    server = live_server.make_server(tracker, timer_engine, boss_state, taunt_tracker, port=live_port)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+
+    threading.Thread(target=_run_tk, daemon=True).start()
+
+    webview.create_window(
+        "DPS — Live", url=f"http://127.0.0.1:{live_port}/",
+        width=720, height=560, x=40, y=40,
+    )
+    webview.start()
 
 
 if __name__ == "__main__":
