@@ -994,9 +994,28 @@ class MeterWindow:
         ttk.Separator(self.parsely_tab).pack(fill="x", padx=6, pady=6)
 
         ttk.Button(
+            self.parsely_tab, text="Upload a Log File...",
+            command=self._upload_log_file,
+        ).pack(anchor="w", padx=6)
+        ttk.Label(
+            self.parsely_tab,
+            text="Pick any saved .txt log -- old or current, doesn't need to be "
+                 "the one actively being watched -- and send the whole file in "
+                 "one click.",
+            foreground="#666", wraplength=560,
+        ).pack(anchor="w", padx=6, pady=(2, 8))
+
+        ttk.Button(
             self.parsely_tab, text="Upload Current Log (whole file)",
             command=self._upload_current_log,
         ).pack(anchor="w", padx=6)
+        ttk.Label(
+            self.parsely_tab,
+            text="Uploads whichever log the live tailer is currently watching -- "
+                 "only works once at least one line has been written to it this "
+                 "session (i.e. after you've been in combat at least once).",
+            foreground="#666", wraplength=560,
+        ).pack(anchor="w", padx=6, pady=(2, 0))
 
         self.parsely_status_var = tk.StringVar(value="")
         ttk.Label(self.parsely_tab, textvariable=self.parsely_status_var, foreground="#333").pack(
@@ -1005,7 +1024,7 @@ class MeterWindow:
 
         ttk.Label(
             self.parsely_tab,
-            text="To upload just one pull instead of the whole session log, use the "
+            text="To upload just one pull instead of a whole file, use the "
                  "History tab -> double-click a pull -> Upload This Pull.",
             foreground="#666", wraplength=560,
         ).pack(anchor="w", padx=6, pady=(10, 0))
@@ -1035,6 +1054,18 @@ class MeterWindow:
         if not path:
             messagebox.showinfo("Parsely", "No active log file yet -- get into combat first.")
             return
+        self._upload_file_path(path)
+
+    def _upload_log_file(self):
+        path = filedialog.askopenfilename(
+            title="Select a SWTOR combat log file to upload",
+            filetypes=[("Log files", "*.txt")],
+        )
+        if not path:
+            return
+        self._upload_file_path(path)
+
+    def _upload_file_path(self, path: str):
         notes = simpledialog.askstring("Parsely upload", "Optional note for this upload:") or None
         settings = self._current_parsely_settings()
         self.parsely_status_var.set("Uploading...")
