@@ -62,6 +62,12 @@ class MeterWindow:
         self.taunt_tracker = taunt_tracker
         self._drag_offset = (0, 0)
         self._history_rows_shown = 0  # how many history rows we've rendered so far
+        # Which character's overlay layout is currently loaded -- None until
+        # boss_state identifies the local player from the log. A tank alt
+        # and a healer alt want different frames up, so the layout swaps in
+        # per character rather than staying one global "whoever's playing"
+        # config. See _maybe_reload_layout_for_character().
+        self._loaded_layout_character = None
 
         self.root = tk.Tk()
         self.root.title("DPS — Dynamic Parse System")
@@ -276,12 +282,13 @@ class MeterWindow:
         ttk.Button(win, text="Clear all", command=self._clear_overlays).grid(
             row=99, column=0, sticky="w", padx=12, pady=10)
 
-    def _restore_overlay_layout(self):
+    def _restore_overlay_layout(self, character=None):
         """Recreates whatever frames were open, where they were, and the
-        lock state -- called once at startup, before the picker has even
-        been opened this session."""
+        lock state -- called once at startup (character=None, before the
+        local player is known yet) and again whenever
+        _maybe_reload_layout_for_character() swaps characters."""
         import overlay as ov
-        layout = storage.load_overlay_layout()
+        layout = storage.load_overlay_layout(character)
         self._overlays_locked.set(bool(layout.get("locked", False)))
         valid_keys = {k for k, _label, _group in ov.AVAILABLE_OVERLAYS}
         for key, pos in layout.get("frames", {}).items():
@@ -289,6 +296,28 @@ class MeterWindow:
                 continue  # a saved key from a version that no longer exists
             self._overlay_vars.setdefault(key, tk.BooleanVar(value=True)).set(True)
             self._apply_overlay(key, pos=pos, persist=False)
+
+    def _maybe_reload_layout_for_character(self):
+        """Called every refresh tick. Once boss_state identifies the local
+        player (or that identity changes -- a relog to a different alt
+        mid-session), swap in THEIR saved overlay layout instead of
+        continuing to show whatever the pre-character-known "default"
+        state had up."""
+        if not self.boss_state:
+            return
+        name = self.boss_state.local_player_name
+        if name is None or name == self._loaded_layout_character:
+            return
+        self._loaded_layout_character = name
+        for o in list(self.bar_overlays):
+            o.win.destroy()
+        self.bar_overlays = []
+        for var in self._overlay_vars.values():
+            var.set(False)  # stale checkmarks from the previous character's layout
+        self._restore_overlay_layout(character=name)
+
+    def _current_character(self):
+        return self.boss_state.local_player_name if self.boss_state else None
 
     def _persist_overlay_layout(self):
         frames = {}
@@ -299,7 +328,7 @@ class MeterWindow:
         storage.save_overlay_layout({
             "locked": self._overlays_locked.get(),
             "frames": frames,
-        })
+        }, character=self._current_character())
 
     def _apply_overlay(self, key, pos=None, persist=True):
         """Show or hide one frame, honouring its checkbox.
@@ -944,6 +973,7 @@ class MeterWindow:
     def _refresh(self):
         self._drain_status()
         self.timer_engine.tick()
+        self._maybe_reload_layout_for_character()
 
         rows, duration = self.tracker.snapshot()
         self.duration_var.set(f"Encounter: {duration:.1f}s")
