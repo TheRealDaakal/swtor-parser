@@ -16,6 +16,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, simpledialog
 
 import storage
+from analysis.corpus import replay_pulls
 from stats import Encounter
 from timers import TimerRule
 
@@ -791,6 +792,85 @@ class MeterWindow:
         self.import_result_var = tk.StringVar(value="")
         ttk.Label(self.import_tab, textvariable=self.import_result_var, foreground="#333").pack(
             anchor="w", padx=6, pady=(8, 0)
+        )
+
+        ttk.Separator(self.import_tab).pack(fill="x", padx=6, pady=10)
+
+        ttk.Label(
+            self.import_tab,
+            text="Load an old session log (e.g. from a previous night, or one "
+                 "you weren't running the app for) and split it into its "
+                 "individual pulls -- each real fight is added to History "
+                 "exactly as if it had been captured live, boss recognition "
+                 "and all. Trivial slivers (looting, stray aggro) are skipped.",
+            wraplength=620,
+            foreground="#555",
+        ).pack(fill="x", padx=6)
+
+        ttk.Button(
+            self.import_tab, text="Load Old Session Log(s)...",
+            command=self._load_past_session,
+        ).pack(anchor="w", padx=6, pady=(6, 0))
+
+        self.past_session_result_var = tk.StringVar(value="")
+        ttk.Label(self.import_tab, textvariable=self.past_session_result_var, foreground="#333").pack(
+            anchor="w", padx=6, pady=(8, 0)
+        )
+
+    def _load_past_session(self):
+        paths = filedialog.askopenfilenames(
+            title="Select old SWTOR combat log file(s)", filetypes=[("Log files", "*.txt")]
+        )
+        if not paths:
+            return
+
+        definitions = self.boss_state.definitions if self.boss_state else {}
+        # A pull already in history (same file, same line range) would
+        # otherwise be re-added every time the same log is imported again --
+        # (log_path, start_line, end_line) uniquely identifies a pull.
+        existing = {
+            (e.log_path, e.start_line, e.end_line) for e in self.tracker.history
+        }
+        imported = 0
+        skipped = 0
+        duplicates = 0
+        labels = []
+        try:
+            for path in paths:
+                for pull in replay_pulls(path, definitions):
+                    encounter = pull["encounter"]
+                    total_damage = sum(p.damage_done for p in encounter.players.values())
+                    if total_damage <= 0:
+                        # A real fight always does damage -- zero-damage
+                        # "pulls" are looting/mop-up noise the EnterCombat
+                        # heuristic occasionally mistakes for a new pull.
+                        skipped += 1
+                        continue
+                    key = (encounter.log_path, encounter.start_line, encounter.end_line)
+                    if key in existing:
+                        duplicates += 1
+                        continue
+                    encounter.label = pull["boss_name"] or "Unknown fight"
+                    self.tracker.history.append(encounter)
+                    storage.append_history_entry(encounter)
+                    existing.add(key)
+                    imported += 1
+                    labels.append(encounter.label)
+        except Exception as exc:
+            messagebox.showerror("Import failed", str(exc))
+            return
+
+        if imported == 0:
+            reason = "already in History" if duplicates else "no real fights found"
+            self.past_session_result_var.set(
+                f"Nothing new to import from the selected file(s) ({reason})."
+            )
+            return
+        preview = ", ".join(labels[:5]) + ("..." if len(labels) > 5 else "")
+        extra = f", {duplicates} already imported" if duplicates else ""
+        self.past_session_result_var.set(
+            f"Imported {imported} pull(s) from {len(paths)} file(s) "
+            f"({skipped} trivial slivers skipped{extra}): {preview}. See History tab."
         )
 
     def _import_logs(self):
