@@ -49,6 +49,12 @@ class PlayerStats:
     deaths: int = 0
     damage_by_ability: Dict[str, float] = field(default_factory=dict)
     healing_by_ability: Dict[str, float] = field(default_factory=dict)
+    # Same totals, broken down by WHO instead of WHICH ABILITY -- lets a
+    # tank/dps see "how much of my damage was actually on the boss" instead
+    # of it being diluted by every add in the pull, and a healer see who
+    # they actually spent their output on.
+    damage_by_target: Dict[str, float] = field(default_factory=dict)
+    healing_by_target: Dict[str, float] = field(default_factory=dict)
     # Outgoing-attack accuracy/crit tallies. damage_attempts counts every
     # damage tick this entity dealt regardless of outcome (landed or not);
     # damage_avoided is the subset the target's defense roll stopped
@@ -116,6 +122,20 @@ class PlayerStats:
         heal = sorted(self.healing_by_ability.items(), key=lambda kv: kv[1], reverse=True)
         return dmg, heal
 
+    def target_breakdown(self):
+        """Same shape as ability_breakdown(), but by WHO instead of WHICH
+        ability -- (damage_rows, healing_rows) of (target_name, amount)."""
+        dmg = sorted(self.damage_by_target.items(), key=lambda kv: kv[1], reverse=True)
+        heal = sorted(self.healing_by_target.items(), key=lambda kv: kv[1], reverse=True)
+        return dmg, heal
+
+    def damage_to(self, names) -> float:
+        """Sum of damage done to any target whose name is in `names` (e.g.
+        a boss's recognized name set) -- the building block for "boss-only
+        DPS", which excludes trash/adds diluting the real progression number."""
+        name_set = set(names)
+        return sum(v for k, v in self.damage_by_target.items() if k in name_set)
+
     def to_dict(self) -> dict:
         return {
             "name": self.name,
@@ -127,6 +147,8 @@ class PlayerStats:
             "deaths": self.deaths,
             "damage_by_ability": self.damage_by_ability,
             "healing_by_ability": self.healing_by_ability,
+            "damage_by_target": self.damage_by_target,
+            "healing_by_target": self.healing_by_target,
             "is_player": self.is_player,
             "damage_attempts": self.damage_attempts,
             "damage_avoided": self.damage_avoided,
@@ -149,6 +171,8 @@ class PlayerStats:
             deaths=d.get("deaths", 0),
             damage_by_ability=dict(d.get("damage_by_ability", {})),
             healing_by_ability=dict(d.get("healing_by_ability", {})),
+            damage_by_target=dict(d.get("damage_by_target", {})),
+            healing_by_target=dict(d.get("healing_by_target", {})),
             is_player=d.get("is_player", False),
             damage_attempts=d.get("damage_attempts", 0),
             damage_avoided=d.get("damage_avoided", 0),
@@ -245,6 +269,10 @@ class Encounter:
                 p.damage_by_ability[ability_key] = (
                     p.damage_by_ability.get(ability_key, 0.0) + event.amount
                 )
+                if event.target:
+                    p.damage_by_target[event.target] = (
+                        p.damage_by_target.get(event.target, 0.0) + event.amount
+                    )
             if event.target:
                 self._get(event.target).damage_taken += event.amount
 
@@ -273,6 +301,10 @@ class Encounter:
                 p.healing_by_ability[ability_key] = (
                     p.healing_by_ability.get(ability_key, 0.0) + event.amount
                 )
+                if event.target:
+                    p.healing_by_target[event.target] = (
+                        p.healing_by_target.get(event.target, 0.0) + event.amount
+                    )
         if event.is_heal and event.source:
             p = self._get(event.source)
             p.heal_casts += 1

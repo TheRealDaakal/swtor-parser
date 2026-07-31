@@ -557,9 +557,10 @@ class MeterWindow:
     def _show_ability_breakdown(self, player, duration=None):
         win = tk.Toplevel(self.root)
         win.title(f"{player.name} — ability breakdown")
-        win.geometry("420x400")
+        win.geometry("420x560")
 
         dmg_rows, heal_rows = player.ability_breakdown()
+        target_dmg_rows, _target_heal_rows = player.target_breakdown()
         if duration is None:
             duration = self.tracker.current.duration()
 
@@ -573,13 +574,22 @@ class MeterWindow:
             stat_parts.append(f"Heal Crit {player.heal_crit_pct():.1f}%")
         if player.times_interrupted > 0:
             stat_parts.append(f"Interrupted {player.times_interrupted}x")
+        # Boss-only DPS: excludes trash/add damage diluting the real
+        # progression number -- only shown while a boss is actually
+        # recognized, since "boss names" is meaningless otherwise.
+        boss = self.boss_state.active_boss if self.boss_state else None
+        if boss is not None:
+            boss_dmg = player.damage_to(boss.boss_names)
+            if boss_dmg > 0:
+                stat_parts.append(f"Boss DPS {boss_dmg / duration:,.0f}" if duration > 0
+                                   else "Boss DPS —")
         ttk.Label(summary, text="   |   ".join(stat_parts) or "No attacks/heals yet",
                   foreground=ACCENT, font=("", 10, "bold")).pack(anchor="w")
 
         ttk.Label(win, text="Damage by ability", font=("", 10, "bold")).pack(
             anchor="w", padx=8, pady=(8, 0)
         )
-        dmg_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=6)
+        dmg_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=5)
         dmg_tree.heading("ability", text="Ability")
         dmg_tree.heading("amount", text="Total")
         dmg_tree.column("ability", width=250, anchor="w")
@@ -591,7 +601,7 @@ class MeterWindow:
         ttk.Label(win, text="Healing by ability", font=("", 10, "bold")).pack(
             anchor="w", padx=8, pady=(8, 0)
         )
-        heal_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=6)
+        heal_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=5)
         heal_tree.heading("ability", text="Ability")
         heal_tree.heading("amount", text="Total")
         heal_tree.column("ability", width=250, anchor="w")
@@ -599,6 +609,18 @@ class MeterWindow:
         heal_tree.pack(fill="x", padx=8, pady=4)
         for ability, amount in heal_rows:
             heal_tree.insert("", "end", values=(ability, f"{amount:,.0f}"))
+
+        ttk.Label(win, text="Damage by target", font=("", 10, "bold")).pack(
+            anchor="w", padx=8, pady=(8, 0)
+        )
+        target_tree = ttk.Treeview(win, columns=("target", "amount"), show="headings", height=5)
+        target_tree.heading("target", text="Target")
+        target_tree.heading("amount", text="Total")
+        target_tree.column("target", width=250, anchor="w")
+        target_tree.column("amount", width=100, anchor="center")
+        target_tree.pack(fill="x", padx=8, pady=4)
+        for target_name, amount in target_dmg_rows:
+            target_tree.insert("", "end", values=(target_name, f"{amount:,.0f}"))
 
     # ---------- timers config tab ----------
 
