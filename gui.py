@@ -1,57 +1,48 @@
 """
 gui.py
 
-Live meter + timers + history browser + log import, with a BARAS-style
-overlay mode (borderless, semi-transparent, draggable, always-on-top) you
-can toggle on top of the normal windowed view.
+What's left of the Tkinter GUI after the pywebview migration: the
+BARAS-style floating bar overlays (borderless, semi-transparent,
+draggable, always-on-top) are genuine OS-level windows that a browser/
+pywebview page structurally can't do -- true per-pixel transparency and
+click-through on an always-on-top window is a Tk (or native) thing, not
+a web one. Everything else (Live, History, Timers, Overlays picker,
+Import Logs, Parsely) is now served by web_server.py and shown in the
+pywebview window; see main.py.
 
-Persistence: history and timer rules are loaded from disk on startup
-(storage.py) and saved as they change, so both survive a restart.
+OverlayManager owns a hidden Tk root purely to host the floating bar
+Toplevels, plus the periodic tick that keeps timers/taunts/history
+advancing and the bars re-rendering, independent of anything the web
+UI is doing.
+
+Threading note: Tcl/Tk is not safe to touch from any thread other than
+the one running mainloop() (see main.py's comment on "Calling Tcl from
+different apartment" for the related, sharper version of this that
+bit pywebview specifically). web_server.py's HTTP handlers run on their
+own per-request threads, so they can't call into Tk-touching methods
+directly -- toggle_overlay()/set_lock()/clear_all() update a plain,
+thread-safe dict/bool immediately (so a GET right after a POST reads
+back correctly) and queue the actual Toplevel work for _refresh() to
+drain on the Tk thread, same idea as Tkinter's own after()-from-another-
+thread pattern.
 """
 
 import queue
-import threading
-import time
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox, simpledialog
 
 import storage
-from analysis.corpus import replay_pulls
-from stats import Encounter
-from timers import TimerRule
 
 REFRESH_MS = 500
 
-# Same palette as the corpus web UI (analysis/static/app.css) so the two
-# halves of the tool don't look like different products. Tk's default theme
-# is a light grey Windows dialog, which over a fullscreen game reads as a
-# misplaced settings window rather than an overlay.
-BG        = "#1a1a19"   # surface
-BG_2      = "#232321"   # raised
-BG_3      = "#2c2c2a"
-INK       = "#ffffff"
-INK_2     = "#c3c2b7"
-INK_MUTED = "#898781"
-HAIRLINE  = "#33332f"
-ACCENT    = "#3987e5"   # series 1
-GOOD      = "#199e70"   # series 3
-CRITICAL  = "#d03b3b"
-WARNING   = "#fab219"
 
-
-class MeterWindow:
-    def __init__(self, tracker, timer_engine, status_queue: "queue.Queue[str]",
-                 boss_state=None, hot_tracker=None, taunt_tracker=None):
+class OverlayManager:
+    def __init__(self, tracker, timer_engine, boss_state=None, hot_tracker=None, taunt_tracker=None):
         self.tracker = tracker
         self.timer_engine = timer_engine
-        self.status_queue = status_queue
         self.boss_state = boss_state
         self.bar_overlays = []
-        self._overlay_vars = {}   # key -> BooleanVar, built by _build_overlays_tab
-        self._overlays_locked = None  # BooleanVar, created after self.root exists
+        self._commands = queue.Queue()  # cross-thread -> drained on the Tk thread by _refresh()
         if hot_tracker is None:
-            # standalone/demo use -- main.py normally supplies the one the
-            # background reader thread is actually feeding
             from dots_hots import HotTracker
             hot_tracker = HotTracker()
         self.hot_tracker = hot_tracker
@@ -59,7 +50,6 @@ class MeterWindow:
             from taunt_tracker import TauntTracker
             taunt_tracker = TauntTracker()
         self.taunt_tracker = taunt_tracker
-        self._history_rows_shown = 0  # how many history rows we've rendered so far
         # Which character's overlay layout is currently loaded -- None until
         # boss_state identifies the local player from the log. A tank alt
         # and a healer alt want different frames up, so the layout swaps in
@@ -67,187 +57,49 @@ class MeterWindow:
         # config. See _maybe_reload_layout_for_character().
         self._loaded_layout_character = None
 
+        import overlay as ov
+        self._overlay_state = {key: False for key, _label, _group in ov.AVAILABLE_OVERLAYS}
+        self._locked = False
+
         self.root = tk.Tk()
-        self.root.title("DPS — Dynamic Parse System")
-        self.root.geometry("680x460")
-        self.root.attributes("-topmost", True)
-        self._overlays_locked = tk.BooleanVar(value=False)
-        self._apply_theme()
+        self.root.withdraw()  # no visible window -- just hosts the bar Toplevels
 
-        self._build_toolbar()
-
-        self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill="both", expand=True, padx=6, pady=(0, 6))
-
-        self.history_tab = ttk.Frame(self.notebook)
-        self.timers_tab = ttk.Frame(self.notebook)
-        self.overlays_tab = ttk.Frame(self.notebook)
-        self.import_tab = ttk.Frame(self.notebook)
-        self.parsely_tab = ttk.Frame(self.notebook)
-        self.notebook.add(self.history_tab, text="History")
-        self.notebook.add(self.timers_tab, text="Timers")
-        self.notebook.add(self.overlays_tab, text="Overlays")
-        self.notebook.add(self.import_tab, text="Import Logs")
-        self.notebook.add(self.parsely_tab, text="Parsely")
-
-        self._build_history_tab()
-        self._build_timers_tab()
-        self._build_overlays_tab()
-        self._build_import_tab()
-        self._build_parsely_tab()
-
-        self._load_persisted_state()
-
+        self._restore_overlay_layout()
         self.root.after(REFRESH_MS, self._refresh)
 
-    # ---------- theme ----------
+    def run(self):
+        self.root.mainloop()
 
-    def _apply_theme(self):
-        """Dark theme via ttk's 'clam' engine. The native Windows theme
-        ignores most colour options -- background/fieldbackground on a
-        Treeview simply don't take -- so clam is the only one that can be
-        recoloured reliably."""
-        self.root.configure(bg=BG)
-        style = ttk.Style(self.root)
-        try:
-            style.theme_use("clam")
-        except tk.TclError:
-            pass
+    # ---------- cross-thread API (safe to call from any thread) ----------
 
-        style.configure(".", background=BG, foreground=INK_2,
-                        fieldbackground=BG, borderwidth=0, focuscolor=BG)
-        style.configure("TFrame", background=BG)
-        style.configure("TLabel", background=BG, foreground=INK_2)
-        style.configure("TCheckbutton", background=BG, foreground=INK_2)
-        style.map("TCheckbutton", background=[("active", BG)])
-        style.configure("TRadiobutton", background=BG, foreground=INK_2)
-        style.map("TRadiobutton", background=[("active", BG)])
-
-        style.configure("TButton", background=BG_2, foreground=INK_2,
-                        borderwidth=1, relief="flat", padding=(10, 4))
-        style.map("TButton",
-                  background=[("active", BG_3), ("pressed", BG_3)],
-                  foreground=[("active", INK)])
-
-        style.configure("TEntry", fieldbackground=BG_2, foreground=INK,
-                        insertcolor=INK, borderwidth=1)
-
-        style.configure("TNotebook", background=BG, borderwidth=0, tabmargins=0)
-        style.configure("TNotebook.Tab", background=BG, foreground=INK_MUTED,
-                        padding=(12, 6), borderwidth=0)
-        style.map("TNotebook.Tab",
-                  background=[("selected", BG_2)],
-                  foreground=[("selected", INK)])
-
-        style.configure("Treeview", background=BG, fieldbackground=BG,
-                        foreground=INK_2, borderwidth=0, rowheight=21)
-        style.configure("Treeview.Heading", background=BG_2, foreground=INK_MUTED,
-                        borderwidth=0, relief="flat")
-        style.map("Treeview.Heading", background=[("active", BG_3)])
-        style.map("Treeview",
-                  background=[("selected", BG_3)], foreground=[("selected", INK)])
-        # kill the dotted focus ring clam draws around the tree
-        style.layout("Treeview.Item", [
-            ("Treeitem.padding", {"sticky": "nswe", "children": [
-                ("Treeitem.image", {"side": "left", "sticky": ""}),
-                ("Treeitem.text", {"side": "left", "sticky": ""}),
-            ]})])
-
-        # Progress bars: default clam green is loud and means nothing here.
-        for name, colour in (("Boss", ACCENT), ("Cooldown", WARNING), ("Dot", GOOD)):
-            style.configure(f"{name}.Horizontal.TProgressbar",
-                            background=colour, troughcolor=BG_2,
-                            borderwidth=0, thickness=6)
-
-        # Overlay picker: a checkbox rendered as a solid toggle button --
-        # dim/outlined when off, filled accent-blue when on -- reads as a
-        # clean button grid rather than a plain checkbox list. "Toolbutton"
-        # is clam's own flat-toggle variant of Checkbutton, so this reuses
-        # the BooleanVar wiring already in place instead of hand-rolling
-        # button state tracking.
-        style.configure("Overlay.Toolbutton", background=BG_2, foreground=INK_MUTED,
-                        borderwidth=1, relief="flat", anchor="w",
-                        padding=(14, 10), font=("Segoe UI", 9, "bold"))
-        style.map("Overlay.Toolbutton",
-                  background=[("selected", ACCENT), ("active", BG_3)],
-                  foreground=[("selected", INK), ("active", INK)])
-
-    # ---------- persistence ----------
-
-    def _load_persisted_state(self):
-        self._restore_overlay_layout()
-        loaded_rules = storage.load_timer_rules()
-        for rule in loaded_rules:
-            self.timer_engine.add_rule(rule)
-            self.rules_tree.insert(
-                "", "end",
-                values=(
-                    rule.keyword, rule.label, rule.duration_seconds,
-                    rule.warn_seconds_before or "-", "on" if rule.voice_alert else "off",
-                ),
-            )
-
-        loaded_history = storage.load_history()
-        if loaded_history:
-            self.tracker.history = loaded_history + self.tracker.history
-        self._history_rows_shown = 0  # force full re-render including loaded entries
-
-    # ---------- toolbar / overlay mode ----------
-
-    def _build_toolbar(self):
-        self.toolbar = ttk.Frame(self.root)
-        self.toolbar.pack(fill="x", padx=8, pady=6)
-
-        self.status_var = tk.StringVar(value="Waiting for combat log...")
-        ttk.Label(self.toolbar, textvariable=self.status_var, anchor="w").pack(
-            side="left", fill="x", expand=True
-        )
-        ttk.Button(self.toolbar, text="Bars",
-                   command=lambda: self.notebook.select(self.overlays_tab)).pack(
-            side="right", padx=(0, 6)
-        )
-
-    # ---------- floating bar overlays ----------
-
-    def _build_overlays_tab(self):
-        """Which floating frames are shown is a per-raider choice (a healer
-        wants HoTs, a dps wants damage), so this is a checklist rather than
-        a fixed set. Lives in the main window as its own tab -- a second,
-        separate popup window for this was one more thing to lose track of
-        and re-find behind the game."""
+    def overlay_state(self) -> dict:
+        """Everything the web Overlays page needs to render its picker."""
         import overlay as ov
-        win = self.overlays_tab
+        return {
+            "groups": ov.OVERLAY_GROUPS,
+            "items": [
+                {"key": key, "label": label, "group": group, "on": self._overlay_state.get(key, False)}
+                for key, label, group in ov.AVAILABLE_OVERLAYS
+            ],
+            "locked": self._locked,
+        }
 
-        # Toolbar row: lock toggle reads the same way the frames themselves
-        # do (a filled pill = active), plus Clear all -- one row of actions
-        # up top rather than a checkbox buried among the frame buttons.
-        controls = ttk.Frame(win)
-        controls.grid(row=0, column=0, columnspan=4, sticky="w", padx=12, pady=(12, 4))
-        ttk.Checkbutton(
-            controls, text="Lock positions", variable=self._overlays_locked,
-            command=self._apply_lock_state, style="Overlay.Toolbutton",
-        ).pack(side="left")
-        ttk.Button(controls, text="Clear all", command=self._clear_overlays).pack(
-            side="left", padx=(8, 0))
-        ttk.Label(
-            win, text="Locked frames are click-through and can't be dragged or closed.",
-            foreground=INK_MUTED,
-        ).grid(row=1, column=0, columnspan=4, sticky="w", padx=12, pady=(0, 10))
+    def toggle_overlay(self, key: str) -> None:
+        if key not in self._overlay_state:
+            return
+        self._overlay_state[key] = not self._overlay_state[key]
+        self._commands.put(("apply", key))
 
-        for col, group in enumerate(ov.OVERLAY_GROUPS):
-            ttk.Label(win, text=group.upper(), foreground=INK_MUTED,
-                      font=("Segoe UI", 8, "bold")).grid(
-                row=2, column=col, padx=(12, 6), pady=(0, 6), sticky="w")
-            row = 3
-            for key, label, grp in ov.AVAILABLE_OVERLAYS:
-                if grp != group:
-                    continue
-                var = self._overlay_vars.setdefault(key, tk.BooleanVar(value=False))
-                ttk.Checkbutton(
-                    win, text=label, variable=var, style="Overlay.Toolbutton",
-                    width=20, command=lambda k=key: self._apply_overlay(k),
-                ).grid(row=row, column=col, sticky="ew", padx=(12, 6), pady=3)
-                row += 1
+    def set_lock(self, locked: bool) -> None:
+        self._locked = bool(locked)
+        self._commands.put(("lock", None))
+
+    def clear_all(self) -> None:
+        for key in self._overlay_state:
+            self._overlay_state[key] = False
+        self._commands.put(("clear", None))
+
+    # ---------- floating bar overlays (Tk thread only past this point) ----------
 
     def _restore_overlay_layout(self, character=None):
         """Recreates whatever frames were open, where they were, and the
@@ -256,12 +108,12 @@ class MeterWindow:
         _maybe_reload_layout_for_character() swaps characters."""
         import overlay as ov
         layout = storage.load_overlay_layout(character)
-        self._overlays_locked.set(bool(layout.get("locked", False)))
+        self._locked = bool(layout.get("locked", False))
         valid_keys = {k for k, _label, _group in ov.AVAILABLE_OVERLAYS}
         for key, pos in layout.get("frames", {}).items():
             if key not in valid_keys:
                 continue  # a saved key from a version that no longer exists
-            self._overlay_vars.setdefault(key, tk.BooleanVar(value=True)).set(True)
+            self._overlay_state[key] = True
             self._apply_overlay(key, pos=pos, persist=False)
 
     def _maybe_reload_layout_for_character(self):
@@ -279,8 +131,8 @@ class MeterWindow:
         for o in list(self.bar_overlays):
             o.win.destroy()
         self.bar_overlays = []
-        for var in self._overlay_vars.values():
-            var.set(False)  # stale checkmarks from the previous character's layout
+        for key in self._overlay_state:
+            self._overlay_state[key] = False  # stale state from the previous character's layout
         self._restore_overlay_layout(character=name)
 
     def _current_character(self):
@@ -293,16 +145,16 @@ class MeterWindow:
             if key:
                 frames[key] = {"x": o.win.winfo_x(), "y": o.win.winfo_y()}
         storage.save_overlay_layout({
-            "locked": self._overlays_locked.get(),
+            "locked": self._locked,
             "frames": frames,
         }, character=self._current_character())
 
     def _apply_overlay(self, key, pos=None, persist=True):
-        """Show or hide one frame, honouring its checkbox.
+        """Show or hide one frame, honouring self._overlay_state[key].
         pos: optional {"x": int, "y": int} to restore a saved position
         instead of the default stacked placement -- used on startup only."""
         import overlay as ov
-        want = self._overlay_vars[key].get()
+        want = self._overlay_state.get(key, False)
         existing = next((o for o in self.bar_overlays if getattr(o, "kind", None) == key), None)
         if not want:
             if existing:
@@ -332,7 +184,7 @@ class MeterWindow:
             o = ov.BarOverlay(self.root, kind=key, x=x, y=y, on_close=drop, on_move=moved)
         # a frame opened while "Lock positions" is already checked should
         # start locked too, not silently draggable until the next toggle
-        if self._overlays_locked.get():
+        if self._locked:
             o.set_locked(True)
         self.bar_overlays.append(o)
         if persist:
@@ -341,27 +193,27 @@ class MeterWindow:
     def _apply_lock_state(self):
         """One toggle governs every currently-visible frame, same as
         BARAS's single LOCKED control -- not a per-frame setting."""
-        locked = self._overlays_locked.get()
         for o in self.bar_overlays:
-            o.set_locked(locked)
+            o.set_locked(self._locked)
         self._persist_overlay_layout()
 
     def _on_overlay_closed(self, o):
-        """Right-clicking a frame dismisses it -- keep the checkbox in sync,
-        otherwise the box stays ticked for a frame that no longer exists."""
+        """Right-clicking a frame dismisses it -- keep state in sync,
+        otherwise the web picker shows a frame that no longer exists as
+        still on. Runs as a Tk event callback, so already on the Tk thread."""
         if o in self.bar_overlays:
             self.bar_overlays.remove(o)
-        var = self._overlay_vars.get(getattr(o, "kind", None))
-        if var is not None:
-            var.set(False)
+        key = getattr(o, "kind", None)
+        if key in self._overlay_state:
+            self._overlay_state[key] = False
         self._persist_overlay_layout()
 
     def _clear_overlays(self):
         for o in list(self.bar_overlays):
             o.win.destroy()
         self.bar_overlays = []
-        for var in self._overlay_vars.values():
-            var.set(False)
+        for key in self._overlay_state:
+            self._overlay_state[key] = False
         self._persist_overlay_layout()
 
     def _refresh_bar_overlays(self):
@@ -369,7 +221,6 @@ class MeterWindow:
             return
         rows, _dur = self.tracker.snapshot()
         boss = self.boss_state.status_text() if self.boss_state else None
-        local = self.boss_state.local_player_name if self.boss_state else None
         for o in self.bar_overlays:
             kind = getattr(o, "kind", None)
             if kind in ("dps", "hps", "taken"):
@@ -408,623 +259,27 @@ class MeterWindow:
             elif kind == "alerts":
                 o.render([t for t in self.timer_engine.snapshot() if t[4]])
 
-    # ---------- history tab ----------
-
-    def _build_history_tab(self):
-        columns = ("pull", "duration", "top")
-        self.history_tree = ttk.Treeview(
-            self.history_tab, columns=columns, show="headings", height=12
-        )
-        headings = {"pull": "Pull #", "duration": "Duration", "top": "Top DPS"}
-        widths = {"pull": 70, "duration": 100, "top": 340}
-        for col in columns:
-            self.history_tree.heading(col, text=headings[col])
-            self.history_tree.column(col, width=widths[col], anchor="w")
-        self.history_tree.pack(fill="both", expand=True, padx=4, pady=4)
-        self.history_tree.bind("<Double-Button-1>", self._on_history_row_double_click)
-        ttk.Label(
-            self.history_tab, text="(double-click a pull to see per-player detail; "
-            "history persists across restarts)", foreground="#666",
-        ).pack(anchor="w", padx=4)
-
-    def _on_history_row_double_click(self, _event):
-        item = self.history_tree.focus()
-        if not item:
-            return
-        pull_num = self.history_tree.item(item, "values")[0]
-        # history is stored oldest-first; pull numbers were assigned 1-based
-        idx = int(pull_num) - 1
-        if 0 <= idx < len(self.tracker.history):
-            self._show_pull_detail(self.tracker.history[idx], pull_num)
-
-    def _show_pull_detail(self, encounter: Encounter, pull_num):
-        win = tk.Toplevel(self.root)
-        win.title(f"Pull #{pull_num} detail")
-        win.geometry("480x300")
-
-        columns = ("name", "dps", "hps", "taken", "mitigated", "deaths")
-        tree = ttk.Treeview(win, columns=columns, show="headings")
-        headings = {
-            "name": "Player", "dps": "DPS", "hps": "HPS", "taken": "Damage Taken",
-            "mitigated": "Mitigated", "deaths": "Deaths",
-        }
-        for col in columns:
-            tree.heading(col, text=headings[col])
-            tree.column(col, width=85, anchor="center")
-        tree.column("name", anchor="w", width=140)
-        tree.pack(fill="both", expand=True, padx=8, pady=8)
-
-        for name, dps, hps, taken, mitigated, deaths in encounter.snapshot():
-            mit_text = f"{mitigated:.0f}%" if (taken > 0 or mitigated > 0) else "—"
-            tree.insert("", "end", values=(name, f"{dps:,.0f}", f"{hps:,.0f}", f"{taken:,.0f}", mit_text, deaths))
-
-        def on_double_click(_event):
-            item = tree.focus()
-            if not item:
-                return
-            name = tree.item(item, "values")[0]
-            player = encounter.player(name)
-            if player:
-                self._show_ability_breakdown(player, duration=encounter.duration())
-
-        tree.bind("<Double-Button-1>", on_double_click)
-        ttk.Label(win, text="(double-click a player for ability breakdown)", foreground="#666").pack(
-            anchor="w", padx=8
-        )
-        ttk.Button(
-            win, text="Upload This Pull to Parsely",
-            command=lambda: self._upload_encounter(encounter),
-        ).pack(anchor="w", padx=8, pady=(6, 8))
-
-    def _show_ability_breakdown(self, player, duration=None):
-        win = tk.Toplevel(self.root)
-        win.title(f"{player.name} — ability breakdown")
-        win.geometry("420x560")
-
-        dmg_rows, heal_rows = player.ability_breakdown()
-        target_dmg_rows, _target_heal_rows = player.target_breakdown()
-        if duration is None:
-            duration = self.tracker.current.duration()
-
-        summary = ttk.Frame(win)
-        summary.pack(fill="x", padx=8, pady=(8, 0))
-        stat_parts = [f"APM {player.apm(duration):.1f}"]
-        if player.damage_events:
-            stat_parts.append(f"Burst DPS {player.burst_dps():,.0f}")
-        if player.heal_events:
-            stat_parts.append(f"Burst EHPS {player.burst_hps():,.0f}")
-        if player.damage_attempts > 0:
-            stat_parts.append(f"Accuracy {player.accuracy_pct():.1f}%")
-            stat_parts.append(f"Crit {player.crit_pct():.1f}%")
-        if player.heal_casts > 0:
-            stat_parts.append(f"Heal Crit {player.heal_crit_pct():.1f}%")
-        if player.times_interrupted > 0:
-            stat_parts.append(f"Interrupted {player.times_interrupted}x")
-        # Boss-only DPS: excludes trash/add damage diluting the real
-        # progression number -- only shown while a boss is actually
-        # recognized, since "boss names" is meaningless otherwise.
-        boss = self.boss_state.active_boss if self.boss_state else None
-        if boss is not None:
-            boss_dmg = player.damage_to(boss.boss_names)
-            if boss_dmg > 0:
-                stat_parts.append(f"Boss DPS {boss_dmg / duration:,.0f}" if duration > 0
-                                   else "Boss DPS —")
-        ttk.Label(summary, text="   |   ".join(stat_parts) or "No attacks/heals yet",
-                  foreground=ACCENT, font=("", 10, "bold")).pack(anchor="w")
-
-        ttk.Label(win, text="Damage by ability", font=("", 10, "bold")).pack(
-            anchor="w", padx=8, pady=(8, 0)
-        )
-        dmg_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=5)
-        dmg_tree.heading("ability", text="Ability")
-        dmg_tree.heading("amount", text="Total")
-        dmg_tree.column("ability", width=250, anchor="w")
-        dmg_tree.column("amount", width=100, anchor="center")
-        dmg_tree.pack(fill="x", padx=8, pady=4)
-        for ability, amount in dmg_rows:
-            dmg_tree.insert("", "end", values=(ability, f"{amount:,.0f}"))
-
-        ttk.Label(win, text="Healing by ability", font=("", 10, "bold")).pack(
-            anchor="w", padx=8, pady=(8, 0)
-        )
-        heal_tree = ttk.Treeview(win, columns=("ability", "amount"), show="headings", height=5)
-        heal_tree.heading("ability", text="Ability")
-        heal_tree.heading("amount", text="Total")
-        heal_tree.column("ability", width=250, anchor="w")
-        heal_tree.column("amount", width=100, anchor="center")
-        heal_tree.pack(fill="x", padx=8, pady=4)
-        for ability, amount in heal_rows:
-            heal_tree.insert("", "end", values=(ability, f"{amount:,.0f}"))
-
-        ttk.Label(win, text="Damage by target", font=("", 10, "bold")).pack(
-            anchor="w", padx=8, pady=(8, 0)
-        )
-        target_tree = ttk.Treeview(win, columns=("target", "amount"), show="headings", height=5)
-        target_tree.heading("target", text="Target")
-        target_tree.heading("amount", text="Total")
-        target_tree.column("target", width=250, anchor="w")
-        target_tree.column("amount", width=100, anchor="center")
-        target_tree.pack(fill="x", padx=8, pady=4)
-        for target_name, amount in target_dmg_rows:
-            target_tree.insert("", "end", values=(target_name, f"{amount:,.0f}"))
-
-    # ---------- timers config tab ----------
-
-    def _build_timers_tab(self):
-        form = ttk.Frame(self.timers_tab)
-        form.pack(fill="x", padx=4, pady=6)
-
-        ttk.Label(form, text="Trigger keyword").grid(row=0, column=0, sticky="w")
-        ttk.Label(form, text="Label / spoken text").grid(row=0, column=1, sticky="w")
-        ttk.Label(form, text="Seconds").grid(row=0, column=2, sticky="w")
-        ttk.Label(form, text="Warn (s before end)").grid(row=0, column=3, sticky="w")
-
-        self.kw_entry = ttk.Entry(form, width=16)
-        self.label_entry = ttk.Entry(form, width=18)
-        self.dur_entry = ttk.Entry(form, width=7)
-        self.warn_entry = ttk.Entry(form, width=7)
-        self.kw_entry.grid(row=1, column=0, padx=(0, 4))
-        self.label_entry.grid(row=1, column=1, padx=(0, 4))
-        self.dur_entry.grid(row=1, column=2, padx=(0, 4))
-        self.warn_entry.grid(row=1, column=3, padx=(0, 4))
-
-        self.voice_var = tk.BooleanVar(value=True)
-        ttk.Checkbutton(form, text="Voice alert", variable=self.voice_var).grid(
-            row=1, column=4, padx=(6, 0)
-        )
-
-        ttk.Button(form, text="Add Timer Rule", command=self._add_rule).grid(
-            row=1, column=5, padx=(6, 0)
-        )
-
-        ttk.Label(
-            self.timers_tab,
-            text="Fires a spoken alert (falls back to a beep if no TTS engine "
-                 "is installed) the moment an ability/effect matching the "
-                 "keyword appears, then counts down. Set 'Warn' to also get a "
-                 "second alert that many seconds before the countdown ends "
-                 "(e.g. 15s timer, warn at 3s). Rules are saved and reloaded "
-                 "automatically.",
-            wraplength=650,
-            foreground="#555",
-        ).pack(fill="x", padx=6, pady=(0, 6))
-
-        columns = ("keyword", "label", "duration", "warn", "voice")
-        self.rules_tree = ttk.Treeview(self.timers_tab, columns=columns, show="headings", height=8)
-        for col, text, w in (
-            ("keyword", "Keyword", 130), ("label", "Label", 160),
-            ("duration", "Seconds", 70), ("warn", "Warn at", 70), ("voice", "Voice", 60),
-        ):
-            self.rules_tree.heading(col, text=text)
-            self.rules_tree.column(col, width=w, anchor="w")
-        self.rules_tree.pack(fill="both", expand=True, padx=4, pady=4)
-
-        ttk.Button(self.timers_tab, text="Remove Selected Rule", command=self._remove_rule).pack(
-            anchor="w", padx=4, pady=(0, 6)
-        )
-
-    def _add_rule(self):
-        keyword = self.kw_entry.get().strip()
-        label = self.label_entry.get().strip() or keyword
-        try:
-            duration = float(self.dur_entry.get().strip())
-        except ValueError:
-            return
-        if not keyword:
-            return
-        warn_text = self.warn_entry.get().strip()
-        try:
-            warn_before = float(warn_text) if warn_text else 0.0
-        except ValueError:
-            warn_before = 0.0
-        voice = self.voice_var.get()
-
-        rule = TimerRule(
-            keyword=keyword,
-            label=label,
-            duration_seconds=duration,
-            voice_alert=voice,
-            warn_seconds_before=warn_before,
-        )
-        self.timer_engine.add_rule(rule)
-        self.rules_tree.insert(
-            "", "end",
-            values=(keyword, label, duration, warn_before or "-", "on" if voice else "off"),
-        )
-        self.kw_entry.delete(0, "end")
-        self.label_entry.delete(0, "end")
-        self.dur_entry.delete(0, "end")
-        self.warn_entry.delete(0, "end")
-        self._save_custom_rules()
-
-    def _remove_rule(self):
-        item = self.rules_tree.focus()
-        if not item:
-            return
-        idx = self.rules_tree.index(item)
-        self.rules_tree.delete(item)
-        self.timer_engine.remove_rule(idx)
-        self._save_custom_rules()
-
-    def _save_custom_rules(self):
-        # Only persist manually-added (Timers tab) rules -- boss and
-        # cooldown rules are re-registered fresh by main.py on every
-        # startup, so saving them here too would duplicate them each time
-        # the user adds/removes a custom rule and the app is restarted.
-        custom_rules = [r for r in self.timer_engine.rules if r.category == "custom"]
-        storage.save_timer_rules(custom_rules)
-
-    # ---------- import tab ----------
-
-    def _build_import_tab(self):
-        # Scrollable: the explanations below are long enough that the whole
-        # tab doesn't reliably fit in the default window height, and unlike
-        # the other tabs this one has no natural way to shrink its content.
-        canvas = tk.Canvas(self.import_tab, bg=BG, highlightthickness=0)
-        scrollbar = ttk.Scrollbar(self.import_tab, orient="vertical", command=canvas.yview)
-        inner = ttk.Frame(canvas)
-        inner.bind(
-            "<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
-        )
-        canvas.create_window((0, 0), window=inner, anchor="nw")
-        canvas.configure(yscrollcommand=scrollbar.set)
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
-
-        def _on_wheel(event):
-            canvas.yview_scroll(-1 if event.delta > 0 else 1, "units")
-
-        canvas.bind("<Enter>", lambda e: canvas.bind_all("<MouseWheel>", _on_wheel))
-        canvas.bind("<Leave>", lambda e: canvas.unbind_all("<MouseWheel>"))
-
-        ttk.Label(
-            inner, text="Merge multiple people's logs",
-            foreground=INK, font=("Segoe UI", 10, "bold"),
-        ).pack(anchor="w", padx=6, pady=(8, 0))
-        ttk.Label(
-            inner,
-            text="For filling visibility gaps: pick two or more raiders' saved "
-                 ".txt logs from the SAME fight and this combines them into one "
-                 "encounter, keeping every event either log recorded (duplicates "
-                 "across the overlapping files are detected and only counted "
-                 "once). Not needed for normal use -- your own log already "
-                 "records the whole group's actions, not just yours -- only "
-                 "useful when someone was out of your log's visibility range "
-                 "for part of the fight (e.g. behind a wall, or zoned in late) "
-                 "and a teammate's log covers what yours missed.\n\n"
-                 "Picking a SINGLE file here just re-imports that one log as one "
-                 "big combined encounter (the whole file, not split into "
-                 "individual pulls) -- Parsely upload works for that case, but "
-                 "not when multiple files are actually merged, since events "
-                 "from different files don't share one real line range to "
-                 "point Parsely at.",
-            wraplength=620,
-            foreground="#555", justify="left",
-        ).pack(fill="x", padx=6, pady=(2, 0))
-
-        ttk.Button(inner, text="Choose Log Files...", command=self._import_logs).pack(
-            anchor="w", padx=6, pady=(6, 0)
-        )
-
-        self.import_result_var = tk.StringVar(value="")
-        ttk.Label(inner, textvariable=self.import_result_var, foreground="#333").pack(
-            anchor="w", padx=6, pady=(8, 0)
-        )
-
-        ttk.Separator(inner).pack(fill="x", padx=6, pady=10)
-
-        ttk.Label(
-            inner, text="Import an old session log",
-            foreground=INK, font=("Segoe UI", 10, "bold"),
-        ).pack(anchor="w", padx=6)
-        ttk.Label(
-            inner,
-            text="For backfilling History: pick ONE of your own saved .txt logs "
-                 "(a previous night, or a session you weren't running the app "
-                 "for) and this replays it exactly like the live tailer would "
-                 "have -- splitting it into its real individual pulls using the "
-                 "same combat-start detection the corpus browser uses, with "
-                 "boss/phase recognition applied to each one. Trivial slivers "
-                 "(looting, a stray pull that never did damage) are skipped "
-                 "automatically. Each real pull is added to History as its own "
-                 "entry, Parsely upload included, same as if it had been "
-                 "captured live. Re-importing the same file is harmless -- "
-                 "pulls already in History (same file, same lines) are "
-                 "detected and skipped instead of duplicated.",
-            wraplength=620,
-            foreground="#555", justify="left",
-        ).pack(fill="x", padx=6, pady=(2, 0))
-
-        ttk.Button(
-            inner, text="Load Old Session Log(s)...",
-            command=self._load_past_session,
-        ).pack(anchor="w", padx=6, pady=(6, 0))
-
-        self.past_session_result_var = tk.StringVar(value="")
-        ttk.Label(inner, textvariable=self.past_session_result_var, foreground="#333").pack(
-            anchor="w", padx=6, pady=(8, 0)
-        )
-
-    def _load_past_session(self):
-        paths = filedialog.askopenfilenames(
-            title="Select old SWTOR combat log file(s)", filetypes=[("Log files", "*.txt")]
-        )
-        if not paths:
-            return
-
-        definitions = self.boss_state.definitions if self.boss_state else {}
-        # A pull already in history (same file, same line range) would
-        # otherwise be re-added every time the same log is imported again --
-        # (log_path, start_line, end_line) uniquely identifies a pull.
-        existing = {
-            (e.log_path, e.start_line, e.end_line) for e in self.tracker.history
-        }
-        imported = 0
-        skipped = 0
-        duplicates = 0
-        labels = []
-        try:
-            for path in paths:
-                for pull in replay_pulls(path, definitions):
-                    encounter = pull["encounter"]
-                    total_damage = sum(p.damage_done for p in encounter.players.values())
-                    if total_damage <= 0:
-                        # A real fight always does damage -- zero-damage
-                        # "pulls" are looting/mop-up noise the EnterCombat
-                        # heuristic occasionally mistakes for a new pull.
-                        skipped += 1
-                        continue
-                    key = (encounter.log_path, encounter.start_line, encounter.end_line)
-                    if key in existing:
-                        duplicates += 1
-                        continue
-                    encounter.label = pull["boss_name"] or "Unknown fight"
-                    self.tracker.history.append(encounter)
-                    storage.append_history_entry(encounter)
-                    existing.add(key)
-                    imported += 1
-                    labels.append(encounter.label)
-        except Exception as exc:
-            messagebox.showerror("Import failed", str(exc))
-            return
-
-        if imported == 0:
-            reason = "already in History" if duplicates else "no real fights found"
-            self.past_session_result_var.set(
-                f"Nothing new to import from the selected file(s) ({reason})."
-            )
-            return
-        preview = ", ".join(labels[:5]) + ("..." if len(labels) > 5 else "")
-        extra = f", {duplicates} already imported" if duplicates else ""
-        self.past_session_result_var.set(
-            f"Imported {imported} pull(s) from {len(paths)} file(s) "
-            f"({skipped} trivial slivers skipped{extra}): {preview}. See History tab."
-        )
-
-    def _import_logs(self):
-        paths = filedialog.askopenfilenames(
-            title="Select SWTOR combat log file(s)", filetypes=[("Log files", "*.txt")]
-        )
-        if not paths:
-            return
-        try:
-            from log_merger import merge_logs
-            encounter = merge_logs(paths)
-        except Exception as exc:
-            messagebox.showerror("Import failed", str(exc))
-            return
-
-        if not encounter.players:
-            self.import_result_var.set("No recognizable combat events found in the selected file(s).")
-            return
-
-        self.tracker.history.append(encounter)
-        storage.append_history_entry(encounter)
-        self.import_result_var.set(
-            f"Imported {len(paths)} file(s) -> merged encounter, "
-            f"{encounter.duration():.1f}s, {len(encounter.players)} players. "
-            f"See it in the History tab."
-        )
-
-    # ---------- parsely tab ----------
-
-    def _build_parsely_tab(self):
-        settings = storage.load_parsely_settings()
-
-        form = ttk.Frame(self.parsely_tab)
-        form.pack(fill="x", padx=6, pady=8)
-
-        ttk.Label(form, text="Parsely username (optional)").grid(row=0, column=0, sticky="w")
-        self.parsely_user_entry = ttk.Entry(form, width=24)
-        self.parsely_user_entry.insert(0, settings.get("username", ""))
-        self.parsely_user_entry.grid(row=0, column=1, sticky="w", padx=(4, 0))
-
-        ttk.Label(form, text="Password").grid(row=1, column=0, sticky="w")
-        self.parsely_pass_entry = ttk.Entry(form, width=24, show="*")
-        self.parsely_pass_entry.insert(0, settings.get("password", ""))
-        self.parsely_pass_entry.grid(row=1, column=1, sticky="w", padx=(4, 0))
-
-        ttk.Label(form, text="Guild (optional)").grid(row=2, column=0, sticky="w")
-        self.parsely_guild_entry = ttk.Entry(form, width=24)
-        self.parsely_guild_entry.insert(0, settings.get("guild", ""))
-        self.parsely_guild_entry.grid(row=2, column=1, sticky="w", padx=(4, 0))
-
-        self.parsely_guild_log_var = tk.BooleanVar(value=settings.get("guild_log", False))
-        ttk.Checkbutton(
-            form, text="Tag all participants as guild members", variable=self.parsely_guild_log_var
-        ).grid(row=3, column=0, columnspan=2, sticky="w", pady=(2, 0))
-
-        ttk.Label(form, text="Default visibility").grid(row=4, column=0, sticky="w", pady=(4, 0))
-        self.parsely_visibility_var = tk.IntVar(value=settings.get("visibility", 1))
-        vis_frame = ttk.Frame(form)
-        vis_frame.grid(row=4, column=1, sticky="w", pady=(4, 0))
-        for label, value in (("Public", 1), ("Guild only", 2), ("Private", 0)):
-            ttk.Radiobutton(
-                vis_frame, text=label, value=value, variable=self.parsely_visibility_var
-            ).pack(side="left")
-
-        ttk.Button(form, text="Save Settings", command=self._save_parsely_settings).grid(
-            row=5, column=0, columnspan=2, sticky="w", pady=(8, 0)
-        )
-
-        ttk.Label(
-            self.parsely_tab,
-            text="Password is stored locally in plain text (same tradeoff BARAS itself "
-                 "makes) -- fine for a personal machine, don't share the settings file.",
-            foreground="#888", wraplength=560,
-        ).pack(anchor="w", padx=6, pady=(0, 8))
-
-        ttk.Separator(self.parsely_tab).pack(fill="x", padx=6, pady=6)
-
-        ttk.Button(
-            self.parsely_tab, text="Upload a Log File...",
-            command=self._upload_log_file,
-        ).pack(anchor="w", padx=6)
-        ttk.Label(
-            self.parsely_tab,
-            text="Pick any saved .txt log -- old or current, doesn't need to be "
-                 "the one actively being watched -- and send the whole file in "
-                 "one click.",
-            foreground="#666", wraplength=560,
-        ).pack(anchor="w", padx=6, pady=(2, 8))
-
-        ttk.Button(
-            self.parsely_tab, text="Upload Current Log (whole file)",
-            command=self._upload_current_log,
-        ).pack(anchor="w", padx=6)
-        ttk.Label(
-            self.parsely_tab,
-            text="Uploads whichever log the live tailer is currently watching -- "
-                 "only works once at least one line has been written to it this "
-                 "session (i.e. after you've been in combat at least once).",
-            foreground="#666", wraplength=560,
-        ).pack(anchor="w", padx=6, pady=(2, 0))
-
-        self.parsely_status_var = tk.StringVar(value="")
-        ttk.Label(self.parsely_tab, textvariable=self.parsely_status_var, foreground="#333").pack(
-            anchor="w", padx=6, pady=(6, 0)
-        )
-
-        ttk.Label(
-            self.parsely_tab,
-            text="To upload just one pull instead of a whole file, use the "
-                 "History tab -> double-click a pull -> Upload This Pull.",
-            foreground="#666", wraplength=560,
-        ).pack(anchor="w", padx=6, pady=(10, 0))
-
-    def _save_parsely_settings(self):
-        settings = {
-            "username": self.parsely_user_entry.get().strip(),
-            "password": self.parsely_pass_entry.get(),
-            "guild": self.parsely_guild_entry.get().strip(),
-            "guild_log": self.parsely_guild_log_var.get(),
-            "visibility": self.parsely_visibility_var.get(),
-        }
-        storage.save_parsely_settings(settings)
-        self.parsely_status_var.set("Settings saved.")
-
-    def _current_parsely_settings(self) -> dict:
-        return {
-            "username": self.parsely_user_entry.get().strip() or None,
-            "password": self.parsely_pass_entry.get() or None,
-            "guild": self.parsely_guild_entry.get().strip() or None,
-            "guild_log": self.parsely_guild_log_var.get(),
-            "visibility": self.parsely_visibility_var.get(),
-        }
-
-    def _upload_current_log(self):
-        path = self.tracker.current_log_path
-        if not path:
-            messagebox.showinfo("Parsely", "No active log file yet -- get into combat first.")
-            return
-        self._upload_file_path(path)
-
-    def _upload_log_file(self):
-        path = filedialog.askopenfilename(
-            title="Select a SWTOR combat log file to upload",
-            filetypes=[("Log files", "*.txt")],
-        )
-        if not path:
-            return
-        self._upload_file_path(path)
-
-    def _upload_file_path(self, path: str):
-        notes = simpledialog.askstring("Parsely upload", "Optional note for this upload:") or None
-        settings = self._current_parsely_settings()
-        self.parsely_status_var.set("Uploading...")
-
-        def _run():
-            from parsely_upload import upload_file
-            result = upload_file(
-                path,
-                visibility=settings["visibility"],
-                notes=notes,
-                username=settings["username"],
-                password=settings["password"],
-                guild=settings["guild"],
-                guild_log=settings["guild_log"],
-            )
-            self.root.after(0, lambda: self._on_parsely_result(result))
-
-        threading.Thread(target=_run, daemon=True).start()
-
-    def _upload_encounter(self, encounter: Encounter):
-        if not encounter.log_path or encounter.start_line is None or encounter.end_line is None:
-            messagebox.showinfo(
-                "Parsely",
-                "This pull doesn't have line-range data (recorded before this feature, "
-                "or an imported/merged log) -- can't upload just this pull.",
-            )
-            return
-        notes = simpledialog.askstring("Parsely upload", "Optional note for this upload:") or None
-        settings = self._current_parsely_settings()
-        self.parsely_status_var.set("Uploading...")
-
-        def _run():
-            from parsely_upload import upload_encounter
-            result = upload_encounter(
-                encounter.log_path,
-                encounter.start_line,
-                encounter.end_line,
-                area_entered_line=encounter.area_entered_line,
-                visibility=settings["visibility"],
-                notes=notes,
-                username=settings["username"],
-                password=settings["password"],
-                guild=settings["guild"],
-                guild_log=settings["guild_log"],
-            )
-            self.root.after(0, lambda: self._on_parsely_result(result))
-
-        threading.Thread(target=_run, daemon=True).start()
-
-    def _on_parsely_result(self, result):
-        if result.success:
-            self.parsely_status_var.set(f"Uploaded: {result.link}")
-            messagebox.showinfo("Parsely upload", f"Uploaded successfully:\n{result.link}")
-        else:
-            self.parsely_status_var.set(f"Upload failed: {result.error}")
-            messagebox.showerror("Parsely upload failed", result.error or "Unknown error")
-
     # ---------- refresh loop ----------
 
-    def _drain_status(self):
-        latest = None
-        try:
-            while True:
-                latest = self.status_queue.get_nowait()
-        except queue.Empty:
-            pass
-        if latest:
-            self.status_var.set(latest)
+    def _drain_commands(self):
+        while True:
+            try:
+                action, key = self._commands.get_nowait()
+            except queue.Empty:
+                return
+            if action == "apply":
+                self._apply_overlay(key)
+            elif action == "lock":
+                self._apply_lock_state()
+            elif action == "clear":
+                self._clear_overlays()
 
     def _refresh(self):
-        """Drives all state forward on a fixed cadence -- this keeps running
-        even though the live meter/timers/taunts display itself moved to the
-        pywebview page (see live_server.py): timers still need to expire and
-        taunts still need to resolve to a miss even between log events, and
-        the floating bar overlays and History tab still render from here."""
-        self._drain_status()
+        """Drives all state forward on a fixed cadence, independent of the
+        web UI: timers still need to expire and taunts still need to
+        resolve to a miss even between log events, and the floating bar
+        overlays need their own render tick and their commands drained."""
+        self._drain_commands()
         self.timer_engine.tick()
         # tick()'d here (not just on the reader thread) so a taunt that got
         # no reply at all still flips from pending to a visible miss --
@@ -1032,22 +287,6 @@ class MeterWindow:
         # sit unresolved until the next unrelated event.
         self.taunt_tracker.tick()
         self._maybe_reload_layout_for_character()
-
-        self._refresh_history()
         self._refresh_bar_overlays()
 
         self.root.after(REFRESH_MS, self._refresh)
-
-    def _refresh_history(self):
-        rows = self.tracker.history_snapshot()
-        if len(rows) <= self._history_rows_shown:
-            return
-        new_count = len(rows) - self._history_rows_shown
-        # rows are most-recent-first; the newest `new_count` entries are new
-        for pull_num, duration, player_rows in rows[:new_count]:
-            top = ", ".join(f"{n} {d:,.0f}" for n, d, h, t, mit, dth in player_rows[:3])
-            self.history_tree.insert("", 0, values=(pull_num, f"{duration:.1f}s", top))
-        self._history_rows_shown = len(rows)
-
-    def run(self):
-        self.root.mainloop()

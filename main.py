@@ -11,7 +11,6 @@ Run with:  python main.py
 Optional:  python main.py "C:\\path\\to\\CombatLogs"
 """
 
-import queue
 import sys
 import threading
 from pathlib import Path
@@ -27,10 +26,19 @@ from cooldowns import register_defensive_cooldowns
 from dots_hots import register_dots_hots, HotTracker
 from alacrity import register_alacrity_buffs
 from taunt_tracker import TauntTracker
-from gui import MeterWindow
+from gui import OverlayManager
 
 BUNDLED_BOSS_DIR = Path(__file__).parent / "boss_definitions_bundled"
 USER_BOSS_DIR = Path(storage.data_dir()) / "boss_definitions"
+
+
+class StatusHolder:
+    """Replaces the old status_q -- that only ever had one consumer (the Tk
+    toolbar's status label), and the web UI just wants "whatever the latest
+    status text is" on each poll, not a queue to drain."""
+
+    def __init__(self):
+        self.text = "Waiting for combat log..."
 
 
 def background_reader(
@@ -40,9 +48,9 @@ def background_reader(
     boss_state: BossEncounterState,
     hot_tracker: HotTracker,
     taunt_tracker: TauntTracker,
-    status_q: "queue.Queue[str]",
+    status: StatusHolder,
 ):
-    status_q.put(f"Watching: {log_dir}")
+    status.text = f"Watching: {log_dir}"
     try:
         for path, line_number, raw_line in log_watcher.watch_folder(log_dir):
             if path != tracker.current_log_path:
@@ -67,8 +75,35 @@ def background_reader(
                     storage.append_history_entry(completed)
                     boss_state.reset()
                     hot_tracker.reset()
-    except Exception as exc:  # keep the GUI alive even if the reader dies
-        status_q.put(f"Reader error: {exc}")
+    except Exception as exc:  # keep the app alive even if the reader dies
+        status.text = f"Reader error: {exc}"
+
+
+class Api:
+    """pywebview js_api bridge -- a browser <input type=file> can only hand
+    back file CONTENTS, never a real filesystem path, so the file pickers
+    for Import Logs and Parsely's "Upload a Log File..." go through
+    pywebview's native dialog instead, called from JS as
+    `await pywebview.api.pick_files()` / `pick_file()`."""
+
+    def __init__(self, window_ref: dict):
+        self._window_ref = window_ref  # {"window": ...}, filled in after create_window
+
+    def pick_files(self):
+        import webview
+        result = self._window_ref["window"].create_file_dialog(
+            webview.OPEN_DIALOG, allow_multiple=True,
+            file_types=("Log files (*.txt)", "All files (*.*)"),
+        )
+        return list(result) if result else []
+
+    def pick_file(self):
+        import webview
+        result = self._window_ref["window"].create_file_dialog(
+            webview.OPEN_DIALOG, allow_multiple=False,
+            file_types=("Log files (*.txt)", "All files (*.*)"),
+        )
+        return result[0] if result else None
 
 
 def main():
@@ -112,48 +147,67 @@ def main():
     # Did-my-taunt-land tracking -- see taunt_tracker.py. Not boss-scoped
     # either: a trash-pull taunt swap matters just as much as a boss one.
     taunt_tracker = TauntTracker()
-    status_q: "queue.Queue[str]" = queue.Queue()
+    status = StatusHolder()
+
+    # Custom (Timers-tab) rules and completed pulls both need to survive a
+    # restart. This used to happen in gui.py's MeterWindow.__init__; now
+    # that the whole tabbed UI is gone from Tkinter, it happens here instead.
+    for rule in storage.load_timer_rules():
+        timer_engine.add_rule(rule)
+    loaded_history = storage.load_history()
+    if loaded_history:
+        tracker.history = loaded_history + tracker.history
 
     if not log_dir:
-        status_q.put(
+        status.text = (
             "Could not auto-find CombatLogs folder. "
-            "Pass the path as an argument, e.g.:\n"
+            "Pass the path as an argument, e.g.: "
             r'python main.py "C:\Users\You\Documents\Star Wars - The Old Republic\CombatLogs"'
         )
     else:
         thread = threading.Thread(
             target=background_reader,
-            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status_q),
+            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status),
             daemon=True,
         )
         thread.start()
 
-    # The live meter is a pywebview page now (see live_server.py); the rest
-    # of the app (History/Timers/Overlays/Import Logs/Parsely, plus the
-    # floating bar overlays) stays Tkinter. pywebview wants the main thread
-    # for its own event loop, so Tk runs on a background thread instead --
-    # confirmed safe on Windows (unlike macOS, Tk has no main-thread
-    # requirement here). Tcl is thread-affine though: the Tk root has to be
-    # BOTH created and mainloop()'d on that same thread, or Tcl raises
-    # "Calling Tcl from different apartment" -- so MeterWindow() itself,
-    # not just .run(), has to happen inside the thread target.
-    import live_server
+    # The whole UI (Live/History/Timers/Overlays/Import Logs/Parsely) is a
+    # pywebview page now (see web_server.py); only the floating bar overlays
+    # stay Tkinter (see gui.py's module docstring for why). pywebview wants
+    # the main thread for its own event loop, so Tk runs on a background
+    # thread instead -- confirmed safe on Windows (unlike macOS, Tk has no
+    # main-thread requirement here). Tcl is thread-affine though: the Tk
+    # root has to be BOTH created and mainloop()'d on that same thread, or
+    # Tcl raises "Calling Tcl from different apartment" -- so
+    # OverlayManager() itself, not just .run(), has to happen inside the
+    # thread target.
+    import web_server
     import webview
 
-    def _run_tk():
-        window = MeterWindow(tracker, timer_engine, status_q, boss_state=boss_state,
-                             hot_tracker=hot_tracker, taunt_tracker=taunt_tracker)
-        window.run()
+    overlay_manager_ref = {}
+    overlay_manager_ready = threading.Event()
 
-    live_port = 8766
-    server = live_server.make_server(tracker, timer_engine, boss_state, taunt_tracker, port=live_port)
-    threading.Thread(target=server.serve_forever, daemon=True).start()
+    def _run_tk():
+        manager = OverlayManager(tracker, timer_engine, boss_state=boss_state,
+                                  hot_tracker=hot_tracker, taunt_tracker=taunt_tracker)
+        overlay_manager_ref["manager"] = manager
+        overlay_manager_ready.set()
+        manager.run()
 
     threading.Thread(target=_run_tk, daemon=True).start()
+    overlay_manager_ready.wait()  # web_server needs the manager before it can start
+    overlay_manager = overlay_manager_ref["manager"]
 
-    webview.create_window(
-        "DPS — Live", url=f"http://127.0.0.1:{live_port}/",
-        width=720, height=560, x=40, y=40,
+    web_port = 8766
+    server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
+                                     overlay_manager, status, port=web_port)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+
+    window_ref = {}
+    window_ref["window"] = webview.create_window(
+        "DPS — Dynamic Parse System", url=f"http://127.0.0.1:{web_port}/",
+        width=960, height=720, js_api=Api(window_ref),
     )
     webview.start()
 

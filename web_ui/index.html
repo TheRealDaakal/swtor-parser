@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DPS — Dynamic Parse System</title>
+<link rel="stylesheet" href="/app.css">
+<style>
+  /* Page-specific: a timer row (label + countdown + meter) isn't a shape
+     app.css defines yet, so it lives here rather than in the shared file
+     the corpus browser also uses. */
+  .timer-row { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+  .timer-row .lbl { flex: 0 0 180px; color: var(--ink); font-size: 12px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .timer-row .rem { flex: 0 0 42px; text-align: right; color: var(--ink-muted);
+    font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .timer-row .meter { flex: 1; }
+  .alert-banner { font-size: 15px; font-weight: 700; color: var(--critical);
+    letter-spacing: .02em; padding: 3px 0; }
+  .live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 820px) { .live-grid { grid-template-columns: 1fr; } }
+
+  .stack { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .stack label.fld { flex-direction: column; align-items: flex-start; gap: 4px; width: 100%; max-width: 320px; }
+  .stack label.fld input, .stack label.fld select { width: 100%; }
+  .stack label.fld.row { flex-direction: row; align-items: center; }
+
+  .overlay-group h3 { font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
+    color: var(--ink-muted); margin: 0 0 8px; }
+  .overlay-toggle {
+    display: block; width: 100%; text-align: left; margin-bottom: 6px;
+    background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink-2);
+  }
+  .overlay-toggle.on { background: var(--s1); border-color: var(--s1); color: #fff; }
+
+  .rule-del { color: var(--critical); cursor: pointer; background: none; border: none;
+    font-size: 12px; padding: 2px 6px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">DPS<em>Dynamic Parse System</em></div>
+  <nav class="tabs" role="tablist">
+    <div class="tab active" data-view="live" role="tab" tabindex="0">Live</div>
+    <div class="tab" data-view="history" role="tab" tabindex="0">History</div>
+    <div class="tab" data-view="timers" role="tab" tabindex="0">Timers</div>
+    <div class="tab" data-view="overlays" role="tab" tabindex="0">Overlays</div>
+    <div class="tab" data-view="import" role="tab" tabindex="0">Import Logs</div>
+    <div class="tab" data-view="parsely" role="tab" tabindex="0">Parsely</div>
+  </nav>
+  <div class="spacer"></div>
+  <div class="status" id="watch-status" style="white-space:pre-line">—</div>
+  <div class="status" id="boss-status">—</div>
+  <div class="status" id="duration">Encounter: 0.0s</div>
+</header>
+
+<main>
+
+  <!-- ============================== live ============================== -->
+  <section class="view active" id="view-live" role="tabpanel">
+    <div id="alerts"></div>
+
+    <div class="panel">
+      <h2>Meter</h2>
+      <div class="tw"><table id="meter">
+        <thead><tr>
+          <th>Player</th><th>DPS</th><th>HPS</th><th>Damage Taken</th><th>Mitigated</th><th>Deaths</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="meter-empty" style="display:none">No combat data yet.</p>
+    </div>
+
+    <div class="live-grid">
+      <div class="panel">
+        <h2>Active Timers</h2>
+        <div id="timers"></div>
+        <p class="empty" id="timers-empty" style="display:none">none active</p>
+      </div>
+      <div class="panel">
+        <h2>Cooldowns</h2>
+        <div id="cooldowns"></div>
+        <p class="empty" id="cooldowns-empty" style="display:none">none active</p>
+      </div>
+      <div class="panel">
+        <h2>DoTs / HoTs</h2>
+        <div id="dotshots"></div>
+        <p class="empty" id="dotshots-empty" style="display:none">none active</p>
+      </div>
+      <div class="panel">
+        <h2>Taunts</h2>
+        <div id="taunts"></div>
+        <p class="empty" id="taunts-empty" style="display:none">no taunts cast yet</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= history ============================= -->
+  <section class="view" id="view-history" role="tabpanel">
+    <div class="panel">
+      <h2>History</h2>
+      <p class="sub">Double-click a pull for per-player detail. History persists across restarts.</p>
+      <div class="tw"><table id="history-table">
+        <thead><tr><th>Pull #</th><th>Duration</th><th>Top DPS</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="history-empty" style="display:none">No pulls recorded yet.</p>
+    </div>
+  </section>
+
+  <!-- ============================== timers ============================== -->
+  <section class="view" id="view-timers" role="tabpanel">
+    <div class="panel">
+      <h2>Custom Timers</h2>
+      <p class="sub">Fires a spoken alert (falls back to a beep if no TTS engine is installed) the
+        moment an ability/effect matching the keyword appears, then counts down. Set "Warn" to also
+        get a second alert that many seconds before the countdown ends. Rules are saved and reloaded
+        automatically.</p>
+      <div class="filters">
+        <label class="fld"><span>Keyword</span><input id="t-keyword" size="14"></label>
+        <label class="fld"><span>Label</span><input id="t-label" size="16"></label>
+        <label class="fld"><span>Seconds</span><input id="t-duration" type="number" step="0.1" size="6"></label>
+        <label class="fld"><span>Warn before</span><input id="t-warn" type="number" step="0.1" size="6"></label>
+        <label class="fld"><input type="checkbox" id="t-voice" checked><span>Voice alert</span></label>
+        <button id="t-add">Add Timer Rule</button>
+      </div>
+      <div class="tw"><table id="rules-table">
+        <thead><tr><th>Keyword</th><th>Label</th><th>Seconds</th><th>Warn at</th><th>Voice</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="rules-empty" style="display:none">No custom rules yet.</p>
+    </div>
+  </section>
+
+  <!-- ============================= overlays ============================= -->
+  <section class="view" id="view-overlays" role="tabpanel">
+    <div class="panel">
+      <h2>Floating Frames</h2>
+      <p class="sub">Which frames float over the game -- a healer wants HoTs, a dps wants damage.
+        Locked frames are click-through and can't be dragged or closed.</p>
+      <div class="filters">
+        <label class="fld"><input type="checkbox" id="ov-lock"><span>Lock positions</span></label>
+        <button id="ov-clear">Clear all</button>
+      </div>
+      <div id="overlay-groups" class="live-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============================== import ============================== -->
+  <section class="view" id="view-import" role="tabpanel">
+    <div class="panel">
+      <h2>Merge multiple people's logs</h2>
+      <p class="sub">For filling visibility gaps: pick two or more raiders' saved .txt logs from
+        the SAME fight and this combines them into one encounter, keeping every event either log
+        recorded (duplicates across the overlapping files are detected and only counted once). Not
+        needed for normal use -- your own log already records the whole group's actions, not just
+        yours -- only useful when someone was out of your log's visibility range for part of the
+        fight and a teammate's log covers what yours missed.<br><br>
+        Picking a SINGLE file here just re-imports that one log as one big combined encounter (the
+        whole file, not split into individual pulls) -- Parsely upload works for that case, but not
+        when multiple files are actually merged, since events from different files don't share one
+        real line range to point Parsely at.</p>
+      <button id="import-merge-btn">Choose Log Files...</button>
+      <p id="import-merge-result" class="sub"></p>
+    </div>
+    <div class="panel">
+      <h2>Import an old session log</h2>
+      <p class="sub">For backfilling History: pick ONE of your own saved .txt logs (a previous
+        night, or a session you weren't running the app for) and this replays it exactly like the
+        live tailer would have -- splitting it into its real individual pulls, with boss/phase
+        recognition applied to each one. Trivial slivers (looting, a stray pull that never did
+        damage) are skipped automatically. Each real pull is added to History as its own entry,
+        Parsely upload included. Re-importing the same file is harmless -- pulls already in History
+        are detected and skipped instead of duplicated.</p>
+      <button id="import-session-btn">Load Old Session Log(s)...</button>
+      <p id="import-session-result" class="sub"></p>
+    </div>
+  </section>
+
+  <!-- ============================== parsely ============================== -->
+  <section class="view" id="view-parsely" role="tabpanel">
+    <div class="panel">
+      <h2>Parsely Settings</h2>
+      <div class="stack">
+        <label class="fld"><span>Username (optional)</span><input id="p-username"></label>
+        <label class="fld"><span>Password</span><input id="p-password" type="password"></label>
+        <label class="fld"><span>Guild (optional)</span><input id="p-guild"></label>
+        <label class="fld row"><input type="checkbox" id="p-guildlog"><span>Tag all participants as guild members</span></label>
+        <label class="fld"><span>Default visibility</span>
+          <select id="p-visibility">
+            <option value="1">Public</option>
+            <option value="2">Guild only</option>
+            <option value="0">Private</option>
+          </select>
+        </label>
+        <button id="p-save">Save Settings</button>
+      </div>
+      <p class="sub" style="margin-top:10px">Password is stored locally in plain text (same
+        tradeoff BARAS itself makes) -- fine for a personal machine, don't share the settings file.</p>
+    </div>
+    <div class="panel">
+      <h2>Upload</h2>
+      <div class="stack">
+        <div>
+          <button id="p-upload-file">Upload a Log File...</button>
+          <p class="sub">Pick any saved .txt log -- old or current, doesn't need to be the one
+            actively being watched -- and send the whole file in one click.</p>
+        </div>
+        <div>
+          <button id="p-upload-current">Upload Current Log (whole file)</button>
+          <p class="sub">Uploads whichever log the live tailer is currently watching -- only works
+            once at least one line has been written to it this session.</p>
+        </div>
+      </div>
+      <p id="p-status" class="sub"></p>
+      <p class="sub">To upload just one pull instead of a whole file, use History -> double-click
+        a pull -> Upload This Pull.</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-inner" id="modal-body"></div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
