@@ -82,6 +82,21 @@ ABILITY_INTERRUPT_KEYWORDS = ("abilityinterrupt",)
 # why: "Death Field" would misclassify against a "death" keyword the same
 # way "Force Storm" would misfire against an ability-name CC check here).
 HARD_CC_KEYWORDS = ("stunned", "incapacitated", "asleep", "sleeping", "lifted")
+# Raid-wide utility cooldowns -- verified against this user's own 216-log
+# corpus by BEHAVIOR, not by guessing names: one player casts it, and the
+# identical ability name applies as an effect to several OTHER players
+# within about a second (the same structural signature Inspiration and
+# Predation both showed). Unlike HARD_CC_KEYWORDS this is matched by EXACT
+# ability name, not a substring: it's a small curated list of real,
+# corpus-verified abilities, not a generic keyword that could misfire
+# against an unrelated ability sharing a word (same reasoning dots_hots.py
+# and boss ability_cast triggers already rely on for exact-name matching).
+RAID_BUFF_ABILITY_NAMES = frozenset({
+    "Transcendence", "Aegis Shield", "Predation", "Warding Shield",
+    "Unlimited Power", "Inspiration", "Tactical Superiority",
+    "Supercharged Celerity", "Stack the Deck", "Force Empowerment",
+    "Bloodthirst", "Rally",
+})
 
 
 @dataclass
@@ -163,6 +178,10 @@ class CombatEvent:
     # different question ("was I CC'd") from what this answers ("did we CC
     # the add").
     is_hard_cc: bool = False
+    # True for the actual cast (not the broadcast applications) of a
+    # RAID_BUFF_ABILITY_NAMES ability -- one per activation, so casting
+    # Predation on 15 people counts as 1, not 15. See RAID_BUFF_ABILITY_NAMES.
+    is_raid_buff_cast: bool = False
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -444,6 +463,10 @@ def _classify(event: CombatEvent, tail: str) -> None:
         event.source_is_player and not event.target_is_player
         and not event.is_effect_removed
         and any(k in effect_name_tight for k in HARD_CC_KEYWORDS)
+    )
+    event.is_raid_buff_cast = (
+        event.is_ability_activate and event.source_is_player
+        and event.ability in RAID_BUFF_ABILITY_NAMES
     )
 
     if event.is_damage or event.is_heal:

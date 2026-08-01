@@ -136,6 +136,8 @@ def build_ability_breakdown(encounter, player_name, boss_state):
         stats["times_interrupted"] = player.times_interrupted
     if player.cc_casts > 0:
         stats["cc_casts"] = player.cc_casts
+    if player.raid_buff_casts > 0:
+        stats["raid_buff_casts"] = player.raid_buff_casts
     # Boss-only DPS uses the CURRENT live boss_state, same as the old Tk
     # ability-breakdown popup did -- for a historical pull this reflects
     # whatever boss is active right now, not necessarily that pull's boss.
@@ -155,6 +157,8 @@ def build_ability_breakdown(encounter, player_name, boss_state):
         "damage_by_target": [{"target": t, "amount": round(v)} for t, v in target_dmg_rows],
         "cc_by_ability": [{"ability": a, "amount": n} for a, n in
                            sorted(player.cc_by_ability.items(), key=lambda kv: -kv[1])],
+        "raid_buff_by_ability": [{"ability": a, "amount": n} for a, n in
+                                  sorted(player.raid_buff_by_ability.items(), key=lambda kv: -kv[1])],
     }
 
 

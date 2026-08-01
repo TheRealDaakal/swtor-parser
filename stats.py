@@ -104,6 +104,10 @@ class PlayerStats:
     # Hard CC (stun/mez/sleep) landed on an NPC -- see CombatEvent.is_hard_cc.
     cc_casts: int = 0
     cc_by_ability: Dict[str, int] = field(default_factory=dict)
+    # Raid-wide utility cooldowns (Predation, Bloodthirst, ...) -- see
+    # CombatEvent.is_raid_buff_cast.
+    raid_buff_casts: int = 0
+    raid_buff_by_ability: Dict[str, int] = field(default_factory=dict)
     # True once this entity has been seen with SWTOR's '@' player marker.
     # Without it, NPCs are indistinguishable from players downstream, and any
     # "deaths" total silently counts every add and trash mob that died --
@@ -200,6 +204,8 @@ class PlayerStats:
             "times_interrupted": self.times_interrupted,
             "cc_casts": self.cc_casts,
             "cc_by_ability": self.cc_by_ability,
+            "raid_buff_casts": self.raid_buff_casts,
+            "raid_buff_by_ability": self.raid_buff_by_ability,
         }
 
     @classmethod
@@ -228,6 +234,8 @@ class PlayerStats:
             times_interrupted=d.get("times_interrupted", 0),
             cc_casts=d.get("cc_casts", 0),
             cc_by_ability=dict(d.get("cc_by_ability", {})),
+            raid_buff_casts=d.get("raid_buff_casts", 0),
+            raid_buff_by_ability=dict(d.get("raid_buff_by_ability", {})),
         )
 
 
@@ -374,6 +382,12 @@ class Encounter:
             p.cc_casts += 1
             key = event.ability or event.effect_name or "Unknown"
             p.cc_by_ability[key] = p.cc_by_ability.get(key, 0) + 1
+
+        if event.is_raid_buff_cast and event.source:
+            p = self._get(event.source)
+            p.raid_buff_casts += 1
+            key = event.ability or "Unknown"
+            p.raid_buff_by_ability[key] = p.raid_buff_by_ability.get(key, 0) + 1
 
     def snapshot(self, players_only: bool = True):
         """Returns list of (name, dps, hps, damage_taken, mitigated_pct, deaths)
