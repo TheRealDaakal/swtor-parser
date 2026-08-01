@@ -140,14 +140,27 @@ class OverlayManager:
 
     def _persist_overlay_layout(self):
         frames = {}
+        notes_text = None
         for o in self.bar_overlays:
             key = getattr(o, "kind", None)
             if key:
                 frames[key] = {"x": o.win.winfo_x(), "y": o.win.winfo_y()}
+            if key == "notes":
+                notes_text = o.current_text()
+        if notes_text is None:
+            # No Notes frame open right now -- keep whatever was last saved
+            # instead of wiping it out just because the frame is closed.
+            notes_text = storage.load_overlay_layout(self._current_character()).get("notes", "")
         storage.save_overlay_layout({
             "locked": self._locked,
             "frames": frames,
+            "notes": notes_text,
         }, character=self._current_character())
+
+    def _on_notes_changed(self, _text: str) -> None:
+        """FocusOut on the Notes text widget -- save immediately rather
+        than waiting for a drag/lock/toggle to trigger a layout persist."""
+        self._persist_overlay_layout()
 
     def _apply_overlay(self, key, pos=None, persist=True):
         """Show or hide one frame, honouring self._overlay_state[key].
@@ -177,9 +190,15 @@ class OverlayManager:
             o = ov.AlertOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
         elif key == "hots":
             o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+        elif key == "hots_grid":
+            o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
         elif key in ("cooldowns", "dots"):
             o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
             o.kind = key
+        elif key == "notes":
+            saved_text = storage.load_overlay_layout(self._current_character()).get("notes", "")
+            o = ov.NotesOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved,
+                                initial_text=saved_text, on_text_change=self._on_notes_changed)
         else:
             o = ov.BarOverlay(self.root, kind=key, x=x, y=y, on_close=drop, on_move=moved)
         # a frame opened while "Lock positions" is already checked should
@@ -283,7 +302,7 @@ class OverlayManager:
                 data = sorted(((p.name, p.threat) for p in entities), key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
-            elif kind == "hots":
+            elif kind in ("hots", "hots_grid"):
                 o.render(self.hot_tracker.expiring(within_seconds=o.within_seconds))
             elif kind == "cooldowns":
                 o.render(self.timer_engine.snapshot("cooldown"))

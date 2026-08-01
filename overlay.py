@@ -41,6 +41,7 @@ ABSORBED_BAR = "#3170b8"  # same blue family as boss timers -- reads as "defence
 THREAT_BAR = "#d9a53a"    # amber -- "you might pull this", distinct from damage/heal/defence colours
 EFFECTIVE_HEAL_BAR = "#6fc79a"  # lighter shade of HEAL_BAR -- same family, distinct at a glance
 BOSS_DAMAGE_BAR = "#dd7268"     # lighter shade of DAMAGE_BAR -- same family, distinct at a glance
+NOTES_BAR = "#9a7fd1"           # soft lavender -- utility/info, not damage/heal/defence/threat
 PANEL = "#15171d"        # cool charcoal, not flat black -- reads as "app", not "hole in the screen"
 PANEL_EDGE = "#33363e"
 LOCK_EDGE = "#4a9eff"  # panel border while locked -- the visual "don't touch"
@@ -99,7 +100,8 @@ PANEL_ALPHA = 0.85
 
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
                 "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR,
-                "effective_hps": EFFECTIVE_HEAL_BAR, "boss_dps": BOSS_DAMAGE_BAR}
+                "effective_hps": EFFECTIVE_HEAL_BAR, "boss_dps": BOSS_DAMAGE_BAR,
+                "notes": NOTES_BAR, "hots_grid": "#3aa876"}
 KIND_TITLES = {
     # "hps" is raw healing power output, overheal included -- see
     # PlayerStats.healing_done. Used to be mislabeled "Effective Healing"
@@ -114,6 +116,8 @@ KIND_TITLES = {
     "threat": "Threat",
     "effective_hps": "Healing (Effective)",
     "boss_dps": "Boss DPS",
+    "notes": "Notes",
+    "hots_grid": "HoTs expiring (grid)",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
@@ -131,7 +135,9 @@ AVAILABLE_OVERLAYS = [
     ("alerts",        "Mechanic Alerts (Stack/Move/Spread)", "Encounter"),
     ("cooldowns",     "Cooldowns",                    "Effects"),
     ("hots",          "HoTs expiring",                "Effects"),
+    ("hots_grid",     "HoTs expiring (grid)",         "Effects"),
     ("dots",          "DoT tracker",                  "Effects"),
+    ("notes",         "Notes",                        "Effects"),
 ]
 OVERLAY_GROUPS = ["Metrics", "Encounter", "Effects"]
 
@@ -237,16 +243,22 @@ class BarOverlay:
 
     # ---------------------------------------------------------------- draw
 
-    def _text(self, x, y, s, fill=TEXT, anchor="w", font=FONT):
+    def _text(self, x, y, s, fill=TEXT, anchor="w", font=FONT, tags=()):
         """Text with a 1px black outline -- Canvas has no stroke option, and
         unoutlined text disappears against a bright game background.
         Returns the visible (non-outline) item id, e.g. for bbox() to place
-        another piece of text right after this one."""
+        another piece of text right after this one.
+
+        tags: forwarded to every item drawn (outline + visible) -- lets a
+        caller like NotesOverlay tag its chrome text "chrome" so it can be
+        deleted/redrawn without touching unrelated canvas items (e.g. an
+        embedded widget window)."""
         for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1),
                        (-1, -1), (1, -1), (-1, 1), (1, 1)):
             self.canvas.create_text(x + dx, y + dy, text=s, fill=OUTLINE,
-                                    anchor=anchor, font=font)
-        return self.canvas.create_text(x, y, text=s, fill=fill, anchor=anchor, font=font)
+                                    anchor=anchor, font=font, tags=tags)
+        return self.canvas.create_text(x, y, text=s, fill=fill, anchor=anchor,
+                                       font=font, tags=tags)
 
     def _rounded_rect(self, x1, y1, x2, y2, radius, **kwargs):
         """Smoothed 12-point polygon -- Canvas has no native rounded-rect
@@ -391,6 +403,79 @@ class HotOverlay(BarOverlay):
             y += ROW_H
 
 
+class HotGridOverlay(HotOverlay):
+    """Same HotTracker.expiring() data as HotOverlay, laid out as a grid of
+    per-player cells instead of a sorted list -- one cell per raid member
+    recently seen, coloured by how soon their nearest HoT expires (same
+    URGENT/SOON thresholds as the list version).
+
+    This is deliberately NOT BARAS's full raid-frame grid (every buff/debuff
+    per player) -- that needs a whole per-player effect-tracking subsystem
+    and icon assets this project doesn't have. It answers the same "who
+    needs healing" question the list already does, just scannable as a
+    block instead of read top-to-bottom -- a real layout upgrade, not a
+    reimplementation of the bigger BARAS feature.
+    """
+
+    GRID_COLS = 3
+    CELL_H = 40
+    CELL_GAP = 6
+
+    def __init__(self, root, x=40, y=760, width=280, rows=12, on_close=None,
+                 on_move=None, within_seconds=None):
+        super().__init__(root, x=x, y=y, width=width, rows=rows,
+                         on_close=on_close, on_move=on_move,
+                         within_seconds=within_seconds)
+        self.kind = "hots_grid"
+
+    def render(self, rows, total=None, subtitle=None):
+        """rows: dicts from HotTracker.expiring() -- identical input shape
+        to HotOverlay.render(), just drawn differently."""
+        self._last_render = ((rows,), {"total": total, "subtitle": subtitle})
+        c = self.canvas
+        c.delete("all")
+        rows = rows[: self.max_rows]
+        cx = self.content_x()
+        cols = self.GRID_COLS
+        grid_rows = max(1, -(-len(rows) // cols)) if rows else 1
+        content_h = grid_rows * self.CELL_H + (grid_rows - 1) * self.CELL_GAP
+        h = PAD_TOP + HEADER_H + content_h + PAD_BOTTOM
+
+        edge = LOCK_EDGE if self.locked else PANEL_EDGE
+        border = 2 if self.locked else 1
+        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
+                           fill=PANEL, outline=edge, width=border)
+        self.canvas.create_line(6, 12, 6, h - 12, fill=KIND_COLOURS.get("hots"),
+                                width=STRIPE_W, capstyle=tk.ROUND)
+        self.canvas.create_line(cx, PAD_TOP + HEADER_H - 6, self.width - PAD_X,
+                                PAD_TOP + HEADER_H - 6, fill=DIVIDER)
+
+        head = "\U0001F512 HoTs expiring" if self.locked else "HoTs expiring"
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
+
+        y0 = PAD_TOP + HEADER_H
+        if not rows:
+            self._text(cx, y0 + 12, "all covered", fill=TEXT_DIM, font=FONT_SMALL)
+            return
+
+        cell_w = (self.width - PAD_X - cx - (cols - 1) * self.CELL_GAP) / cols
+        for i, r in enumerate(rows):
+            remaining, duration = r["remaining"], max(r["duration"], 0.001)
+            if remaining <= self.URGENT:
+                colour = "#e2564a"
+            elif remaining <= self.SOON:
+                colour = "#d9a53a"
+            else:
+                colour = "#3aa876"
+            col, row_i = i % cols, i // cols
+            x0 = cx + col * (cell_w + self.CELL_GAP)
+            y = y0 + row_i * (self.CELL_H + self.CELL_GAP)
+            self._rounded_rect(x0, y, x0 + cell_w, y + self.CELL_H, 8,
+                               fill=colour, outline="", stipple="gray25")
+            self._text(x0 + 8, y + 12, r["target"][:12], font=FONT_SMALL)
+            self._text(x0 + 8, y + 28, f"{remaining:.1f}s", fill=colour, font=FONT_VALUE)
+
+
 class TimerOverlay(BarOverlay):
     """Countdown bars -- same floating treatment, bar shrinks as it runs."""
 
@@ -464,3 +549,78 @@ class AlertOverlay(BarOverlay):
             self._text(cx, y + 14, label.upper()[:24], fill="#ff7a68",
                        font=("Segoe UI", 13, "bold"))
             y += ROW_H
+
+
+class NotesOverlay(BarOverlay):
+    """Free-form scratch pad -- matches BARAS's notes_overlay. Unlike every
+    other bar overlay, the content is editable text the player types (raid
+    plan, callouts, whatever), not read-only tracker data, so it embeds a
+    real tk.Text widget via canvas.create_window() instead of drawing rows.
+
+    Every other subclass's render() starts with canvas.delete("all"),
+    which would destroy an embedded widget on every repaint (e.g. the
+    lock-toggle-triggered _redraw()). So this one never uses "all": the
+    Text widget is created once in __init__, and render() only
+    deletes/redraws the "chrome" tag (panel + header), leaving the widget
+    untouched across repeated calls.
+    """
+
+    def __init__(self, root, x=40, y=340, width=260, height=200, on_close=None,
+                 on_move=None, initial_text="", on_text_change=None):
+        self.on_text_change = on_text_change
+        self._panel_height = height
+        super().__init__(root, kind="notes", x=x, y=y, width=width, rows=0,
+                         on_close=on_close, on_move=on_move)
+        # BarOverlay.__init__ sized the window off `rows`, which notes has
+        # none of -- override with a fixed text-area height instead.
+        self.win.geometry(f"{width}x{height}+{x}+{y}")
+        self.canvas.configure(height=height)
+
+        text_top = PAD_TOP + HEADER_H
+        text_h = height - text_top - PAD_BOTTOM
+        cx = self.content_x()
+        self.text = tk.Text(self.canvas, wrap="word", bg=PANEL, fg=TEXT,
+                            insertbackground=TEXT, relief="flat", bd=0,
+                            font=FONT, highlightthickness=0)
+        if initial_text:
+            self.text.insert("1.0", initial_text)
+        self.text.bind("<FocusOut>", self._on_focus_out)
+        self.canvas.create_window(cx, text_top, anchor="nw", window=self.text,
+                                  width=width - cx - PAD_X, height=text_h)
+
+        self.render()
+
+    def _on_focus_out(self, _e=None):
+        if self.on_text_change:
+            self.on_text_change(self.text.get("1.0", "end-1c"))
+
+    def current_text(self) -> str:
+        return self.text.get("1.0", "end-1c")
+
+    def set_locked(self, locked: bool) -> None:
+        # A locked Notes overlay should still be readable but not editable
+        # or click-through-eaten -- the base class's true Win32
+        # click-through would make the Text widget unfocusable/unreadable
+        # via mouse, which defeats "notes you can glance at while locked".
+        self.locked = locked
+        self.text.configure(state="disabled" if locked else "normal")
+        self._redraw()
+
+    def render(self, *_args, **_kwargs):
+        self._last_render = ((), {})
+        c = self.canvas
+        c.delete("chrome")
+        h = self._panel_height
+        edge = LOCK_EDGE if self.locked else PANEL_EDGE
+        border = 2 if self.locked else 1
+        panel_id = self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
+                                      fill=PANEL, outline=edge, width=border,
+                                      tags=("chrome",))
+        c.tag_lower(panel_id)  # keep the Text widget visible on top of it
+        c.create_line(6, 12, 6, h - 12, fill=NOTES_BAR, width=STRIPE_W,
+                      capstyle=tk.ROUND, tags=("chrome",))
+        cx = self.content_x()
+        head = "\U0001F512 Notes" if self.locked else "Notes"
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE, tags=("chrome",))
+        c.create_line(cx, PAD_TOP + HEADER_H - 6, self.width - PAD_X,
+                      PAD_TOP + HEADER_H - 6, fill=DIVIDER, tags=("chrome",))

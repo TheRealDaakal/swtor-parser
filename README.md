@@ -65,6 +65,11 @@ whether to show the "update available" banner (see `update_check.py`; it
 checks once at startup and never blocks the app if the check fails or the
 repo isn't public yet).
 
+Pushing a `v*` tag (e.g. `git tag v0.2.0 && git push origin v0.2.0`) runs
+`.github/workflows/release.yml`, which does the same build + zip on a clean
+CI machine and publishes it as a GitHub Release automatically -- the manual
+steps above are for local dev builds, not how actual releases get cut.
+
 ## Corpus analytics (the part that isn't a BARAS clone)
 
 ```

@@ -153,7 +153,7 @@ def _overlay_layout_path() -> Path:
     return data_dir() / "overlay_layout.json"
 
 
-_DEFAULT_LAYOUT = {"locked": False, "frames": {}}
+_DEFAULT_LAYOUT = {"locked": False, "frames": {}, "notes": ""}
 
 
 def _normalize_layout(data: dict) -> dict:

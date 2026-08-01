@@ -30,5 +30,25 @@ if (Test-Path $zipPath) {
 Compress-Archive -Path "dist\DPS-Dynamic-Parse-System" -DestinationPath $zipPath
 
 Write-Output "Done: $zipPath"
+
+# Installer is optional -- skip quietly if Inno Setup's iscc isn't on PATH
+# rather than failing the whole build over it. version is passed in via
+# /D so installer.iss's own AppVersion never has to be hand-edited.
+$iscc = Get-Command iscc -ErrorAction SilentlyContinue
+if ($iscc) {
+    Write-Output ""
+    Write-Output "Building installer..."
+    & $iscc.Source "/DMyAppVersion=$version" installer.iss
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Inno Setup build failed (exit $LASTEXITCODE)"
+    }
+    Write-Output "Done: dist\swtor-parser-v$version-setup.exe"
+} else {
+    Write-Output ""
+    Write-Output "Skipping installer build: Inno Setup's iscc not found on PATH."
+    Write-Output "Install it (winget install JRSoftware.InnoSetup) to also produce dist\swtor-parser-v$version-setup.exe."
+}
+
 Write-Output ""
-Write-Output "Next: gh release create v$version $zipPath --title `"v$version`" --notes `"...`""
+Write-Output "Next: git tag v$version; git push origin v$version"
+Write-Output "(pushing that tag triggers .github/workflows/release.yml, which builds and publishes the GitHub Release itself -- no need to run gh release create by hand)"
