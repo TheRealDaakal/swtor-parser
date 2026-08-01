@@ -919,6 +919,276 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "Styrak_k_orbs_choke_clone_1st",
+      "label": "Choke Clone 1st",
+      "duration_seconds": 52.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_charge_clone_1st",
+      "label": "Charge Clone 1st",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_knockback_1st",
+      "label": "Knockback 1st",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_vomit_pool_1st",
+      "label": "Vomit Pool 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_leap_slam_1st",
+      "label": "Leap Slam 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_spines",
+      "label": "Spines",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spines"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_choke_clone_d",
+      "label": "Choke Clone D",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Summon"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_knockback_vm",
+      "label": "Knockback VM",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Headbutt"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_knockback",
+      "label": "Knockback",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3294763902042112"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_vomit_pool_16m",
+      "label": "Vomit Pool 16m",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Vomit Pool"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_leap_slam",
+      "label": "Leap Slam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leap Slam"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_charge_clone",
+      "label": "Charge Clone",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3141656907874304"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_thundering_blast_1st",
+      "label": "Thundering Blast 1st",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_force_lightning_1st",
+      "label": "Force Lightning 1st",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_pull_nightmare_1st",
+      "label": "Pull + Nightmare 1st",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_chained_manifestation_1st",
+      "label": "Chained Manifestation 1st",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_lightning_manifestation_1st",
+      "label": "Lightning Manifestation 1st",
+      "duration_seconds": 53.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3067057620910080"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_thundering_blast",
+      "label": "Thundering Blast",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Thundering Blast"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_chained_death_hp",
+      "label": "Chained Death HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 0.0,
+        "selector": [
+          "3147154466013184"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_chained_stealth",
+      "label": "Chained Stealth",
+      "duration_seconds": 31.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Chained Manifestation"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_force_ligthning_c",
+      "label": "Force Ligthning C",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_orbs_pull_nightmare_c"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_lightning_stealth",
+      "label": "Lightning Stealth",
+      "duration_seconds": 26.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Lightning Manifestation"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_force_lightning_l",
+      "label": "Force Lightning L",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_orbs_pull_nightmare_l"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_chained_manifestation_l",
+      "label": "Chained Manifestation L",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_orbs_force_lightning_l"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_lightning_manifestation_l",
+      "label": "Lightning Manifestation L",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_orbs_chained_manifestation_l"
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_burn_hp",
+      "label": "Burn HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "3152407211016192"
+        ]
+      }
+    },
+    {
+      "id": "Styrak_k_orbs_burn_phase",
+      "label": "Burn phase",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_orbs_burn_hp"
+      },
+      "is_alert": true
     }
   ]
 }
