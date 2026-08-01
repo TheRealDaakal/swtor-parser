@@ -1137,7 +1137,7 @@
       "duration_seconds": 34.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4168128321814528"
+        "keyword": "Induction Cascade"
       }
     },
     {
@@ -1146,7 +1146,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4168128321814528"
+        "keyword": "Induction Cascade"
       },
       "is_alert": true
     },
@@ -1244,7 +1244,7 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4163854829355008"
+        "keyword": "[p5_event_manager]"
       }
     },
     {
@@ -1302,21 +1302,12 @@
       }
     },
     {
-      "id": "IZAX_K_orbs_p3_tether_droids",
-      "label": "P3 Tether Droids",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "IZAX_K_orbs_p3_reposition"
-      }
-    },
-    {
       "id": "IZAX_K_orbs_p4_reposition_m",
       "label": "P4 Reposition_M",
       "duration_seconds": 80.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4166341615419392"
+        "keyword": "[p4_reposition]"
       }
     },
     {
@@ -1325,7 +1316,7 @@
       "duration_seconds": 36.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4160719503228928"
+        "keyword": "Drone Launch"
       }
     },
     {
@@ -1334,7 +1325,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4168794041745408"
+        "keyword": "Saturation Volley"
       }
     },
     {

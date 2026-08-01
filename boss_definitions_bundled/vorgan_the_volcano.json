@@ -28,7 +28,7 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3230060219727872"
+        "keyword": "Shield Generator"
       }
     },
     {
@@ -37,7 +37,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3230068809662464"
+        "keyword": "Shield Generator"
       }
     }
   ]

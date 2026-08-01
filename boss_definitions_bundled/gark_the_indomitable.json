@@ -58,7 +58,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "1677953528233984"
+        "keyword": "Stockstrike"
       }
     },
     {
@@ -67,7 +67,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "1677919168495616"
+        "keyword": "Hail Of Bolts"
       }
     }
   ]

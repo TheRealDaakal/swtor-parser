@@ -21,7 +21,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4447455814877184"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4447455814877184"
       }
     },
     {
@@ -30,7 +30,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4450183119110144"
+        "keyword": "Slam"
       }
     },
     {
@@ -39,16 +39,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4456380756918272"
-      }
-    },
-    {
-      "id": "graul_orbs_quaking_blows",
-      "label": "Quaking Blows",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "4447460109844480"
+        "keyword": "Quaking Blows"
       }
     }
   ]

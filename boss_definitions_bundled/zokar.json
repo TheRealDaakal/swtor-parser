@@ -53,7 +53,7 @@
       }
     },
     {
-      "id": "zokar_orbs_jump",
+      "id": "zokar_orbs_jump_2",
       "label": "Jump",
       "duration_seconds": 10.0,
       "trigger": {

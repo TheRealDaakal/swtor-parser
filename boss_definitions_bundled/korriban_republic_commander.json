@@ -22,7 +22,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3493260110594048"
+        "keyword": "Force Push"
       }
     },
     {
@@ -31,7 +31,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3493272995495936"
+        "keyword": "Master Strike"
       }
     },
     {
@@ -40,7 +40,7 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3493247225692160"
+        "keyword": "Master Stasis"
       }
     },
     {
@@ -49,7 +49,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "811976452210688"
+        "keyword": "Shockwave"
       }
     },
     {
@@ -58,7 +58,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3493277290463232"
+        "keyword": "Hilt Strike"
       }
     }
   ]

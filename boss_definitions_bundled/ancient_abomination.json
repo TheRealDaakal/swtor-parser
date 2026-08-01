@@ -33,7 +33,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2535937670119424"
+        "keyword": "Smash"
       }
     },
     {

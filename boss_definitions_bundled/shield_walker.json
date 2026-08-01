@@ -21,7 +21,7 @@
       "duration_seconds": 90.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3393835912658944"
+        "keyword": "[atst_arena_aoe_warning]"
       }
     },
     {
@@ -30,7 +30,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3398719290474496"
+        "keyword": "Missile Blast"
       }
     },
     {
@@ -48,7 +48,7 @@
       "duration_seconds": 62.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3395214597160960"
+        "keyword": "Call Reinforcements"
       }
     },
     {
@@ -66,7 +66,7 @@
       "duration_seconds": 36.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3535453869309952"
+        "keyword": "Orbital Multistrike"
       }
     }
   ]

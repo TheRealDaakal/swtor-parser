@@ -284,6 +284,24 @@
       }
     },
     {
+      "id": "firebrand_stormcaller_orbs_targeted_missile_m",
+      "label": "Targeted Missile M",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_incinerate_armor_m",
+      "label": "Incinerate Armor M",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
       "id": "firebrand_stormcaller_orbs_mortar_volley",
       "label": "Mortar Volley",
       "duration_seconds": 25.0,
@@ -427,7 +445,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2876713260285952"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2876713260285952"
       }
     }
   ]

@@ -107,11 +107,11 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2508518598901760"
+        "keyword": "Overwhelming Swipe"
       }
     },
     {
-      "id": "xrr3_orbs_cone_swipe",
+      "id": "xrr3_orbs_cone_swipe_2",
       "label": "Cone Swipe_",
       "duration_seconds": 9.0,
       "trigger": {
@@ -120,12 +120,12 @@
       }
     },
     {
-      "id": "xrr3_orbs_cone_swipe",
+      "id": "xrr3_orbs_cone_swipe_3",
       "label": "Cone Swipe",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2508424109621248"
+        "keyword": "[allow_sweep_2]"
       },
       "is_alert": true
     },
@@ -135,18 +135,8 @@
       "duration_seconds": 26.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2508436994523136"
+        "keyword": "Missile Salvo"
       }
-    },
-    {
-      "id": "xrr3_orbs_aw3_set",
-      "label": "AW3 set",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "xrr3_orbs_cone_swipe"
-      },
-      "is_alert": true
     },
     {
       "id": "xrr3_orbs_initial_aw",
@@ -161,16 +151,7 @@
       "is_alert": true
     },
     {
-      "id": "xrr3_orbs_groundfire",
-      "label": "Groundfire",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "xrr3_orbs_aw2"
-      }
-    },
-    {
-      "id": "xrr3_orbs_groundfire",
+      "id": "xrr3_orbs_groundfire_2",
       "label": "Groundfire",
       "duration_seconds": 10.0,
       "trigger": {
@@ -185,18 +166,9 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2138674670075904"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2138674670075904"
       },
       "is_alert": true
-    },
-    {
-      "id": "xrr3_orbs_salvo",
-      "label": "Salvo",
-      "duration_seconds": 3.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "xrr3_orbs_aoe_swipe"
-      }
     }
   ]
 }

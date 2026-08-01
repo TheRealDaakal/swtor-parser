@@ -585,30 +585,21 @@
       "is_alert": true
     },
     {
-      "id": "apex_vanguard_orbs_target_voltinator",
-      "label": "Target/Voltinator",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "apex_vanguard_orbs_venom_voltinator_2nd"
-      }
-    },
-    {
-      "id": "apex_vanguard_orbs_target_voltinator_2nd",
-      "label": "Target/Voltinator 2nd",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "apex_vanguard_orbs_target_voltinator"
-      }
-    },
-    {
       "id": "apex_vanguard_orbs_apx_contagion",
       "label": "APX: Contagion",
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Contagion"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_photogenesis",
+      "label": "Photogenesis",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_photo_hp"
       }
     },
     {
@@ -624,15 +615,6 @@
       }
     },
     {
-      "id": "apex_vanguard_orbs_acid_deluge",
-      "label": "Acid Deluge",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "apex_vanguard_orbs_target_voltinator_2nd"
-      }
-    },
-    {
       "id": "apex_vanguard_orbs_p2_hp",
       "label": "P2 HP",
       "duration_seconds": 10.0,
@@ -642,6 +624,15 @@
         "selector": [
           "Apex Vanguard"
         ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_venom_target",
+      "label": "Venom/Target",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_voltinator_1st"
       }
     },
     {
@@ -666,6 +657,15 @@
         "selector": [
           "Apex Vanguard"
         ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_voltinator_1st",
+      "label": "Voltinator 1st",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_mass_target_1st"
       }
     },
     {
@@ -723,7 +723,7 @@
       }
     },
     {
-      "id": "apex_vanguard_orbs_acid_deluge",
+      "id": "apex_vanguard_orbs_acid_deluge_2",
       "label": "Acid Deluge",
       "duration_seconds": 122.0,
       "trigger": {
@@ -761,6 +761,16 @@
       "is_alert": true
     },
     {
+      "id": "apex_vanguard_orbs_can_delay_salvo",
+      "label": "Can Delay Salvo",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_rocket_salvo_setup"
+      },
+      "is_alert": true
+    },
+    {
       "id": "apex_vanguard_orbs_acid_blast_setup",
       "label": "Acid Blast Setup",
       "duration_seconds": 22.0,
@@ -786,16 +796,6 @@
         "type": "ability_cast",
         "keyword": "Rocket Salvo"
       }
-    },
-    {
-      "id": "apex_vanguard_orbs_light_off",
-      "label": "Light OFF",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "apex_vanguard_orbs_healing"
-      },
-      "is_alert": true
     }
   ]
 }

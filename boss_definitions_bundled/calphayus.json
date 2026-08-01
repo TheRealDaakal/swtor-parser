@@ -360,6 +360,16 @@
       }
     },
     {
+      "id": "calphayus_orbs_inevitability_1st",
+      "label": "Inevitability",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_orbs_inevitability_hp"
+      },
+      "is_alert": true
+    },
+    {
       "id": "calphayus_orbs_inevitability_hp",
       "label": "Inevitability HP",
       "duration_seconds": 10.0,
@@ -369,33 +379,6 @@
         "selector": [
           "3273946195558400"
         ]
-      }
-    },
-    {
-      "id": "calphayus_orbs_adds_2nd",
-      "label": "Adds 2nd",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "calphayus_orbs_adds_1st"
-      }
-    },
-    {
-      "id": "calphayus_orbs_adds_3rd",
-      "label": "Adds 3rd",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "calphayus_orbs_adds_2nd"
-      }
-    },
-    {
-      "id": "calphayus_orbs_pick_up_seed",
-      "label": "Pick up Seed",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "calphayus_orbs_adds_3rd"
       }
     },
     {
@@ -440,7 +423,7 @@
       "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3306356018774016"
+        "keyword": "[drop_holocron]"
       }
     },
     {
@@ -458,7 +441,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3319155021316096"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3319155021316096"
       }
     },
     {

@@ -32,7 +32,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4526972839395328"
+        "keyword": "Terminus Protocol"
       }
     },
     {
@@ -41,7 +41,7 @@
       "duration_seconds": 21.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4482172035530752"
+        "keyword": "Obliteration Protocols"
       }
     },
     {
@@ -59,7 +59,7 @@
       "duration_seconds": 21.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4578800209756160"
+        "keyword": "Eradication Protocols"
       }
     },
     {

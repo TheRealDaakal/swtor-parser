@@ -394,7 +394,7 @@
       "duration_seconds": 23.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3447523003858944"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
       }
     },
     {
@@ -403,7 +403,7 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3447523003858944"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
       }
     },
     {
@@ -412,7 +412,7 @@
       "duration_seconds": 9.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3455881010216960"
+        "keyword": "Shatter"
       }
     },
     {
@@ -464,6 +464,15 @@
         "keyword": "Handful of Grenades"
       },
       "is_alert": true
+    },
+    {
+      "id": "revan_orbs_force_imbue",
+      "label": "Force Imbue",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "revan_orbs_adds_kill_shot"
+      }
     },
     {
       "id": "revan_orbs_adds_kill_shot",

@@ -89,7 +89,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4132312589533184"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4132312589533184"
       }
     },
     {
@@ -98,7 +98,7 @@
       "duration_seconds": 90.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4132346949271552"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4132346949271552"
       }
     },
     {
@@ -107,7 +107,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4132342654304256"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4132342654304256"
       }
     },
     {
@@ -116,7 +116,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4134146540568576"
+        "keyword": "Heat Beam"
       }
     },
     {
@@ -125,7 +125,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4134941109518336"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4134941109518336"
       }
     },
     {
@@ -134,7 +134,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4143492389404672"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4143492389404672"
       }
     },
     {
@@ -143,7 +143,7 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4139755767857152"
+        "keyword": "Mortar Volley"
       }
     },
     {
@@ -152,7 +152,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4132943949725696"
+        "keyword": "Immediate Proximity Security Measure"
       }
     },
     {
@@ -161,7 +161,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4149080141856768"
+        "keyword": "Incinerate"
       }
     }
   ]

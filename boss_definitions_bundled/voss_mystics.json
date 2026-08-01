@@ -22,16 +22,6 @@
   "counters": [],
   "timers": [
     {
-      "id": "voss_mystics_orbs_push_reset",
-      "label": "Push reset",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "voss_mystics_orbs_force_push"
-      },
-      "is_alert": true
-    },
-    {
       "id": "voss_mystics_orbs_rada_dead",
       "label": "Rada dead",
       "duration_seconds": 10.0,
@@ -56,30 +46,30 @@
       "is_alert": true
     },
     {
-      "id": "voss_mystics_orbs_light_beam",
+      "id": "voss_mystics_orbs_light_beam_2",
       "label": "Light Beam_",
       "duration_seconds": 31.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4679573027422208"
+        "keyword": "Light Beam"
       }
     },
     {
-      "id": "voss_mystics_orbs_corrupted_spirit",
+      "id": "voss_mystics_orbs_corrupted_spirit_2",
       "label": "Corrupted Spirit_",
       "duration_seconds": 31.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4679839315394560"
+        "keyword": "Corrupted Spirit"
       }
     },
     {
-      "id": "voss_mystics_orbs_lightning_storm",
+      "id": "voss_mystics_orbs_lightning_storm_2",
       "label": "Lightning Storm_",
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4679568732454912"
+        "keyword": "Lightning Storm"
       }
     }
   ]

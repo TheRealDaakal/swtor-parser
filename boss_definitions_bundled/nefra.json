@@ -235,7 +235,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3308460552749056"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308460552749056"
       }
     },
     {
@@ -244,7 +244,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3308164200005632"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3308164200005632"
       }
     },
     {
@@ -253,7 +253,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3342167456088064"
+        "keyword": "Nightmare Twin Attack"
       },
       "is_alert": true
     }

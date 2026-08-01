@@ -26,20 +26,51 @@ convention.
 """
 import json
 import re
-import uuid
 from pathlib import Path
 from typing import List, Optional
+
+# Reuses BARAS's name-resolution tables rather than duplicating them: the
+# `resolve()` there already implements this project's provenance rules
+# (real-log corpus first, BARAS's own label as a reported fallback, explicit
+# placeholder rather than a guess). See NUMERIC_ID_RE below for why an ORBS
+# translator needs id resolution at all.
+import translate_baras_toml as _baras
 
 TOOLS_DIR = Path(__file__).resolve().parent
 OUT_DIR = TOOLS_DIR.parent / "boss_definitions_bundled"
 
 SUPPORTED_TRIGGER_TYPES = {2, 14, 16, 6, 1}  # AbilityUsed, NewEntitySpawn, EntityDeath, TimerExpired, EntityHP
 
+# ORBS's Ability/Effect fields USUALLY hold display text, but not always --
+# a meaningful minority hold the raw numeric ability id instead. Our engine
+# matches keywords against the ability/effect NAME text parsed out of the
+# log, so a numeric id passed through verbatim produces a rule that can
+# never match anything: dead on arrival, and silently so. Found by auditing
+# the merged output (326 such keywords across 118 files), not at parse time
+# -- the JSON is perfectly well-formed either way.
+NUMERIC_ID_RE = re.compile(r"^\d{6,}$")
+
 skipped = []  # (context, reason)
 
 
 def _slugify(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
+
+
+def _resolve_keyword(raw: str, ctx: str) -> str:
+    """Passes display text through unchanged; routes a raw numeric id
+    through the corpus/BARAS name tables. An id neither table knows becomes
+    an explicit REPLACE_WITH_REAL_ABILITY_NAME_<id> placeholder (same
+    convention as translate_baras_toml) -- still non-matching, but visibly
+    so rather than masquerading as a real keyword."""
+    if not NUMERIC_ID_RE.match(raw):
+        return raw
+    resolved = _baras.resolve(raw)
+    if resolved.startswith("REPLACE_WITH_REAL_ABILITY_NAME_"):
+        skipped.append((ctx, f"numeric ability id {raw} not in the corpus or BARAS tables -- left as placeholder"))
+    elif raw in _baras.fallback_resolved_ids:
+        skipped.append((ctx, f"numeric ability id {raw} -> '{resolved}' via BARAS's table only (not corpus-verified)"))
+    return resolved
 
 
 def _entity_selector(value: Optional[str]) -> Optional[List[str]]:
@@ -51,15 +82,14 @@ def _entity_selector(value: Optional[str]) -> Optional[List[str]]:
     return [value]
 
 
-def translate_timer(t: dict, id_prefix: str, uuid_to_ourid: dict, ctx_prefix: str):
+def translate_timer(t: dict, our_id: str, uuid_to_ourid: dict, ctx_prefix: str):
     """Returns (our_id, translated_dict) or (our_id, None) if this timer's
-    trigger type/shape isn't in the supported subset. Always returns an
-    our_id (even for skipped timers) so sibling timers referencing this
-    one's ORBS uuid via ExperiationTimerId can detect "points at something
-    we dropped" and skip cleanly too, instead of guessing."""
+    trigger type/shape isn't in the supported subset. `our_id` is assigned
+    by the caller (see translate_source_block's pass 1) so that ids are
+    unique across the block AND every ORBS uuid is already mapped before
+    any trigger is built -- a TimerExpired can legitimately reference a
+    timer defined LATER in ORBS's own ordering."""
     orbs_id = t["Id"]
-    our_id = f"{id_prefix}_{_slugify(t.get('Name') or orbs_id)}"
-    uuid_to_ourid[orbs_id] = our_id
     ctx = f"{ctx_prefix} timer '{t.get('Name')}' ({orbs_id})"
 
     if t.get("Clause1") or t.get("Clause2"):
@@ -77,7 +107,7 @@ def translate_timer(t: dict, id_prefix: str, uuid_to_ourid: dict, ctx_prefix: st
         if not keyword:
             skipped.append((ctx, "AbilityUsed with no Ability/Effect text"))
             return our_id, None
-        trigger = {"type": "ability_cast", "keyword": keyword}
+        trigger = {"type": "ability_cast", "keyword": _resolve_keyword(keyword, ctx)}
     elif trigger_type == 14:  # NewEntitySpawn
         selector = _entity_selector(t.get("Source"))
         if not selector:
@@ -94,8 +124,11 @@ def translate_timer(t: dict, id_prefix: str, uuid_to_ourid: dict, ctx_prefix: st
         ref_orbs_id = t.get("ExperiationTimerId")
         ref_our_id = uuid_to_ourid.get(ref_orbs_id)
         if not ref_our_id:
-            skipped.append((ctx, "TimerExpired referencing a timer not yet translated (forward ref) or dropped"))
+            skipped.append((ctx, f"TimerExpired referencing unknown ORBS timer id {ref_orbs_id!r}"))
             return our_id, None
+        # The referenced timer may still be dropped later (unsupported
+        # trigger type, difficulty-variant collapse). _prune_dangling_refs()
+        # catches that afterwards, once the final emitted set is known.
         trigger = {"type": "timer_expires", "timer_id": ref_our_id}
     elif trigger_type == 1:  # EntityHP
         selector = _entity_selector(t.get("Target"))
@@ -167,21 +200,77 @@ def _dedupe_difficulty_variants(rows: List[dict], names: dict, ctx_prefix: str) 
     return out
 
 
+def _prune_dangling_refs(rows: List[dict], ctx_prefix: str) -> List[dict]:
+    """Drops timers whose timer_expires points at an id that isn't in the
+    final emitted set. Such a rule is not merely cosmetic: boss_definitions'
+    'timer_expires' matches by membership in ctx.recently_expired_timer_ids,
+    which a never-emitted id can never join -- so the condition is
+    permanently False and the timer NEVER fires. Silent dead weight.
+
+    Iterates to a fixpoint because pruning one timer can orphan another that
+    chained off it."""
+    while True:
+        live_ids = {r["id"] for r in rows}
+        kept, dropped = [], []
+        for r in rows:
+            trig = r.get("trigger") or {}
+            if trig.get("type") == "timer_expires" and trig.get("timer_id") not in live_ids:
+                dropped.append(r)
+            else:
+                kept.append(r)
+        if not dropped:
+            return kept
+        for r in dropped:
+            skipped.append((
+                ctx_prefix,
+                f"dropped '{r['id']}' -- chains off timer "
+                f"'{r['trigger']['timer_id']}' which isn't in the emitted set "
+                f"(unsupported trigger type, or collapsed as a difficulty variant)",
+            ))
+        rows = kept
+
+
 def translate_source_block(source: dict, id_prefix: str, ctx_prefix: str) -> List[dict]:
     """source: one {"TimerSource": ..., "Timers": [...]} block for a single
-    boss, in ORBS's own trigger-order (needed since TimerExpired can only
-    resolve a same-pass ExperiationTimerId reference to an EARLIER timer in
-    the list -- a forward reference is reported and dropped rather than
-    reordered/guessed at)."""
+    boss.
+
+    Three passes, in this order for real reasons:
+      1. Assign a unique our_id to EVERY ORBS timer up front. Two things
+         depend on this: ids must not collide (ORBS reuses a display name
+         for genuinely different rules -- e.g. two distinct "Acid Deluge"
+         timers at 60s and 122s -- and slugifying alone silently merged
+         them), and the uuid->id map must be complete before any trigger is
+         built, since a TimerExpired may reference a timer defined later in
+         ORBS's ordering.
+      2. Translate each timer, then collapse difficulty variants.
+      3. Prune timers left chaining off something that didn't survive.
+    """
+    timers = source.get("Timers", [])
+
     uuid_to_ourid = {}
+    assigned_ids = []
+    used = set()
+    for t in timers:
+        base = f"{id_prefix}_{_slugify(t.get('Name') or t['Id'])}"
+        our_id = base
+        n = 2
+        while our_id in used:
+            our_id = f"{base}_{n}"
+            n += 1
+        used.add(our_id)
+        assigned_ids.append(our_id)
+        uuid_to_ourid[t["Id"]] = our_id
+
     out = []
     names = {}  # our_id -> ORBS's original Name, for difficulty-suffix stripping
-    for t in source.get("Timers", []):
-        our_id, translated = translate_timer(t, id_prefix, uuid_to_ourid, ctx_prefix)
+    for t, our_id in zip(timers, assigned_ids):
+        _, translated = translate_timer(t, our_id, uuid_to_ourid, ctx_prefix)
         if translated is not None:
             out.append(translated)
             names[our_id] = t.get("Name") or our_id
-    return _dedupe_difficulty_variants(out, names, ctx_prefix)
+
+    out = _dedupe_difficulty_variants(out, names, ctx_prefix)
+    return _prune_dangling_refs(out, ctx_prefix)
 
 
 def find_boss_source(path: Path, boss_name: str) -> Optional[dict]:

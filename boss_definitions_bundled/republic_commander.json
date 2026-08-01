@@ -22,7 +22,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3485786867499008"
+        "keyword": "Force Charge"
       }
     },
     {
@@ -31,7 +31,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3485782572531712"
+        "keyword": "Force Push"
       }
     },
     {
@@ -47,7 +47,7 @@
       }
     },
     {
-      "id": "republic_commander_orbs_force_push",
+      "id": "republic_commander_orbs_force_push_2",
       "label": "Force Push",
       "duration_seconds": 10.0,
       "trigger": {
@@ -62,7 +62,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3485808342335488"
+        "keyword": "Spike"
       }
     },
     {
@@ -71,7 +71,7 @@
       "duration_seconds": 17.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3493199981051904"
+        "keyword": "Force Sweep"
       }
     }
   ]

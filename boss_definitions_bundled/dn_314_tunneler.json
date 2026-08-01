@@ -22,7 +22,7 @@
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3169647209742336"
+        "keyword": "Targeted Laser"
       }
     },
     {
@@ -47,24 +47,6 @@
         "selector": [
           "DN-314 Tunneler"
         ]
-      }
-    },
-    {
-      "id": "dn_314_tunneler_orbs_adds_2",
-      "label": "Adds 2",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dn_314_tunneler_orbs_adds_1"
-      }
-    },
-    {
-      "id": "dn_314_tunneler_orbs_adds_3",
-      "label": "Adds 3",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dn_314_tunneler_orbs_adds_2"
       }
     }
   ]

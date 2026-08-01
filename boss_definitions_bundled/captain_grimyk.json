@@ -22,7 +22,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2506302395777024"
+        "keyword": "Thermal Grenade"
       }
     },
     {

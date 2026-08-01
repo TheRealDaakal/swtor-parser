@@ -28,24 +28,6 @@
       }
     },
     {
-      "id": "bonethrasher_orbs_super_smash_1st",
-      "label": "Super Smash 1st",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "bonethrasher_orbs_sweep_1st"
-      }
-    },
-    {
-      "id": "bonethrasher_orbs_smash_1st",
-      "label": "Smash 1st",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "bonethrasher_orbs_super_smash_1st"
-      }
-    },
-    {
       "id": "bonethrasher_orbs_sweep",
       "label": "Sweep",
       "duration_seconds": 20.0,

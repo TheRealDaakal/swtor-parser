@@ -66,7 +66,7 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4295542821617664"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4295542821617664"
       }
     },
     {
@@ -75,7 +75,7 @@
       "duration_seconds": 31.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4307856492855296"
+        "keyword": "Blade Storm"
       }
     },
     {
@@ -84,7 +84,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4292858467057664"
+        "keyword": "Master Strike"
       }
     },
     {
@@ -97,12 +97,12 @@
       }
     },
     {
-      "id": "tau_idair_orbs_adds",
+      "id": "tau_idair_orbs_adds_2",
       "label": "Adds_",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4337350033276928"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4337350033276928"
       }
     },
     {
@@ -115,12 +115,12 @@
       }
     },
     {
-      "id": "tau_idair_orbs_breath_of_ossus",
+      "id": "tau_idair_orbs_breath_of_ossus_2",
       "label": "Move out",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4337715105497088"
+        "keyword": "Breath of Ossus"
       },
       "is_alert": true
     }

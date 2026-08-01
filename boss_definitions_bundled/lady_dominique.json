@@ -346,7 +346,7 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4593978624180224"
+        "keyword": "[spawn_aria]"
       }
     },
     {
@@ -355,7 +355,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4595108200579072"
+        "keyword": "[spawn_p2_detonator]"
       }
     },
     {
@@ -364,7 +364,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4598754627813376"
+        "keyword": "Unify"
       }
     },
     {
@@ -397,7 +397,7 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4598806167420928"
+        "keyword": "[p3_opener]"
       }
     },
     {
@@ -406,7 +406,7 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4598754627813376"
+        "keyword": "Unify"
       }
     },
     {

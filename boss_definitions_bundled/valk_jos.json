@@ -61,7 +61,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3395794417745920"
+        "keyword": "Jet Charge"
       }
     },
     {
@@ -70,7 +70,7 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3394445798014976"
+        "keyword": "Aerial Strike"
       }
     },
     {
@@ -79,11 +79,11 @@
       "duration_seconds": 10.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3395824482516992"
+        "keyword": "[shoulder_cannon]"
       }
     },
     {
-      "id": "valk_jos_orbs_aerial_strike",
+      "id": "valk_jos_orbs_aerial_strike_2",
       "label": "Aerial Strike",
       "duration_seconds": 10.0,
       "trigger": {

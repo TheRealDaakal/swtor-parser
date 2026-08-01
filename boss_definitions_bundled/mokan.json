@@ -16,12 +16,12 @@
   "counters": [],
   "timers": [
     {
-      "id": "mokan_orbs_compound_17",
+      "id": "mokan_orbs_compound_17_2",
       "label": "Compound 17",
       "duration_seconds": 43.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3535548358590464"
+        "keyword": "Compound 17 Release"
       }
     }
   ]

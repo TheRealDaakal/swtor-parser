@@ -19,10 +19,20 @@
     {
       "id": "duneclaw_orbs_sandstorm",
       "label": "Sandstorm",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "duneclaw_orbs_phase_95"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "duneclaw_orbs_sandstorm_2",
+      "label": "Sandstorm",
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3262049136148480"
+        "keyword": "[sandstorm]"
       }
     },
     {
@@ -31,7 +41,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3261555214909440"
+        "keyword": "Sweep"
       }
     },
     {
@@ -40,7 +50,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3284563354714112"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3284563354714112"
       }
     },
     {

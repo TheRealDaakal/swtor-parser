@@ -21,7 +21,7 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4458077269000192"
+        "keyword": "Containment Protocol"
       }
     },
     {
@@ -30,7 +30,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4449727852576768"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4449727852576768"
       }
     },
     {

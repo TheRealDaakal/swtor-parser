@@ -25,7 +25,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2463666255429632"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2463666255429632"
       }
     },
     {
@@ -34,7 +34,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2439519949291520"
+        "keyword": "Inspire Loyalty"
       }
     },
     {

@@ -175,7 +175,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3255761304027136"
+        "keyword": "Huge Grenade"
       }
     },
     {

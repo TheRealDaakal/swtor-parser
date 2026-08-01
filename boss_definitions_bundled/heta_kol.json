@@ -47,7 +47,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4438419203686400"
+        "keyword": "Flamethrower"
       }
     },
     {
@@ -56,7 +56,7 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4438024066695168"
+        "keyword": "Sticky Grenade"
       }
     },
     {
@@ -65,7 +65,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4437001864478720"
+        "keyword": "Lockdown"
       }
     }
   ]

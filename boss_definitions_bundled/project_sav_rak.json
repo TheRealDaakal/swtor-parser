@@ -22,7 +22,7 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2837543158546432"
+        "keyword": "[allow_lava_smash]"
       }
     },
     {

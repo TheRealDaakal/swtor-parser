@@ -22,7 +22,7 @@
       "duration_seconds": 18.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2518195160219648"
+        "keyword": "Stealth"
       }
     },
     {
@@ -67,7 +67,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2518165095448576"
+        "keyword": "Kick"
       }
     },
     {
@@ -83,7 +83,7 @@
       }
     },
     {
-      "id": "foundry_hk_47_orbs_kick",
+      "id": "foundry_hk_47_orbs_kick_2",
       "label": "Kick",
       "duration_seconds": 10.0,
       "trigger": {
@@ -98,7 +98,7 @@
       "duration_seconds": 18.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2518182275317760"
+        "keyword": "Stealth"
       }
     }
   ]

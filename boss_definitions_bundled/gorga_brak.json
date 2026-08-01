@@ -21,7 +21,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4433883718221824"
+        "keyword": "Energized Grapple"
       }
     },
     {

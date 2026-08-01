@@ -61,7 +61,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4450986277994496"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4450986277994496"
       }
     },
     {
@@ -70,7 +70,7 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4447472994746368"
+        "keyword": "Sticky Grenade"
       }
     }
   ]

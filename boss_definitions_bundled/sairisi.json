@@ -34,7 +34,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3356607136137216"
+        "keyword": "[security_grapple_precast]"
       }
     },
     {
@@ -43,7 +43,7 @@
       "duration_seconds": 17.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3369766915932160"
+        "keyword": "High-Explosive Shells"
       }
     },
     {

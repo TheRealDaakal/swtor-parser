@@ -643,7 +643,7 @@
       }
     },
     {
-      "id": "kanoth_orbs_repel",
+      "id": "kanoth_orbs_repel_2",
       "label": "Repel_",
       "duration_seconds": 25.0,
       "trigger": {
@@ -675,7 +675,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4601872774070272"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4601872774070272"
       }
     },
     {

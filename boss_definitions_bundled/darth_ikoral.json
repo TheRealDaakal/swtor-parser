@@ -69,7 +69,7 @@
       "duration_seconds": 50.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2496982316744704"
+        "keyword": "Ancient Knowledge"
       }
     },
     {
@@ -88,7 +88,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2496982316744704"
+        "keyword": "Ancient Knowledge"
       },
       "is_alert": true
     },
@@ -108,7 +108,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2487743842091008"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2487743842091008"
       },
       "is_alert": true
     }

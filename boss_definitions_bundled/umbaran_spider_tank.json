@@ -69,7 +69,7 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4126385534664704"
+        "keyword": "Concussive Blast"
       }
     },
     {
@@ -78,7 +78,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4117963103797248"
+        "keyword": "Proximity Burner"
       }
     }
   ]

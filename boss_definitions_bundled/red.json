@@ -122,69 +122,6 @@
       }
     },
     {
-      "id": "red_orbs_bull_2nd",
-      "label": "Bull 2nd",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_1st"
-      }
-    },
-    {
-      "id": "red_orbs_bull_3rd",
-      "label": "Bull 3rd",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_2nd"
-      }
-    },
-    {
-      "id": "red_orbs_bull_4th",
-      "label": "Bull 4th",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_3rd"
-      }
-    },
-    {
-      "id": "red_orbs_bull_5th",
-      "label": "Bull 5th",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_4th"
-      }
-    },
-    {
-      "id": "red_orbs_bull_6th",
-      "label": "Bull 6th",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_5th"
-      }
-    },
-    {
-      "id": "red_orbs_bull_7th",
-      "label": "Bull 7th",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_6th"
-      }
-    },
-    {
-      "id": "red_orbs_enrage_bull",
-      "label": "Enrage + Bull",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "red_orbs_bull_7th"
-      }
-    },
-    {
       "id": "red_orbs_hydrochloric_pool",
       "label": "Hydrochloric Pool",
       "duration_seconds": 47.0,

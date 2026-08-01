@@ -22,7 +22,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3390219550195712"
+        "keyword": "Well-Aimed Kick"
       }
     }
   ]

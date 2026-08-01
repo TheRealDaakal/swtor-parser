@@ -22,7 +22,7 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2304219889532928"
+        "keyword": "Generator Drain"
       }
     },
     {

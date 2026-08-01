@@ -38,12 +38,12 @@
       "is_alert": true
     },
     {
-      "id": "bask_sunn_orbs_restrain",
+      "id": "bask_sunn_orbs_restrain_2",
       "label": "Restrain",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4429206498836480"
+        "keyword": "Restrain"
       }
     }
   ]

@@ -116,12 +116,12 @@
       }
     },
     {
-      "id": "thrasher_orbs_firebug",
+      "id": "thrasher_orbs_firebug_2",
       "label": "Firebug_",
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3060692479377408"
+        "keyword": "Spawn Adds"
       }
     },
     {
@@ -148,7 +148,7 @@
       "duration_seconds": 8.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3262208049938432"
+        "keyword": "Spawn Adds"
       }
     }
   ]

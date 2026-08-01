@@ -48,7 +48,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2877413339955200"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2877413339955200"
       },
       "is_alert": true
     },
@@ -58,7 +58,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2877482059431936"
+        "keyword": "Bash"
       }
     },
     {
@@ -67,7 +67,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2877451994660864"
+        "keyword": "Rush"
       }
     }
   ]

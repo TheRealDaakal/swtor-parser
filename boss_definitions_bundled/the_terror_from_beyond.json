@@ -568,33 +568,6 @@
         ]
       },
       "is_alert": true
-    },
-    {
-      "id": "the_terror_from_beyond_orbs_spit_pool_scream",
-      "label": "Spit Pool + Scream_",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "the_terror_from_beyond_orbs_tentacles_p2"
-      }
-    },
-    {
-      "id": "the_terror_from_beyond_orbs_adds",
-      "label": "Adds_",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "the_terror_from_beyond_orbs_beacon"
-      }
-    },
-    {
-      "id": "the_terror_from_beyond_orbs_void_disturbance",
-      "label": "Void Disturbance",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "the_terror_from_beyond_orbs_void_disturbance"
-      }
     }
   ]
 }

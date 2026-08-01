@@ -70,7 +70,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068658113216512"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2068658113216512"
       }
     },
     {
@@ -79,7 +79,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068662408183808"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2068662408183808"
       }
     },
     {
@@ -88,7 +88,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068670998118400"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2068670998118400"
       }
     },
     {
@@ -97,7 +97,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068675293085696"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2068675293085696"
       }
     },
     {
@@ -106,7 +106,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068301630930944"
+        "keyword": "Dirty Kick"
       }
     },
     {
@@ -115,25 +115,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2068318810800128"
-      }
-    },
-    {
-      "id": "krel_thak_orbs_dirty_kick_mm",
-      "label": "Dirty Kick MM",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "2522425703006208"
-      }
-    },
-    {
-      "id": "krel_thak_orbs_thermal_grenade_mm",
-      "label": "Thermal Grenade MM",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "2522464357711872"
+        "keyword": "Thermal Grenade"
       }
     }
   ]

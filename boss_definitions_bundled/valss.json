@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "valss_orbs_phase_2",
+      "id": "valss_orbs_phase_2_2",
       "label": "Phase 2",
       "duration_seconds": 10.0,
       "trigger": {
@@ -55,11 +55,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4134623281938432"
+        "keyword": "Impulse"
       }
     },
     {
-      "id": "valss_orbs_phase_3",
+      "id": "valss_orbs_phase_3_2",
       "label": "Phase 3",
       "duration_seconds": 10.0,
       "trigger": {
@@ -74,25 +74,25 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136263959445504"
+        "keyword": "Orbital Bombardment"
       }
     },
     {
-      "id": "valss_orbs_bombardment",
+      "id": "valss_orbs_bombardment_2",
       "label": "Bombardment",
       "duration_seconds": 39.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4134812260499456"
+        "keyword": "Orbital Bombardment"
       }
     },
     {
-      "id": "valss_orbs_impulse",
+      "id": "valss_orbs_impulse_2",
       "label": "Impulse_",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4135396376051712"
+        "keyword": "Impulse"
       }
     },
     {
@@ -101,7 +101,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4134503022854144"
+        "keyword": "Shoto Throw"
       }
     },
     {
@@ -110,7 +110,7 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4135435030757376"
+        "keyword": "Master Stroke"
       }
     },
     {
@@ -119,7 +119,7 @@
       "duration_seconds": 79.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4147375039840256"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4147375039840256"
       }
     },
     {
@@ -128,7 +128,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4147581198270464"
+        "keyword": "Blizzard Burst"
       }
     }
   ]

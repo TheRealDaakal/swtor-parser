@@ -65,7 +65,7 @@
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4484302339309568"
+        "keyword": "Relentless Assault"
       }
     },
     {
@@ -83,7 +83,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4482936539709440"
+        "keyword": "Cataclysm"
       },
       "is_alert": true
     }

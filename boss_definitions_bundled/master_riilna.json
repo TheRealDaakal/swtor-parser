@@ -58,7 +58,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3342210405761024"
+        "keyword": "Forcequake"
       }
     },
     {
@@ -67,7 +67,7 @@
       "duration_seconds": 13.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3483446110322688"
+        "keyword": "Mass Project"
       }
     },
     {
@@ -76,7 +76,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3342300600074240"
+        "keyword": "Mind Crush"
       }
     },
     {
@@ -85,7 +85,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3342197520859136"
+        "keyword": "Telekinetic Throw"
       }
     }
   ]

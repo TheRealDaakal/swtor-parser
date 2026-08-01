@@ -85,7 +85,7 @@
       "duration_seconds": 75.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3064046848835584"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3064046848835584"
       }
     },
     {
@@ -94,7 +94,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3064046848835584"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3064046848835584"
       }
     },
     {
@@ -134,7 +134,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3121285877989376"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3121285877989376"
       }
     },
     {

@@ -70,7 +70,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3228668650323968"
+        "keyword": "Affliction"
       }
     },
     {
@@ -79,16 +79,16 @@
       "duration_seconds": 31.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2315051797053440"
+        "keyword": "Spawn Adds"
       }
     },
     {
-      "id": "leyarsha_orbs_adds",
+      "id": "leyarsha_orbs_adds_2",
       "label": "Adds_",
       "duration_seconds": 31.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2211899567505408"
+        "keyword": "Spawn Adds"
       }
     },
     {
@@ -97,7 +97,7 @@
       "duration_seconds": 7.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2263529369370624"
+        "keyword": "Blaster Volley"
       }
     }
   ]

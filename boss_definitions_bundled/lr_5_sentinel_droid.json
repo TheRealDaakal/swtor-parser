@@ -58,7 +58,7 @@
       "duration_seconds": 17.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2851183974678528"
+        "keyword": "Incinerate"
       }
     }
   ]

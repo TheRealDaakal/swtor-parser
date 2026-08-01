@@ -21,7 +21,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3511084224872448"
+        "keyword": "Wide Slash"
       }
     },
     {
@@ -42,11 +42,11 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3516401394384896"
+        "keyword": "Unstable Barrier"
       }
     },
     {
-      "id": "infinite_army_prototype_orbs_shield",
+      "id": "infinite_army_prototype_orbs_shield_2",
       "label": "Shield",
       "duration_seconds": 10.0,
       "trigger": {

@@ -58,7 +58,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3261890222358528"
+        "keyword": "Lift"
       }
     },
     {
@@ -67,7 +67,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3261898812293120"
+        "keyword": "Smash"
       }
     }
   ]

@@ -18,66 +18,39 @@
   "counters": [],
   "timers": [
     {
-      "id": "kirba_orbs_forceful_presence",
-      "label": "Forceful Presence",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "kirba_orbs_blast_of_hatred"
-      }
-    },
-    {
-      "id": "kirba_orbs_furious_bellow",
-      "label": "Furious Bellow",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "kirba_orbs_forceful_presence"
-      }
-    },
-    {
       "id": "kirba_orbs_enraged_stomp",
       "label": "Enraged Stomp",
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4677219385344000"
+        "keyword": "Enraged Stomp"
       }
     },
     {
-      "id": "kirba_orbs_ancient_s_rage",
-      "label": "Ancient's Rage",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "kirba_orbs_furious_bellow"
-      }
-    },
-    {
-      "id": "kirba_orbs_ancient_s_rage",
+      "id": "kirba_orbs_ancient_s_rage_2",
       "label": "Ancient's Rage_",
       "duration_seconds": 61.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4677709011615744"
+        "keyword": "Ancient's Rage"
       }
     },
     {
-      "id": "kirba_orbs_forceful_presence",
+      "id": "kirba_orbs_forceful_presence_2",
       "label": "Forceful Presence_",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4676824248352768"
+        "keyword": "Forceful Presence"
       }
     },
     {
-      "id": "kirba_orbs_furious_bellow",
+      "id": "kirba_orbs_furious_bellow_2",
       "label": "Furious Bellow_",
       "duration_seconds": 23.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4677077651423232"
+        "keyword": "Furious Bellow"
       }
     },
     {
@@ -86,11 +59,11 @@
       "duration_seconds": 4.35,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4677064766521344"
+        "keyword": "Blast of Hatred"
       }
     },
     {
-      "id": "kirba_orbs_blast_of_hatred",
+      "id": "kirba_orbs_blast_of_hatred_2",
       "label": "Blast of Hatred_",
       "duration_seconds": 15.65,
       "trigger": {

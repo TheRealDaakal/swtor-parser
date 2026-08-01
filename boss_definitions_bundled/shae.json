@@ -22,16 +22,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3411672911839232"
-      }
-    },
-    {
-      "id": "shae_orbs_maelstrom",
-      "label": "Maelstrom",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "shae_orbs_grapple_droid"
+        "keyword": "Death from Above"
       }
     },
     {
@@ -52,7 +43,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3408391556825088"
+        "keyword": "Electro Dart"
       }
     },
     {
@@ -70,7 +61,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3408374376955904"
+        "keyword": "Carbonize"
       }
     },
     {
@@ -88,7 +79,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3408387261857792"
+        "keyword": "Grapple"
       }
     }
   ]

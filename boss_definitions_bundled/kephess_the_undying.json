@@ -260,75 +260,43 @@
       ]
     },
     {
-      "id": "kephess_the_undying_orbs_burn",
-      "label": "Burn",
+      "id": "kephess_the_undying_orbs_hp_59",
+      "label": "HP 59",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "hp_below",
-        "percent": 10.0,
+        "percent": 59.0,
         "selector": [
-          "Kephess the Undying"
+          "Warlord Kephess"
         ]
       }
     },
     {
-      "id": "kephess_the_undying_orbs_cascade",
-      "label": "Cascade",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "hp_below",
-        "percent": 50.0,
-        "selector": [
-          "Kephess the Undying"
-        ]
-      }
-    },
-    {
-      "id": "kephess_the_undying_orbs_cascade_jump",
-      "label": "Cascade Jump",
+      "id": "kephess_the_undying_orbs_gift_of_the_masters",
+      "label": "Gift of the Masters",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "timer_expires",
-        "timer_id": "kephess_the_undying_orbs_cascade"
+        "timer_id": "kephess_the_undying_orbs_hp_59"
       },
       "is_alert": true
     },
     {
-      "id": "kephess_the_undying_orbs_invulnerable",
-      "label": "Invulnerable",
-      "duration_seconds": 9.0,
+      "id": "kephess_the_undying_orbs_mighty_leap",
+      "label": "Mighty Leap",
+      "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3008070540066816"
+        "keyword": "Mighty Leap"
       }
     },
     {
-      "id": "kephess_the_undying_orbs_overcharge_counter",
-      "label": "Overcharge Counter",
-      "duration_seconds": 10.0,
+      "id": "kephess_the_undying_orbs_savage_slash",
+      "label": "Savage Slash",
+      "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Overcharge"
-      },
-      "is_alert": true
-    },
-    {
-      "id": "kephess_the_undying_orbs_nanites_counter",
-      "label": "Nanites Counter",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
-      },
-      "is_alert": true
-    },
-    {
-      "id": "kephess_the_undying_orbs_1st_nanites_jump",
-      "label": "1st Nanites + Jump",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "3008070540066816"
+        "keyword": "Savage Arcing Slash"
       }
     }
   ]

@@ -193,7 +193,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3406531835985920"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3406531835985920"
       }
     },
     {
@@ -202,7 +202,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3406527541018624"
+        "keyword": "Summon Flame Turret"
       }
     },
     {
@@ -230,7 +230,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3406488886312960"
+        "keyword": "Floor Vents"
       }
     },
     {
@@ -239,7 +239,7 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3412583444905984"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3412583444905984"
       }
     },
     {
@@ -248,7 +248,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3513382032375808"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3513382032375808"
       }
     }
   ]

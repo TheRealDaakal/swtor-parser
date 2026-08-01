@@ -1008,7 +1008,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3294763902042112"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
       }
     },
     {
@@ -1035,7 +1035,7 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3141656907874304"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3141656907874304"
       }
     },
     {
@@ -1124,48 +1124,12 @@
       }
     },
     {
-      "id": "Styrak_k_orbs_force_ligthning_c",
-      "label": "Force Ligthning C",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "Styrak_k_orbs_pull_nightmare_c"
-      }
-    },
-    {
       "id": "Styrak_k_orbs_lightning_stealth",
       "label": "Lightning Stealth",
       "duration_seconds": 26.5,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Lightning Manifestation"
-      }
-    },
-    {
-      "id": "Styrak_k_orbs_force_lightning_l",
-      "label": "Force Lightning L",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "Styrak_k_orbs_pull_nightmare_l"
-      }
-    },
-    {
-      "id": "Styrak_k_orbs_chained_manifestation_l",
-      "label": "Chained Manifestation L",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "Styrak_k_orbs_force_lightning_l"
-      }
-    },
-    {
-      "id": "Styrak_k_orbs_lightning_manifestation_l",
-      "label": "Lightning Manifestation L",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "Styrak_k_orbs_chained_manifestation_l"
       }
     },
     {

@@ -43,7 +43,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4474780396814336"
+        "keyword": "Harrowing Bellow"
       }
     },
     {
@@ -52,7 +52,7 @@
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4484667411529728"
+        "keyword": "Cacophonous Roar"
       }
     },
     {
@@ -61,7 +61,7 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4473539151265792"
+        "keyword": "Feral Pounce"
       }
     }
   ]

@@ -94,7 +94,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3512467204341760"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3512467204341760"
       }
     },
     {
@@ -126,12 +126,12 @@
       "is_alert": true
     },
     {
-      "id": "underlurker_orbs_adds",
+      "id": "underlurker_orbs_adds_2",
       "label": "Adds_",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3413575582351360"
+        "keyword": "Devastation"
       }
     }
   ]

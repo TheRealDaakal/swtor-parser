@@ -204,7 +204,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2137966000472064"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2137966000472064"
       }
     },
     {
@@ -253,7 +253,7 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2138051899817984"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2138051899817984"
       }
     },
     {
@@ -307,7 +307,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2482912003883008"
+        "keyword": "Mind Trap"
       }
     },
     {
@@ -316,7 +316,7 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2482985018327040"
+        "keyword": "Ball Lightning"
       }
     },
     {
@@ -325,7 +325,7 @@
       "duration_seconds": 37.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "1790412951912448"
+        "keyword": "Force Cyclone"
       }
     },
     {
@@ -334,7 +334,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2076298860036096"
+        "keyword": "Ball Lightning"
       }
     },
     {
@@ -343,7 +343,7 @@
       "duration_seconds": 36.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2025528051630080"
+        "keyword": "Mind Trap"
       }
     }
   ]

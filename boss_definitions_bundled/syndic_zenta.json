@@ -62,12 +62,22 @@
       "is_alert": true
     },
     {
+      "id": "syndic_zenta_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "syndic_zenta_orbs_phase_25"
+      },
+      "is_alert": true
+    },
+    {
       "id": "syndic_zenta_orbs_grapple",
       "label": "Grapple",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4138836644855808"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4138836644855808"
       }
     },
     {
@@ -76,7 +86,7 @@
       "duration_seconds": 11.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136714931011584"
+        "keyword": "Electro-Magnetic Charge"
       }
     },
     {
@@ -85,7 +95,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4137170197544960"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4137170197544960"
       }
     },
     {
@@ -94,7 +104,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136379923562496"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4136379923562496"
       }
     },
     {
@@ -103,7 +113,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136414283300864"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4136414283300864"
       }
     },
     {
@@ -112,7 +122,7 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4151811741057024"
+        "keyword": "Impulse"
       }
     },
     {
@@ -121,7 +131,7 @@
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4140116545110016"
+        "keyword": "High-Powered Snipe"
       }
     },
     {
@@ -130,7 +140,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136375628595200"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4136375628595200"
       }
     },
     {
@@ -139,16 +149,16 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4145493844164608"
+        "keyword": "Charging Static Probes"
       }
     },
     {
-      "id": "syndic_zenta_orbs_assassins",
+      "id": "syndic_zenta_orbs_assassins_2",
       "label": "Assassins_",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4140193854521344"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4140193854521344"
       }
     },
     {
@@ -157,7 +167,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4136384218529792"
+        "keyword": "Summon Tank Droids"
       }
     },
     {
@@ -166,7 +176,7 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4149479573815296"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4149479573815296"
       }
     },
     {

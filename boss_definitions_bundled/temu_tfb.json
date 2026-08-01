@@ -18,30 +18,30 @@
   "counters": [],
   "timers": [
     {
-      "id": "temu_tfb_orbs_forceful_slam",
+      "id": "temu_tfb_orbs_forceful_slam_2",
       "label": "Forceful Slam_",
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4684585254256640"
+        "keyword": "Forceful Slam"
       }
     },
     {
-      "id": "temu_tfb_orbs_summon_the_corrupted",
+      "id": "temu_tfb_orbs_summon_the_corrupted_2",
       "label": "Summon the Corrupted_",
       "duration_seconds": 46.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4684589549223936"
+        "keyword": "Summon the Corrupted"
       }
     },
     {
-      "id": "temu_tfb_orbs_corrupt_the_weak",
+      "id": "temu_tfb_orbs_corrupt_the_weak_2",
       "label": "Corrupt the Weak_",
       "duration_seconds": 74.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4684593844191232"
+        "keyword": "Corrupt the Weak"
       }
     },
     {
@@ -94,7 +94,7 @@
       "duration_seconds": 31.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4695185233543168"
+        "keyword": "Creeping Roots"
       }
     }
   ]

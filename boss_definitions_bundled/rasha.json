@@ -21,7 +21,7 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4282928502669312"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4282928502669312"
       }
     },
     {
@@ -47,12 +47,12 @@
       "is_alert": true
     },
     {
-      "id": "rasha_orbs_adds",
+      "id": "rasha_orbs_adds_2",
       "label": "Adds_",
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4284040899198976"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4284040899198976"
       }
     },
     {
@@ -61,7 +61,7 @@
       "duration_seconds": 28.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4283924935081984"
+        "keyword": "Deployable Shield"
       }
     },
     {
@@ -70,7 +70,7 @@
       "duration_seconds": 23.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4282919912734720"
+        "keyword": "Artillery"
       }
     },
     {
@@ -79,7 +79,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4282954272473088"
+        "keyword": "Sweeping Gunfire"
       }
     },
     {
@@ -88,7 +88,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4282958567440384"
+        "keyword": "Armor Piercing Rounds"
       }
     }
   ]

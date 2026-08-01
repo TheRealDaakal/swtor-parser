@@ -21,7 +21,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4432844336136192"
+        "keyword": "Songbirds Volley"
       }
     },
     {
@@ -30,7 +30,7 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4432586638098432"
+        "keyword": "Pick Off"
       }
     }
   ]

@@ -81,7 +81,7 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2491059556843520"
+        "keyword": "Concussion Charge"
       }
     },
     {
@@ -90,7 +90,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2496046013874176"
+        "keyword": "Red Beam"
       }
     },
     {
@@ -133,7 +133,7 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2496273647140864"
+        "keyword": "Blue Beam"
       }
     },
     {

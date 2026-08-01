@@ -22,7 +22,7 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3361408909574144"
+        "keyword": "Flow"
       }
     },
     {
@@ -40,7 +40,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3368014569275392"
+        "keyword": "Confluence"
       },
       "is_alert": true
     },
@@ -50,7 +50,7 @@
       "duration_seconds": 6.8,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3361645132775424"
+        "keyword": "Project"
       }
     },
     {
@@ -59,7 +59,7 @@
       "duration_seconds": 48.8,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3505891609411584"
+        "keyword": "Mass Project"
       }
     }
   ]

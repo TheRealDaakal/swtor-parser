@@ -166,11 +166,21 @@
     },
     {
       "id": "olok_orbs_flashbang",
+      "label": "Flashbang",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "[flash_gate]"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "olok_orbs_flashbang_2",
       "label": "Flashbang_",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3131215842377728"
+        "keyword": "[flash_gate]"
       }
     },
     {
@@ -179,7 +189,7 @@
       "duration_seconds": 4.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3131215842377728"
+        "keyword": "[flash_gate]"
       }
     }
   ]

@@ -17,24 +17,6 @@
   "counters": [],
   "timers": [
     {
-      "id": "hk_47_orbs_snipe_p2",
-      "label": "Snipe P2",
-      "duration_seconds": 6.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "hk_47_orbs_sonic_grenade_p2"
-      }
-    },
-    {
-      "id": "hk_47_orbs_poison_grenade_p2",
-      "label": "Poison Grenade P2",
-      "duration_seconds": 3.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "hk_47_orbs_snipe_p2"
-      }
-    },
-    {
       "id": "hk_47_orbs_snipe_90",
       "label": "Snipe 90",
       "duration_seconds": 10.0,

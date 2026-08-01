@@ -38,12 +38,12 @@
       "is_alert": true
     },
     {
-      "id": "goldie_orbs_slam",
+      "id": "goldie_orbs_slam_2",
       "label": "Slam",
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4439110693421056"
+        "keyword": "Slam"
       }
     },
     {
@@ -52,16 +52,16 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4439097808519168"
+        "keyword": "Left-Handed Swipe"
       }
     },
     {
-      "id": "goldie_orbs_swipe",
+      "id": "goldie_orbs_swipe_2",
       "label": "Swipe_",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4439102103486464"
+        "keyword": "Right-Handed Swipe"
       }
     }
   ]

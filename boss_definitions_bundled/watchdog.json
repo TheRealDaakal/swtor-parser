@@ -253,6 +253,15 @@
       "is_alert": true
     },
     {
+      "id": "watchdog_orbs_wd_protocol_end",
+      "label": "WD Protocol END",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_orbs_wd_protocol_swap"
+      }
+    },
+    {
       "id": "watchdog_orbs_burn_hp",
       "label": "Burn HP",
       "duration_seconds": 10.0,
@@ -300,24 +309,6 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Stalker Protocol"
-      }
-    },
-    {
-      "id": "watchdog_orbs_missiles_p2_1st",
-      "label": "Missiles P2 1st",
-      "duration_seconds": 6.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "watchdog_orbs_bombs_p2_1st"
-      }
-    },
-    {
-      "id": "watchdog_orbs_polarized_beam_p2_1st",
-      "label": "Polarized Beam P2 1st",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "watchdog_orbs_bombs_p2_1st"
       }
     },
     {

@@ -43,7 +43,7 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4116970966351872"
+        "keyword": "Ground Pound"
       }
     },
     {
@@ -52,7 +52,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4116983851253760"
+        "keyword": "Fierce Swipe"
       }
     },
     {
@@ -61,7 +61,7 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4117353218441216"
+        "keyword": "Enraged Pounding"
       }
     }
   ]

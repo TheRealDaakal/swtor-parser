@@ -21,7 +21,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3251041134968832"
+        "keyword": "Kick"
       }
     },
     {
@@ -47,12 +47,12 @@
       "is_alert": true
     },
     {
-      "id": "asteroid_beast_orbs_rampage",
+      "id": "asteroid_beast_orbs_rampage_2",
       "label": "Rampage",
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3251036840001536"
+        "keyword": "Rampage"
       }
     }
   ]

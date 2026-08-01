@@ -306,7 +306,7 @@
       "duration_seconds": 55.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2988107532075008"
+        "keyword": "[aw_lightning_chain]"
       }
     },
     {
@@ -315,7 +315,7 @@
       "duration_seconds": 55.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2988369525080064"
+        "keyword": "[aw_lightning_field]"
       }
     },
     {
@@ -324,7 +324,7 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2988369525080064"
+        "keyword": "[aw_lightning_field]"
       }
     },
     {

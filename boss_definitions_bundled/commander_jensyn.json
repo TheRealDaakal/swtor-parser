@@ -53,7 +53,7 @@
       }
     },
     {
-      "id": "commander_jensyn_orbs_stun_add",
+      "id": "commander_jensyn_orbs_stun_add_2",
       "label": "Stun Add",
       "duration_seconds": 10.0,
       "trigger": {
@@ -68,7 +68,7 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3333800859795456"
+        "keyword": "Force Unleashed"
       }
     },
     {
@@ -77,11 +77,11 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3334715687829504"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3334715687829504"
       }
     },
     {
-      "id": "commander_jensyn_orbs_stun_add",
+      "id": "commander_jensyn_orbs_stun_add_3",
       "label": "Stun Add",
       "duration_seconds": 44.0,
       "trigger": {
@@ -95,7 +95,7 @@
       "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3486143349784576"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3486143349784576"
       }
     },
     {
@@ -113,17 +113,17 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3333392837902336"
+        "keyword": "Awe"
       },
       "is_alert": true
     },
     {
-      "id": "commander_jensyn_orbs_master_strike",
+      "id": "commander_jensyn_orbs_master_strike_2",
       "label": "Master Strike",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3333289758687232"
+        "keyword": "Master Strike"
       }
     }
   ]

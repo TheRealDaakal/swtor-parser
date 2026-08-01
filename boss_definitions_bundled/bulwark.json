@@ -92,7 +92,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2520437133148160"
+        "keyword": "Shielded Attack"
       },
       "is_alert": true
     },
@@ -102,7 +102,7 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2970463806423040"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2970463806423040"
       }
     },
     {
@@ -115,21 +115,21 @@
       }
     },
     {
-      "id": "bulwark_orbs_smash",
+      "id": "bulwark_orbs_smash_2",
       "label": "Smash",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2520419953278976"
+        "keyword": "Bulwark Smash"
       }
     },
     {
-      "id": "bulwark_orbs_missile",
+      "id": "bulwark_orbs_missile_2",
       "label": "Missile",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2520462902951936"
+        "keyword": "Dummy Missile"
       }
     }
   ]

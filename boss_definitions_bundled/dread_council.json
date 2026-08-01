@@ -752,7 +752,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3316389062377472"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3316389062377472"
       }
     },
     {
@@ -880,7 +880,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3362517011136512"
+        "keyword": "[dispense_pair]"
       }
     },
     {
@@ -889,7 +889,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3322870168027136"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3322870168027136"
       }
     },
     {
@@ -986,69 +986,6 @@
         "selector": [
           "Dread Master Raptus"
         ]
-      }
-    },
-    {
-      "id": "dread_council_orbs_force_cyclone_1st_vm",
-      "label": "Force Cyclone 1st VM",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_calphayus_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_smash_vm_1st",
-      "label": "Smash VM 1st",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_raptus_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_whirlwind_vm_1st",
-      "label": "Whirlwind VM 1st",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_raptus_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_deadly_slash_1st_vm",
-      "label": "Deadly Slash 1st VM",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_raptus_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_force_pull_1st_vm",
-      "label": "Force Pull 1st VM",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_tyrans_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_death_mark_1st_vm",
-      "label": "Death Mark 1st VM",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_tyrans_active_vm"
-      }
-    },
-    {
-      "id": "dread_council_orbs_tyrans_tp_1st_vm",
-      "label": "Tyrans TP 1st VM",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "dread_council_orbs_tyrans_active_vm"
       }
     }
   ]

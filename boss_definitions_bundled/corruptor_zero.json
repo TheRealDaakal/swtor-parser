@@ -165,6 +165,16 @@
       }
     },
     {
+      "id": "corruptor_zero_orbs_adds_1st",
+      "label": "Ranged Adds",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "corruptor_zero_orbs_adds_hp_1st"
+      },
+      "is_alert": true
+    },
+    {
       "id": "corruptor_zero_orbs_adds_hp_1st",
       "label": "Adds HP 1st",
       "duration_seconds": 10.0,

@@ -135,6 +135,26 @@
       }
     },
     {
+      "id": "sparky_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sparky_orbs_phase_2_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "sparky_orbs_burn_phase",
+      "label": "Burn phase",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sparky_orbs_burn_phase_hp"
+      },
+      "is_alert": true
+    },
+    {
       "id": "sparky_orbs_phase_2_hp",
       "label": "Phase 2 HP",
       "duration_seconds": 10.0,
@@ -157,6 +177,16 @@
           "Sparky"
         ]
       }
+    },
+    {
+      "id": "sparky_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sparky_orbs_phase_3_hp"
+      },
+      "is_alert": true
     },
     {
       "id": "sparky_orbs_phase_3_hp",
@@ -198,7 +228,7 @@
       }
     },
     {
-      "id": "sparky_orbs_body_slam",
+      "id": "sparky_orbs_body_slam_2",
       "label": "Body Slam",
       "duration_seconds": 25.0,
       "trigger": {

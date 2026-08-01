@@ -38,7 +38,7 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "811851898159104"
+        "keyword": "Full Auto"
       }
     },
     {
@@ -47,7 +47,7 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "830363207204864"
+        "keyword": "Concussion Charge"
       }
     }
   ]

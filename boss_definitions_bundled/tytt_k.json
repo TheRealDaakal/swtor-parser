@@ -552,12 +552,21 @@
       "is_alert": true
     },
     {
+      "id": "TYTT_K_orbs_adds_setup",
+      "label": "Adds setup",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "TYTT_K_orbs_adds"
+      }
+    },
+    {
       "id": "TYTT_K_orbs_adds",
       "label": "Adds",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4076168777039872"
+        "keyword": "[spawn_adds]"
       }
     },
     {
@@ -586,6 +595,16 @@
         "type": "ability_cast",
         "keyword": "Sweep"
       }
+    },
+    {
+      "id": "TYTT_K_orbs_p3_alert",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "TYTT_K_orbs_p3_hp"
+      },
+      "is_alert": true
     },
     {
       "id": "TYTT_K_orbs_p3_hp",

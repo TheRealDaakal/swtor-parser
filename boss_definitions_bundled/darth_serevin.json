@@ -20,12 +20,12 @@
   "counters": [],
   "timers": [
     {
-      "id": "darth_serevin_orbs_affliction",
-      "label": "Affliction",
-      "duration_seconds": 15.0,
+      "id": "darth_serevin_orbs_affliction_mm",
+      "label": "Affliction MM",
+      "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2074314585145344"
+        "keyword": "Affliction"
       }
     },
     {
@@ -65,30 +65,12 @@
       }
     },
     {
-      "id": "darth_serevin_orbs_affliction_mm",
-      "label": "Affliction MM",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "2520995478896640"
-      }
-    },
-    {
       "id": "darth_serevin_orbs_electro_storm",
       "label": "Electro Storm",
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2074318880112640"
-      }
-    },
-    {
-      "id": "darth_serevin_orbs_electro_storm_mm",
-      "label": "Electro Storm MM",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "2520986888962048"
+        "keyword": "Electro Storm"
       }
     }
   ]

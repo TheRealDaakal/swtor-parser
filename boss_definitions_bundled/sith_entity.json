@@ -16,24 +16,6 @@
   "counters": [],
   "timers": [
     {
-      "id": "sith_entity_orbs_knocback_1st",
-      "label": "Knocback 1st",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "sith_entity_orbs_affliction_1st"
-      }
-    },
-    {
-      "id": "sith_entity_orbs_force_lightning_1st",
-      "label": "Force Lightning 1st",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "sith_entity_orbs_knocback_1st"
-      }
-    },
-    {
       "id": "sith_entity_orbs_adds_75",
       "label": "Adds 75",
       "duration_seconds": 10.0,
@@ -67,24 +49,6 @@
         "selector": [
           "Sith Entity"
         ]
-      }
-    },
-    {
-      "id": "sith_entity_orbs_knockback_a",
-      "label": "Knockback A",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "sith_entity_orbs_affliction_a"
-      }
-    },
-    {
-      "id": "sith_entity_orbs_force_lightning_a",
-      "label": "Force Lightning A",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "sith_entity_orbs_knockback_a"
       }
     }
   ]

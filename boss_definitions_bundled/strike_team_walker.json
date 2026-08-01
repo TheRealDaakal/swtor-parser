@@ -21,17 +21,18 @@
       "duration_seconds": 80.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4140206739423232"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4140206739423232"
       }
     },
     {
       "id": "strike_team_walker_orbs_orbital_laser",
       "label": "Orbital Laser",
-      "duration_seconds": 12.0,
+      "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4137865982246912"
-      }
+        "keyword": "Orbital Laser"
+      },
+      "is_alert": true
     },
     {
       "id": "strike_team_walker_orbs_burst_wave",
@@ -39,7 +40,7 @@
       "duration_seconds": 22.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4143638418292736"
+        "keyword": "Burst Wave"
       }
     },
     {
@@ -48,7 +49,7 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4138295478976512"
+        "keyword": "Rain of Fire"
       }
     },
     {
@@ -57,7 +58,7 @@
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4138033485971456"
+        "keyword": "Calibrating Weapons System"
       }
     },
     {
@@ -66,7 +67,16 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4137853097345024"
+        "keyword": "Shock and Awe"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_orbital_laser_2",
+      "label": "Orbital Laser",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Orbital Laser"
       }
     }
   ]

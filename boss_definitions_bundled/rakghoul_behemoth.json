@@ -65,12 +65,12 @@
       }
     },
     {
-      "id": "rakghoul_behemoth_orbs_smash",
+      "id": "rakghoul_behemoth_orbs_smash_2",
       "label": "Smash",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2765327578431488"
+        "keyword": "Smash"
       }
     },
     {
@@ -79,7 +79,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "2765336168366080"
+        "keyword": "Lift"
       }
     }
   ]

@@ -521,7 +521,7 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3302168425660416"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3302168425660416"
       }
     },
     {
@@ -565,6 +565,16 @@
       }
     },
     {
+      "id": "raptus_orbs_spinning_1st",
+      "label": "Spinning",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_orbs_spinning_hp"
+      },
+      "is_alert": true
+    },
+    {
       "id": "raptus_orbs_spinning_hp",
       "label": "Spinning HP",
       "duration_seconds": 10.0,
@@ -577,12 +587,21 @@
       }
     },
     {
+      "id": "raptus_orbs_spinning",
+      "label": "Spinning",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "raptus_orbs_spinnin_over"
+      }
+    },
+    {
       "id": "raptus_orbs_spinnin_over",
       "label": "Spinnin Over",
       "duration_seconds": 23.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "3356173344440320"
+        "keyword": "Spinning Attack"
       }
     },
     {

@@ -21,7 +21,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4129623940005888"
+        "keyword": "[poison_breath_permission]"
       }
     },
     {
@@ -30,7 +30,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4121394782666752"
+        "keyword": "Pounce"
       }
     },
     {
@@ -39,7 +39,7 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4129623940005888"
+        "keyword": "[poison_breath_permission]"
       },
       "is_alert": true
     },
@@ -49,7 +49,7 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "4121652480704512"
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4121652480704512"
       }
     }
   ]
