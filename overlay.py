@@ -239,12 +239,14 @@ class BarOverlay:
 
     def _text(self, x, y, s, fill=TEXT, anchor="w", font=FONT):
         """Text with a 1px black outline -- Canvas has no stroke option, and
-        unoutlined text disappears against a bright game background."""
+        unoutlined text disappears against a bright game background.
+        Returns the visible (non-outline) item id, e.g. for bbox() to place
+        another piece of text right after this one."""
         for dx, dy in ((-1, 0), (1, 0), (0, -1), (0, 1),
                        (-1, -1), (1, -1), (-1, 1), (1, 1)):
             self.canvas.create_text(x + dx, y + dy, text=s, fill=OUTLINE,
                                     anchor=anchor, font=font)
-        self.canvas.create_text(x, y, text=s, fill=fill, anchor=anchor, font=font)
+        return self.canvas.create_text(x, y, text=s, fill=fill, anchor=anchor, font=font)
 
     def _rounded_rect(self, x1, y1, x2, y2, radius, **kwargs):
         """Smoothed 12-point polygon -- Canvas has no native rounded-rect
@@ -281,7 +283,10 @@ class BarOverlay:
         return h
 
     def render(self, rows, total=None, subtitle=None):
-        """rows: list of (name, value), already sorted desc."""
+        """rows: list of (name, value) or (name, value, crit_pct), already
+        sorted desc. crit_pct is optional (None for kinds where it isn't
+        meaningful, e.g. Damage Taken/Threat) and drawn dim right after the
+        name when present."""
         self._last_render = ((rows,), {"total": total, "subtitle": subtitle})
         c = self.canvas
         c.delete("all")
@@ -299,10 +304,16 @@ class BarOverlay:
                        fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
 
         y = PAD_TOP + HEADER_H
-        top = max((v for _n, v in rows), default=0) or 1
+        top = max((r[1] for r in rows), default=0) or 1
         track_w = self.width - PAD_X - cx
-        for name, value in rows:
-            self._text(cx, y + 12, name[:18], font=FONT)
+        for row in rows:
+            name, value = row[0], row[1]
+            crit_pct = row[2] if len(row) > 2 else None
+            name_id = self._text(cx, y + 12, name[:18], font=FONT)
+            if crit_pct is not None:
+                _x0, _y0, name_right, _y1 = c.bbox(name_id)
+                self._text(name_right + 6, y + 12, f"{crit_pct:.0f}%",
+                           fill=TEXT_DIM, font=FONT_SMALL)
             self._text(self.width - PAD_X, y + 12, compact(value),
                        fill=colour, anchor="e", font=FONT_VALUE)
             # Thin rounded-cap meter, not a full-height block -- shows the

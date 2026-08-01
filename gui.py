@@ -223,26 +223,46 @@ class OverlayManager:
         boss = self.boss_state.status_text() if self.boss_state else None
         for o in self.bar_overlays:
             kind = getattr(o, "kind", None)
-            if kind in ("dps", "hps", "taken"):
-                idx = {"dps": 1, "hps": 2, "taken": 3}[kind]
-                data = sorted(((r[0], r[idx]) for r in rows), key=lambda r: -r[1])
+            if kind == "taken":
+                data = sorted(((r[0], r[3]) for r in rows), key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
-                o.render(data, total=sum(r[1] for r in data),
-                         subtitle=boss if kind == "dps" else None)
+                o.render(data, total=sum(r[1] for r in data))
+            elif kind == "dps":
+                # Attaches each player's crit_pct() as a 3rd tuple element --
+                # see BarOverlay.render's optional crit_pct display.
+                entities = self.tracker.current.players
+                data = sorted(
+                    ((r[0], r[1], entities[r[0]].crit_pct()) for r in rows if r[0] in entities),
+                    key=lambda r: -r[1],
+                )
+                data = [r for r in data if r[1] > 0]
+                o.render(data, total=sum(r[1] for r in data), subtitle=boss)
+            elif kind == "hps":
+                entities = self.tracker.current.players
+                data = sorted(
+                    ((r[0], r[2], entities[r[0]].heal_crit_pct()) for r in rows if r[0] in entities),
+                    key=lambda r: -r[1],
+                )
+                data = [r for r in data if r[1] > 0]
+                o.render(data, total=sum(r[1] for r in data))
             elif kind == "effective_hps":
                 # Reads PlayerStats directly since the compact snapshot()
                 # tuple only carries raw healing_done, not overheal.
                 entities = [p for p in self.tracker.current.players.values() if p.is_player]
-                data = sorted(((p.name, p.effective_hps(duration)) for p in entities),
-                              key=lambda r: -r[1])
+                data = sorted(
+                    ((p.name, p.effective_hps(duration), p.heal_crit_pct()) for p in entities),
+                    key=lambda r: -r[1],
+                )
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
             elif kind == "boss_dps":
                 active = self.boss_state.active_boss if self.boss_state else None
                 boss_names = active.boss_names if active else []
                 entities = [p for p in self.tracker.current.players.values() if p.is_player]
-                data = sorted(((p.name, p.boss_dps(boss_names, duration)) for p in entities),
-                              key=lambda r: -r[1])
+                data = sorted(
+                    ((p.name, p.boss_dps(boss_names, duration), p.crit_pct()) for p in entities),
+                    key=lambda r: -r[1],
+                )
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data), subtitle=boss)
             elif kind == "absorbed":
