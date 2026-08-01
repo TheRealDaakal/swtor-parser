@@ -168,7 +168,8 @@ def build_ability_breakdown(encounter, player_name, boss_state):
     }
 
 
-def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status):
+def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
+                  update_holder=None):
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
 
@@ -240,6 +241,16 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
 
             if u.path == "/api/live":
                 return self._json(build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status))
+
+            if u.path == "/api/update":
+                # update_holder.result is set once, in the background, by
+                # the startup check in main.py -- this just returns whatever
+                # it currently is (None until that check completes, or
+                # forever if it found nothing newer / couldn't reach GitHub).
+                result = update_holder.result if update_holder else None
+                if result is None:
+                    return self._json({"available": False})
+                return self._json({"available": True, **result})
 
             if u.path == "/api/history":
                 return self._json(build_history_list(tracker))
@@ -502,6 +513,7 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
 
 
 def make_server(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                 port: int = 8766) -> ThreadingHTTPServer:
-    handler = make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status)
+                 port: int = 8766, update_holder=None) -> ThreadingHTTPServer:
+    handler = make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
+                            update_holder=update_holder)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)

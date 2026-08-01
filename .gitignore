@@ -12,3 +12,8 @@ venv/
 # in %APPDATA%\swtor-parser\, so there's nothing sensitive to catch here)
 *.txt
 corpus_index.json
+
+# PyInstaller build output -- built by build.ps1, not checked in. Built
+# releases get uploaded as GitHub Release assets instead.
+build/
+dist/

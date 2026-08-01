@@ -17,6 +17,13 @@
   .timer-row .meter { flex: 1; }
   .alert-banner { font-size: 15px; font-weight: 700; color: var(--critical);
     letter-spacing: .02em; padding: 3px 0; }
+  .update-banner { display: flex; align-items: center; gap: 12px;
+    padding: 8px 16px; background: var(--good); color: #fff;
+    font-size: 13px; }
+  .update-banner a { color: #fff; font-weight: 700; text-decoration: underline; }
+  .update-banner button { margin-left: auto; background: none; border: none;
+    color: #fff; font-size: 16px; line-height: 1; cursor: pointer; opacity: .8; }
+  .update-banner button:hover { opacity: 1; }
   .live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 820px) { .live-grid { grid-template-columns: 1fr; } }
 
@@ -54,6 +61,12 @@
   <div class="status" id="boss-status">—</div>
   <div class="status" id="duration">Encounter: 0.0s</div>
 </header>
+
+<div class="update-banner" id="update-banner" style="display:none">
+  <span id="update-banner-text"></span>
+  <a id="update-banner-link" href="#" target="_blank" rel="noopener">Download</a>
+  <button type="button" id="update-banner-dismiss" aria-label="Dismiss">&times;</button>
+</div>
 
 <main>
 

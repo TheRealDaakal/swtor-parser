@@ -17,6 +17,8 @@ from pathlib import Path
 
 import log_watcher
 import storage
+import update_check
+from version import __version__
 from log_parser import parse_line
 from stats import StatsTracker
 from timers import TimerEngine
@@ -39,6 +41,21 @@ class StatusHolder:
 
     def __init__(self):
         self.text = "Waiting for combat log..."
+
+
+class UpdateHolder:
+    """Holds the result of the one-shot startup update check (see
+    update_check.py) -- None until that background thread finishes, then
+    either stays None (nothing newer / check failed) or holds
+    {"version", "url"} for the web UI's update banner to read via
+    /api/update. Never re-checked after startup."""
+
+    def __init__(self):
+        self.result = None
+
+
+def _check_for_update_once(holder: "UpdateHolder"):
+    holder.result = update_check.check_for_update(__version__)
 
 
 def background_reader(
@@ -152,6 +169,8 @@ def main():
     # either: a trash-pull taunt swap matters just as much as a boss one.
     taunt_tracker = TauntTracker()
     status = StatusHolder()
+    update_holder = UpdateHolder()
+    threading.Thread(target=_check_for_update_once, args=(update_holder,), daemon=True).start()
 
     # Custom (Timers-tab) rules and completed pulls both need to survive a
     # restart. This used to happen in gui.py's MeterWindow.__init__; now
@@ -205,7 +224,8 @@ def main():
 
     web_port = 8766
     server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
-                                     overlay_manager, status, port=web_port)
+                                     overlay_manager, status, port=web_port,
+                                     update_holder=update_holder)
     threading.Thread(target=server.serve_forever, daemon=True).start()
 
     window_ref = {}

@@ -7,7 +7,9 @@ player in an always-on-top window while you raid.
 ## Requirements
 
 - Python 3.8+ (tkinter is included with standard Python on Windows)
-- `pip install requests` — needed for Parsely uploads
+- `pip install pywebview requests` — pywebview drives the whole tabbed UI
+  (Live/History/Timers/Overlays/Import Logs/Parsely), requests is needed
+  for Parsely uploads
 - SWTOR combat logging enabled: in-game, press **Ctrl+P** → Preferences →
   Combat Logging → check "Enable combat logging to file"
 - Optional, for spoken (not just beeped) timer alerts:
@@ -27,6 +29,25 @@ If it can't find it (custom install location), pass the path directly:
 ```
 python main.py "D:\Games\SWTOR\CombatLogs"
 ```
+
+## Building a release
+
+For distributing to people who don't have Python installed, `build.ps1`
+packages the app into a standalone Windows folder via PyInstaller:
+
+```
+pip install pyinstaller
+.\build.ps1
+```
+
+This produces `dist\DPS-Dynamic-Parse-System\` (the runnable app — ship the
+whole folder, not just the .exe) and a versioned zip,
+`dist\swtor-parser-v<version>-win64.zip`, ready to attach to a GitHub
+Release. Bump `__version__` in `version.py` before building a new release —
+that's what the app compares against GitHub's latest release tag to decide
+whether to show the "update available" banner (see `update_check.py`; it
+checks once at startup and never blocks the app if the check fails or the
+repo isn't public yet).
 
 ## Corpus analytics (the part that isn't a BARAS clone)
 

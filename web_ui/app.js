@@ -602,6 +602,30 @@ $('#p-upload-current').addEventListener('click', async () => {
   $('#p-status').textContent = result.success ? `Uploaded: ${result.link}` : `Upload failed: ${result.error}`;
 });
 
+// --------------------------------------------------------- update banner
+// The backend only checks GitHub once, at startup (see main.py's
+// UpdateHolder) -- no need to keep polling /api/update for the rest of
+// the session. Check once on load, then once more shortly after in case
+// that background thread hadn't finished yet on first paint.
+let updateDismissed = false;
+async function checkForUpdate() {
+  if (updateDismissed) return;
+  try {
+    const data = await api('/api/update');
+    if (data.available && !updateDismissed) {
+      $('#update-banner-text').textContent = `A new version is available: v${data.version}`;
+      $('#update-banner-link').href = data.url;
+      $('#update-banner').style.display = '';
+    }
+  } catch (e) { /* silent -- an update check failing is never worth surfacing */ }
+}
+$('#update-banner-dismiss').addEventListener('click', () => {
+  updateDismissed = true;
+  $('#update-banner').style.display = 'none';
+});
+checkForUpdate();
+setTimeout(checkForUpdate, 5000);
+
 // ------------------------------------------------------------- tab poll
 setInterval(refreshActiveTab, TAB_POLL_MS);
 
