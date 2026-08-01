@@ -619,6 +619,105 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "nahut_k_orbs_discharge_1st",
+      "label": "Discharge 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4133906022400000"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_slice",
+      "label": "Slice",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Energized Slice"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_suppression",
+      "label": "Suppression",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Suppression Burst"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_mass_distortion_p1",
+      "label": "Mass Distortion P1",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pursuit"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_p1_2nd",
+      "label": "P1 2nd",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 76.67,
+        "selector": [
+          "NAHUT"
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_orbs_p1_3rd",
+      "label": "P1 3rd",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "NAHUT"
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_orbs_p1_1st",
+      "label": "P1 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 88.33,
+        "selector": [
+          "NAHUT"
+        ]
+      }
+    },
+    {
+      "id": "nahut_k_orbs_turret_spawn",
+      "label": "Turret Spawn",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134120770764800"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_suppression_cd",
+      "label": "Suppression CD",
+      "duration_seconds": 60.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Suppression Burst"
+      }
+    },
+    {
+      "id": "nahut_k_orbs_mass_distortion",
+      "label": "Mass Distortion",
+      "duration_seconds": 12.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mass Distortion"
+      }
     }
   ]
 }

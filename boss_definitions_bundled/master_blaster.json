@@ -715,6 +715,71 @@
         "type": "phase_entered",
         "phase_id": "master_blaster_p3_t"
       }
+    },
+    {
+      "id": "master_blaster_orbs_3rd_rop_dmg",
+      "label": "3rd ROP DMG",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "master_blaster_orbs_2n_rop_dmg"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_rop_shield_down",
+      "label": "ROP Shield down",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "master_blaster_orbs_3rd_rop_dmg"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_rain_of_pain",
+      "label": "Rain of Pain",
+      "duration_seconds": 49.4,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "master_blaster_orbs_rop_shield_down"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_ion_cutter",
+      "label": "Ion Cutter",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Fire Wheel of Death"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_1st_rop_dmg",
+      "label": "1st ROP DMG",
+      "duration_seconds": 11.6,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rain of Pain"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_scatterblast_m",
+      "label": "Scatterblast M",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3421916408840192"
+      }
+    },
+    {
+      "id": "master_blaster_orbs_fire_wheel_1st",
+      "label": "Fire Wheel 1st",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "BO-55 Master Droid"
+        ]
+      }
     }
   ]
 }

@@ -83,6 +83,73 @@
         "type": "ability_cast",
         "keyword": "Spawn Adds"
       }
+    },
+    {
+      "id": "thrasher_orbs_double_wave",
+      "label": "Double Wave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Thrasher"
+        ]
+      }
+    },
+    {
+      "id": "thrasher_orbs_double_alert",
+      "label": "Double Wave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "thrasher_orbs_double_wave"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "thrasher_orbs_firebug",
+      "label": "Firebug",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spawn Hazard"
+      }
+    },
+    {
+      "id": "thrasher_orbs_firebug",
+      "label": "Firebug_",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3060692479377408"
+      }
+    },
+    {
+      "id": "thrasher_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Spawn Adds"
+      }
+    },
+    {
+      "id": "thrasher_orbs_knockback_180",
+      "label": "Knockback 180",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Head Butt"
+      }
+    },
+    {
+      "id": "thrasher_orbs_knockback_360",
+      "label": "Knockback 360",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3262208049938432"
+      }
     }
   ]
 }

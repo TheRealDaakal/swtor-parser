@@ -17,5 +17,109 @@
     }
   ],
   "counters": [],
-  "timers": []
+  "timers": [
+    {
+      "id": "foreman_crusher_orbs_hp_80",
+      "label": "HP 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_60",
+      "label": "HP 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_40",
+      "label": "HP 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_20",
+      "label": "HP 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_75",
+      "label": "HP 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_50",
+      "label": "HP 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_hp_25",
+      "label": "HP 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Foreman Crusher"
+        ]
+      }
+    },
+    {
+      "id": "foreman_crusher_orbs_rock_throw",
+      "label": "Rock Throw",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rock Throw"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "foreman_crusher_orbs_frenzy_p",
+      "label": "Frenzy(P)",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Perforating Rend"
+      }
+    }
+  ]
 }

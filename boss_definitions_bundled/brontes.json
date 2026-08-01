@@ -191,6 +191,158 @@
         "type": "ability_cast",
         "keyword": "Arcing Assault"
       }
+    },
+    {
+      "id": "brontes_orbs_clone_hp_1st",
+      "label": "Clone HP 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 96.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "brontes_orbs_clone_1st",
+      "label": "Clone 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_orbs_clone_hp_1st"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "brontes_orbs_cant_clone_hp",
+      "label": "Cant Clone HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 52.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "brontes_orbs_cant_clone",
+      "label": "Cant Clone",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_orbs_cant_clone_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "brontes_orbs_clone",
+      "label": "Clone",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3309152042483712"
+      }
+    },
+    {
+      "id": "brontes_orbs_energy_sphere_p3_hp",
+      "label": "Energy Sphere P3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 67.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "brontes_orbs_energy_sphere_p3_1st",
+      "label": "Energy Sphere P3 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_orbs_energy_sphere_p3_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "brontes_orbs_overcharge_1st",
+      "label": "Overcharge 1st",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3313824966901760"
+      }
+    },
+    {
+      "id": "brontes_orbs_fingers_knockback_1st",
+      "label": "Fingers Knockback 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3303572879966208"
+      }
+    },
+    {
+      "id": "brontes_orbs_phase_5",
+      "label": "Phase 5",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3301459756056576"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "brontes_orbs_energy_sphere_p3",
+      "label": "Energy Sphere P3",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3313167836905472"
+      }
+    },
+    {
+      "id": "brontes_orbs_phase_6",
+      "label": "Phase 6",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Supremacy"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "brontes_orbs_overcharge",
+      "label": "Overcharge",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Overcharge"
+      }
+    },
+    {
+      "id": "brontes_orbs_fingers_knockback",
+      "label": "Fingers Knockback_",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "brontes_orbs_fingers_knockback"
+      }
+    },
+    {
+      "id": "brontes_orbs_fingers_count",
+      "label": "Fingers Count",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3275642707640320"
+        ]
+      },
+      "is_alert": true
     }
   ]
 }

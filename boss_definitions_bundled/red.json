@@ -1,7 +1,9 @@
 {
   "id": "red",
   "name": "Red",
-  "boss_names": ["Red"],
+  "boss_names": [
+    "Red"
+  ],
   "phases": [
     {
       "id": "red_red",
@@ -9,23 +11,43 @@
       "start_trigger": {
         "type": "any_of",
         "conditions": [
-          { "type": "combat_start" },
-          { "type": "phase_ended", "phase_id": "red_bull" }
+          {
+            "type": "combat_start"
+          },
+          {
+            "type": "phase_ended",
+            "phase_id": "red_bull"
+          }
         ]
       }
     },
     {
       "id": "red_bull",
       "name": "Bull",
-      "start_trigger": { "type": "npc_appears", "selector": ["Bull"] },
-      "end_trigger": { "type": "entity_death", "selector": ["Bull"] }
+      "start_trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Bull"
+        ]
+      },
+      "end_trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Bull"
+        ]
+      }
     }
   ],
   "counters": [
     {
       "id": "red_bulls_killed",
       "name": "Bulls Killed",
-      "increment_on": { "type": "entity_death", "selector": ["Bull"] }
+      "increment_on": {
+        "type": "entity_death",
+        "selector": [
+          "Bull"
+        ]
+      }
     }
   ],
   "timers": [
@@ -33,13 +55,18 @@
       "id": "red_bull_cs",
       "label": "Bull",
       "duration_seconds": 60.0,
-      "trigger": { "type": "combat_start" }
+      "trigger": {
+        "type": "combat_start"
+      }
     },
     {
       "id": "red_bull_gives_u_wings",
       "label": "Bull",
       "duration_seconds": 60.0,
-      "trigger": { "type": "timer_expires", "timer_id": "red_bull_cs" },
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_bull_cs"
+      },
       "repeat_interval_seconds": 60.0,
       "repeat_count": 4
     },
@@ -48,7 +75,10 @@
       "label": "Enrage + Bull",
       "duration_seconds": 480.0,
       "warn_seconds_before": 60.0,
-      "trigger": { "type": "timer_expires", "timer_id": "red_bull_gives_u_wings" }
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_bull_gives_u_wings"
+      }
     },
     {
       "label": "Flower buff expired",
@@ -63,23 +93,114 @@
       "id": "red_hydrochloric_pool_cs",
       "label": "Hydrochloric Pool",
       "duration_seconds": 15.0,
-      "trigger": { "type": "combat_start" }
+      "trigger": {
+        "type": "combat_start"
+      }
     },
     {
       "label": "Hydrochloric Pool",
       "duration_seconds": 47.0,
-      "trigger": { "type": "ability_cast", "keyword": "Hydrochloric Pool" }
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Hydrochloric Pool"
+      }
     },
     {
       "id": "red_acidic_jet_1st",
       "label": "Acidic Jet",
       "duration_seconds": 20.0,
-      "trigger": { "type": "combat_start" }
+      "trigger": {
+        "type": "combat_start"
+      }
     },
     {
       "label": "Acidic Jet",
       "duration_seconds": 30.0,
-      "trigger": { "type": "ability_cast", "keyword": "Acidic Jet" }
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acidic Jet"
+      }
+    },
+    {
+      "id": "red_orbs_bull_2nd",
+      "label": "Bull 2nd",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_1st"
+      }
+    },
+    {
+      "id": "red_orbs_bull_3rd",
+      "label": "Bull 3rd",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_2nd"
+      }
+    },
+    {
+      "id": "red_orbs_bull_4th",
+      "label": "Bull 4th",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_3rd"
+      }
+    },
+    {
+      "id": "red_orbs_bull_5th",
+      "label": "Bull 5th",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_4th"
+      }
+    },
+    {
+      "id": "red_orbs_bull_6th",
+      "label": "Bull 6th",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_5th"
+      }
+    },
+    {
+      "id": "red_orbs_bull_7th",
+      "label": "Bull 7th",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_6th"
+      }
+    },
+    {
+      "id": "red_orbs_enrage_bull",
+      "label": "Enrage + Bull",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "red_orbs_bull_7th"
+      }
+    },
+    {
+      "id": "red_orbs_hydrochloric_pool",
+      "label": "Hydrochloric Pool",
+      "duration_seconds": 47.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Hydrochloric Pool"
+      }
+    },
+    {
+      "id": "red_orbs_acidic_jet",
+      "label": "Acidic Jet",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acidic Jet"
+      }
     }
   ]
 }

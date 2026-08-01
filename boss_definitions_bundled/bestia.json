@@ -456,6 +456,156 @@
           "value": 0.0
         }
       ]
+    },
+    {
+      "id": "bestia_orbs_a3_larva",
+      "label": "A3: larva ",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a2_monster"
+      }
+    },
+    {
+      "id": "bestia_orbs_a4_monster",
+      "label": "A4: Monster",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a3_larva"
+      }
+    },
+    {
+      "id": "bestia_orbs_a5_tentacle",
+      "label": "A5: Tentacle",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a4_monster"
+      }
+    },
+    {
+      "id": "bestia_orbs_a6_larva",
+      "label": "A6: Larva",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a5_tentacle"
+      }
+    },
+    {
+      "id": "bestia_orbs_a9_monster_larva_2nd",
+      "label": "A9: Monster + Larva 2nd",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a8_monster_tentacle_1st"
+      }
+    },
+    {
+      "id": "bestia_orbs_a10_monster_tentacle_2nd",
+      "label": "A10: Monster + Tentacle 2nd",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a9_monster_larva_2nd"
+      }
+    },
+    {
+      "id": "bestia_orbs_a11_monster_larva_3rd",
+      "label": "A11: Monster + Larva 3rd",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a10_monster_tentacle_2nd"
+      }
+    },
+    {
+      "id": "bestia_orbs_a12_tentacle_larva",
+      "label": "A12: Tentacle + Larva",
+      "duration_seconds": 48.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a11_monster_larva_3rd"
+      }
+    },
+    {
+      "id": "bestia_orbs_bestia_p3_hp_mm",
+      "label": "Bestia P3 HP_MM",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Dread Master Bestia"
+        ]
+      }
+    },
+    {
+      "id": "bestia_orbs_bestia_p3_hp_vm",
+      "label": "Bestia P3 HP_VM",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Bestia"
+        ]
+      }
+    },
+    {
+      "id": "bestia_orbs_swelling_despair",
+      "label": "Swelling Despair",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Swelling Despair"
+      }
+    },
+    {
+      "id": "bestia_orbs_dread_strike",
+      "label": "Dread Strike",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Dread Strike"
+      }
+    },
+    {
+      "id": "bestia_orbs_combusting_seed",
+      "label": "Combusting Seed",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3294102477078528"
+      }
+    },
+    {
+      "id": "bestia_orbs_dread_pool",
+      "label": "Dread Pool",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3301519885598720"
+      }
+    },
+    {
+      "id": "bestia_orbs_bestia_active_vm",
+      "label": "Bestia Active_VM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a6_larva"
+      }
+    },
+    {
+      "id": "bestia_orbs_bestia_active_mm",
+      "label": "Bestia Active_MM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bestia_orbs_a6_larva"
+      }
     }
   ]
 }

@@ -292,6 +292,204 @@
         "type": "ability_cast",
         "keyword": "Land Mine"
       }
+    },
+    {
+      "id": "coratanni_orbs_phase_2_hp",
+      "label": "Phase 2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "Coratanni"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_phase_3_hp",
+      "label": "Phase 3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Coratanni"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_phase_3_bird",
+      "label": "Phase 3 (Bird)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "coratanni_orbs_phase_3_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "coratanni_orbs_ricochet",
+      "label": "Ricochet",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3372880767221760"
+      }
+    },
+    {
+      "id": "coratanni_orbs_cannon_shot",
+      "label": "Cannon Shot",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3374298106429440"
+      }
+    },
+    {
+      "id": "coratanni_orbs_phase_2_cannons",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "coratanni_orbs_phase_2_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "coratanni_orbs_jet_boost_1st",
+      "label": "Jet Boost 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Ruugar"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_focus",
+      "label": "Focus",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Focus"
+      }
+    },
+    {
+      "id": "coratanni_orbs_grapple_1st",
+      "label": "Grapple 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Ruugar"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_grapple",
+      "label": "Grapple",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3378185051832320"
+      }
+    },
+    {
+      "id": "coratanni_orbs_cull_1st",
+      "label": "Cull 1st",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Ruugar"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_cull",
+      "label": "Cull",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Cull"
+      }
+    },
+    {
+      "id": "coratanni_orbs_death_mouse",
+      "label": "Death Mouse",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3438825695084544"
+      }
+    },
+    {
+      "id": "coratanni_orbs_death_mouse_1st",
+      "label": "Death Mouse 1st",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Ruugar"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_focus_hostage",
+      "label": "Focus + Hostage",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Ruugar"
+        ]
+      }
+    },
+    {
+      "id": "coratanni_orbs_hostage",
+      "label": "Hostage",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Hostage Situation"
+      }
+    },
+    {
+      "id": "coratanni_orbs_aoe_knockback_rng",
+      "label": "AoE knockback(RNG)",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Jet Boost"
+      }
+    },
+    {
+      "id": "coratanni_orbs_jest_boost",
+      "label": "Jest Boost_",
+      "duration_seconds": 15.6,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Knockback"
+      }
+    },
+    {
+      "id": "coratanni_orbs_jet_boost",
+      "label": "Jet Boost",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "coratanni_orbs_aoe_knockback_rng"
+      }
+    },
+    {
+      "id": "coratanni_orbs_can_t_grapple",
+      "label": "Can't Grapple",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Land Mine"
+      }
     }
   ]
 }

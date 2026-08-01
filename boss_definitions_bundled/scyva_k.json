@@ -828,6 +828,120 @@
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p4_c"
       }
+    },
+    {
+      "id": "SCYVA_K_orbs_upheaval",
+      "label": "Upheaval",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Upheaval"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_1st_beam",
+      "label": "1st beam",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Emergency Purge"
+        ]
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_red_catalyst_1st",
+      "label": "Red Catalyst 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_1st_beam"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_double_catalyst_1st",
+      "label": "Double Catalyst 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_red_catalyst_1st"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_red_catalyst_2nd",
+      "label": "Red Catalyst 2nd",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_double_catalyst_1st"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_5th_beam",
+      "label": "5th Beam",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_red_catalyst_2nd"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_double_catalyst_2nd",
+      "label": "Double Catalyst 2nd",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_5th_beam"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_7th_beam",
+      "label": "7th Beam",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_double_catalyst_2nd"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_scyva_vulnarable",
+      "label": "SCYVA Vulnarable",
+      "duration_seconds": 68.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_7th_beam"
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_phase_5_hp",
+      "label": "Phase 5 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "SCYVA"
+        ]
+      }
+    },
+    {
+      "id": "SCYVA_K_orbs_phase_5",
+      "label": "Phase 5",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "SCYVA_K_orbs_phase_5_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "SCYVA_K_orbs_atomic_p5_1st",
+      "label": "Atomic P5 1st",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Initialize Extinction Protocols"
+      }
     }
   ]
 }

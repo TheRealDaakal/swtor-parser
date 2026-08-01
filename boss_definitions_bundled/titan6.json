@@ -137,6 +137,64 @@
         "keyword": "Huge Grenade",
         "target": "local_player"
       }
+    },
+    {
+      "id": "titan6_orbs_reposition",
+      "label": "Reposition",
+      "duration_seconds": 16.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Launch"
+      }
+    },
+    {
+      "id": "titan6_orbs_bunrn_hp",
+      "label": "Bunrn HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Titan 6"
+        ]
+      }
+    },
+    {
+      "id": "titan6_orbs_burn",
+      "label": "Burn",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "titan6_orbs_bunrn_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "titan6_orbs_huge_grenade_b",
+      "label": "Huge Grenade (B)",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3255761304027136"
+      }
+    },
+    {
+      "id": "titan6_orbs_explosive_charge",
+      "label": "Explosive Charge",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Explosive Charge"
+      }
+    },
+    {
+      "id": "titan6_orbs_lots_of_missiles",
+      "label": "Lots of Missiles",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Lots of Missiles"
+      }
     }
   ]
 }

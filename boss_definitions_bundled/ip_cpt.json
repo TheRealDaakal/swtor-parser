@@ -275,6 +275,51 @@
         "type": "timer_expires",
         "timer_id": "ip_cpt_4th_intrusion_units"
       }
+    },
+    {
+      "id": "ip_cpt_orbs_p2_turrets",
+      "label": "P2 Turrets",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_orbs_p2_bombs_2"
+      }
+    },
+    {
+      "id": "ip_cpt_orbs_p2_droids",
+      "label": "P2 Droids",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_orbs_p2_bombs_1"
+      }
+    },
+    {
+      "id": "ip_cpt_orbs_p4_turrets",
+      "label": "P4 Turrets",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_orbs_p4_bombs_1"
+      }
+    },
+    {
+      "id": "ip_cpt_orbs_p4_bombs_2",
+      "label": "P4 Bombs 2",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_orbs_p4_turrets"
+      }
+    },
+    {
+      "id": "ip_cpt_orbs_p4_droids",
+      "label": "P4 Droids",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ip_cpt_orbs_p4_bombs_2"
+      }
     }
   ]
 }

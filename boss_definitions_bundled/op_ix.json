@@ -233,6 +233,85 @@
         "keyword": "Yellow Deletion Protocol"
       },
       "is_alert": true
+    },
+    {
+      "id": "op_ix_orbs_black_obtuse_1st_hp",
+      "label": "Black Obtuse 1st HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Operator IX"
+        ]
+      }
+    },
+    {
+      "id": "op_ix_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "op_ix_orbs_black_obtuse_1st_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "op_ix_orbs_black_obtuse",
+      "label": "Black Obtuse",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Black Obtuse"
+      }
+    },
+    {
+      "id": "op_ix_orbs_adds_30",
+      "label": "Adds 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Operator IX"
+        ]
+      }
+    },
+    {
+      "id": "op_ix_orbs_adds_50",
+      "label": "Adds 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Operator IX"
+        ]
+      }
+    },
+    {
+      "id": "op_ix_orbs_adds_70",
+      "label": "Adds 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "Operator IX"
+        ]
+      }
+    },
+    {
+      "id": "op_ix_orbs_adds_90",
+      "label": "Adds 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Operator IX"
+        ]
+      }
     }
   ]
 }

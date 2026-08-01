@@ -297,6 +297,182 @@
       "trigger": {
         "type": "combat_start"
       }
+    },
+    {
+      "id": "revan_orbs_phase_2_hp",
+      "label": "Phase 2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 64.51,
+        "selector": [
+          "Revan"
+        ]
+      }
+    },
+    {
+      "id": "revan_orbs_phase_5_hp",
+      "label": "Phase 5 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 29.0,
+        "selector": [
+          "Revan"
+        ]
+      }
+    },
+    {
+      "id": "revan_orbs_phase_7_hp",
+      "label": "Phase 7 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.01,
+        "selector": [
+          "Revan"
+        ]
+      }
+    },
+    {
+      "id": "revan_orbs_heave",
+      "label": "Heave",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Heave"
+      }
+    },
+    {
+      "id": "revan_orbs_overcharge",
+      "label": "Overcharge",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Saber Overcharge"
+      }
+    },
+    {
+      "id": "revan_orbs_flying_sabers",
+      "label": "Flying Sabers",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Wield"
+      }
+    },
+    {
+      "id": "revan_orbs_trail_of_agony",
+      "label": "Trail of Agony",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Trail of Agony"
+      }
+    },
+    {
+      "id": "revan_orbs_impel",
+      "label": "Impel",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Impel"
+      }
+    },
+    {
+      "id": "revan_orbs_essence_corruption",
+      "label": "Essence Corruption",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Essence Corruption"
+      }
+    },
+    {
+      "id": "revan_orbs_force_aberration_1st",
+      "label": "Force Aberration 1st",
+      "duration_seconds": 23.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3447523003858944"
+      }
+    },
+    {
+      "id": "revan_orbs_sabers_trial_p4",
+      "label": "16.5",
+      "duration_seconds": 16.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3447523003858944"
+      }
+    },
+    {
+      "id": "revan_orbs_push_p4",
+      "label": "Push P4_",
+      "duration_seconds": 9.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3455881010216960"
+      }
+    },
+    {
+      "id": "revan_orbs_force_aberration",
+      "label": "Force Aberration",
+      "duration_seconds": 77.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Aberration"
+      }
+    },
+    {
+      "id": "revan_orbs_unstable_aberration",
+      "label": "Unstable Aberration",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Unstable Aberration"
+      }
+    },
+    {
+      "id": "revan_orbs_reactive_hp",
+      "label": "Reactive HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "revan_orbs_reactive_shield",
+      "label": "Reactive Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "revan_orbs_reactive_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "revan_orbs_grenades",
+      "label": "Grenades",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Handful of Grenades"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "revan_orbs_adds_kill_shot",
+      "label": "Adds/Kill Shot",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Imbue"
+      }
     }
   ]
 }

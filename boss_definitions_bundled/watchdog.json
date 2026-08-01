@@ -251,6 +251,84 @@
         ]
       },
       "is_alert": true
+    },
+    {
+      "id": "watchdog_orbs_burn_hp",
+      "label": "Burn HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 13.5,
+        "selector": [
+          "Watchdog"
+        ]
+      }
+    },
+    {
+      "id": "watchdog_orbs_wd_protocol_swap",
+      "label": "WD Protocol Swap",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Watchdog Protocol"
+      }
+    },
+    {
+      "id": "watchdog_orbs_degauss",
+      "label": "Degauss",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "watchdog_orbs_beam_reset",
+      "label": "Beam Reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Degauss"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "watchdog_orbs_invert",
+      "label": "Invert",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Stalker Protocol"
+      }
+    },
+    {
+      "id": "watchdog_orbs_missiles_p2_1st",
+      "label": "Missiles P2 1st",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_orbs_bombs_p2_1st"
+      }
+    },
+    {
+      "id": "watchdog_orbs_polarized_beam_p2_1st",
+      "label": "Polarized Beam P2 1st",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_orbs_bombs_p2_1st"
+      }
+    },
+    {
+      "id": "watchdog_orbs_burn_phase",
+      "label": "Burn phase",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "watchdog_orbs_burn_hp"
+      },
+      "is_alert": true
     }
   ]
 }

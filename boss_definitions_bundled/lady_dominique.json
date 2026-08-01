@@ -330,6 +330,102 @@
         "keyword": "Grey Reaper"
       },
       "is_alert": true
+    },
+    {
+      "id": "dominique_orbs_detonator_1st",
+      "label": "Detonator 1st",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Separate"
+      }
+    },
+    {
+      "id": "dominique_orbs_intermission",
+      "label": "Intermission",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4593978624180224"
+      }
+    },
+    {
+      "id": "dominique_orbs_detonator",
+      "label": "Detonator",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4595108200579072"
+      }
+    },
+    {
+      "id": "dominique_orbs_attractors_1st",
+      "label": "Attractors 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4598754627813376"
+      }
+    },
+    {
+      "id": "dominique_orbs_phase6_hp",
+      "label": "Phase6 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Lady Dominique"
+        ]
+      }
+    },
+    {
+      "id": "dominique_orbs_phase5_hp",
+      "label": "Phase5 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Lady Dominique"
+        ]
+      }
+    },
+    {
+      "id": "dominique_orbs_watchdog_p3",
+      "label": "Watchdog P3",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4598806167420928"
+      }
+    },
+    {
+      "id": "dominique_orbs_recursive_blast_1st",
+      "label": "Recursive Blast 1st",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4598754627813376"
+      }
+    },
+    {
+      "id": "dominique_orbs_recursive_setup",
+      "label": "Recursive Setup",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Recursive Blast"
+      }
+    },
+    {
+      "id": "dominique_orbs_recursive_blast",
+      "label": "Recursive Blast",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dominique_orbs_recursive_setup"
+      }
     }
   ]
 }

@@ -184,6 +184,15 @@
       "trigger": {
         "type": "combat_start"
       }
+    },
+    {
+      "id": "golden_fury_orbs_laser",
+      "label": "Laser",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3258922399956992"
+      }
     }
   ]
 }

@@ -264,6 +264,170 @@
         "type": "ability_cast",
         "keyword": "Divebomb"
       }
+    },
+    {
+      "id": "trandos_orbs_inspiration",
+      "label": "Inspiration",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Inspirational Scream"
+      }
+    },
+    {
+      "id": "trandos_orbs_crush_the_weak",
+      "label": "Crush the Weak",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Crush the Weak"
+      }
+    },
+    {
+      "id": "trandos_orbs_crush_the_weak_1st_vm",
+      "label": "Crush the Weak 1st VM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Titax"
+        ]
+      }
+    },
+    {
+      "id": "trandos_orbs_titax_strike_vm",
+      "label": "Titax Strike VM",
+      "duration_seconds": 35.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Titax Strike"
+      }
+    },
+    {
+      "id": "trandos_orbs_titax_strike_1st_vm",
+      "label": "Titax Strike 1st VM",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Titax"
+        ]
+      }
+    },
+    {
+      "id": "trandos_orbs_divebomb_1st",
+      "label": "Divebomb 1st",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Greus"
+        ]
+      }
+    },
+    {
+      "id": "trandos_orbs_divebomb",
+      "label": "Divebomb",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Divebomb"
+      }
+    },
+    {
+      "id": "trandos_orbs_ayhis_eru",
+      "label": "Ayhis & Eru",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Ayhis & Eru"
+      }
+    },
+    {
+      "id": "trandos_orbs_fire_blast_1st",
+      "label": "Fire Blast 1st",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Greus"
+        ]
+      }
+    },
+    {
+      "id": "trandos_orbs_fire_blast",
+      "label": "Fire Blast",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Fire Blast"
+      }
+    },
+    {
+      "id": "trandos_orbs_endothermic",
+      "label": "Endothermic",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Endothermic Blast"
+      }
+    },
+    {
+      "id": "trandos_orbs_train_arrive",
+      "label": "Train Arrive",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "833455583657984"
+      }
+    },
+    {
+      "id": "trandos_orbs_caustic_reset",
+      "label": "Caustic reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "trandos_orbs_caustic_plume"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "trandos_orbs_irradiated_fire_blast_1st",
+      "label": "Irradiated Fire Blast 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "The Ultimate Hunter"
+        ]
+      }
+    },
+    {
+      "id": "trandos_orbs_irradiated_fire_blast_db",
+      "label": "Irradiated Fire Blast DB",
+      "duration_seconds": 12.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Divebomb"
+      }
+    },
+    {
+      "id": "trandos_orbs_irradiated_fire_blast",
+      "label": "Irradiated Fire Blast",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Irradiated Fire Blast"
+      }
+    },
+    {
+      "id": "trandos_orbs_divebomb_u",
+      "label": "Divebomb U",
+      "duration_seconds": 24.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Divebomb"
+      }
     }
   ]
 }

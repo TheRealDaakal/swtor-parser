@@ -132,6 +132,70 @@
         "counter_id": "rain_damage",
         "value": 1
       }
+    },
+    {
+      "id": "sword_squadron_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Emergency Shielding"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_mine_droid",
+      "label": "Mine + Droid",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3449387019665408"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_huge_grenade",
+      "label": "Huge Grenade",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Huge Grenade"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_mega_blast",
+      "label": "Mega Blast",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mega Blast"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_rapid_fire",
+      "label": "Rapid Fire",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rapid Fire"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_gravity",
+      "label": "Gravity",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3519549605412864"
+      }
+    },
+    {
+      "id": "sword_squadron_orbs_rain_reset",
+      "label": "Rain reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sword_squadron_orbs_rain_of_missiles"
+      },
+      "is_alert": true
     }
   ]
 }

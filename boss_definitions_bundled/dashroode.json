@@ -78,6 +78,73 @@
           }
         ]
       }
+    },
+    {
+      "id": "dashroode_orbs_updraft_g",
+      "label": "Updraft G",
+      "duration_seconds": 75.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3064046848835584"
+      }
+    },
+    {
+      "id": "dashroode_orbs_kick_g",
+      "label": "Kick G",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3064046848835584"
+      }
+    },
+    {
+      "id": "dashroode_orbs_hp_kick_shatter",
+      "label": "HP Kick_Shatter",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 98.0,
+        "selector": [
+          "Dash'Roode"
+        ]
+      }
+    },
+    {
+      "id": "dashroode_orbs_kick_shatter_1st",
+      "label": "Kick_Shatter",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dashroode_orbs_hp_kick_shatter"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "dashroode_orbs_groundshatter",
+      "label": "Groundshatter",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Groundshatter"
+      }
+    },
+    {
+      "id": "dashroode_orbs_xuvvas",
+      "label": "Xuvvas",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3121285877989376"
+      }
+    },
+    {
+      "id": "dashroode_orbs_updraft",
+      "label": "Updraft",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Updraft"
+      }
     }
   ]
 }

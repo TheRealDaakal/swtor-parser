@@ -282,6 +282,153 @@
         "type": "phase_entered",
         "phase_id": "fs_shield"
       }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_mortar_volley",
+      "label": "Mortar Volley",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mortar Volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_firebrand_cleave_m",
+      "label": "Firebrand Cleave M",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_f_hp_60",
+      "label": "F_HP_60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Firebrand Battle Tank"
+        ]
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_f_hp_80",
+      "label": "F_HP_80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Firebrand Battle Tank"
+        ]
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_f_hp_40",
+      "label": "F_HP_40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Firebrand Battle Tank"
+        ]
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_f_hp_20",
+      "label": "F_HP_20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Firebrand Battle Tank"
+        ]
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_firebrand_cleave",
+      "label": "Firebrand Cleave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Missile Barrage"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_incinerate_armor_vm",
+      "label": "Incinerate Armor VM",
+      "duration_seconds": 49.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Incinerate Armor"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_targeted_missile",
+      "label": "Targeted Missile",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Targeted"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_double_destruction_vm",
+      "label": "Double Destruction VM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Double Destruction"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_storm_cleave",
+      "label": "Storm Cleave",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Electric Discharge"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_storm_cleave_m",
+      "label": "Storm Cleave M",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_double_destruction_m",
+      "label": "Double Destruction M",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_void_zone_m",
+      "label": "Void Zone M",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "firebrand_stormcaller_orbs_mortar_volley"
+      }
+    },
+    {
+      "id": "firebrand_stormcaller_orbs_void_zone",
+      "label": "Void Zone",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2876713260285952"
+      }
     }
   ]
 }

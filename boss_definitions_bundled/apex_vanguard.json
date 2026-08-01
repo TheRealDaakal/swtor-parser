@@ -583,6 +583,219 @@
         "phase_id": "apex_burn"
       },
       "is_alert": true
+    },
+    {
+      "id": "apex_vanguard_orbs_target_voltinator",
+      "label": "Target/Voltinator",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_venom_voltinator_2nd"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_target_voltinator_2nd",
+      "label": "Target/Voltinator 2nd",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_target_voltinator"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_apx_contagion",
+      "label": "APX: Contagion",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Contagion"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_photo_hp",
+      "label": "Photo HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 94.0,
+        "selector": [
+          "Apex Vanguard"
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_acid_deluge",
+      "label": "Acid Deluge",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_target_voltinator_2nd"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_p2_hp",
+      "label": "P2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 59.0,
+        "selector": [
+          "Apex Vanguard"
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_p3_hp",
+      "label": "P3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 27.5,
+        "selector": [
+          "Apex Vanguard"
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_p4_hp",
+      "label": "P4 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 16.0,
+        "selector": [
+          "Apex Vanguard"
+        ]
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_red_venom_1st",
+      "label": "Red Venom 1st",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Darkness Overdrive"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_mass_target_1st",
+      "label": "Mass Target 1st",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_red_venom_1st"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_blood_lust_1st",
+      "label": "Blood Lust 1st",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Darkness Overdrive"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_blood_lust",
+      "label": "Blood Lust",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Blood Lust"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_ultra_violence",
+      "label": "Ultra Violence",
+      "duration_seconds": 63.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Ultra Violence"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_rocket_salvo_zd",
+      "label": "Rocket Salvo ZD",
+      "duration_seconds": 23.1,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Zone Defense"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_acid_deluge",
+      "label": "Acid Deluge",
+      "duration_seconds": 122.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acid Deluge"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_salvo_cancel",
+      "label": "No salvo",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mass Target Lock"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "apex_vanguard_orbs_zone_defense_setup",
+      "label": "Zone Defense Setup",
+      "duration_seconds": 310.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Zone Defense"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_zone_defense",
+      "label": "Zone Defense",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_zone_defense_setup"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "apex_vanguard_orbs_acid_blast_setup",
+      "label": "Acid Blast Setup",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Acid Blast"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_acid_blast",
+      "label": "Acid Blast",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_acid_blast_setup"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_rocket_salvo_setup",
+      "label": "Rocket Salvo Setup",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rocket Salvo"
+      }
+    },
+    {
+      "id": "apex_vanguard_orbs_light_off",
+      "label": "Light OFF",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_vanguard_orbs_healing"
+      },
+      "is_alert": true
     }
   ]
 }

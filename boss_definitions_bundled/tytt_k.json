@@ -550,6 +550,66 @@
         "keyword": "Aivela's Grace"
       },
       "is_alert": true
+    },
+    {
+      "id": "TYTT_K_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4076168777039872"
+      }
+    },
+    {
+      "id": "TYTT_K_orbs_inversion",
+      "label": "Inversion",
+      "duration_seconds": 37.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Inversion"
+      }
+    },
+    {
+      "id": "TYTT_K_orbs_energy_wave",
+      "label": "Energy Wave",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Energy Wave"
+      }
+    },
+    {
+      "id": "TYTT_K_orbs_sweep",
+      "label": "Sweep",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Sweep"
+      }
+    },
+    {
+      "id": "TYTT_K_orbs_p3_hp",
+      "label": "P3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "TYTH"
+        ]
+      }
+    },
+    {
+      "id": "TYTT_K_orbs_p2_hp",
+      "label": "P2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "TYTH"
+        ]
+      }
     }
   ]
 }

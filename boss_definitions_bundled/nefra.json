@@ -219,6 +219,43 @@
           "value": 15
         }
       ]
+    },
+    {
+      "id": "nefra_orbs_voice_of_the_masters",
+      "label": "Voice of the Masters",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Voice of the Masters"
+      }
+    },
+    {
+      "id": "nefra_orbs_dps_add_vm",
+      "label": "DPS Add VM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3308460552749056"
+      }
+    },
+    {
+      "id": "nefra_orbs_tank_add_vm",
+      "label": "TANK Add VM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3308164200005632"
+      }
+    },
+    {
+      "id": "nefra_orbs_nta_reset",
+      "label": "NTA Reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3342167456088064"
+      },
+      "is_alert": true
     }
   ]
 }

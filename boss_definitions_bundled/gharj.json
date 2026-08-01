@@ -1,50 +1,175 @@
 {
   "id": "gharj",
   "name": "Gharj",
-  "boss_names": ["Gharj"],
+  "boss_names": [
+    "Gharj"
+  ],
   "phases": [
-    { "id": "main", "name": "Main" }
+    {
+      "id": "main",
+      "name": "Main"
+    }
   ],
   "timers": [
     {
       "label": "Platform Collapse",
       "duration_seconds": 5.0,
-      "trigger": { "type": "ability_cast", "keyword": "Leaping Smash" }
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leaping Smash"
+      }
     },
     {
       "label": "Jump",
       "duration_seconds": 34.0,
-      "trigger": { "type": "ability_cast", "keyword": "Leaping Smash" }
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leaping Smash"
+      }
     },
     {
       "label": "Pulverizing Slam",
       "duration_seconds": 14.0,
-      "trigger": { "type": "ability_cast", "keyword": "Pulverizing Slam" }
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverizing Slam"
+      }
     },
     {
       "label": "95% - Platform Soon",
       "duration_seconds": 3.0,
-      "trigger": { "type": "hp_below", "percent": 95.0 }
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0
+      }
     },
     {
       "label": "70% - Platform Soon",
       "duration_seconds": 3.0,
-      "trigger": { "type": "hp_below", "percent": 70.0 }
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0
+      }
     },
     {
       "label": "50% - Platform Soon",
       "duration_seconds": 3.0,
-      "trigger": { "type": "hp_below", "percent": 50.0 }
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0
+      }
     },
     {
       "label": "30% - Platform Soon",
       "duration_seconds": 3.0,
-      "trigger": { "type": "hp_below", "percent": 30.0 }
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0
+      }
     },
     {
       "label": "10% - Final Platform",
       "duration_seconds": 3.0,
-      "trigger": { "type": "hp_below", "percent": 10.0 }
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0
+      }
+    },
+    {
+      "id": "gharj_orbs_hp_95",
+      "label": "HP 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Gharj"
+        ]
+      }
+    },
+    {
+      "id": "gharj_orbs_hp_70",
+      "label": "HP 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "Gharj"
+        ]
+      }
+    },
+    {
+      "id": "gharj_orbs_hp_50",
+      "label": "HP 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Gharj"
+        ]
+      }
+    },
+    {
+      "id": "gharj_orbs_hp_30",
+      "label": "HP 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Gharj"
+        ]
+      }
+    },
+    {
+      "id": "gharj_orbs_hp_10",
+      "label": "HP 10",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Gharj"
+        ]
+      }
+    },
+    {
+      "id": "gharj_orbs_leaping_smash_1st",
+      "label": "Leaping Smash 1st",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leap"
+      }
+    },
+    {
+      "id": "gharj_orbs_pulverizing_slam_1st",
+      "label": "Pulverizing Slam 1st",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "gharj_orbs_leaping_smash_1st"
+      }
+    },
+    {
+      "id": "gharj_orbs_leaping_smash",
+      "label": "Leaping Smash",
+      "duration_seconds": 24.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2508411224719360"
+      }
+    },
+    {
+      "id": "gharj_orbs_pulverizing_slam",
+      "label": "Pulverizing Slam",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Pulverizing Slam"
+      }
     }
   ]
 }

@@ -147,6 +147,123 @@
         "type": "ability_cast",
         "keyword": "Mass Barrage"
       }
+    },
+    {
+      "id": "bulo_orbs_shotgun_blast",
+      "label": "Shotgun Blast",
+      "duration_seconds": 8.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Shotgun Blast"
+      }
+    },
+    {
+      "id": "bulo_orbs_gcd",
+      "label": "GCD",
+      "duration_seconds": 4.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Barrel Throw"
+      }
+    },
+    {
+      "id": "bulo_orbs_pirates",
+      "label": "Pirates",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3391757148487680"
+      }
+    },
+    {
+      "id": "bulo_orbs_volley",
+      "label": "Volley",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Volley"
+      }
+    },
+    {
+      "id": "bulo_orbs_carts",
+      "label": "Carts",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3466880421462016"
+      }
+    },
+    {
+      "id": "bulo_orbs_loadlifters",
+      "label": "Loadlifters",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3420554904207360"
+      }
+    },
+    {
+      "id": "bulo_orbs_barrel_throw",
+      "label": "Barrel Throw",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bulo_orbs_gcd"
+      }
+    },
+    {
+      "id": "bulo_orbs_scatter_blaster_end",
+      "label": "Scatter Blaster END",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3391744263585792"
+      }
+    },
+    {
+      "id": "bulo_orbs_scatter_blaster",
+      "label": "Scatter Blaster",
+      "duration_seconds": 29.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bulo_orbs_scatter_blaster_end"
+      }
+    },
+    {
+      "id": "bulo_orbs_barrage_carts_delay",
+      "label": "Barrage/Carts delay",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3391744263585792"
+      }
+    },
+    {
+      "id": "bulo_orbs_mass_barrage_end",
+      "label": "Mass Barrage END",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mass Barrage"
+      }
+    },
+    {
+      "id": "bulo_orbs_mass_barrage",
+      "label": "Mass Barrage",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bulo_orbs_mass_barrage_end"
+      }
+    },
+    {
+      "id": "bulo_orbs_relocated",
+      "label": "Relocated",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3457169500405760"
+      }
     }
   ]
 }

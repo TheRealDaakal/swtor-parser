@@ -22,5 +22,24 @@
     }
   ],
   "counters": [],
-  "timers": []
+  "timers": [
+    {
+      "id": "jarg_sorno_orbs_sorno_back",
+      "label": "Sorno back",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2759280264478720"
+      }
+    },
+    {
+      "id": "jarg_sorno_orbs_thermal_detonator",
+      "label": "Thermal Detonator_",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2759284559446016"
+      }
+    }
+  ]
 }

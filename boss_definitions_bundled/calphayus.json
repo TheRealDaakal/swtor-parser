@@ -322,6 +322,156 @@
           }
         ]
       }
+    },
+    {
+      "id": "calphayus_orbs_tree_phase_hp",
+      "label": "Tree Phase HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "3273946195558400"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_crystal_phase_hp",
+      "label": "Crystal Phase HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "3273946195558400"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_final_phase_hp",
+      "label": "Final Phase HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "3273946195558400"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_inevitability_hp",
+      "label": "Inevitability HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 97.0,
+        "selector": [
+          "3273946195558400"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_adds_2nd",
+      "label": "Adds 2nd",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_orbs_adds_1st"
+      }
+    },
+    {
+      "id": "calphayus_orbs_adds_3rd",
+      "label": "Adds 3rd",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_orbs_adds_2nd"
+      }
+    },
+    {
+      "id": "calphayus_orbs_pick_up_seed",
+      "label": "Pick up Seed",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "calphayus_orbs_adds_3rd"
+      }
+    },
+    {
+      "id": "calphayus_orbs_crystal_jump_hp80",
+      "label": "Crystal JUMP HP80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "3284954196738048"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_crystal_jump_hp50",
+      "label": "Crystal JUMP HP50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "3284954196738048"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_crystal_jump_hp30",
+      "label": "Crystal JUMP HP30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "3284954196738048"
+        ]
+      }
+    },
+    {
+      "id": "calphayus_orbs_holocron_hit",
+      "label": "Holocron Hit",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3306356018774016"
+      }
+    },
+    {
+      "id": "calphayus_orbs_inevitability",
+      "label": "Inevitability",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Inevitability"
+      }
+    },
+    {
+      "id": "calphayus_orbs_dread_defiler",
+      "label": "Dread Defiler",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3319155021316096"
+      }
+    },
+    {
+      "id": "calphayus_orbs_crystal_death",
+      "label": "Crystal Death",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "3285422348173312"
+        ]
+      },
+      "is_alert": true
     }
   ]
 }

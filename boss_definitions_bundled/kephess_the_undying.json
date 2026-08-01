@@ -258,6 +258,78 @@
           "value": 2
         }
       ]
+    },
+    {
+      "id": "kephess_the_undying_orbs_burn",
+      "label": "Burn",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Kephess the Undying"
+        ]
+      }
+    },
+    {
+      "id": "kephess_the_undying_orbs_cascade",
+      "label": "Cascade",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Kephess the Undying"
+        ]
+      }
+    },
+    {
+      "id": "kephess_the_undying_orbs_cascade_jump",
+      "label": "Cascade Jump",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kephess_the_undying_orbs_cascade"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "kephess_the_undying_orbs_invulnerable",
+      "label": "Invulnerable",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3008070540066816"
+      }
+    },
+    {
+      "id": "kephess_the_undying_orbs_overcharge_counter",
+      "label": "Overcharge Counter",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Overcharge"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "kephess_the_undying_orbs_nanites_counter",
+      "label": "Nanites Counter",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Corrupted Nanites"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "kephess_the_undying_orbs_1st_nanites_jump",
+      "label": "1st Nanites + Jump",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3008070540066816"
+      }
     }
   ]
 }

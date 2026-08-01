@@ -254,6 +254,96 @@
         "type": "effect_applied",
         "keyword": "Force Leech"
       }
+    },
+    {
+      "id": "dread_guard_orbs_choke",
+      "label": "Choke",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Roving Smash"
+      }
+    },
+    {
+      "id": "dread_guard_orbs_adds_75",
+      "label": "Adds 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Kel'sara"
+        ]
+      }
+    },
+    {
+      "id": "dread_guard_orbs_adds_50",
+      "label": "Adds 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Kel'sara"
+        ]
+      }
+    },
+    {
+      "id": "dread_guard_orbs_adds_25",
+      "label": "Adds 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Kel'sara"
+        ]
+      }
+    },
+    {
+      "id": "dread_guard_orbs_empowered_barrier_vm",
+      "label": "Empowered Barrier VM",
+      "duration_seconds": 55.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2988107532075008"
+      }
+    },
+    {
+      "id": "dread_guard_orbs_lightning_copy",
+      "label": "Lightning (COPY)",
+      "duration_seconds": 55.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2988369525080064"
+      }
+    },
+    {
+      "id": "dread_guard_orbs_lightning",
+      "label": "Lightning",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2988369525080064"
+      }
+    },
+    {
+      "id": "dread_guard_orbs_overload",
+      "label": "Overload",
+      "duration_seconds": 19.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Leech"
+      }
+    },
+    {
+      "id": "dread_guard_orbs_force_leech",
+      "label": "Force Leech",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Mark of Death"
+      }
     }
   ]
 }

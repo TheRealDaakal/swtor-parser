@@ -17,5 +17,78 @@
     }
   ],
   "counters": [],
-  "timers": []
+  "timers": [
+    {
+      "id": "bonethrasher_orbs_taunted",
+      "label": "Taunted",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Call Target"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_super_smash_1st",
+      "label": "Super Smash 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bonethrasher_orbs_sweep_1st"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_smash_1st",
+      "label": "Smash 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bonethrasher_orbs_super_smash_1st"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_sweep",
+      "label": "Sweep",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Sweep"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_super_smash",
+      "label": "Super Smash",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Super Smash"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Smash"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_gamorrean_eaten",
+      "label": "Gamorrean Eaten",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Eat"
+      }
+    },
+    {
+      "id": "bonethrasher_orbs_swipe",
+      "label": "Swipe",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Swipe"
+      }
+    }
+  ]
 }

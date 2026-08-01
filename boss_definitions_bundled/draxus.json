@@ -272,6 +272,42 @@
         "keyword": "Emergency Shielding"
       },
       "is_alert": true
+    },
+    {
+      "id": "draxus_orbs_escape_hp_90",
+      "label": "Escape HP 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Gate Commander Draxus"
+        ]
+      }
+    },
+    {
+      "id": "draxus_orbs_escape_hp_60",
+      "label": "Escape HP 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Gate Commander Draxus"
+        ]
+      }
+    },
+    {
+      "id": "draxus_orbs_escape_hp_30",
+      "label": "Escape HP 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Gate Commander Draxus"
+        ]
+      }
     }
   ]
 }

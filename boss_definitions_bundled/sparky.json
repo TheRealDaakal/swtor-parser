@@ -133,6 +133,96 @@
         "type": "ability_cast",
         "keyword": "Roar"
       }
+    },
+    {
+      "id": "sparky_orbs_phase_2_hp",
+      "label": "Phase 2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Sparky"
+        ]
+      }
+    },
+    {
+      "id": "sparky_orbs_burn_phase_hp",
+      "label": "Burn phase HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Sparky"
+        ]
+      }
+    },
+    {
+      "id": "sparky_orbs_phase_3_hp",
+      "label": "Phase 3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Sparky"
+        ]
+      }
+    },
+    {
+      "id": "sparky_orbs_shoulder_throw",
+      "label": "Shoulder Throw",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Body Slam"
+      }
+    },
+    {
+      "id": "sparky_orbs_rampage_end",
+      "label": "Rampage END",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rampage!"
+      }
+    },
+    {
+      "id": "sparky_orbs_body_slam",
+      "label": "Body Slam_",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Shoulder Throw"
+      }
+    },
+    {
+      "id": "sparky_orbs_body_slam",
+      "label": "Body Slam",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Body Slam"
+      }
+    },
+    {
+      "id": "sparky_orbs_forceful_roar_adds",
+      "label": "Forceful Roar (Adds)",
+      "duration_seconds": 40.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Forceful Roar"
+      }
+    },
+    {
+      "id": "sparky_orbs_roar_adds",
+      "label": "Roar (Adds)",
+      "duration_seconds": 17.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Roar"
+      }
     }
   ]
 }

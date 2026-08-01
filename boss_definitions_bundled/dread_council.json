@@ -682,6 +682,374 @@
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
       }
+    },
+    {
+      "id": "dread_council_orbs_force_push",
+      "label": "Force Push",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Push"
+      }
+    },
+    {
+      "id": "dread_council_orbs_force_cyclone",
+      "label": "Force Cyclone",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Carry"
+      }
+    },
+    {
+      "id": "dread_council_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Smash"
+      }
+    },
+    {
+      "id": "dread_council_orbs_whirlwind",
+      "label": "Whirlwind",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Whirlwind"
+      }
+    },
+    {
+      "id": "dread_council_orbs_deadly_slash",
+      "label": "Deadly Slash",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Deadly Slash"
+      }
+    },
+    {
+      "id": "dread_council_orbs_force_pull",
+      "label": "Force Pull",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Force Pull"
+      }
+    },
+    {
+      "id": "dread_council_orbs_death_mark",
+      "label": "Death Mark",
+      "duration_seconds": 62.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Death Mark"
+      }
+    },
+    {
+      "id": "dread_council_orbs_tyrans_tp",
+      "label": "Tyrans TP",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3316389062377472"
+      }
+    },
+    {
+      "id": "dread_council_orbs_slam_1st",
+      "label": "Slam 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "3303830578003968"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_dragon_hp",
+      "label": "Dragon HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 0.0,
+        "selector": [
+          "3303830578003968"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_dragon_death",
+      "label": "Dragon death",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_dragon_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "dread_council_orbs_slam",
+      "label": "Slam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Leap Slam"
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontes_beam_hp",
+      "label": "Brontes Beam HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 26.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontes_beam",
+      "label": "Brontes Beam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_brontes_beam_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "dread_council_orbs_brontes_reaches_hp",
+      "label": "Brontes Reaches HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontes_reaches",
+      "label": "Brontes Reaches",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_brontes_reaches_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "dread_council_orbs_brontes_tp_1st",
+      "label": "Brontes TP 1st",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "npc_appears",
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontes_hp",
+      "label": "Brontes HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 0.0,
+        "selector": [
+          "Dread Master Brontes"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontes_death",
+      "label": "Brontes death",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_brontes_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "dread_council_orbs_reaches_end",
+      "label": "Reaches END",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3362517011136512"
+      }
+    },
+    {
+      "id": "dread_council_orbs_brontest_tp",
+      "label": "Brontest TP",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3322870168027136"
+      }
+    },
+    {
+      "id": "dread_council_orbs_bestia_hp_p3",
+      "label": "Bestia HP P3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Dread Master Bestia"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_tyrans_hp_p3",
+      "label": "Tyrans HP P3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Dread Master Tyrans"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_raptus_hp_p3",
+      "label": "Raptus HP P3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Dread Master Raptus"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_calphayus_hp_p3",
+      "label": "Calphayus HP P3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 35.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_calphayus_hp_p1",
+      "label": "Calphayus HP P1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 54.0,
+        "selector": [
+          "Dread Master Calphayus"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_bestia_hp_p1",
+      "label": "Bestia HP P1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 54.0,
+        "selector": [
+          "Dread Master Bestia"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_tyrans_hp_p1",
+      "label": "Tyrans HP P1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 54.0,
+        "selector": [
+          "Dread Master Tyrans"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_raptus_hp_p1",
+      "label": "Raptus HP P1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 54.0,
+        "selector": [
+          "Dread Master Raptus"
+        ]
+      }
+    },
+    {
+      "id": "dread_council_orbs_force_cyclone_1st_vm",
+      "label": "Force Cyclone 1st VM",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_calphayus_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_smash_vm_1st",
+      "label": "Smash VM 1st",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_raptus_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_whirlwind_vm_1st",
+      "label": "Whirlwind VM 1st",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_raptus_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_deadly_slash_1st_vm",
+      "label": "Deadly Slash 1st VM",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_raptus_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_force_pull_1st_vm",
+      "label": "Force Pull 1st VM",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_tyrans_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_death_mark_1st_vm",
+      "label": "Death Mark 1st VM",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_tyrans_active_vm"
+      }
+    },
+    {
+      "id": "dread_council_orbs_tyrans_tp_1st_vm",
+      "label": "Tyrans TP 1st VM",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dread_council_orbs_tyrans_active_vm"
+      }
     }
   ]
 }

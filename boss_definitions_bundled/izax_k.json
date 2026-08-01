@@ -1130,6 +1130,232 @@
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_w"
       }
+    },
+    {
+      "id": "IZAX_K_orbs_induction",
+      "label": "Induction",
+      "duration_seconds": 34.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4168128321814528"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_induction_a",
+      "label": "Induction",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4168128321814528"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "IZAX_K_orbs_phase_2_hp",
+      "label": "Phase 2 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 97.0,
+        "selector": [
+          "IZAX"
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_phase_3_hp",
+      "label": "Phase 3 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "IZAX"
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_phase_4_hp",
+      "label": "Phase 4 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "IZAX"
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_phase_2_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "IZAX_K_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_phase_3_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "IZAX_K_orbs_phase_4",
+      "label": "Phase 4",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_phase_4_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "IZAX_K_orbs_phase_5_hp",
+      "label": "Phase 5 HP",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 59.0,
+        "selector": [
+          "IZAX"
+        ]
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_phase_5",
+      "label": "Phase 5",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_phase_5_hp"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "IZAX_K_orbs_p4_missile_volley_1",
+      "label": "P4 Missile Volley 1",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4163854829355008"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p4_missile_volley_2",
+      "label": "P4 Missile Volley 2",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p4_missile_volley_1"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p4_missile_volley_3",
+      "label": "P4 Missile Volley 3",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p4_missile_volley_2"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p4_missile_volley_4",
+      "label": "P4 Missile Volley 4",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p4_missile_volley_3"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p5_scyva",
+      "label": "P5 SCYVA",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p4_missile_volley_4"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p5_end",
+      "label": "P5 End",
+      "duration_seconds": 120.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p5_scyva"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p5_explosion",
+      "label": "P5 Explosion",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p5_end"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p3_tether_droids",
+      "label": "P3 Tether Droids",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p3_reposition"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p4_reposition_m",
+      "label": "P4 Reposition_M",
+      "duration_seconds": 80.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4166341615419392"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p2_hull_cutters",
+      "label": "P2 Hull Cutters",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4160719503228928"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p2_explosion_1",
+      "label": "P2 Explosion 1",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4168794041745408"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p2_explosion_2",
+      "label": "P2 Explosion 2",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "IZAX_K_orbs_p2_explosion_1"
+      }
+    },
+    {
+      "id": "IZAX_K_orbs_p5_tether_drone",
+      "label": "P5 Tether Drone",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "4164821196996608"
+        ]
+      }
     }
   ]
 }
