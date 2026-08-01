@@ -283,7 +283,7 @@
     },
     {
       "id": "Styrak_k_kd_vpl_1st",
-      "label": "Vomit Pool",
+      "label": "Spit",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "phase_entered",
@@ -292,7 +292,8 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Vomit Pool"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "Styrak_k_kd_sps_1st",
@@ -379,7 +380,7 @@
     },
     {
       "id": "Styrak_k_kd_vpl",
-      "label": "Vomit Pool",
+      "label": "Spit",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
@@ -388,11 +389,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "Styrak_k_kd_vpl_vm",
-      "label": "Vomit Pool",
+      "label": "Spit",
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
@@ -401,11 +403,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "Styrak_k_kd_vpl_16m",
-      "label": "Vomit Pool",
+      "label": "Spit",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
@@ -414,7 +417,8 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "Styrak_k_kd_sps",
@@ -545,47 +549,23 @@
     },
     {
       "id": "Styrak_k_st_cmf_1st",
-      "label": "Chained Manifestation",
+      "label": "Chains",
       "duration_seconds": 25.0,
       "trigger": {
-        "type": "any_of",
-        "conditions": [
-          {
-            "type": "timer_expires",
-            "timer_id": "Styrak_k_p2_cnd"
-          },
-          {
-            "type": "phase_entered",
-            "phase_id": "Styrak_k_p2_stk_r"
-          }
-        ]
+        "type": "phase_entered",
+        "phase_id": "Styrak_k_p2_stk_r"
       },
-      "cancel_trigger": {
-        "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3255757009059840"
-      }
+      "is_alert": true
     },
     {
       "id": "Styrak_k_st_lmf_1st",
-      "label": "Lightning Manifestation",
+      "label": "Lightning",
       "duration_seconds": 45.0,
       "trigger": {
-        "type": "any_of",
-        "conditions": [
-          {
-            "type": "timer_expires",
-            "timer_id": "Styrak_k_p2_cnd"
-          },
-          {
-            "type": "timer_expires",
-            "timer_id": "Styrak_k_st_fpnm_lmf"
-          }
-        ]
+        "type": "timer_expires",
+        "timer_id": "Styrak_k_st_fpnm_lmf"
       },
-      "cancel_trigger": {
-        "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3255757009059840"
-      }
+      "is_alert": true
     },
     {
       "id": "Styrak_k_p2_cmf_t",
