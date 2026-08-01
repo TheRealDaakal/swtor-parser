@@ -1,0 +1,30 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    # windows-latest, not ubuntu -- this app is Windows-only in practice
+    # (SWTOR's own log format/paths, winsound, the PyInstaller build), so
+    # that's the platform worth actually testing against. The suite itself
+    # has no OS-specific behavior in what it covers today, but matching the
+    # real target avoids a class of "passes in CI, breaks for the one
+    # platform anyone runs this on" surprise.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # Matches the version this project is actually developed against
+          # -- reduces "works locally, fails in CI" surprises, which is
+          # exactly the class of gap this whole test suite exists to close.
+          python-version: "3.14"
+
+      - name: Install test dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest -v
