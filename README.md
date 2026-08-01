@@ -30,6 +30,22 @@ If it can't find it (custom install location), pass the path directly:
 python main.py "D:\Games\SWTOR\CombatLogs"
 ```
 
+## Running tests
+
+```
+pip install -r requirements-dev.txt
+pytest
+```
+
+Self-contained -- no dependency on a real SWTOR install, CombatLogs folder,
+or `%APPDATA%\swtor-parser` data, so it runs the same on a fresh machine or
+in CI as it does locally. Covers the pipeline correctness fixes that came
+out of a system audit: timer dedupe/refresh (the Kolto Pods pile-up bug),
+overheal parsing, the log-replay clock (midnight rollover and mid-session
+clock adjustments), live-vs-offline pull-splitting parity, the shutdown
+flush, and the ORBS boss-timer translator's three dead-timer fixes (numeric
+keywords, colliding ids, dangling chain references).
+
 ## Building a release
 
 For distributing to people who don't have Python installed, `build.ps1`

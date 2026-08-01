@@ -1,0 +1,3 @@
+# Test/dev-only dependencies -- runtime deps are in README.md's Requirements
+# section (pywebview, requests, optional pyttsx3).
+pytest
