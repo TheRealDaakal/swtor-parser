@@ -66,6 +66,32 @@ def find_last_area_entered_line(path: str) -> Optional[int]:
     return last_match
 
 
+def find_local_player_name(path: str) -> Optional[str]:
+    """Scans a file's already-written content for the last AreaEntered line
+    and returns its source name. Verified against a real 34k-line raid log:
+    AreaEntered appears only for the local player (7 hits, all the same
+    name), unlike DisciplineChanged, which turned out to also be broadcast
+    for any group member's loadout swap -- a teammate who respecced mid-log
+    showed up under that event just as often. AreaEntered is a far more
+    reliable local-player signal than "first player entity seen"
+    (BossEncounterState._note_local_player), which can lock onto a teammate
+    if the app is (re)started out-of-combat right as their action happens
+    to be the first one tailed."""
+    from log_parser import parse_line
+
+    last_match: Optional[str] = None
+    line_number = 0
+    with open(path, "r", encoding="cp1252", errors="replace") as f:
+        for line in f:
+            line_number += 1
+            if "AreaEntered" not in line:
+                continue
+            event = parse_line(line, line_number=line_number)
+            if event is not None and event.source:
+                last_match = event.source
+    return last_match
+
+
 def tail_file(path: str, poll_interval: float = 0.25) -> Iterator[Tuple[int, str]]:
     """Yields (absolute_line_number, line) for new lines appended to `path`,
     forever. Line numbers are 1-based and account for lines already in the

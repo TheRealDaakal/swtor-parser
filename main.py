@@ -59,6 +59,10 @@ def background_reader(
                 if backfilled is not None:
                     tracker.last_area_entered_line = backfilled
                     tracker.current.area_entered_line = backfilled
+                if boss_state.local_player_name is None:
+                    seeded_name = log_watcher.find_local_player_name(path)
+                    if seeded_name is not None:
+                        boss_state.local_player_name = seeded_name
             event = parse_line(raw_line, line_number=line_number)
             if event is not None:
                 completed = tracker.feed(event)
