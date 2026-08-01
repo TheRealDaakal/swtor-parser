@@ -61,6 +61,22 @@ NEW_PULL_MIN_GAP_SECONDS = 30.0
 MIN_ENCOUNTER_SECONDS = 5.0
 
 
+def _append_bucketed(events: List[Tuple[float, float]], now: float, amount: float) -> None:
+    """Adds `amount` to events, merging into the current whole-second bucket
+    if the last entry is still in it, else starting a new one. Bucket
+    boundary is the floor of `now`, which _max_window_sum reads as that
+    bucket's timestamp -- comparing against a floored start time only ever
+    makes a sliding window look up to ~1s NARROWER than it really was, never
+    wider, so burst_dps()/burst_hps() can undercount by a bounded, small
+    amount but never overcount."""
+    bucket = float(int(now))
+    if events and events[-1][0] == bucket:
+        ts, total = events[-1]
+        events[-1] = (ts, total + amount)
+    else:
+        events.append((bucket, amount))
+
+
 def _max_window_sum(events: List[Tuple[float, float]], window_seconds: float) -> float:
     """Max sum of `amount` over any window_seconds-wide sliding window across
     `events` (assumed already in chronological order, which every caller here
@@ -113,7 +129,17 @@ class PlayerStats:
     # (timestamp, amount) per landed hit/heal, in arrival order -- the raw
     # material burst_dps()/burst_hps() slide a window over. Not aggregated
     # away like everything else above because "best 10s window" genuinely
-    # needs the individual timestamps, not just a running total.
+    # needs individual timestamps, not just a running total -- but bucketed
+    # to whole seconds (see _append_bucketed) rather than kept per-tick: a
+    # busy pull logs many hits a second, and burst math only needs ~1s
+    # resolution against a BURST_WINDOW_SECONDS=10.0 window. Measured on a
+    # real 200-pull history: these two fields were 79% of history.json's
+    # 15.8MB, and re-serializing the whole file on every single pull
+    # completion (append_history_entry rewrites it in full) cost ~330ms of
+    # blocking I/O on the log-reader thread. Bucketing doesn't fix the
+    # rewrite-the-whole-file design, but it cuts what there is to rewrite by
+    # roughly the average events-per-second-per-player, which in practice is
+    # most of it.
     damage_events: List[Tuple[float, float]] = field(default_factory=list)
     heal_events: List[Tuple[float, float]] = field(default_factory=list)
     # Outgoing-attack accuracy/crit tallies. damage_attempts counts every
@@ -376,7 +402,7 @@ class Encounter:
                     p.damage_by_target[event.target] = (
                         p.damage_by_target.get(event.target, 0.0) + event.amount
                     )
-                p.damage_events.append((now, event.amount))
+                _append_bucketed(p.damage_events, now, event.amount)
             if event.target:
                 self._get(event.target).damage_taken += event.amount
 
@@ -410,7 +436,7 @@ class Encounter:
                     p.healing_by_target[event.target] = (
                         p.healing_by_target.get(event.target, 0.0) + event.amount
                     )
-                p.heal_events.append((now, event.amount))
+                _append_bucketed(p.heal_events, now, event.amount)
         if event.is_heal and event.source:
             p = self._get(event.source)
             p.heal_casts += 1

@@ -11,6 +11,7 @@ Run with:  python main.py
 Optional:  python main.py "C:\\path\\to\\CombatLogs"
 """
 
+import queue
 import sys
 import threading
 from pathlib import Path
@@ -58,6 +59,47 @@ def _check_for_update_once(holder: "UpdateHolder"):
     holder.result = update_check.check_for_update(__version__)
 
 
+class HistoryWriter:
+    """Persists completed encounters on a dedicated background thread, so
+    the log-reader loop never blocks on disk I/O.
+
+    storage.append_history_entry() does a full read-modify-write of
+    history.json on every call -- on a real 200-pull, 15.8MB history file
+    that's ~330ms. Calling it directly from background_reader() means every
+    pull completion stalls live event processing for that long, right when
+    the next pull is often already starting. This queues the write instead:
+    submit() only appends to an in-memory queue (effectively instant), and
+    a single worker thread drains it and calls the real (still synchronous)
+    append_history_entry() one at a time -- one writer, so concurrent
+    submissions can't race each other into a corrupted file.
+
+    Deliberately NOT used for storage.append_history_entry() callers outside
+    the live reader (e.g. the Import Logs HTTP endpoints) -- those already
+    return their HTTP response only once the write actually lands, and
+    making that async would let the response claim success before the data
+    is durably on disk. This class exists for the one caller where blocking
+    is a real, measured problem: the live reader thread."""
+
+    def __init__(self, status: "StatusHolder"):
+        self._queue: "queue.Queue" = queue.Queue()
+        self._status = status
+        threading.Thread(target=self._run, daemon=True).start()
+
+    def submit(self, encounter) -> None:
+        self._queue.put(encounter)
+
+    def _run(self):
+        while True:
+            encounter = self._queue.get()
+            try:
+                storage.append_history_entry(encounter)
+            except OSError as exc:
+                # Visible, not silent -- same convention background_reader
+                # uses for its own errors. A dropped write shouldn't crash
+                # the app, but it also shouldn't vanish with no trace.
+                self._status.text = f"Failed to save a completed pull: {exc}"
+
+
 def background_reader(
     log_dir: str,
     tracker: StatsTracker,
@@ -66,6 +108,7 @@ def background_reader(
     hot_tracker: HotTracker,
     taunt_tracker: TauntTracker,
     status: StatusHolder,
+    history_writer: "HistoryWriter",
 ):
     status.text = f"Watching: {log_dir}"
     try:
@@ -93,7 +136,7 @@ def background_reader(
                 hot_tracker.feed(event, local_player_name=boss_state.local_player_name)
                 taunt_tracker.feed(event, local_player_name=boss_state.local_player_name)
                 if completed is not None:
-                    storage.append_history_entry(completed)
+                    history_writer.submit(completed)
                     boss_state.reset()
                     hot_tracker.reset()
     except Exception as exc:  # keep the app alive even if the reader dies
@@ -169,6 +212,7 @@ def main():
     # either: a trash-pull taunt swap matters just as much as a boss one.
     taunt_tracker = TauntTracker()
     status = StatusHolder()
+    history_writer = HistoryWriter(status)
     update_holder = UpdateHolder()
     threading.Thread(target=_check_for_update_once, args=(update_holder,), daemon=True).start()
 
@@ -190,7 +234,8 @@ def main():
     else:
         thread = threading.Thread(
             target=background_reader,
-            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status),
+            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status,
+                  history_writer),
             daemon=True,
         )
         thread.start()
