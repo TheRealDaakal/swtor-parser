@@ -257,6 +257,32 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                     return self._json({"error": "no such player"}, 404)
                 return self._json(breakdown)
 
+            # /api/history/<idx>/deaths and /api/history/<idx>/timeline -- same
+            # (log_path, start_line, end_line) re-read the corpus browser's
+            # forensics/timeline views already use, just pointed at a pull
+            # from live/imported History instead of the corpus index.
+            if (len(parts) == 4 and parts[:2] == ["api", "history"] and parts[2].isdigit()
+                    and parts[3] in ("deaths", "timeline")):
+                idx = int(parts[2]) - 1
+                if not (0 <= idx < len(tracker.history)):
+                    return self._json({"error": "no such pull"}, 404)
+                encounter = tracker.history[idx]
+                if not encounter.log_path or encounter.start_line is None or encounter.end_line is None:
+                    return self._json({"error": "This pull doesn't have line-range data "
+                                                 "(imported/merged, or recorded before this feature)."}, 404)
+                try:
+                    if parts[3] == "deaths":
+                        from analysis import forensics
+                        reports = forensics.analyze_deaths(encounter.log_path, encounter.start_line,
+                                                             encounter.end_line)
+                        return self._json({"reports": reports, "summary": forensics.summarize_deaths(reports)})
+                    else:
+                        from analysis import timeline
+                        return self._json(timeline.build_timeline(encounter.log_path, encounter.start_line,
+                                                                    encounter.end_line))
+                except OSError as exc:
+                    return self._json({"error": str(exc)}, 500)
+
             if u.path == "/api/timer_rules":
                 custom = [r for r in timer_engine.rules if r.category == "custom"]
                 return self._json([
