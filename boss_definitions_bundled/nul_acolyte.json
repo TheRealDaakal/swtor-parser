@@ -1,0 +1,18 @@
+{
+  "id": "nul_acolyte",
+  "name": "Nul Acolyte",
+  "boss_names": [
+    "Nul Acolyte"
+  ],
+  "boss_npc_ids": [
+    "4922389003501568"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

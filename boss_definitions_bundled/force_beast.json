@@ -1,0 +1,18 @@
+{
+  "id": "force_beast",
+  "name": "Force Beast",
+  "boss_names": [
+    "Force Beast"
+  ],
+  "boss_npc_ids": [
+    "4932512241418240"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

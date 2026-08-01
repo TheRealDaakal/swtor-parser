@@ -1,0 +1,18 @@
+{
+  "id": "last_daughter",
+  "name": "Last Daughter",
+  "boss_names": [
+    "Last Daughter"
+  ],
+  "boss_npc_ids": [
+    "4946380690817024"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}
