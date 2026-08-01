@@ -99,6 +99,13 @@ DOTS: List[DotHotDefinition] = [
 HOTS: List[DotHotDefinition] = [
     DotHotDefinition('Force Armor', duration_seconds=30.0),  # unverified: BARAS name, not in this user's corpus
     DotHotDefinition('Kolto Probe', duration_seconds=21.0),
+    # Mercenary/Commando's Kolto Missile channel -- logs as its own ability
+    # name ("Kolto Pods"), separate from "Kolto Missile" itself, ticking ~3
+    # times about 0.9s apart (real spacing measured from this user's own
+    # log). No RemoveEffect ever fires for it -- turns out that's fine, a
+    # TimerRule's countdown runs off its own fixed duration_seconds and
+    # doesn't need one; each new tick just re-arms the same short window.
+    DotHotDefinition('Kolto Pods', duration_seconds=2.5),
     DotHotDefinition('Kolto Shell', duration_seconds=180.0, track_by="target"),
     DotHotDefinition('Rejuvenate', duration_seconds=15.0),
     DotHotDefinition('Resurgence', duration_seconds=15.0),

@@ -109,6 +109,12 @@ class ActiveTimer:
     definition_id: Optional[str] = None
     category: str = "custom"
     is_alert: bool = False
+    # When set, a later start_timer() call with the same (label, category,
+    # dedupe_key) refreshes this entry in place instead of appending a new
+    # one -- e.g. re-landing your Kolto Probe on the SAME target restarts
+    # its countdown (what the game does), but Kolto Probe on a different
+    # target is a genuinely separate instance and still gets its own row.
+    dedupe_key: Optional[str] = None
 
     def remaining(self, now: Optional[float] = None) -> float:
         now = now if now is not None else time.time()
@@ -149,15 +155,32 @@ class TimerEngine:
         self, label: str, duration_seconds: float, warn_seconds_before: float = 0.0,
         voice_alert: bool = True, repeat_interval_seconds: Optional[float] = None,
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
-        is_alert: bool = False,
+        is_alert: bool = False, dedupe_key: Optional[str] = None,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
         If repeat_interval_seconds is set, the timer re-arms itself that
         many times after first expiring. If definition_id is set, its FINAL
         expiry (after repeats) is reported via pop_recently_expired_ids()
-        for other timers to chain off of."""
+        for other timers to chain off of.
+
+        If dedupe_key is given and an active timer with the same (label,
+        category, dedupe_key) already exists, that entry is refreshed in
+        place instead of a new one being appended -- prevents a
+        rapidly-retriggered effect (e.g. Kolto Pods ticking on the same
+        target every ~0.9s) from piling up near-duplicate rows."""
         with self._lock:
+            if dedupe_key is not None:
+                for t in self.active:
+                    if t.label == label and t.category == category and t.dedupe_key == dedupe_key:
+                        t.started_at = time.time()
+                        t.duration_seconds = duration_seconds
+                        t.warn_seconds_before = warn_seconds_before
+                        t.warned = False
+                        t.voice_alert = voice_alert
+                        if voice_alert:
+                            audio.speak(label)
+                        return
             self.active.append(
                 ActiveTimer(
                     label=label,
@@ -170,6 +193,7 @@ class TimerEngine:
                     definition_id=definition_id,
                     category=category,
                     is_alert=is_alert,
+                    dedupe_key=dedupe_key,
                 )
             )
             if definition_id:
@@ -250,6 +274,7 @@ class TimerEngine:
                 self.start_timer(
                     rule.label, rule.duration_seconds, rule.warn_seconds_before, rule.voice_alert,
                     category=rule.category, is_alert=rule.is_alert,
+                    dedupe_key=event.target if rule.category in ("dot", "hot") else None,
                 )
 
             self._prune_and_warn()
