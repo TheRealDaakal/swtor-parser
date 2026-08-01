@@ -72,6 +72,11 @@ class TimerRule:
     # re-trigger your own cooldown display. Ignored (permissive) until the
     # local player has actually been detected.
     only_local_player: bool = False
+    # Same idea, but for buffs where WHO cast it doesn't matter -- only
+    # whether it landed on you (e.g. a shield a healer put on you). Distinct
+    # from only_local_player: that answers "did I cast this", this answers
+    # "is this currently on me".
+    only_target_is_local_player: bool = False
     # See boss_definitions.BossTimerDef.is_alert -- same flag, threaded
     # through the legacy keyword path too so a manually/boss-registered
     # TimerRule can request the callout display instead of a countdown.
@@ -233,6 +238,12 @@ class TimerEngine:
                     rule.only_local_player
                     and local_player_name is not None
                     and event.source != local_player_name
+                ):
+                    continue
+                if (
+                    rule.only_target_is_local_player
+                    and local_player_name is not None
+                    and event.target != local_player_name
                 ):
                     continue
 

@@ -42,6 +42,16 @@ from timers import TimerRule
 class DotHotDefinition:
     label: str  # real ability/effect name, matched as the trigger keyword
     duration_seconds: float
+    # "source" (default): track when the local player CAST it -- right for a
+    # healer's own rotation (Kolto Probe, Resurgence, ...), where "is my HoT
+    # up on someone" is the useful question. "target": track when it's
+    # CURRENTLY ON the local player, regardless of who cast it -- right for
+    # a shield/utility buff a teammate is just as likely to put on you as
+    # you are to put on them (Kolto Shell, Trauma Probe) -- confirmed from a
+    # real log where "kolto shells aren't showing" turned out to be exactly
+    # this: a teammate's Kolto Shell landing on the local player never
+    # matched a source=local_player rule at all.
+    track_by: str = "source"
 
 
 # -- DoTs (translated from BARAS's dots.toml) --------------------------------
@@ -89,12 +99,12 @@ DOTS: List[DotHotDefinition] = [
 HOTS: List[DotHotDefinition] = [
     DotHotDefinition('Force Armor', duration_seconds=30.0),  # unverified: BARAS name, not in this user's corpus
     DotHotDefinition('Kolto Probe', duration_seconds=21.0),
-    DotHotDefinition('Kolto Shell', duration_seconds=180.0),
+    DotHotDefinition('Kolto Shell', duration_seconds=180.0, track_by="target"),
     DotHotDefinition('Rejuvenate', duration_seconds=15.0),
     DotHotDefinition('Resurgence', duration_seconds=15.0),
     DotHotDefinition('Slow-release Medpac', duration_seconds=21.0),
     DotHotDefinition('Static Barrier', duration_seconds=30.0),
-    DotHotDefinition('Trauma Probe', duration_seconds=180.0),
+    DotHotDefinition('Trauma Probe', duration_seconds=180.0, track_by="target"),
 ]
 
 
@@ -190,5 +200,6 @@ def register_dots_hots(
             voice_alert=False,
             category="hot",
             event_type="applied",
-            only_local_player=True,
+            only_local_player=(d.track_by == "source"),
+            only_target_is_local_player=(d.track_by == "target"),
         ))
