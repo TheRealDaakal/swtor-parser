@@ -30,6 +30,36 @@ ENCOUNTER_GAP_SECONDS = 8.0        # inactivity fallback for ending a fight
 TRAILING_CAPTURE_SECONDS = 4.0     # StarParse-style post-ExitCombat grace window
 BURST_WINDOW_SECONDS = 10.0        # ORBS/StarParse's own "burst" window width
 
+# Treat a fresh EnterCombat as the start of a new pull.
+#
+# Needed because ExitCombat alone is not a reliable end-of-pull signal: SWTOR
+# logs it far less often than EnterCombat (one real raid log here: 21
+# EnterCombat vs 8 ExitCombat), and during progression the adds never stop
+# swinging, so the ENCOUNTER_GAP_SECONDS inactivity fallback never fires
+# either. Symptom when that happens: five separate Styrak pulls fused into
+# one 36-minute "encounter" credited with 92 deaths for a single player.
+#
+# EnterCombat is logged for the LOCAL PLAYER ONLY (verified: all 21 in that
+# file share one source), so it is a clean per-pull signal rather than
+# something that fires once per raid member.
+#
+# The delay guard exists because combat can drop and re-establish within a
+# single fight -- those re-entries show up 9-16s apart, while genuine
+# re-pulls in the same data are 39s+ apart.
+#
+# Lives here (not in analysis/corpus.py, where it was first written) because
+# the live tracker and the offline replay MUST split pulls the same way. They
+# didn't: the offline path adopted this signal, the live path never did, and
+# the same log split into 93 pulls offline vs 75 live -- a 19% divergence
+# that also produced near-duplicate History rows, since the dedup key is
+# (log_path, start_line, end_line) and the boundaries genuinely differed.
+NEW_PULL_MIN_GAP_SECONDS = 30.0
+
+# Below this, an encounter is a sliver (looting, a stray DoT tick) rather
+# than a pull. Used when explicitly closing out the in-flight encounter --
+# see StatsTracker.flush_current().
+MIN_ENCOUNTER_SECONDS = 5.0
+
 
 def _max_window_sum(events: List[Tuple[float, float]], window_seconds: float) -> float:
     """Max sum of `amount` over any window_seconds-wide sliding window across
@@ -471,6 +501,9 @@ class StatsTracker:
         self.history: List[Encounter] = list(preloaded_history or [])
         self.current_log_path: Optional[str] = None
         self.last_area_entered_line: Optional[int] = None
+        # Wall-clock time of the last EnterCombat, for the same new-pull
+        # detection the offline replay uses -- see NEW_PULL_MIN_GAP_SECONDS.
+        self._last_enter_combat: Optional[float] = None
         # Guards self.current/self.history: feed() is called from the
         # background log-reader thread while snapshot()/history_snapshot()
         # are polled from the Tk GUI thread roughly every 500ms. Without
@@ -495,11 +528,33 @@ class StatsTracker:
             if event.is_area_entered and event.line_number is not None:
                 self.last_area_entered_line = event.line_number
 
-            # If the previous encounter is done (past its trailing window)
-            # and a new combat event shows up, roll over to a fresh encounter.
-            if self.current.players and self.current.past_trailing_window(now):
-                completed = self.current
-                self.history.append(completed)
+            # A fresh EnterCombat, far enough from the last one, starts a new
+            # pull even if the previous encounter never saw ExitCombat and
+            # never went quiet -- see NEW_PULL_MIN_GAP_SECONDS.
+            new_pull = False
+            if event.is_combat_start:
+                if (self._last_enter_combat is not None
+                        and (now - self._last_enter_combat) >= NEW_PULL_MIN_GAP_SECONDS
+                        and self.current.players):
+                    new_pull = True
+                self._last_enter_combat = now
+
+            # Roll over when the previous encounter is done -- either a new
+            # pull started, or it aged past its trailing window.
+            if self.current.players and (new_pull or self.current.past_trailing_window(now)):
+                # Slivers (looting, a stray tick, combat dropping and never
+                # re-establishing) are discarded rather than persisted --
+                # matches the offline replay's flush(), which has always
+                # done this. Without this filter here, unifying the live
+                # path with EnterCombat-based splitting (above) surfaces
+                # MORE boundaries than before, and every one of them used to
+                # get written to history.json unfiltered: on a real log this
+                # produced 116 "completed" pulls where only 93 were real
+                # fights -- confirmed by filtering to >=5s, which lands on
+                # exactly 93, matching the offline count precisely.
+                if self.current.duration() >= MIN_ENCOUNTER_SECONDS:
+                    completed = self.current
+                    self.history.append(completed)
                 self.current = Encounter()
                 self.current.log_path = self.current_log_path
                 self.current.area_entered_line = self.last_area_entered_line
@@ -508,6 +563,30 @@ class StatsTracker:
                 self.current.area_entered_line = self.last_area_entered_line
 
             self.current.apply(event)
+            return completed
+
+    def flush_current(self) -> Optional[Encounter]:
+        """Closes out the in-flight encounter and returns it, or None if
+        there's nothing worth keeping.
+
+        feed() only rolls over when the NEXT event arrives, so without this
+        the last pull of a session is never appended to history and never
+        persisted -- close the app after your final boss and it's gone.
+        Measured on a real log: a 144.7s, 10-player pull silently lost.
+
+        Slivers under MIN_ENCOUNTER_SECONDS are dropped rather than saved:
+        quitting during looting or a stray DoT tick shouldn't leave a junk
+        row in History."""
+        with self._lock:
+            if not self.current.players:
+                return None
+            if self.current.duration() < MIN_ENCOUNTER_SECONDS:
+                return None
+            completed = self.current
+            self.history.append(completed)
+            self.current = Encounter()
+            self.current.log_path = self.current_log_path
+            self.current.area_entered_line = self.last_area_entered_line
             return completed
 
     def snapshot(self):

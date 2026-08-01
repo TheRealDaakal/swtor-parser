@@ -34,32 +34,18 @@ from typing import Dict, List, Optional
 import storage
 from boss_definitions import load_definitions
 from boss_intelligence import BossEncounterState
-from log_merger import _seconds_of_day
+from log_merger import LogClock
 from log_parser import parse_line
-from stats import Encounter
+from stats import Encounter, MIN_ENCOUNTER_SECONDS, NEW_PULL_MIN_GAP_SECONDS
 
 CACHE_VERSION = 6  # bump to invalidate every cached entry after a parser change
-MIN_ENCOUNTER_SECONDS = 5.0     # ignore trivial slivers (looting, stray ticks)
 MIN_FILE_BYTES = 50_000         # skip near-empty logs (login blips)
 
-# Treat a fresh EnterCombat as the start of a new pull.
-#
-# Why this is needed on the replay path: the live tracker ends an encounter on
-# ExitCombat, falling back to an inactivity gap. But SWTOR logs ExitCombat far
-# less reliably than EnterCombat (one real raid log here: 21 EnterCombat vs 8
-# ExitCombat), and during progression the adds never stop swinging, so the
-# inactivity fallback never fires either. The result was five separate Styrak
-# pulls fused into one 36-minute "encounter" credited with 92 deaths for a
-# single player.
-#
-# EnterCombat is logged for the LOCAL PLAYER ONLY (verified: all 21 in that
-# file share one source), so it is a clean per-pull signal rather than
-# something that fires once per raid member.
-#
-# The delay guard exists because combat can drop and re-establish within a
-# single fight -- those re-entries show up 9-16s apart, while genuine
-# re-pulls in the same data are 39s+ apart.
-NEW_PULL_MIN_GAP_SECONDS = 30.0
+# NEW_PULL_MIN_GAP_SECONDS / MIN_ENCOUNTER_SECONDS now live in stats.py --
+# the live tracker (StatsTracker.feed) needs the exact same EnterCombat-
+# based pull-splitting this replay path uses, not a second copy that can
+# drift out of sync (it already had: offline used this signal, live never
+# did, and the same log split into 93 pulls offline vs 75 live).
 
 _DATE_RE = re.compile(r"combat_(\d{4})-(\d{2})-(\d{2})_(\d{2})_(\d{2})_(\d{2})")
 
@@ -120,13 +106,17 @@ def replay_pulls(path: str, definitions) -> List[dict]:
         })
 
     last_enter_combat = None
+    # Monotonic across midnight and mid-session clock adjustments -- raw
+    # seconds-of-day goes backwards at both, which silently deletes any pull
+    # spanning the jump. See LogClock.
+    clock = LogClock()
 
     with open(path, "r", encoding="cp1252", errors="replace") as f:
         for i, line in enumerate(f, 1):
             event = parse_line(line, line_number=i)
             if event is None:
                 continue
-            now = _seconds_of_day(event.timestamp or "")
+            now = clock(event.timestamp or "")
 
             # A fresh EnterCombat means a new pull (see NEW_PULL_MIN_GAP_SECONDS).
             new_pull = False

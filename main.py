@@ -233,7 +233,16 @@ def main():
         "DPS — Dynamic Parse System", url=f"http://127.0.0.1:{web_port}/",
         width=960, height=720, js_api=Api(window_ref),
     )
-    webview.start()
+    webview.start()  # blocks until the window closes
+
+    # Without this, the pull in progress when the app is closed is never
+    # rolled over (StatsTracker.feed only does that when the NEXT event
+    # arrives) and so never reaches history.json -- the last fight of every
+    # session was silently lost. Confirmed on a real log: a 144.7s,
+    # 10-player pull that vanished this exact way.
+    completed = tracker.flush_current()
+    if completed is not None:
+        storage.append_history_entry(completed)
 
 
 if __name__ == "__main__":
