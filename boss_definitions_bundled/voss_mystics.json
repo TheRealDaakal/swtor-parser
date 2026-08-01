@@ -1,0 +1,86 @@
+{
+  "id": "voss_mystics",
+  "name": "Voss Mystics",
+  "boss_names": [
+    "Temu San",
+    "Rada-Ki"
+  ],
+  "boss_npc_ids": [
+    "4705570464464896",
+    "4705574759432192",
+    "4705591939301376",
+    "4705596234268672",
+    "4705600529235968",
+    "4705604824203264"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "voss_mystics_orbs_push_reset",
+      "label": "Push reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "voss_mystics_orbs_force_push"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "voss_mystics_orbs_rada_dead",
+      "label": "Rada dead",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Rada-Ki"
+        ]
+      },
+      "is_alert": true
+    },
+    {
+      "id": "voss_mystics_orbs_tem_dead",
+      "label": "Tem Dead",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "Tem-Su"
+        ]
+      },
+      "is_alert": true
+    },
+    {
+      "id": "voss_mystics_orbs_light_beam",
+      "label": "Light Beam_",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4679573027422208"
+      }
+    },
+    {
+      "id": "voss_mystics_orbs_corrupted_spirit",
+      "label": "Corrupted Spirit_",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4679839315394560"
+      }
+    },
+    {
+      "id": "voss_mystics_orbs_lightning_storm",
+      "label": "Lightning Storm_",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4679568732454912"
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "id": "ancient_abomination",
+  "name": "Ancient Abomination",
+  "boss_names": [
+    "Ancient Abomination"
+  ],
+  "boss_npc_ids": [
+    "3247459132243968"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "ancient_abomination_orbs_smash_80",
+      "label": "Smash 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Ancient Abomination"
+        ]
+      }
+    },
+    {
+      "id": "ancient_abomination_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2535937670119424"
+      }
+    },
+    {
+      "id": "ancient_abomination_orbs_smash_hp",
+      "label": "Smash",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ancient_abomination_orbs_smash_80"
+      },
+      "is_alert": true
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "lr_5_sentinel_droid",
+  "name": "LR-5 Sentinel Droid",
+  "boss_names": [
+    "LR-5 Sentinel Droid"
+  ],
+  "boss_npc_ids": [
+    "2808620848775168",
+    "2815832098865152"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "lr_5_sentinel_droid_orbs_phase_85",
+      "label": "Phase 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "LR-5 Sentinel Droid"
+        ]
+      }
+    },
+    {
+      "id": "lr_5_sentinel_droid_orbs_phase_55",
+      "label": "Phase 55",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 55.0,
+        "selector": [
+          "LR-5 Sentinel Droid"
+        ]
+      }
+    },
+    {
+      "id": "lr_5_sentinel_droid_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "LR-5 Sentinel Droid"
+        ]
+      }
+    },
+    {
+      "id": "lr_5_sentinel_droid_orbs_incinerate",
+      "label": "Incinerate",
+      "duration_seconds": 17.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2851183974678528"
+      }
+    }
+  ]
+}

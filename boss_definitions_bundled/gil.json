@@ -1,0 +1,59 @@
+{
+  "id": "gil",
+  "name": "Gil",
+  "boss_names": [
+    "Gil"
+  ],
+  "boss_npc_ids": [
+    "3250538623795200"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "gil_orbs_jump_92",
+      "label": "Jump 92",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 92.0,
+        "selector": [
+          "Gil"
+        ]
+      }
+    },
+    {
+      "id": "gil_orbs_jump_hp",
+      "label": "Jump",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "gil_orbs_jump_92"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "gil_orbs_jump_ww",
+      "label": "Jump + WW",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3250963825557504"
+      }
+    },
+    {
+      "id": "gil_orbs_knockback",
+      "label": "Knockback",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3250972415492096"
+      }
+    }
+  ]
+}

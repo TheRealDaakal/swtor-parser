@@ -1,0 +1,46 @@
+{
+  "id": "monstrous_terentatek",
+  "name": "Monstrous Terentatek",
+  "boss_names": [
+    "Monstrous Terentatek"
+  ],
+  "boss_npc_ids": [
+    "4445316921163776"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "monstrous_terentatek_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4458077269000192"
+      }
+    },
+    {
+      "id": "monstrous_terentatek_orbs_brutal_leap",
+      "label": "Brutal Leap",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4449727852576768"
+      }
+    },
+    {
+      "id": "monstrous_terentatek_orbs_skull_slam",
+      "label": "Skull Slam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Skull Slam"
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "regnant",
+  "name": "Regnant",
+  "boss_names": [
+    "Regnant"
+  ],
+  "boss_npc_ids": [
+    "4469132514820096"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "regnant_orbs_phase_tracker",
+      "label": "Phase Tracker",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "entity_death",
+        "selector": [
+          "4479955832406016"
+        ]
+      }
+    },
+    {
+      "id": "regnant_orbs_middle_beam",
+      "label": "Middle Beam",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4526972839395328"
+      }
+    },
+    {
+      "id": "regnant_orbs_multi_beams_end",
+      "label": "Multi Beams End",
+      "duration_seconds": 21.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4482172035530752"
+      }
+    },
+    {
+      "id": "regnant_orbs_multi_beams",
+      "label": "Multi Beams",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "regnant_orbs_multi_beams_end"
+      }
+    },
+    {
+      "id": "regnant_orbs_missile_barrage_end",
+      "label": "Missile Barrage End",
+      "duration_seconds": 21.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4578800209756160"
+      }
+    },
+    {
+      "id": "regnant_orbs_missile_barrage",
+      "label": "Missile Barrage",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "regnant_orbs_missile_barrage_end"
+      }
+    }
+  ]
+}

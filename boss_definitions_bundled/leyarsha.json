@@ -1,0 +1,104 @@
+{
+  "id": "leyarsha",
+  "name": "Professor Ley'arsha",
+  "boss_names": [
+    "Professor Ley'arsha"
+  ],
+  "boss_npc_ids": [
+    "1172496007036928",
+    "3158072272879616"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "leyarsha_orbs_adds_80",
+      "label": "Adds 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Professor Ley'arsha"
+        ]
+      }
+    },
+    {
+      "id": "leyarsha_orbs_affliction_field_60",
+      "label": "Affliction Field 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Professor Ley'arsha"
+        ]
+      }
+    },
+    {
+      "id": "leyarsha_orbs_adds_40",
+      "label": "Adds 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Professor Ley'arsha"
+        ]
+      }
+    },
+    {
+      "id": "leyarsha_orbs_affliction_field_20",
+      "label": "Affliction Field 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Professor Ley'arsha"
+        ]
+      }
+    },
+    {
+      "id": "leyarsha_orbs_affliction_field",
+      "label": "Affliction Field",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3228668650323968"
+      }
+    },
+    {
+      "id": "leyarsha_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 31.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2315051797053440"
+      }
+    },
+    {
+      "id": "leyarsha_orbs_adds",
+      "label": "Adds_",
+      "duration_seconds": 31.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2211899567505408"
+      }
+    },
+    {
+      "id": "leyarsha_orbs_blaster_volley",
+      "label": "Blaster Volley",
+      "duration_seconds": 7.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2263529369370624"
+      }
+    }
+  ]
+}

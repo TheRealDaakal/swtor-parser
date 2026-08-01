@@ -1,0 +1,56 @@
+{
+  "id": "gxr_5_sabotage_droid",
+  "name": "GXR-5 Sabotage Droid",
+  "boss_names": [
+    "GXR-5 Sabotage Droid"
+  ],
+  "boss_npc_ids": [
+    "2509699714908160",
+    "430896888938496"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "gxr_5_sabotage_droid_orbs_adds_75",
+      "label": "Adds 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "GXR-5 Sabotage Droid"
+        ]
+      }
+    },
+    {
+      "id": "gxr_5_sabotage_droid_orbs_adds_50",
+      "label": "Adds 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "GXR-5 Sabotage Droid"
+        ]
+      }
+    },
+    {
+      "id": "gxr_5_sabotage_droid_orbs_adds_25",
+      "label": "Adds 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "GXR-5 Sabotage Droid"
+        ]
+      }
+    }
+  ]
+}

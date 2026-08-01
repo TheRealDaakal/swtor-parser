@@ -1,0 +1,72 @@
+{
+  "id": "heta_kol",
+  "name": "Heta Kol",
+  "boss_names": [
+    "Heta Kol",
+    "Heta Kol P2"
+  ],
+  "boss_npc_ids": [
+    "4419718916079616",
+    "4437744893820928"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "heta_kol_orbs_escape_66",
+      "label": "Escape 66",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 66.0,
+        "selector": [
+          "4419718916079616"
+        ]
+      }
+    },
+    {
+      "id": "heta_kol_orbs_escape_33",
+      "label": "Escape 33",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 33.0,
+        "selector": [
+          "4437744893820928"
+        ]
+      }
+    },
+    {
+      "id": "heta_kol_orbs_flamethrower",
+      "label": "Flamethrower",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4438419203686400"
+      }
+    },
+    {
+      "id": "heta_kol_orbs_grenade",
+      "label": "Grenade",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4438024066695168"
+      }
+    },
+    {
+      "id": "heta_kol_orbs_lockdown",
+      "label": "Lockdown",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4437001864478720"
+      }
+    }
+  ]
+}

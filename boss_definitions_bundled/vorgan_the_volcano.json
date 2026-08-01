@@ -1,0 +1,44 @@
+{
+  "id": "vorgan_the_volcano",
+  "name": "Vorgan the Volcano",
+  "boss_names": [
+    "Vorgan the Volcano",
+    "Sawbones Gjonfs",
+    "2R-CH, Torch"
+  ],
+  "boss_npc_ids": [
+    "2286223976562688",
+    "2286228271529984",
+    "2286241156431872",
+    "3152158102913024",
+    "3152162397880320",
+    "3152166692847616"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "vorgan_the_volcano_orbs_shield_self",
+      "label": "Shield Self",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3230060219727872"
+      }
+    },
+    {
+      "id": "vorgan_the_volcano_orbs_shielf_friends",
+      "label": "Shielf Friends",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3230068809662464"
+      }
+    }
+  ]
+}

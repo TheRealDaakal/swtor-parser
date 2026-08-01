@@ -1,0 +1,136 @@
+{
+  "id": "bulwark",
+  "name": "Bulwark",
+  "boss_names": [
+    "Bulwark"
+  ],
+  "boss_npc_ids": [
+    "2511984637509632",
+    "751348693860352"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "bulwark_orbs_phase_90",
+      "label": "Phase 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Bulwark"
+        ]
+      }
+    },
+    {
+      "id": "bulwark_orbs_phase_80",
+      "label": "Phase 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Bulwark"
+        ]
+      }
+    },
+    {
+      "id": "bulwark_orbs_phase_60",
+      "label": "Phase 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Bulwark"
+        ]
+      }
+    },
+    {
+      "id": "bulwark_orbs_phase_40",
+      "label": "Phase 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Bulwark"
+        ]
+      }
+    },
+    {
+      "id": "bulwark_orbs_phase_20",
+      "label": "Phase 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Bulwark"
+        ]
+      }
+    },
+    {
+      "id": "bulwark_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bulwark_orbs_phase_90"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "bulwark_orbs_canceler",
+      "label": "Canceler",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2520437133148160"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "bulwark_orbs_missile",
+      "label": "Missile_",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2970463806423040"
+      }
+    },
+    {
+      "id": "bulwark_orbs_smash",
+      "label": "Smash_",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "bulwark_orbs_missile"
+      }
+    },
+    {
+      "id": "bulwark_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2520419953278976"
+      }
+    },
+    {
+      "id": "bulwark_orbs_missile",
+      "label": "Missile",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2520462902951936"
+      }
+    }
+  ]
+}

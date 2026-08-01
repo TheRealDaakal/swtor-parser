@@ -1,0 +1,22 @@
+{
+  "id": "prototypes_a14_b16",
+  "name": "Prototype A-14 & Prototype B-16",
+  "boss_names": [
+    "Prototype A-14",
+    "Prototype B-16"
+  ],
+  "boss_npc_ids": [
+    "1790202498514944",
+    "1790206793482240",
+    "2511718349537280",
+    "2511726939471872"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

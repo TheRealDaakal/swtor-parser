@@ -1,0 +1,59 @@
+{
+  "id": "asteroid_beast",
+  "name": "Asteroid Beast",
+  "boss_names": [
+    "Asteroid Beast"
+  ],
+  "boss_npc_ids": [
+    "3251019660132352"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "asteroid_beast_orbs_kick_sweep",
+      "label": "Kick + Sweep",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3251041134968832"
+      }
+    },
+    {
+      "id": "asteroid_beast_orbs_rampage_90",
+      "label": "Rampage 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Asteroid Beast"
+        ]
+      }
+    },
+    {
+      "id": "asteroid_beast_orbs_rampage",
+      "label": "Rampage",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "asteroid_beast_orbs_rampage_90"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "asteroid_beast_orbs_rampage",
+      "label": "Rampage",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3251036840001536"
+      }
+    }
+  ]
+}

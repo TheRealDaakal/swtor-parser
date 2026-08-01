@@ -1,0 +1,92 @@
+{
+  "id": "master_riilna",
+  "name": "Master Riilna",
+  "boss_names": [
+    "Master Riilna"
+  ],
+  "boss_npc_ids": [
+    "3333461557379072",
+    "3468753027203072"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "master_riilna_orbs_adds_75",
+      "label": "Adds 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Master Riilna"
+        ]
+      }
+    },
+    {
+      "id": "master_riilna_orbs_adds_50",
+      "label": "Adds 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Master Riilna"
+        ]
+      }
+    },
+    {
+      "id": "master_riilna_orbs_adds_25",
+      "label": "Adds 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Master Riilna"
+        ]
+      }
+    },
+    {
+      "id": "master_riilna_orbs_quake",
+      "label": "Quake",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3342210405761024"
+      }
+    },
+    {
+      "id": "master_riilna_orbs_knocback",
+      "label": "Knocback",
+      "duration_seconds": 13.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3483446110322688"
+      }
+    },
+    {
+      "id": "master_riilna_orbs_mind_crush",
+      "label": "Mind Crush",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3342300600074240"
+      }
+    },
+    {
+      "id": "master_riilna_orbs_throw",
+      "label": "Throw",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3342197520859136"
+      }
+    }
+  ]
+}

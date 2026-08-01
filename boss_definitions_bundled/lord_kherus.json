@@ -1,0 +1,109 @@
+{
+  "id": "lord_kherus",
+  "name": "Lord Kherus",
+  "boss_names": [
+    "Lord Kherus"
+  ],
+  "boss_npc_ids": [
+    "2482594176303104"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "lord_kherus_orbs_drain_85",
+      "label": "Drain 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain_70",
+      "label": "Drain 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain_55",
+      "label": "Drain 55",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 55.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain_40",
+      "label": "Drain 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain_25",
+      "label": "Drain 25",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain_10",
+      "label": "Drain 10",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Lord Kherus"
+        ]
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_drain",
+      "label": "Drain",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2485635013148672"
+      }
+    },
+    {
+      "id": "lord_kherus_orbs_whirlwind",
+      "label": "Whirlwind",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2495281509695488"
+      }
+    }
+  ]
+}

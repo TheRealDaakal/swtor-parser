@@ -1,0 +1,89 @@
+{
+  "id": "captain_grimyk",
+  "name": "Captain Grimyk",
+  "boss_names": [
+    "Captain Grimyk"
+  ],
+  "boss_npc_ids": [
+    "2503961638600704",
+    "3210677032321024"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "captain_grimyk_orbs_grenade",
+      "label": "Grenade",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2506302395777024"
+      }
+    },
+    {
+      "id": "captain_grimyk_orbs_adds_90",
+      "label": "Adds 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Captain Grimyk"
+        ]
+      }
+    },
+    {
+      "id": "captain_grimyk_orbs_adds_70",
+      "label": "Adds 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "Captain Grimyk"
+        ]
+      }
+    },
+    {
+      "id": "captain_grimyk_orbs_adds_30",
+      "label": "Adds 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Captain Grimyk"
+        ]
+      }
+    },
+    {
+      "id": "captain_grimyk_orbs_adds_50",
+      "label": "Adds 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Captain Grimyk"
+        ]
+      }
+    },
+    {
+      "id": "captain_grimyk_orbs_gg",
+      "label": "GG",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Captain Grimyk"
+        ]
+      }
+    }
+  ]
+}

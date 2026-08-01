@@ -1,0 +1,29 @@
+{
+  "id": "foundry_guardian",
+  "name": "Foundry Guardian",
+  "boss_names": [
+    "Foundry Guardian"
+  ],
+  "boss_npc_ids": [
+    "2514742006513664",
+    "747710856560640"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "foundry_guardian_orbs_molten_burst",
+      "label": "Molten Burst",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2521790047846400"
+      }
+    }
+  ]
+}

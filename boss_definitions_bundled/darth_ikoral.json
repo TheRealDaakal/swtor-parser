@@ -1,0 +1,116 @@
+{
+  "id": "darth_ikoral",
+  "name": "Darth Ikoral",
+  "boss_names": [
+    "Darth Ikoral"
+  ],
+  "boss_npc_ids": [
+    "1478800189685760"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "darth_ikoral_orbs_adds_80",
+      "label": "Adds 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Darth Ikoral"
+        ]
+      }
+    },
+    {
+      "id": "darth_ikoral_orbs_adds_40",
+      "label": "Adds 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Darth Ikoral"
+        ]
+      }
+    },
+    {
+      "id": "darth_ikoral_orbs_empower_60",
+      "label": "Empower 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Darth Ikoral"
+        ]
+      }
+    },
+    {
+      "id": "darth_ikoral_orbs_empower_20",
+      "label": "Empower 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Darth Ikoral"
+        ]
+      }
+    },
+    {
+      "id": "darth_ikoral_orbs_empowered_vm",
+      "label": "Empowered VM",
+      "duration_seconds": 50.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2496982316744704"
+      }
+    },
+    {
+      "id": "darth_ikoral_orbs_knocback_80",
+      "label": "Knocback",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "darth_ikoral_orbs_adds_80"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "darth_ikoral_orbs_cant_knockback",
+      "label": "Cant knockback",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2496982316744704"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "darth_ikoral_orbs_knockback_permision",
+      "label": "Knockback permision",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "darth_ikoral_orbs_adds_40"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "darth_ikoral_orbs_knockback_reset",
+      "label": "Knockback Reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2487743842091008"
+      },
+      "is_alert": true
+    }
+  ]
+}

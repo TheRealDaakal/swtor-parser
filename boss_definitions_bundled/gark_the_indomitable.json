@@ -1,0 +1,74 @@
+{
+  "id": "gark_the_indomitable",
+  "name": "Gark the Indomitable",
+  "boss_names": [
+    "Gark the Indomitable"
+  ],
+  "boss_npc_ids": [
+    "1675608476090368",
+    "2511477831368704"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "gark_the_indomitable_orbs_adds_90",
+      "label": "Adds 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 99.0,
+        "selector": [
+          "Gark the Indomitable"
+        ]
+      }
+    },
+    {
+      "id": "gark_the_indomitable_orbs_adds_30",
+      "label": "Adds 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Gark the Indomitable"
+        ]
+      }
+    },
+    {
+      "id": "gark_the_indomitable_orbs_adds_60",
+      "label": "Adds 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Gark the Indomitable"
+        ]
+      }
+    },
+    {
+      "id": "gark_the_indomitable_orbs_stockstrike",
+      "label": "Stockstrike",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "1677953528233984"
+      }
+    },
+    {
+      "id": "gark_the_indomitable_orbs_hail_of_bolts",
+      "label": "Hail Of Bolts",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "1677919168495616"
+      }
+    }
+  ]
+}

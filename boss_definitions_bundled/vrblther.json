@@ -1,0 +1,74 @@
+{
+  "id": "vrblther",
+  "name": "Enhanced Vrblther",
+  "boss_names": [
+    "Enhanced Vrblther"
+  ],
+  "boss_npc_ids": [
+    "3247278743617536",
+    "3279289134874624"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "vrblther_orbs_phase_80",
+      "label": "Phase 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Enhanced Vrblther"
+        ]
+      }
+    },
+    {
+      "id": "vrblther_orbs_phase_20",
+      "label": "Phase 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Enhanced Vrblther"
+        ]
+      }
+    },
+    {
+      "id": "vrblther_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Enhanced Vrblther"
+        ]
+      }
+    },
+    {
+      "id": "vrblther_orbs_lift",
+      "label": "Lift",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3261890222358528"
+      }
+    },
+    {
+      "id": "vrblther_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3261898812293120"
+      }
+    }
+  ]
+}

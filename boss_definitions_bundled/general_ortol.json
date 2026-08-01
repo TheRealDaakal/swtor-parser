@@ -1,0 +1,102 @@
+{
+  "id": "general_ortol",
+  "name": "General Ortol",
+  "boss_names": [
+    "General Ortol"
+  ],
+  "boss_npc_ids": [
+    "2506547208912896",
+    "3210659852451840"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "general_ortol_orbs_root_knockback_95",
+      "label": "Root + Knockback 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "General Ortol"
+        ]
+      }
+    },
+    {
+      "id": "general_ortol_orbs_root",
+      "label": "Root",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2506624518324224"
+      }
+    },
+    {
+      "id": "general_ortol_orbs_knocback",
+      "label": "Knocback",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2694782740594688"
+      }
+    },
+    {
+      "id": "general_ortol_orbs_rocket_cancel_80",
+      "label": "Rocket cancel 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "General Ortol"
+        ]
+      }
+    },
+    {
+      "id": "general_ortol_orbs_rovcket_cancel_s",
+      "label": "Rovcket cancel",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "general_ortol_orbs_rocket_cancel_80"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "general_ortol_orbs_single_rocket",
+      "label": "Single Rocket",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3213541775507456"
+      }
+    },
+    {
+      "id": "general_ortol_orbs_multi_rocket_70",
+      "label": "Multi Rocket 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "General Ortol"
+        ]
+      }
+    },
+    {
+      "id": "general_ortol_orbs_multi_rocket",
+      "label": "Multi Rocket",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3213546070474752"
+      }
+    }
+  ]
+}

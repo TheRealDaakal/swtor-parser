@@ -1,0 +1,41 @@
+{
+  "id": "hxi_54_juggernaut",
+  "name": "HXI-54 Juggernaut",
+  "boss_names": [
+    "HXI-54 Juggernaut"
+  ],
+  "boss_npc_ids": [
+    "2514497193377792",
+    "745340034613248"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "hxi_54_juggernaut_orbs_generator_drain",
+      "label": "Generator Drain",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2304219889532928"
+      }
+    },
+    {
+      "id": "hxi_54_juggernaut_orbs_generator_drain_90",
+      "label": "Generator Drain 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "HXI-54 Juggernaut"
+        ]
+      }
+    }
+  ]
+}

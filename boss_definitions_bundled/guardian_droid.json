@@ -1,0 +1,168 @@
+{
+  "id": "guardian_droid",
+  "name": "Guardian Droid",
+  "boss_names": [
+    "Guardian Droid"
+  ],
+  "boss_npc_ids": [
+    "4128382694457344"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "guardian_droid_orbs_phase_80",
+      "label": "Phase 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_phase_60",
+      "label": "Phase 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_phase_45",
+      "label": "Phase 45",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 45.0,
+        "selector": [
+          "Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_phase_1",
+      "label": "Phase 1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "guardian_droid_orbs_phase_60"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "guardian_droid_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "guardian_droid_orbs_phase_25"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "guardian_droid_orbs_security_droid",
+      "label": "Security Droid",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4132312589533184"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_tank_droid",
+      "label": "Tank Droid",
+      "duration_seconds": 90.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4132346949271552"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_explosive_droid",
+      "label": "Explosive Droid",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4132342654304256"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_heat_beam",
+      "label": "Heat Beam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134146540568576"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_missile",
+      "label": "Missile",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134941109518336"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_concussive_blast",
+      "label": "Concussive Blast",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4143492389404672"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_mortar_volley",
+      "label": "Mortar Volley",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4139755767857152"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_proximity_measure",
+      "label": "Proximity Measure",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4132943949725696"
+      }
+    },
+    {
+      "id": "guardian_droid_orbs_incinerate",
+      "label": "Incinerate",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4149080141856768"
+      }
+    }
+  ]
+}

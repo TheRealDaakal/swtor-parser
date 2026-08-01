@@ -1,0 +1,65 @@
+{
+  "id": "korriban_republic_commander",
+  "name": "Republic Commander",
+  "boss_names": [
+    "Republic Commander"
+  ],
+  "boss_npc_ids": [
+    "3484803319988224",
+    "3493182801182720"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "korriban_republic_commander_orbs_force_push",
+      "label": "Force Push",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3493260110594048"
+      }
+    },
+    {
+      "id": "korriban_republic_commander_orbs_master_strike",
+      "label": "Master Strike",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3493272995495936"
+      }
+    },
+    {
+      "id": "korriban_republic_commander_orbs_master_stasis",
+      "label": "Master Stasis",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3493247225692160"
+      }
+    },
+    {
+      "id": "korriban_republic_commander_orbs_shockwave",
+      "label": "Shockwave",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "811976452210688"
+      }
+    },
+    {
+      "id": "korriban_republic_commander_orbs_hilt_strike",
+      "label": "Hilt Strike",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3493277290463232"
+      }
+    }
+  ]
+}

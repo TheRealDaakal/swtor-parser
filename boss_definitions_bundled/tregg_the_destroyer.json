@@ -1,0 +1,41 @@
+{
+  "id": "tregg_the_destroyer",
+  "name": "Tregg the Destroyer",
+  "boss_names": [
+    "Tregg the Destroyer"
+  ],
+  "boss_npc_ids": [
+    "1690314444111872",
+    "2511761299210240"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "tregg_the_destroyer_orbs_leap_slash",
+      "label": "Leap + Slash",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2315786236461056"
+      }
+    },
+    {
+      "id": "tregg_the_destroyer_orbs_leap_slah",
+      "label": "Leap + Slah",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Tregg the Destroyer"
+        ]
+      }
+    }
+  ]
+}

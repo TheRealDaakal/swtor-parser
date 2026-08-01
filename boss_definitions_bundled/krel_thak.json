@@ -1,0 +1,140 @@
+{
+  "id": "krel_thak",
+  "name": "Krel Thak",
+  "boss_names": [
+    "Krel Thak"
+  ],
+  "boss_npc_ids": [
+    "2511486421303296",
+    "770946629632000"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "krel_thak_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Krel Thak"
+        ]
+      }
+    },
+    {
+      "id": "krel_thak_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Krel Thak"
+        ]
+      }
+    },
+    {
+      "id": "krel_thak_orbs_phase_4",
+      "label": "Phase 4",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Krel Thak"
+        ]
+      }
+    },
+    {
+      "id": "krel_thak_orbs_phase_5",
+      "label": "Phase 5",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Krel Thak"
+        ]
+      }
+    },
+    {
+      "id": "krel_thak_orbs_p2",
+      "label": "P2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068658113216512"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_p3",
+      "label": "P3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068662408183808"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_p4",
+      "label": "P4",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068670998118400"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_p5",
+      "label": "P5",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068675293085696"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_dirty_kick",
+      "label": "Dirty Kick",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068301630930944"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_thermal_grenade",
+      "label": "Thermal Grenade",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2068318810800128"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_dirty_kick_mm",
+      "label": "Dirty Kick MM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2522425703006208"
+      }
+    },
+    {
+      "id": "krel_thak_orbs_thermal_grenade_mm",
+      "label": "Thermal Grenade MM",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2522464357711872"
+      }
+    }
+  ]
+}

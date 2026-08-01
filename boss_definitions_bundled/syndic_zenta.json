@@ -1,0 +1,186 @@
+{
+  "id": "syndic_zenta",
+  "name": "Syndic Zenta",
+  "boss_names": [
+    "Syndic Zenta"
+  ],
+  "boss_npc_ids": [
+    "4135314771673088"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "syndic_zenta_orbs_phase_80",
+      "label": "Phase 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Syndic Zenta"
+        ]
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_phase_60",
+      "label": "Phase 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Syndic Zenta"
+        ]
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_phase_45",
+      "label": "Phase 45",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 45.0,
+        "selector": [
+          "Syndic Zenta"
+        ]
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_phase_1",
+      "label": "Phase 1",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "syndic_zenta_orbs_phase_60"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "syndic_zenta_orbs_grapple",
+      "label": "Grapple",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4138836644855808"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_magnetic_charge",
+      "label": "Magnetic Charge",
+      "duration_seconds": 11.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136714931011584"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_medic",
+      "label": "Medic",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4137170197544960"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_laser_droid",
+      "label": "Laser Droid",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136379923562496"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_assassins",
+      "label": "Assassins",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136414283300864"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_impulse",
+      "label": "Impulse",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4151811741057024"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_snipe",
+      "label": "Snipe",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4140116545110016"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_snipers",
+      "label": "Snipers",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136375628595200"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_static_probe",
+      "label": "Static Probe",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4145493844164608"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_assassins",
+      "label": "Assassins_",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4140193854521344"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_tank_droids",
+      "label": "Tank Droids",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136384218529792"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_demo_droid",
+      "label": "Demo Droid",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4149479573815296"
+      }
+    },
+    {
+      "id": "syndic_zenta_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Syndic Zenta"
+        ]
+      },
+      "is_alert": true
+    }
+  ]
+}

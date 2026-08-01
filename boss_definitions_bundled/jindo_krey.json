@@ -1,0 +1,19 @@
+{
+  "id": "jindo_krey",
+  "name": "Jindo Krey",
+  "boss_names": [
+    "Jindo Krey"
+  ],
+  "boss_npc_ids": [
+    "2511709759602688",
+    "770959514533888"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

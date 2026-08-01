@@ -1,0 +1,74 @@
+{
+  "id": "doctor_lorrick",
+  "name": "Doctor Lorrick",
+  "boss_names": [
+    "Doctor Lorrick"
+  ],
+  "boss_npc_ids": [
+    "2794163988856832",
+    "2809320928444416",
+    "2819959562436608",
+    "2838582540632064"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "doctor_lorrick_orbs_phase_40",
+      "label": "Phase 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Doctor Lorrick"
+        ]
+      }
+    },
+    {
+      "id": "doctor_lorrick_orbs_phase_10",
+      "label": "Phase 10",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "Doctor Lorrick"
+        ]
+      }
+    },
+    {
+      "id": "doctor_lorrick_orbs_viral_count",
+      "label": "Viral Count",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2877413339955200"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "doctor_lorrick_orbs_bash",
+      "label": "Bash",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2877482059431936"
+      }
+    },
+    {
+      "id": "doctor_lorrick_orbs_ravage",
+      "label": "Ravage",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2877451994660864"
+      }
+    }
+  ]
+}

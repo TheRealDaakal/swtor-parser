@@ -1,0 +1,60 @@
+{
+  "id": "burrower_matriarch",
+  "name": "Burrower Matriarch",
+  "boss_names": [
+    "Burrower Matriarch"
+  ],
+  "boss_npc_ids": [
+    "1148233736781824",
+    "2514724826644480"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "burrower_matriarch_orbs_spit_pool",
+      "label": "Spit Pool",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2316967352467456"
+      }
+    },
+    {
+      "id": "burrower_matriarch_orbs_knocback",
+      "label": "Knocback",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2541984984072192"
+      }
+    },
+    {
+      "id": "burrower_matriarch_orbs_spit_pool_90",
+      "label": "Spit Pool 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "2514724826644480"
+        ]
+      }
+    },
+    {
+      "id": "burrower_matriarch_orbs_spit_pool",
+      "label": "Spit Pool",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "burrower_matriarch_orbs_spit_pool_90"
+      },
+      "is_alert": true
+    }
+  ]
+}

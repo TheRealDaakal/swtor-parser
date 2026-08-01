@@ -1,0 +1,28 @@
+{
+  "id": "mokan",
+  "name": "Commander Mokan",
+  "boss_names": [
+    "Commander Mokan"
+  ],
+  "boss_npc_ids": [
+    "3417131815272448"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "mokan_orbs_compound_17",
+      "label": "Compound 17",
+      "duration_seconds": 43.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3535548358590464"
+      }
+    }
+  ]
+}

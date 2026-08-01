@@ -1,0 +1,29 @@
+{
+  "id": "bonus_droid",
+  "name": "M2-AUX Foreman",
+  "boss_names": [
+    "M2-AUX Foreman"
+  ],
+  "boss_npc_ids": [
+    "3506896631758848",
+    "3506922401562624"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "bonus_droid_orbs_endothermic_grenade",
+      "label": "Endothermic Grenade",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3507768510119936"
+      }
+    }
+  ]
+}

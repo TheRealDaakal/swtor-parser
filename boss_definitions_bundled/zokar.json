@@ -1,0 +1,66 @@
+{
+  "id": "zokar",
+  "name": "Chief Zokar",
+  "boss_names": [
+    "Chief Zokar"
+  ],
+  "boss_npc_ids": [
+    "3245985958461440",
+    "3279302019776512"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "zokar_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Chief Zokar"
+        ]
+      }
+    },
+    {
+      "id": "zokar_orbs_phase_75",
+      "label": "Phase 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Chief Zokar"
+        ]
+      }
+    },
+    {
+      "id": "zokar_orbs_phase_95",
+      "label": "Phase 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Chief Zokar"
+        ]
+      }
+    },
+    {
+      "id": "zokar_orbs_jump",
+      "label": "Jump",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "zokar_orbs_phase_95"
+      },
+      "is_alert": true
+    }
+  ]
+}

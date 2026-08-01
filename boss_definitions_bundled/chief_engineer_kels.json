@@ -1,0 +1,38 @@
+{
+  "id": "chief_engineer_kels",
+  "name": "Chief Engineer Kels",
+  "boss_names": [
+    "Chief Engineer Kels"
+  ],
+  "boss_npc_ids": [
+    "1004111814197248",
+    "2514488603443200"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "chief_engineer_kels_orbs_reflective_shield",
+      "label": "Reflective Shield",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2541542602440704"
+      }
+    },
+    {
+      "id": "chief_engineer_kels_orbs_reactor_pulse",
+      "label": "Reactor Pulse",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2535314899861504"
+      }
+    }
+  ]
+}

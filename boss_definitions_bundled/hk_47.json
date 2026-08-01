@@ -1,0 +1,108 @@
+{
+  "id": "hk_47",
+  "name": "HK-47",
+  "boss_names": [
+    "HK-47"
+  ],
+  "boss_npc_ids": [
+    "2511701169668096",
+    "770955219566592"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "hk_47_orbs_snipe_p2",
+      "label": "Snipe P2",
+      "duration_seconds": 6.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "hk_47_orbs_sonic_grenade_p2"
+      }
+    },
+    {
+      "id": "hk_47_orbs_poison_grenade_p2",
+      "label": "Poison Grenade P2",
+      "duration_seconds": 3.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "hk_47_orbs_snipe_p2"
+      }
+    },
+    {
+      "id": "hk_47_orbs_snipe_90",
+      "label": "Snipe 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "hk_47_orbs_mortar_80",
+      "label": "Mortar 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "hk_47_orbs_turrets_60",
+      "label": "Turrets 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "hk_47_orbs_carbonite_40",
+      "label": "Carbonite 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "hk_47_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "hk_47_orbs_carbonite_40"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "hk_47_orbs_carbonite_10",
+      "label": "Carbonite 10",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    }
+  ]
+}

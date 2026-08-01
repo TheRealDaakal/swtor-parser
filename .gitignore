@@ -21,3 +21,4 @@ dist/
 # Raw reference downloads used by tools/translate_orbs_json.py -- source
 # data from github.com/L34T/ORBS, re-fetchable, not ours to redistribute.
 scratch_orbs/
+scratch_baras_fp/

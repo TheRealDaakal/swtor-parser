@@ -1,0 +1,95 @@
+{
+  "id": "rasha",
+  "name": "Commander Rasha",
+  "boss_names": [
+    "Commander Rasha"
+  ],
+  "boss_npc_ids": [
+    "4258185196077056"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "rasha_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4282928502669312"
+      }
+    },
+    {
+      "id": "rasha_orbs_phase_33",
+      "label": "Phase 33",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 33.5,
+        "selector": [
+          "Commander Rasha"
+        ]
+      }
+    },
+    {
+      "id": "rasha_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "rasha_orbs_phase_33"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "rasha_orbs_adds",
+      "label": "Adds_",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4284040899198976"
+      }
+    },
+    {
+      "id": "rasha_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 28.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4283924935081984"
+      }
+    },
+    {
+      "id": "rasha_orbs_artillery",
+      "label": "Artillery",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4282919912734720"
+      }
+    },
+    {
+      "id": "rasha_orbs_sweeping_gunfire",
+      "label": "Sweeping Gunfire",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4282954272473088"
+      }
+    },
+    {
+      "id": "rasha_orbs_piercing_rounds",
+      "label": "Piercing Rounds",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4282958567440384"
+      }
+    }
+  ]
+}

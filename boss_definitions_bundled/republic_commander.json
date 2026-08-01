@@ -1,0 +1,78 @@
+{
+  "id": "republic_commander",
+  "name": "Republic Commander",
+  "boss_names": [
+    "Republic Commander"
+  ],
+  "boss_npc_ids": [
+    "3485688083251200",
+    "3493169916280832"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "republic_commander_orbs_force_charge",
+      "label": "Force Charge",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3485786867499008"
+      }
+    },
+    {
+      "id": "republic_commander_orbs_force_push",
+      "label": "Force Push",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3485782572531712"
+      }
+    },
+    {
+      "id": "republic_commander_orbs_force_push_90",
+      "label": "Force Push 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Republic Commander"
+        ]
+      }
+    },
+    {
+      "id": "republic_commander_orbs_force_push",
+      "label": "Force Push",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "republic_commander_orbs_force_push_90"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "republic_commander_orbs_spike",
+      "label": "Spike",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3485808342335488"
+      }
+    },
+    {
+      "id": "republic_commander_orbs_force_sweep",
+      "label": "Force Sweep",
+      "duration_seconds": 17.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3493199981051904"
+      }
+    }
+  ]
+}

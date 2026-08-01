@@ -1,0 +1,32 @@
+{
+  "id": "yadira_ban",
+  "name": "Yadira Ban",
+  "boss_names": [
+    "Yadira Ban"
+  ],
+  "boss_npc_ids": [
+    "2509777024319488",
+    "365755119960064"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "yadira_ban_orbs_cyclone_90",
+      "label": "Cyclone 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Yadira Ban"
+        ]
+      }
+    }
+  ]
+}

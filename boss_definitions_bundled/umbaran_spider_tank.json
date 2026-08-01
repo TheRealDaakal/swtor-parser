@@ -1,0 +1,85 @@
+{
+  "id": "umbaran_spider_tank",
+  "name": "Umbaran Spider Tank",
+  "boss_names": [
+    "Umbaran Spider Tank"
+  ],
+  "boss_npc_ids": [
+    "4112779078270976"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "umbaran_spider_tank_orbs_phase_75",
+      "label": "Phase 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Umbaran Spider Tank"
+        ]
+      }
+    },
+    {
+      "id": "umbaran_spider_tank_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Umbaran Spider Tank"
+        ]
+      }
+    },
+    {
+      "id": "umbaran_spider_tank_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Umbaran Spider Tank"
+        ]
+      }
+    },
+    {
+      "id": "umbaran_spider_tank_orbs_phase_15",
+      "label": "Phase 15",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Umbaran Spider Tank"
+        ]
+      }
+    },
+    {
+      "id": "umbaran_spider_tank_orbs_concussive_blast",
+      "label": "Concussive Blast",
+      "duration_seconds": 14.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4126385534664704"
+      }
+    },
+    {
+      "id": "umbaran_spider_tank_orbs_proximity_burner",
+      "label": "Proximity Burner",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4117963103797248"
+      }
+    }
+  ]
+}

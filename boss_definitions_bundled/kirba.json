@@ -1,0 +1,124 @@
+{
+  "id": "kirba",
+  "name": "Kirba, the Forgotten",
+  "boss_names": [
+    "Kirba, the Forgotten"
+  ],
+  "boss_npc_ids": [
+    "4702761555853312",
+    "4702765850820608",
+    "4702770145787904"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "kirba_orbs_forceful_presence",
+      "label": "Forceful Presence",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kirba_orbs_blast_of_hatred"
+      }
+    },
+    {
+      "id": "kirba_orbs_furious_bellow",
+      "label": "Furious Bellow",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kirba_orbs_forceful_presence"
+      }
+    },
+    {
+      "id": "kirba_orbs_enraged_stomp",
+      "label": "Enraged Stomp",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4677219385344000"
+      }
+    },
+    {
+      "id": "kirba_orbs_ancient_s_rage",
+      "label": "Ancient's Rage",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kirba_orbs_furious_bellow"
+      }
+    },
+    {
+      "id": "kirba_orbs_ancient_s_rage",
+      "label": "Ancient's Rage_",
+      "duration_seconds": 61.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4677709011615744"
+      }
+    },
+    {
+      "id": "kirba_orbs_forceful_presence",
+      "label": "Forceful Presence_",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4676824248352768"
+      }
+    },
+    {
+      "id": "kirba_orbs_furious_bellow",
+      "label": "Furious Bellow_",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4677077651423232"
+      }
+    },
+    {
+      "id": "kirba_orbs_resist",
+      "label": "Resist",
+      "duration_seconds": 4.35,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4677064766521344"
+      }
+    },
+    {
+      "id": "kirba_orbs_blast_of_hatred",
+      "label": "Blast of Hatred_",
+      "duration_seconds": 15.65,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kirba_orbs_resist"
+      }
+    },
+    {
+      "id": "kirba_orbs_phase_30",
+      "label": "Phase 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Kirba, the Forgotten"
+        ]
+      }
+    },
+    {
+      "id": "kirba_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "kirba_orbs_phase_30"
+      },
+      "is_alert": true
+    }
+  ]
+}

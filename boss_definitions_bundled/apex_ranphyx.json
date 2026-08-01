@@ -1,0 +1,68 @@
+{
+  "id": "apex_ranphyx",
+  "name": "Apex Ranphyx",
+  "boss_names": [
+    "Apex Ranphyx"
+  ],
+  "boss_npc_ids": [
+    "4468097427701760"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "apex_ranphyx_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Apex Ranphyx"
+        ]
+      }
+    },
+    {
+      "id": "apex_ranphyx_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "apex_ranphyx_orbs_phase_50"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "apex_ranphyx_orbs_harrowing",
+      "label": "Harrowing",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4474780396814336"
+      }
+    },
+    {
+      "id": "apex_ranphyx_orbs_roar",
+      "label": "Roar",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4484667411529728"
+      }
+    },
+    {
+      "id": "apex_ranphyx_orbs_feral_pounce",
+      "label": "Feral Pounce",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4473539151265792"
+      }
+    }
+  ]
+}

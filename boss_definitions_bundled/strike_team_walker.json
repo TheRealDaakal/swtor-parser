@@ -1,0 +1,73 @@
+{
+  "id": "strike_team_walker",
+  "name": "Strike Team Walker",
+  "boss_names": [
+    "Strike Team Walker"
+  ],
+  "boss_npc_ids": [
+    "4137311931465728"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "strike_team_walker_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 80.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4140206739423232"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_orbital_laser",
+      "label": "Orbital Laser",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4137865982246912"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_burst_wave",
+      "label": "Burst Wave",
+      "duration_seconds": 22.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4143638418292736"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_rain_of_fire",
+      "label": "Rain of Fire",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4138295478976512"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_buf_repair",
+      "label": "Buf + Repair",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4138033485971456"
+      }
+    },
+    {
+      "id": "strike_team_walker_orbs_shock_and_awe",
+      "label": "Shock and Awe",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4137853097345024"
+      }
+    }
+  ]
+}

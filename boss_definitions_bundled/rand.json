@@ -1,0 +1,29 @@
+{
+  "id": "rand",
+  "name": "Commander Rand",
+  "boss_names": [
+    "Commander Rand"
+  ],
+  "boss_npc_ids": [
+    "3373078335717376",
+    "3491885721059328"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "rand_orbs_knockback_burst",
+      "label": "Knockback + Burst",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3390219550195712"
+      }
+    }
+  ]
+}

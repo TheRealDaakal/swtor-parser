@@ -1,0 +1,105 @@
+{
+  "id": "foundry_hk_47",
+  "name": "HK-47",
+  "boss_names": [
+    "HK-47"
+  ],
+  "boss_npc_ids": [
+    "2514754891415552",
+    "739833886539776"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "foundry_hk_47_orbs_iddle",
+      "label": "Iddle",
+      "duration_seconds": 18.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2518195160219648"
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_stealth_75",
+      "label": "Stealth 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_stealth_50",
+      "label": "Stealth 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_stealth_25",
+      "label": "Stealth 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_kick",
+      "label": "Kick",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2518165095448576"
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_kick_90",
+      "label": "Kick 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "HK-47"
+        ]
+      }
+    },
+    {
+      "id": "foundry_hk_47_orbs_kick",
+      "label": "Kick",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "foundry_hk_47_orbs_kick_90"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "foundry_hk_47_orbs_enrage_core",
+      "label": "Enrage Core",
+      "duration_seconds": 18.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2518182275317760"
+      }
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "id": "duneclaw",
+  "name": "Enhanced Duneclaw",
+  "boss_names": [
+    "Enhanced Duneclaw"
+  ],
+  "boss_npc_ids": [
+    "3247274448650240",
+    "3279293429841920"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "duneclaw_orbs_sandstorm",
+      "label": "Sandstorm",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3262049136148480"
+      }
+    },
+    {
+      "id": "duneclaw_orbs_sweep",
+      "label": "Sweep",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3261555214909440"
+      }
+    },
+    {
+      "id": "duneclaw_orbs_rampage",
+      "label": "Rampage",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3284563354714112"
+      }
+    },
+    {
+      "id": "duneclaw_orbs_phase_95",
+      "label": "Phase 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Enhanced Duneclaw"
+        ]
+      }
+    }
+  ]
+}

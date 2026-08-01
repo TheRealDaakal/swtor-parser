@@ -1,0 +1,86 @@
+{
+  "id": "rakghoul_behemoth",
+  "name": "Rakghoul Behemoth",
+  "boss_names": [
+    "Rakghoul Behemoth"
+  ],
+  "boss_npc_ids": [
+    "2741129732685824",
+    "2765357643202560"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "rakghoul_behemoth_orbs_phase_60",
+      "label": "Phase 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Rakghoul Behemoth"
+        ]
+      }
+    },
+    {
+      "id": "rakghoul_behemoth_orbs_phase_20",
+      "label": "Phase 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Rakghoul Behemoth"
+        ]
+      }
+    },
+    {
+      "id": "rakghoul_behemoth_orbs_phase_80",
+      "label": "Phase 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "Rakghoul Behemoth"
+        ]
+      }
+    },
+    {
+      "id": "rakghoul_behemoth_orbs_phase_40",
+      "label": "Phase 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Rakghoul Behemoth"
+        ]
+      }
+    },
+    {
+      "id": "rakghoul_behemoth_orbs_smash",
+      "label": "Smash",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2765327578431488"
+      }
+    },
+    {
+      "id": "rakghoul_behemoth_orbs_lift",
+      "label": "Lift",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2765336168366080"
+      }
+    }
+  ]
+}

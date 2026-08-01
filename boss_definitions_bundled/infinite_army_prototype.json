@@ -1,0 +1,59 @@
+{
+  "id": "infinite_army_prototype",
+  "name": "Infinite Army Prototype",
+  "boss_names": [
+    "Prototype Solider"
+  ],
+  "boss_npc_ids": [
+    "3493419024384000"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "infinite_army_prototype_orbs_knockback",
+      "label": "Knockback",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3511084224872448"
+      }
+    },
+    {
+      "id": "infinite_army_prototype_orbs_shield_85",
+      "label": "Shield 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Infinite Army Prototype"
+        ]
+      }
+    },
+    {
+      "id": "infinite_army_prototype_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3516401394384896"
+      }
+    },
+    {
+      "id": "infinite_army_prototype_orbs_shield",
+      "label": "Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "infinite_army_prototype_orbs_shield_85"
+      },
+      "is_alert": true
+    }
+  ]
+}

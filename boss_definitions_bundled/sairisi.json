@@ -1,0 +1,60 @@
+{
+  "id": "sairisi",
+  "name": "Sairisi",
+  "boss_names": [
+    "Sairisi"
+  ],
+  "boss_npc_ids": [
+    "3350332188917760",
+    "3505251659284480"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "sairisi_orbs_flechette_cannon_35",
+      "label": "Flechette Cannon 35 ",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 35.0,
+        "selector": [
+          "Sairisi"
+        ]
+      }
+    },
+    {
+      "id": "sairisi_orbs_grapple",
+      "label": "Grapple",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3356607136137216"
+      }
+    },
+    {
+      "id": "sairisi_orbs_flechette_cannon",
+      "label": "Flechette Cannon",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3369766915932160"
+      }
+    },
+    {
+      "id": "sairisi_orbs_cannon_hp",
+      "label": "Cannon",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sairisi_orbs_flechette_cannon_35"
+      },
+      "is_alert": true
+    }
+  ]
+}

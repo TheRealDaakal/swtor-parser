@@ -1,0 +1,73 @@
+{
+  "id": "shield_walker",
+  "name": "Shield Squadron Unit 1",
+  "boss_names": [
+    "Shield Squadron Unit 1"
+  ],
+  "boss_npc_ids": [
+    "3369157030576128"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "shield_walker_orbs_electrical_megastorm",
+      "label": "Electrical Megastorm",
+      "duration_seconds": 90.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3393835912658944"
+      }
+    },
+    {
+      "id": "shield_walker_orbs_missile_setup",
+      "label": "Missile Setup",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3398719290474496"
+      }
+    },
+    {
+      "id": "shield_walker_orbs_missile_blast",
+      "label": "Missile Blast",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "shield_walker_orbs_missile_setup"
+      }
+    },
+    {
+      "id": "shield_walker_orbs_adds_setup",
+      "label": "Adds Setup",
+      "duration_seconds": 62.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3395214597160960"
+      }
+    },
+    {
+      "id": "shield_walker_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "shield_walker_orbs_adds_setup"
+      }
+    },
+    {
+      "id": "shield_walker_orbs_orbital_multistrike",
+      "label": "Orbital Multistrike",
+      "duration_seconds": 36.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3535453869309952"
+      }
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "vixian_mauler",
+  "name": "Vixian Mauler",
+  "boss_names": [
+    "Vixian Mauler"
+  ],
+  "boss_npc_ids": [
+    "4112173487882240"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "vixian_mauler_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Vixian Mauler"
+        ]
+      }
+    },
+    {
+      "id": "vixian_mauler_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "vixian_mauler_orbs_phase_25"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "vixian_mauler_orbs_ground_pound",
+      "label": "Ground Pound",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4116970966351872"
+      }
+    },
+    {
+      "id": "vixian_mauler_orbs_fierce_swipe",
+      "label": "Fierce Swipe",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4116983851253760"
+      }
+    },
+    {
+      "id": "vixian_mauler_orbs_enraged_pounding",
+      "label": "Enraged Pounding",
+      "duration_seconds": 9.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4117353218441216"
+      }
+    }
+  ]
+}

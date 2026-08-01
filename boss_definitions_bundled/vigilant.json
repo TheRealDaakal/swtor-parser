@@ -1,0 +1,68 @@
+{
+  "id": "vigilant",
+  "name": "The Vigilant",
+  "boss_names": [
+    "The Vigilant"
+  ],
+  "boss_npc_ids": [
+    "3247240088911872",
+    "3279310609711104"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "vigilant_orbs_grapple",
+      "label": "Grapple",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3286667888689152"
+      }
+    },
+    {
+      "id": "vigilant_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "The Vigilant"
+        ]
+      }
+    },
+    {
+      "id": "vigilant_orbs_beam",
+      "label": "Beam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3264020526137344"
+      }
+    },
+    {
+      "id": "vigilant_orbs_backhand",
+      "label": "Backhand",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3263689813655552"
+      }
+    },
+    {
+      "id": "vigilant_orbs_slash",
+      "label": "Slash",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3263951806660608"
+      }
+    }
+  ]
+}

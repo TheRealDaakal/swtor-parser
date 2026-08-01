@@ -1,0 +1,38 @@
+{
+  "id": "gxr_7_command_droid",
+  "name": "GXR-7 Command Droid",
+  "boss_names": [
+    "GXR-7 Command Droid"
+  ],
+  "boss_npc_ids": [
+    "1426904099848192",
+    "2509755549483008"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "gxr_7_command_droid_orbs_power_punch",
+      "label": "Power Punch",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2517117123428352"
+      }
+    },
+    {
+      "id": "gxr_7_command_droid_orbs_power_blast",
+      "label": "Power Blast",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2517112828461056"
+      }
+    }
+  ]
+}

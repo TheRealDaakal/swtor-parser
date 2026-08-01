@@ -1,0 +1,56 @@
+{
+  "id": "alpha_slybex",
+  "name": "Alpha Slybex",
+  "boss_names": [
+    "Alpha Slybex"
+  ],
+  "boss_npc_ids": [
+    "4121025415479296"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "alpha_slybex_orbs_poison_breath",
+      "label": "Poison Breath",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4129623940005888"
+      }
+    },
+    {
+      "id": "alpha_slybex_orbs_pounce",
+      "label": "Pounce",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4121394782666752"
+      }
+    },
+    {
+      "id": "alpha_slybex_orbs_poison",
+      "label": "Poison",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4129623940005888"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "alpha_slybex_orbs_target_swap",
+      "label": "Target Swap",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4121652480704512"
+      }
+    }
+  ]
+}

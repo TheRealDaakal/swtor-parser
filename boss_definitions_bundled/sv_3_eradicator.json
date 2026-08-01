@@ -1,0 +1,149 @@
+{
+  "id": "sv_3_eradicator",
+  "name": "SV-3 Eradicator",
+  "boss_names": [
+    "SV-3 Eradicator"
+  ],
+  "boss_npc_ids": [
+    "2482692960550912"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "sv_3_eradicator_orbs_blue_70",
+      "label": "Blue 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 70.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_red_55",
+      "label": "Red 55",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 55.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_blue_40",
+      "label": "Blue 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_red_25",
+      "label": "Red 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_blue_10",
+      "label": "Blue 10",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 10.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_knockback",
+      "label": "Knockback",
+      "duration_seconds": 16.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2491059556843520"
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_red_beam",
+      "label": "Red Beam",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2496046013874176"
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_beam_95",
+      "label": "Beam 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_red_85",
+      "label": "Red 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "SV-3 Eradicator"
+        ]
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_beam",
+      "label": "Beam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sv_3_eradicator_orbs_beam_95"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "sv_3_eradicator_orbs_blue_beam_setup",
+      "label": "Blue Beam Setup",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2496273647140864"
+      }
+    },
+    {
+      "id": "sv_3_eradicator_orbs_blue_beam",
+      "label": "Blue Beam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "sv_3_eradicator_orbs_blue_beam_setup"
+      }
+    }
+  ]
+}

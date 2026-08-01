@@ -1,0 +1,89 @@
+{
+  "id": "mavrix_varad",
+  "name": "Mavrix Varad",
+  "boss_names": [
+    "Mavrix Varad"
+  ],
+  "boss_npc_ids": [
+    "1276069143379968",
+    "3172567787503616"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "mavrix_varad_orbs_jump_95",
+      "label": "Jump 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Mavrix Varad"
+        ]
+      }
+    },
+    {
+      "id": "mavrix_varad_orbs_jump_85",
+      "label": "Jump 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Mavrix Varad"
+        ]
+      }
+    },
+    {
+      "id": "mavrix_varad_orbs_jump_65",
+      "label": "Jump 65",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "Mavrix Varad"
+        ]
+      }
+    },
+    {
+      "id": "mavrix_varad_orbs_jump_45",
+      "label": "Jump 45",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 45.0,
+        "selector": [
+          "Mavrix Varad"
+        ]
+      }
+    },
+    {
+      "id": "mavrix_varad_orbs_random_missile_mm",
+      "label": "Random Missile MM",
+      "duration_seconds": 18.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2455797875343360"
+      }
+    },
+    {
+      "id": "mavrix_varad_orbs_jump_25",
+      "label": "Jump 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Mavrix Varad"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "id": "commander_jensyn",
+  "name": "Commander Jensyn",
+  "boss_names": [
+    "Commander Jensyn"
+  ],
+  "boss_npc_ids": [
+    "3331339843534848",
+    "3468757322170368"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "commander_jensyn_orbs_alpha_strike_75",
+      "label": "Alpha Strike 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Commander Jensyn"
+        ]
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_alpha_strike_25",
+      "label": "Alpha Strike 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Commander Jensyn"
+        ]
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_stun_add",
+      "label": "Stun Add",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Commander Jensyn"
+        ]
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_stun_add",
+      "label": "Stun Add",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "commander_jensyn_orbs_stun_add"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "commander_jensyn_orbs_master_strike",
+      "label": "Master Strike_",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3333800859795456"
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_reflect_permision",
+      "label": "Reflect Permision",
+      "duration_seconds": 16.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3334715687829504"
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_stun_add",
+      "label": "Stun Add",
+      "duration_seconds": 44.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "commander_jensyn_orbs_reflect_permision"
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_suicide_add_setup",
+      "label": "Suicide Add Setup",
+      "duration_seconds": 5.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3486143349784576"
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_suicide_add",
+      "label": "Suicide Add",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "commander_jensyn_orbs_suicide_add_setup"
+      }
+    },
+    {
+      "id": "commander_jensyn_orbs_strike_cancel",
+      "label": "Strike Cancel",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3333392837902336"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "commander_jensyn_orbs_master_strike",
+      "label": "Master Strike",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3333289758687232"
+      }
+    }
+  ]
+}

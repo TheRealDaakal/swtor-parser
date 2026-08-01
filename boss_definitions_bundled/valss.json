@@ -1,0 +1,135 @@
+{
+  "id": "valss",
+  "name": "Valss",
+  "boss_names": [
+    "Valss"
+  ],
+  "boss_npc_ids": [
+    "4132209510318080"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "valss_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 67.0,
+        "selector": [
+          "Valss"
+        ]
+      }
+    },
+    {
+      "id": "valss_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 34.0,
+        "selector": [
+          "Valss"
+        ]
+      }
+    },
+    {
+      "id": "valss_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "valss_orbs_phase_2"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "valss_orbs_impulse",
+      "label": "Impulse",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134623281938432"
+      }
+    },
+    {
+      "id": "valss_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "valss_orbs_phase_3"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "valss_orbs_bombardment",
+      "label": "Bombardment_",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4136263959445504"
+      }
+    },
+    {
+      "id": "valss_orbs_bombardment",
+      "label": "Bombardment",
+      "duration_seconds": 39.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134812260499456"
+      }
+    },
+    {
+      "id": "valss_orbs_impulse",
+      "label": "Impulse_",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4135396376051712"
+      }
+    },
+    {
+      "id": "valss_orbs_powered_shot",
+      "label": "Powered Shot",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4134503022854144"
+      }
+    },
+    {
+      "id": "valss_orbs_master_stroke",
+      "label": "Master Stroke",
+      "duration_seconds": 25.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4135435030757376"
+      }
+    },
+    {
+      "id": "valss_orbs_mine_primer",
+      "label": "Mine primer",
+      "duration_seconds": 79.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4147375039840256"
+      }
+    },
+    {
+      "id": "valss_orbs_blizzard_burst",
+      "label": "Blizzard Burst",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4147581198270464"
+      }
+    }
+  ]
+}

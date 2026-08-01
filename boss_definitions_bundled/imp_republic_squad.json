@@ -1,0 +1,77 @@
+{
+  "id": "imp_republic_squad",
+  "name": "Republic Squad",
+  "boss_names": [
+    "Captain Meinar",
+    "Lieutenant Osonu",
+    "Sergeant Corrik"
+  ],
+  "boss_npc_ids": [
+    "4445282561425408",
+    "4445286856392704",
+    "4445291151360000"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "imp_republic_squad_orbs_captain_50",
+      "label": "Captain 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Captain Meinar"
+        ]
+      }
+    },
+    {
+      "id": "imp_republic_squad_orbs_sergeant_50",
+      "label": "Sergeant 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Sergeant Corrick"
+        ]
+      }
+    },
+    {
+      "id": "imp_republic_squad_orbs_lieutenant_50",
+      "label": "Lieutenant 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Lieutenant Osonu"
+        ]
+      }
+    },
+    {
+      "id": "imp_republic_squad_orbs_jump",
+      "label": "Jump",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4450986277994496"
+      }
+    },
+    {
+      "id": "imp_republic_squad_orbs_sticky_grenade",
+      "label": "Sticky Grenade",
+      "duration_seconds": 7.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4447472994746368"
+      }
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "id": "tau_idair",
+  "name": "Tau Idair",
+  "boss_names": [
+    "Tau Idair"
+  ],
+  "boss_npc_ids": [
+    "4257463641571328",
+    "4363175671627776"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "tau_idair_orbs_phase_75",
+      "label": "Phase 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Tau Idair"
+        ]
+      }
+    },
+    {
+      "id": "tau_idair_orbs_phase_25",
+      "label": "Phase 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Tau Idair"
+        ]
+      }
+    },
+    {
+      "id": "tau_idair_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "tau_idair_orbs_phase_75"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "tau_idair_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "tau_idair_orbs_phase_25"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "tau_idair_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4295542821617664"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_blade_storm",
+      "label": "Blade Storm",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4307856492855296"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_master_strike",
+      "label": "Master Strike",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4292858467057664"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_forcequake",
+      "label": "Forcequake",
+      "duration_seconds": 12.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "tau_idair_orbs_phase_75"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_adds",
+      "label": "Adds_",
+      "duration_seconds": 40.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4337350033276928"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_breath_of_ossus",
+      "label": "Breath of Ossus",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "tau_idair_orbs_phase_25"
+      }
+    },
+    {
+      "id": "tau_idair_orbs_breath_of_ossus",
+      "label": "Move out",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4337715105497088"
+      },
+      "is_alert": true
+    }
+  ]
+}

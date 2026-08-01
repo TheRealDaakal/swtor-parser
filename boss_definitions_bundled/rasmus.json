@@ -1,0 +1,73 @@
+{
+  "id": "rasmus",
+  "name": "Rasmus Blys",
+  "boss_names": [
+    "Rasmus Blys"
+  ],
+  "boss_npc_ids": [
+    "3247210024140800",
+    "3279306314743808"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "rasmus_orbs_phase_95",
+      "label": "Phase 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Rasmus Blys"
+        ]
+      }
+    },
+    {
+      "id": "rasmus_orbs_phase_30",
+      "label": "Phase 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "Rasmus Blys"
+        ]
+      }
+    },
+    {
+      "id": "rasmus_orbs_escape",
+      "label": "Escape",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3271223186292736"
+      }
+    },
+    {
+      "id": "rasmus_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "rasmus_orbs_phase_95"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "rasmus_orbs_burn",
+      "label": "Shield",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "rasmus_orbs_phase_30"
+      },
+      "is_alert": true
+    }
+  ]
+}

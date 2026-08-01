@@ -1,0 +1,68 @@
+{
+  "id": "goldie",
+  "name": "Goldie",
+  "boss_names": [
+    "Goldie"
+  ],
+  "boss_npc_ids": [
+    "4434373344493568"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "goldie_orbs_slam_60",
+      "label": "Slam 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Goldie"
+        ]
+      }
+    },
+    {
+      "id": "goldie_orbs_slam",
+      "label": "Slam",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "goldie_orbs_slam_60"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "goldie_orbs_slam",
+      "label": "Slam",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4439110693421056"
+      }
+    },
+    {
+      "id": "goldie_orbs_swipe",
+      "label": "Swipe",
+      "duration_seconds": 8.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4439097808519168"
+      }
+    },
+    {
+      "id": "goldie_orbs_swipe",
+      "label": "Swipe_",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4439102103486464"
+      }
+    }
+  ]
+}

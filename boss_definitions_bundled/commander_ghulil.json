@@ -1,0 +1,19 @@
+{
+  "id": "commander_ghulil",
+  "name": "Commander Ghulil",
+  "boss_names": [
+    "Commander Ghulil"
+  ],
+  "boss_npc_ids": [
+    "2509686830006272",
+    "364857471795200"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}

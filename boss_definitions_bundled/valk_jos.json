@@ -1,0 +1,96 @@
+{
+  "id": "valk_jos",
+  "name": "Valk & Jos",
+  "boss_names": [
+    "Jos",
+    "Valk"
+  ],
+  "boss_npc_ids": [
+    "3384193711079424",
+    "3384198006046720",
+    "3507029775745024",
+    "3507034070712320"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "valk_jos_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Jos Beroya"
+        ]
+      }
+    },
+    {
+      "id": "valk_jos_orbs_aerial_strike_85",
+      "label": "Aerial Strike 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Jos Beroya"
+        ]
+      }
+    },
+    {
+      "id": "valk_jos_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Jos Beroya"
+        ]
+      }
+    },
+    {
+      "id": "valk_jos_orbs_jet_charge",
+      "label": "Jet Charge",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3395794417745920"
+      }
+    },
+    {
+      "id": "valk_jos_orbs_aerial_strike",
+      "label": "Aerial Strike",
+      "duration_seconds": 33.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3394445798014976"
+      }
+    },
+    {
+      "id": "valk_jos_orbs_missiles",
+      "label": "Missiles",
+      "duration_seconds": 10.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3395824482516992"
+      }
+    },
+    {
+      "id": "valk_jos_orbs_aerial_strike",
+      "label": "Aerial Strike",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "valk_jos_orbs_aerial_strike_85"
+      },
+      "is_alert": true
+    }
+  ]
+}

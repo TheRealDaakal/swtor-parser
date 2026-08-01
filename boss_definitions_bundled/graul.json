@@ -1,0 +1,55 @@
+{
+  "id": "graul",
+  "name": "Graul",
+  "boss_names": [
+    "Graul"
+  ],
+  "boss_npc_ids": [
+    "4445312626196480"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "graul_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4447455814877184"
+      }
+    },
+    {
+      "id": "graul_orbs_slam",
+      "label": "Slam",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4450183119110144"
+      }
+    },
+    {
+      "id": "graul_orbs_quaking_blows_mm",
+      "label": "Quaking Blows MM",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4456380756918272"
+      }
+    },
+    {
+      "id": "graul_orbs_quaking_blows",
+      "label": "Quaking Blows",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4447460109844480"
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "id": "stivastin",
+  "name": "Stivastin",
+  "boss_names": [
+    "Stivastin"
+  ],
+  "boss_npc_ids": [
+    "3362925033029632",
+    "3505268839153664"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "stivastin_orbs_adds_60",
+      "label": "Adds 60",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 60.0,
+        "selector": [
+          "Stivastin"
+        ]
+      }
+    },
+    {
+      "id": "stivastin_orbs_adds_40",
+      "label": "Adds 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Stivastin"
+        ]
+      }
+    },
+    {
+      "id": "stivastin_orbs_adds_20",
+      "label": "Adds 20",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 20.0,
+        "selector": [
+          "Stivastin"
+        ]
+      }
+    },
+    {
+      "id": "stivastin_orbs_kick",
+      "label": "Kick",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3364831998509056"
+      }
+    },
+    {
+      "id": "stivastin_orbs_cryo_grenade",
+      "label": "Cryo Grenade",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3364694559555584"
+      }
+    }
+  ]
+}

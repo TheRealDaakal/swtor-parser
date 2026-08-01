@@ -1,0 +1,50 @@
+{
+  "id": "braxx_the_bloodhound",
+  "name": "Braxx the Bloodhound",
+  "boss_names": [
+    "Braxx the Bloodhound",
+    "Sanguine Salky Hound"
+  ],
+  "boss_npc_ids": [
+    "2438158444658688",
+    "2438167034593280",
+    "3158424460197888",
+    "3158428755165184"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "braxx_the_bloodhound_orbs_carbonize",
+      "label": "Carbonize",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2463666255429632"
+      }
+    },
+    {
+      "id": "braxx_the_bloodhound_orbs_inspire_end",
+      "label": "Inspire End",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2439519949291520"
+      }
+    },
+    {
+      "id": "braxx_the_bloodhound_orbs_inspire",
+      "label": "Inspire",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "braxx_the_bloodhound_orbs_inspire_end"
+      }
+    }
+  ]
+}

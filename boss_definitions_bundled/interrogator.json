@@ -1,0 +1,68 @@
+{
+  "id": "interrogator",
+  "name": "Interrogator",
+  "boss_names": [
+    "Interrogator"
+  ],
+  "boss_npc_ids": [
+    "1627981583745024",
+    "2512053356986368"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "interrogator_orbs_adds_90",
+      "label": "Adds 90",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 90.0,
+        "selector": [
+          "Interrogator"
+        ]
+      }
+    },
+    {
+      "id": "interrogator_orbs_adds_65",
+      "label": "Adds 65",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 65.0,
+        "selector": [
+          "Interrogator"
+        ]
+      }
+    },
+    {
+      "id": "interrogator_orbs_adds_40",
+      "label": "Adds 40",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 40.0,
+        "selector": [
+          "Interrogator"
+        ]
+      }
+    },
+    {
+      "id": "interrogator_orbs_adds_15",
+      "label": "Adds 15",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "Interrogator"
+        ]
+      }
+    }
+  ]
+}

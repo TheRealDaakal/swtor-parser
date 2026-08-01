@@ -1,0 +1,66 @@
+{
+  "id": "ortuno",
+  "name": "Ortuno",
+  "boss_names": [
+    "Ortuno"
+  ],
+  "boss_npc_ids": [
+    "3350327893950464",
+    "3505260249219072"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "ortuno_orbs_immune",
+      "label": "Immune",
+      "duration_seconds": 13.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3361408909574144"
+      }
+    },
+    {
+      "id": "ortuno_orbs_flow_erruption",
+      "label": "Flow + Erruption",
+      "duration_seconds": 38.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "ortuno_orbs_immune"
+      }
+    },
+    {
+      "id": "ortuno_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3368014569275392"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "ortuno_orbs_water",
+      "label": "Water_",
+      "duration_seconds": 6.8,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3361645132775424"
+      }
+    },
+    {
+      "id": "ortuno_orbs_mass_water",
+      "label": "Mass Water",
+      "duration_seconds": 48.8,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3505891609411584"
+      }
+    }
+  ]
+}

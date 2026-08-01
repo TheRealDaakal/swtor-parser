@@ -1,0 +1,51 @@
+{
+  "id": "transgenic_sample_eleven",
+  "name": "Transgenic Sample Eleven",
+  "boss_names": [
+    "Transgenic Sample Eleven"
+  ],
+  "boss_npc_ids": [
+    "2802509110312960",
+    "2835799401824256"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "transgenic_sample_eleven_orbs_frostbite_75",
+      "label": "Frostbite 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Transgenic Sample Eleven"
+        ]
+      }
+    },
+    {
+      "id": "transgenic_sample_eleven_orbs_frostbite",
+      "label": "Frostbite",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "transgenic_sample_eleven_orbs_frostbite_75"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "transgenic_sample_eleven_orbs_frostbite",
+      "label": "Frostbite",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "2877645268189184"
+      }
+    }
+  ]
+}

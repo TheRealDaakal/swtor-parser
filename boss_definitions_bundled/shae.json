@@ -1,0 +1,95 @@
+{
+  "id": "shae",
+  "name": "Shae Vizla",
+  "boss_names": [
+    "Shae Vizla"
+  ],
+  "boss_npc_ids": [
+    "3407807441272832",
+    "3507051250581504"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "shae_orbs_death_from_above",
+      "label": "Death from Above",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3411672911839232"
+      }
+    },
+    {
+      "id": "shae_orbs_maelstrom",
+      "label": "Maelstrom",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "shae_orbs_grapple_droid"
+      }
+    },
+    {
+      "id": "shae_orbs_rng_cc_95",
+      "label": "RNG CC 95",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 95.0,
+        "selector": [
+          "Shae Vizla"
+        ]
+      }
+    },
+    {
+      "id": "shae_orbs_electro_dart_setup",
+      "label": "Electro Dart Setup",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3408391556825088"
+      }
+    },
+    {
+      "id": "shae_orbs_electro_dart",
+      "label": "Electro Dart",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "shae_orbs_electro_dart_setup"
+      }
+    },
+    {
+      "id": "shae_orbs_carbonize_setup",
+      "label": "Carbonize Setup",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3408374376955904"
+      }
+    },
+    {
+      "id": "shae_orbs_carbonize",
+      "label": "Carbonize",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "shae_orbs_carbonize_setup"
+      }
+    },
+    {
+      "id": "shae_orbs_can_t_stun",
+      "label": "Can't stun",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3408387261857792"
+      }
+    }
+  ]
+}

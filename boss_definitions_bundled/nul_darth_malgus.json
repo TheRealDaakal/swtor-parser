@@ -1,0 +1,91 @@
+{
+  "id": "nul_darth_malgus",
+  "name": "Darth Malgus",
+  "boss_names": [
+    "Darth Malgus"
+  ],
+  "boss_npc_ids": [
+    "4468509744562176"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "nul_darth_malgus_orbs_phase_66",
+      "label": "Phase 66",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 66.0,
+        "selector": [
+          "Darth Malgus"
+        ]
+      }
+    },
+    {
+      "id": "nul_darth_malgus_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nul_darth_malgus_orbs_phase_66"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "nul_darth_malgus_orbs_phase_33",
+      "label": "Phase 33",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 33.0,
+        "selector": [
+          "Darth Malgus"
+        ]
+      }
+    },
+    {
+      "id": "nul_darth_malgus_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nul_darth_malgus_orbs_phase_33"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "nul_darth_malgus_orbs_relentless_assault_end",
+      "label": "Relentless Assault End",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4484302339309568"
+      }
+    },
+    {
+      "id": "nul_darth_malgus_orbs_relentless_assault",
+      "label": "Relentless Assault",
+      "duration_seconds": 26.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "nul_darth_malgus_orbs_relentless_assault_end"
+      }
+    },
+    {
+      "id": "nul_darth_malgus_orbs_rage_reset",
+      "label": "Rage reset",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4482936539709440"
+      },
+      "is_alert": true
+    }
+  ]
+}

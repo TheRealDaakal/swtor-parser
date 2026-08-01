@@ -1,0 +1,53 @@
+{
+  "id": "replicator",
+  "name": "Replicator",
+  "boss_names": [
+    "Replicator"
+  ],
+  "boss_npc_ids": [
+    "1629334498443264",
+    "2512109191561216"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "replicator_orbs_phase_70",
+      "label": "Phase 70",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 0.0,
+        "selector": [
+          "2512109191561216"
+        ]
+      }
+    },
+    {
+      "id": "replicator_orbs_phase_30",
+      "label": "Phase 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "2512113486528512"
+        ]
+      }
+    },
+    {
+      "id": "replicator_orbs_enrage",
+      "label": "Enrage",
+      "duration_seconds": 71.5,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "1779645468901376"
+      }
+    }
+  ]
+}

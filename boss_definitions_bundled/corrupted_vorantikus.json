@@ -1,0 +1,39 @@
+{
+  "id": "corrupted_vorantikus",
+  "name": "Corrupted Vorantikus",
+  "boss_names": [
+    "Corrupted Vorantikus"
+  ],
+  "boss_npc_ids": [
+    "4702735786049536",
+    "4702748670951424",
+    "4702752965918720"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "corrupted_vorantikus_orbs_tantrum",
+      "label": "Tantrum",
+      "duration_seconds": 60.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4680784208199680"
+      }
+    },
+    {
+      "id": "corrupted_vorantikus_orbs_cleaving_strike",
+      "label": "Cleaving Strike",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4680346121535488"
+      }
+    }
+  ]
+}

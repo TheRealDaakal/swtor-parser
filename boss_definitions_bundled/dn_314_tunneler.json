@@ -1,0 +1,71 @@
+{
+  "id": "dn_314_tunneler",
+  "name": "DN-314 Tunneler",
+  "boss_names": [
+    "DN-314 Tunneler"
+  ],
+  "boss_npc_ids": [
+    "2276525940408320",
+    "3152170987814912"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "dn_314_tunneler_orbs_targeted_laser",
+      "label": "Targeted Laser",
+      "duration_seconds": 21.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3169647209742336"
+      }
+    },
+    {
+      "id": "dn_314_tunneler_orbs_adds_80",
+      "label": "Adds 80",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 80.0,
+        "selector": [
+          "DN-314 Tunneler"
+        ]
+      }
+    },
+    {
+      "id": "dn_314_tunneler_orbs_adds_30",
+      "label": "Adds 30",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 30.0,
+        "selector": [
+          "DN-314 Tunneler"
+        ]
+      }
+    },
+    {
+      "id": "dn_314_tunneler_orbs_adds_2",
+      "label": "Adds 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dn_314_tunneler_orbs_adds_1"
+      }
+    },
+    {
+      "id": "dn_314_tunneler_orbs_adds_3",
+      "label": "Adds 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "dn_314_tunneler_orbs_adds_2"
+      }
+    }
+  ]
+}

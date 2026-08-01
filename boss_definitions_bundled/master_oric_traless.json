@@ -1,0 +1,89 @@
+{
+  "id": "master_oric_traless",
+  "name": "Master Oric Traless",
+  "boss_names": [
+    "Master Oric Traless"
+  ],
+  "boss_npc_ids": [
+    "3327796495515648",
+    "3465579046371328"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "master_oric_traless_orbs_holocron_84",
+      "label": "Holocron 84",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 84.0,
+        "selector": [
+          "Master Oric Traless"
+        ]
+      }
+    },
+    {
+      "id": "master_oric_traless_orbs_overload_68",
+      "label": "Overload 68",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 68.0,
+        "selector": [
+          "Master Oric Traless"
+        ]
+      }
+    },
+    {
+      "id": "master_oric_traless_orbs_holocron_50",
+      "label": "Holocron 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Master Oric Traless"
+        ]
+      }
+    },
+    {
+      "id": "master_oric_traless_orbs_holocron_18",
+      "label": "Holocron 18",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 18.0,
+        "selector": [
+          "Master Oric Traless"
+        ]
+      }
+    },
+    {
+      "id": "master_oric_traless_orbs_overload_34",
+      "label": "Overload 34",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 34.0,
+        "selector": [
+          "Master Oric Traless"
+        ]
+      }
+    },
+    {
+      "id": "master_oric_traless_orbs_knockback",
+      "label": "Knockback",
+      "duration_seconds": 23.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3328045603618816"
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "id": "master_liam_dentiri",
+  "name": "Master Liam Dentiri",
+  "boss_names": [
+    "Master Liam Dentiri"
+  ],
+  "boss_npc_ids": [
+    "3325902414938112",
+    "3465536096698368"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "master_liam_dentiri_orbs_adds_85",
+      "label": "Adds 85",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 85.0,
+        "selector": [
+          "Master Liam Dentiri"
+        ]
+      }
+    },
+    {
+      "id": "master_liam_dentiri_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "master_liam_dentiri_orbs_adds_85"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "master_liam_dentiri_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3327766430744576"
+      }
+    },
+    {
+      "id": "master_liam_dentiri_orbs_backstab",
+      "label": "Backstab",
+      "duration_seconds": 22.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "3328002653945856"
+      }
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "id": "temu_tfb",
+  "name": "The Curse",
+  "boss_names": [
+    "The Curse"
+  ],
+  "boss_npc_ids": [
+    "4705557579563008",
+    "4705561874530304",
+    "4705566169497600"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "temu_tfb_orbs_forceful_slam",
+      "label": "Forceful Slam_",
+      "duration_seconds": 11.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4684585254256640"
+      }
+    },
+    {
+      "id": "temu_tfb_orbs_summon_the_corrupted",
+      "label": "Summon the Corrupted_",
+      "duration_seconds": 46.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4684589549223936"
+      }
+    },
+    {
+      "id": "temu_tfb_orbs_corrupt_the_weak",
+      "label": "Corrupt the Weak_",
+      "duration_seconds": 74.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4684593844191232"
+      }
+    },
+    {
+      "id": "temu_tfb_orbs_phase_75",
+      "label": "Phase 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "The Curse"
+        ]
+      }
+    },
+    {
+      "id": "temu_tfb_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "The Curse"
+        ]
+      }
+    },
+    {
+      "id": "temu_tfb_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "temu_tfb_orbs_phase_75"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "temu_tfb_orbs_phase_3",
+      "label": "Phase 3",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "temu_tfb_orbs_phase_50"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "temu_tfb_orbs_creeping_roots",
+      "label": "Creeping Roots",
+      "duration_seconds": 31.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "4695185233543168"
+      }
+    }
+  ]
+}
