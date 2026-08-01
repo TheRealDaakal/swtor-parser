@@ -274,7 +274,14 @@ class TimerEngine:
                 self.start_timer(
                     rule.label, rule.duration_seconds, rule.warn_seconds_before, rule.voice_alert,
                     category=rule.category, is_alert=rule.is_alert,
-                    dedupe_key=event.target if rule.category in ("dot", "hot") else None,
+                    # "cooldown" belongs here alongside dot/hot for the same
+                    # reason Kolto Pods needed it: some personal defensives
+                    # (e.g. Adrenaline Rush) are themselves a periodic
+                    # self-heal, so the game logs one ApplyEffect line per
+                    # tick under the same ability name -- without dedup,
+                    # every tick appended a fresh "Adrenaline Rush" row
+                    # instead of refreshing the one already counting down.
+                    dedupe_key=event.target if rule.category in ("dot", "hot", "cooldown") else None,
                 )
 
             self._prune_and_warn()

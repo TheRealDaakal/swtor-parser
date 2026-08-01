@@ -7,7 +7,9 @@ dedupe_key: reapplying the same (label, category, dedupe_key) refreshes the
 existing entry instead of stacking a new one, while a different dedupe_key
 (different target) still gets its own row.
 """
-from timers import TimerEngine
+from timers import TimerEngine, TimerRule
+from cooldowns import register_defensive_cooldowns
+from log_parser import CombatEvent
 
 
 def test_same_dedupe_key_refreshes_in_place(sim_clock):
@@ -75,4 +77,40 @@ def test_realistic_kolto_pods_burst_stays_bounded(sim_clock):
     assert max_seen == len(targets), (
         f"expected the pile-up to stay bounded at {len(targets)} distinct targets, "
         f"saw {max_seen} simultaneous entries"
+    )
+
+
+def test_adrenaline_rush_ticks_dont_pile_up(sim_clock):
+    """Same bug shape as Kolto Pods, but for personal cooldowns: Adrenaline
+    Rush is itself a periodic self-heal, so the game logs one ApplyEffect
+    line per tick under the ability's own name, not just once on cast.
+    TimerEngine.feed() only wired dedupe_key through for category in
+    ("dot", "hot"), so every tick appended a fresh "Adrenaline Rush" buff
+    row instead of refreshing the one already counting down -- reported
+    live as "multiple Adrenaline Rushes" showing at once."""
+    from log_parser import parse_line
+    from conftest import log_line
+
+    engine = TimerEngine()
+    register_defensive_cooldowns(engine)
+    log_name = "@Vanguard#1"  # source/target as written in the log line
+    parsed_name = "Vanguard"  # what parse_line strips it down to on event.source --
+                               # local_player_name is compared against that, not the raw log form
+
+    t = 0.0
+    for _tick in range(15):  # ~60s of 4s heal ticks -- one full buff uptime
+        sim_clock(t)
+        ev = parse_line(
+            log_line(f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}",
+                      log_name, target=log_name, ability="Adrenaline Rush {1}",
+                      effect_name="Heal {2}", amount="500"),
+            line_number=1,
+        )
+        engine.feed(ev, local_player_name=parsed_name)
+        t += 4.0
+
+    rush_rows = [row for row in engine.snapshot("cooldown") if row[0] == "Adrenaline Rush"]
+    assert len(rush_rows) == 1, (
+        f"expected exactly one 'Adrenaline Rush' buff row after repeated ticks, "
+        f"got {len(rush_rows)}"
     )
