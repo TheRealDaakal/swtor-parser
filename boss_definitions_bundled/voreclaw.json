@@ -1,0 +1,58 @@
+{
+  "id": "voreclaw",
+  "name": "Voreclaw",
+  "boss_names": [
+    "Voreclaw"
+  ],
+  "boss_npc_ids": [
+    "4157176155209728"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "voreclaw_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Voreclaw"
+        ]
+      }
+    },
+    {
+      "id": "voreclaw_orbs_power_leap",
+      "label": "Power Leap",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Power Leap"
+      }
+    },
+    {
+      "id": "voreclaw_orbs_burrow",
+      "label": "Burrow",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Burrow"
+      }
+    },
+    {
+      "id": "voreclaw_orbs_burrowed",
+      "label": "Burrowed",
+      "duration_seconds": 15.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Burrow"
+      }
+    }
+  ]
+}

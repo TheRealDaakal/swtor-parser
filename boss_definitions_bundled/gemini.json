@@ -1,0 +1,90 @@
+{
+  "id": "gemini",
+  "name": "Gemini 16",
+  "boss_names": [
+    "GEMINI 16"
+  ],
+  "boss_npc_ids": [
+    "4158834012585984"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "gemini_orbs_phase_15",
+      "label": "Phase 15",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 15.0,
+        "selector": [
+          "4158834012585984"
+        ]
+      }
+    },
+    {
+      "id": "gemini_orbs_obliteration",
+      "label": "Obliteration",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "gemini_orbs_phase_15"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "gemini_orbs_phase_50",
+      "label": "Phase 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "4158834012585984"
+        ]
+      }
+    },
+    {
+      "id": "gemini_orbs_phase_2",
+      "label": "Phase 2",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "timer_expires",
+        "timer_id": "gemini_orbs_phase_50"
+      },
+      "is_alert": true
+    },
+    {
+      "id": "gemini_orbs_beam",
+      "label": "Beam",
+      "duration_seconds": 17.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Integration Beam"
+      }
+    },
+    {
+      "id": "gemini_orbs_adds_vm",
+      "label": "Adds VM",
+      "duration_seconds": 45.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4162446080081920"
+      }
+    },
+    {
+      "id": "gemini_orbs_adds",
+      "label": "Adds",
+      "duration_seconds": 30.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4162235626684416"
+      }
+    }
+  ]
+}

@@ -829,6 +829,87 @@
           "value": 1
         }
       ]
+    },
+    {
+      "id": "a&e_k_orbs_phase_2_hp_e",
+      "label": "Phase 2 HP (E)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 72.01,
+        "selector": [
+          "ESNE"
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_orbs_phase_2_hp_a",
+      "label": "Phase 2 HP (A)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 72.01,
+        "selector": [
+          "AIVELA"
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_orbs_phase_3_hp_a",
+      "label": "Phase 3 HP (A)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 42.71,
+        "selector": [
+          "AIVELA"
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_orbs_phase_3_hp_e",
+      "label": "Phase 3 HP (E)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 42.71,
+        "selector": [
+          "ESNE"
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_orbs_synergy_protocol",
+      "label": "Synergy Protocol",
+      "duration_seconds": 32.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Synergy Protocol"
+      }
+    },
+    {
+      "id": "a&e_k_orbs_phase_4_hp_e",
+      "label": "Phase 4 HP (E)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 7.5,
+        "selector": [
+          "ESNE"
+        ]
+      }
+    },
+    {
+      "id": "a&e_k_orbs_phase_4_hp_a",
+      "label": "Phase 4 HP (A)",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 7.5,
+        "selector": [
+          "AIVELA"
+        ]
+      }
     }
   ]
 }

@@ -1,0 +1,64 @@
+{
+  "id": "nathema_guardian_droid",
+  "name": "Ancient Guardian Droid",
+  "boss_names": [
+    "Ancient Guardian Droid"
+  ],
+  "boss_npc_ids": [
+    "4152640669745152"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": [
+    {
+      "id": "nathema_guardian_droid_orbs_jump_75",
+      "label": "Jump 75",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 75.0,
+        "selector": [
+          "Ancient Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "nathema_guardian_droid_orbs_jump_50",
+      "label": "Jump 50",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 50.0,
+        "selector": [
+          "Ancient Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "nathema_guardian_droid_orbs_jump_25",
+      "label": "Jump 25",
+      "duration_seconds": 10.0,
+      "trigger": {
+        "type": "hp_below",
+        "percent": 25.0,
+        "selector": [
+          "Ancient Guardian Droid"
+        ]
+      }
+    },
+    {
+      "id": "nathema_guardian_droid_orbs_rocket_stomp",
+      "label": "Rocket Stomp",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "ability_cast",
+        "keyword": "Rocket Stomp"
+      }
+    }
+  ]
+}

@@ -23,3 +23,4 @@ dist/
 # data from github.com/L34T/ORBS, re-fetchable, not ours to redistribute.
 scratch_orbs/
 scratch_baras_fp/
+scratch_baras_ops/

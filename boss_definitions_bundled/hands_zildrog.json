@@ -1,0 +1,19 @@
+{
+  "id": "hands_zildrog",
+  "name": "Hands of Zildrog",
+  "boss_names": [
+    "Hand of Zildrog"
+  ],
+  "boss_npc_ids": [
+    "4172294440091648",
+    "4172298735058944"
+  ],
+  "phases": [
+    {
+      "id": "main",
+      "name": "Main"
+    }
+  ],
+  "counters": [],
+  "timers": []
+}
