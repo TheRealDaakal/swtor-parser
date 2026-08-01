@@ -138,20 +138,28 @@ def build_ability_breakdown(encounter, player_name, boss_state):
         stats["crit_pct"] = round(player.crit_pct(), 1)
     if player.heal_casts > 0:
         stats["heal_crit_pct"] = round(player.heal_crit_pct(), 1)
+        stats["effective_hps"] = round(player.effective_hps(duration))
     if player.times_interrupted > 0:
         stats["times_interrupted"] = player.times_interrupted
     if player.cc_casts > 0:
         stats["cc_casts"] = player.cc_casts
     if player.raid_buff_casts > 0:
         stats["raid_buff_casts"] = player.raid_buff_casts
-    # Boss-only DPS uses the CURRENT live boss_state, same as the old Tk
-    # ability-breakdown popup did -- for a historical pull this reflects
-    # whatever boss is active right now, not necessarily that pull's boss.
-    # Preserved as-is rather than "fixed" here since it's a pre-existing
-    # behavior, not something introduced by this migration.
-    boss = boss_state.active_boss if boss_state else None
-    if boss is not None:
-        boss_dmg = player.damage_to(boss.boss_names)
+    # Boss-only DPS for THIS pull's own boss -- matched by encounter.label
+    # (set from the boss name at import/completion time) against the
+    # definitions' own .name, not boss_state.active_boss. That used to mean
+    # a historical pull's boss DPS reflected whatever boss happened to be
+    # live right now (wrong/missing for anything reviewed outside of an
+    # active encounter) -- fixed here since History is exactly where this
+    # stat needs to work.
+    boss_names = None
+    if encounter.label and boss_state:
+        for definition in boss_state.definitions.values():
+            if definition.name == encounter.label:
+                boss_names = definition.boss_names
+                break
+    if boss_names:
+        boss_dmg = player.damage_to(boss_names)
         if boss_dmg > 0:
             stats["boss_dps"] = round(boss_dmg / duration) if duration > 0 else None
 

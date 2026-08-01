@@ -435,10 +435,11 @@ async function openBreakdown(pullNum, name) {
   const s = b.stats;
   const statParts = [`APM ${s.apm}`];
   if (s.burst_dps != null) statParts.push(`Burst DPS ${fmt(s.burst_dps)}`);
-  if (s.burst_hps != null) statParts.push(`Burst EHPS ${fmt(s.burst_hps)}`);
+  if (s.burst_hps != null) statParts.push(`Burst HPS ${fmt(s.burst_hps)}`);
   if (s.accuracy_pct != null) statParts.push(`Accuracy ${s.accuracy_pct}%`);
   if (s.crit_pct != null) statParts.push(`Crit ${s.crit_pct}%`);
   if (s.heal_crit_pct != null) statParts.push(`Heal Crit ${s.heal_crit_pct}%`);
+  if (s.effective_hps != null) statParts.push(`Healing (Eff.) ${fmt(s.effective_hps)}`);
   if (s.times_interrupted) statParts.push(`Interrupted ${s.times_interrupted}x`);
   if (s.cc_casts) statParts.push(`CC Applied ${s.cc_casts}x`);
   if (s.raid_buff_casts) statParts.push(`Raid Buffs Used ${s.raid_buff_casts}x`);
