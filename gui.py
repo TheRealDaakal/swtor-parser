@@ -219,7 +219,7 @@ class OverlayManager:
     def _refresh_bar_overlays(self):
         if not self.bar_overlays:
             return
-        rows, _dur = self.tracker.snapshot()
+        rows, duration = self.tracker.snapshot()
         boss = self.boss_state.status_text() if self.boss_state else None
         for o in self.bar_overlays:
             kind = getattr(o, "kind", None)
@@ -229,6 +229,22 @@ class OverlayManager:
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data),
                          subtitle=boss if kind == "dps" else None)
+            elif kind == "effective_hps":
+                # Reads PlayerStats directly since the compact snapshot()
+                # tuple only carries raw healing_done, not overheal.
+                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                data = sorted(((p.name, p.effective_hps(duration)) for p in entities),
+                              key=lambda r: -r[1])
+                data = [r for r in data if r[1] > 0]
+                o.render(data, total=sum(r[1] for r in data))
+            elif kind == "boss_dps":
+                active = self.boss_state.active_boss if self.boss_state else None
+                boss_names = active.boss_names if active else []
+                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                data = sorted(((p.name, p.boss_dps(boss_names, duration)) for p in entities),
+                              key=lambda r: -r[1])
+                data = [r for r in data if r[1] > 0]
+                o.render(data, total=sum(r[1] for r in data), subtitle=boss)
             elif kind == "absorbed":
                 # Raw absorbed magnitude, not the percentage -- bars only
                 # make sense as a comparable quantity across players, and

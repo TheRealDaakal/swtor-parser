@@ -67,7 +67,9 @@ function renderMeter(players) {
     return `<tr>
       <td class="name">${esc(p.name)}</td>
       <td class="accent">${fmt(p.dps)}</td>
+      <td class="accent">${fmt(p.boss_dps)}</td>
       <td class="good">${fmt(p.hps)}</td>
+      <td class="good">${fmt(p.effective_hps)}</td>
       <td>${fmt(p.taken)}</td>
       <td>${mitText}</td>
       <td>${p.deaths}</td>

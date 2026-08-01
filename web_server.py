@@ -40,11 +40,17 @@ def _timer_rows(rows):
 
 def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status) -> dict:
     rows, duration = tracker.snapshot()
-    players = [
-        {"name": name, "dps": dps, "hps": hps, "taken": taken,
-         "mitigated": mitigated, "deaths": deaths}
-        for name, dps, hps, taken, mitigated, deaths in rows
-    ]
+    active_boss = boss_state.active_boss if boss_state else None
+    boss_names = active_boss.boss_names if active_boss else []
+    players = []
+    for name, dps, hps, taken, mitigated, deaths in rows:
+        p = tracker.current.players.get(name)
+        players.append({
+            "name": name, "dps": dps, "hps": hps, "taken": taken,
+            "mitigated": mitigated, "deaths": deaths,
+            "boss_dps": p.boss_dps(boss_names, duration) if p else 0.0,
+            "effective_hps": p.effective_hps(duration) if p else 0.0,
+        })
 
     all_timers = timer_engine.snapshot()
     alerts = [t[0] for t in all_timers if t[4]]

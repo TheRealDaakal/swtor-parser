@@ -150,6 +150,13 @@ class CombatEvent:
     # only ever mentions inside a nested "(N absorbed {id})" group tagged
     # with a sibling "-shield" marker -- see _extract_amount_and_shield.
     shield_absorbed: float = 0.0
+    # Portion of a heal that couldn't land because the target was already
+    # near/at full HP. SWTOR logs a heal's full cast power as the primary
+    # amount and this as a nested "~N" suffix -- e.g. "(10926* ~7382)" is a
+    # 10926-power heal that only restored 3544 HP, wasting 7382. amount
+    # above is that raw cast power, NOT reduced by this -- subtract it
+    # yourself for the effective (actually-restored) amount.
+    overheal: float = 0.0
     # True when the value group's leading number carries SWTOR's own crit
     # marker (a literal trailing '*', e.g. '9578*') -- applies to both damage
     # and heals, since both can crit.
@@ -298,6 +305,22 @@ def _extract_shield_absorbed(tail: str) -> float:
     if group is None:
         return 0.0
     match = SHIELD_ABSORBED_RE.search(group)
+    return float(match.group(1)) if match else 0.0
+
+
+OVERHEAL_RE = re.compile(r"~(\d+(?:\.\d+)?)")
+
+
+def _extract_overheal(tail: str) -> float:
+    """Pulls a heal's wasted-overheal amount out of the same value group
+    `_extract_amount` reads, e.g. '10926* ~7382' -> 7382. Zero overheal
+    (target wasn't near full) doesn't get a '~0' suffix on every line --
+    it does in practice (SWTOR always emits it), but treat absence the
+    same as explicit zero either way."""
+    group = _first_balanced_paren(tail)
+    if group is None:
+        return 0.0
+    match = OVERHEAL_RE.search(group)
     return float(match.group(1)) if match else 0.0
 
 
@@ -472,6 +495,8 @@ def _classify(event: CombatEvent, tail: str) -> None:
     if event.is_damage or event.is_heal:
         event.amount = _extract_amount(tail)
         event.is_critical = _extract_is_critical(tail)
+    if event.is_heal:
+        event.overheal = _extract_overheal(tail)
     if event.is_damage:
         # Shield Chance mitigation and avoidance (miss/dodge/parry/deflect/
         # resist) only ever apply to incoming damage, not healing -- no need

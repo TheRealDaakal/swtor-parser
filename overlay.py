@@ -39,6 +39,8 @@ HEAL_BAR = "#2f8f63"
 TAKEN_BAR = "#8d3b57"
 ABSORBED_BAR = "#3170b8"  # same blue family as boss timers -- reads as "defence", not damage
 THREAT_BAR = "#d9a53a"    # amber -- "you might pull this", distinct from damage/heal/defence colours
+EFFECTIVE_HEAL_BAR = "#6fc79a"  # lighter shade of HEAL_BAR -- same family, distinct at a glance
+BOSS_DAMAGE_BAR = "#dd7268"     # lighter shade of DAMAGE_BAR -- same family, distinct at a glance
 PANEL = "#15171d"        # cool charcoal, not flat black -- reads as "app", not "hole in the screen"
 PANEL_EDGE = "#33363e"
 LOCK_EDGE = "#4a9eff"  # panel border while locked -- the visual "don't touch"
@@ -96,31 +98,40 @@ FONT_SMALL = ("Segoe UI", 9)
 PANEL_ALPHA = 0.85
 
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
-                "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR}
+                "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR,
+                "effective_hps": EFFECTIVE_HEAL_BAR, "boss_dps": BOSS_DAMAGE_BAR}
 KIND_TITLES = {
-    "dps": "Damage", "hps": "Effective Healing", "taken": "Damage Taken",
+    # "hps" is raw healing power output, overheal included -- see
+    # PlayerStats.healing_done. Used to be mislabeled "Effective Healing"
+    # here despite never having subtracted overheal; "effective_hps" below
+    # is the real thing, added once overheal parsing existed to compute it.
+    "dps": "Damage", "hps": "Healing (Raw)", "taken": "Damage Taken",
     # Raw absorbed magnitude, not a percentage -- see gui.py's
     # _refresh_bar_overlays for why (bars need a comparable quantity; the
     # live table's "Mitigated" column already carries the per-person %).
     "absorbed": "Shield Absorbed",
     "alerts": "Alerts",
     "threat": "Threat",
+    "effective_hps": "Healing (Effective)",
+    "boss_dps": "Boss DPS",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
 # is (key, label, group). The key is what gui.py switches on when building
 # and refreshing the frame.
 AVAILABLE_OVERLAYS = [
-    ("dps",       "Damage",          "Metrics"),
-    ("hps",       "Effective Healing", "Metrics"),
-    ("taken",     "Damage Taken",    "Metrics"),
-    ("absorbed",  "Shield Absorbed", "Metrics"),
-    ("threat",    "Threat",          "Metrics"),
-    ("timers",    "Timers",          "Encounter"),
-    ("alerts",    "Mechanic Alerts (Stack/Move/Spread)", "Encounter"),
-    ("cooldowns", "Cooldowns",       "Effects"),
-    ("hots",      "HoTs expiring",   "Effects"),
-    ("dots",      "DoT tracker",     "Effects"),
+    ("dps",           "Damage (Raw, all targets)", "Metrics"),
+    ("boss_dps",      "Boss DPS (no fluff)",        "Metrics"),
+    ("hps",           "Healing (Raw)",              "Metrics"),
+    ("effective_hps", "Healing (Effective)",        "Metrics"),
+    ("taken",         "Damage Taken",                "Metrics"),
+    ("absorbed",      "Shield Absorbed",             "Metrics"),
+    ("threat",        "Threat",                      "Metrics"),
+    ("timers",        "Timers",                      "Encounter"),
+    ("alerts",        "Mechanic Alerts (Stack/Move/Spread)", "Encounter"),
+    ("cooldowns",     "Cooldowns",                    "Effects"),
+    ("hots",          "HoTs expiring",                "Effects"),
+    ("dots",          "DoT tracker",                  "Effects"),
 ]
 OVERLAY_GROUPS = ["Metrics", "Encounter", "Effects"]
 

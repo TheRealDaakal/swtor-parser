@@ -56,6 +56,10 @@ class PlayerStats:
     name: str
     damage_done: float = 0.0
     healing_done: float = 0.0
+    # Portion of healing_done that was wasted because the target was already
+    # near/at full HP -- see CombatEvent.overheal. healing_done itself is raw
+    # cast power (unaffected by this); effective_healing_done() subtracts it.
+    healing_overheal: float = 0.0
     damage_taken: float = 0.0
     # Damage prevented by Shield Chance mitigation -- see CombatEvent.shield_
     # absorbed. damage_taken above is already post-mitigation (what actually
@@ -121,6 +125,18 @@ class PlayerStats:
     def hps(self, duration: float) -> float:
         return self.healing_done / duration if duration > 0 else 0.0
 
+    def effective_healing_done(self) -> float:
+        """Actual HP restored -- healing_done minus the portion that
+        overhealed a target already near/at full."""
+        return max(self.healing_done - self.healing_overheal, 0.0)
+
+    def effective_hps(self, duration: float) -> float:
+        return self.effective_healing_done() / duration if duration > 0 else 0.0
+
+    def boss_dps(self, boss_names, duration: float) -> float:
+        """Damage-per-second to `boss_names` only -- see damage_to()."""
+        return self.damage_to(boss_names) / duration if duration > 0 else 0.0
+
     def tps(self, duration: float) -> float:
         return self.threat / duration if duration > 0 else 0.0
 
@@ -184,6 +200,7 @@ class PlayerStats:
             "name": self.name,
             "damage_done": self.damage_done,
             "healing_done": self.healing_done,
+            "healing_overheal": self.healing_overheal,
             "damage_taken": self.damage_taken,
             "damage_absorbed": self.damage_absorbed,
             "threat": self.threat,
@@ -214,6 +231,7 @@ class PlayerStats:
             name=d["name"],
             damage_done=d.get("damage_done", 0.0),
             healing_done=d.get("healing_done", 0.0),
+            healing_overheal=d.get("healing_overheal", 0.0),
             damage_taken=d.get("damage_taken", 0.0),
             damage_absorbed=d.get("damage_absorbed", 0.0),
             threat=d.get("threat", 0.0),
@@ -354,6 +372,7 @@ class Encounter:
             if event.source:
                 p = self._get(event.source)
                 p.healing_done += event.amount
+                p.healing_overheal += event.overheal
                 p.healing_by_ability[ability_key] = (
                     p.healing_by_ability.get(ability_key, 0.0) + event.amount
                 )
