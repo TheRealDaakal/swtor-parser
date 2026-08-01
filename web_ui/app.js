@@ -9,6 +9,20 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const fmt = n => n == null ? '—' : Math.round(n).toLocaleString();
+// Stat-tile contract: 1,284 / 12.9K / $4.2M -- anything under 10K keeps its
+// exact digits. Compacting 1,983 to "2K" throws away real precision.
+const compact = n => {
+  if (n == null) return '—';
+  const a = Math.abs(n);
+  if (a >= 1e6) return (n / 1e6).toFixed(a >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M';
+  if (a >= 1e4) return (n / 1e3).toFixed(a >= 1e5 ? 0 : 1).replace(/\.0$/, '') + 'K';
+  return Math.round(n).toLocaleString();
+};
+const dur = s => {
+  if (s == null) return '—';
+  const m = Math.floor(s / 60), r = Math.round(s % 60);
+  return m ? `${m}m ${String(r).padStart(2, '0')}s` : `${r}s`;
+};
 const api = (p, opts) => fetch(p, opts).then(r => r.json());
 const post = (p, body) => api(p, {
   method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -142,6 +156,10 @@ async function openPull(pullNum) {
   const d = await api(`/api/history/${pullNum}`);
   if (d.error) return;
   renderPullModal(d);
+  if (d.can_upload) {
+    loadPullTimeline(d.pull, d.duration);
+    loadPullDeaths(d.pull, d);
+  }
 }
 
 function renderPullModal(d) {
@@ -171,11 +189,234 @@ function renderPullModal(d) {
         Upload This Pull to Parsely
       </button>
       <span id="modal-upload-status" class="sub" style="margin-left:8px"></span>
-    </div>`;
+    </div>
+    ${d.can_upload ? `
+      <div class="panel" id="m-timeline-panel" style="margin-top:14px">
+        <h2>Timeline<span class="sub" style="margin-left:8px;font-weight:400">
+          drag across the chart to select a range and recalculate stats for just that slice</span></h2>
+        <div id="m-timeline-box" class="chart-wrap" style="min-height:220px"><div class="loading">Re-reading the log…</div></div>
+        <div id="m-timeline-summary"></div>
+      </div>
+      <div id="m-deaths-box" style="margin-top:14px"></div>` : ''}`;
   if (d.can_upload) {
     $('#modal-upload').onclick = () => uploadPull(d.pull);
   }
   $('#modal').classList.add('open');
+}
+
+async function loadPullTimeline(pullNum, totalDuration) {
+  const box = $('#m-timeline-box');
+  if (!box) return;
+  let tl;
+  try {
+    tl = await api(`/api/history/${pullNum}/timeline`);
+  } catch {
+    tl = null;
+  }
+  if (!tl || tl.error || !Object.keys(tl.players).length) {
+    box.innerHTML = '<div class="empty">No timeline data for this pull.</div>';
+    return;
+  }
+  timelineChart(box, $('#m-timeline-summary'), tl, totalDuration);
+}
+
+async function loadPullDeaths(pullNum, pull) {
+  const box = $('#m-deaths-box');
+  if (!box) return;
+  const res = await api(`/api/history/${pullNum}/deaths`);
+  if (res.error || !res.reports || !res.reports.length) return;  // no deaths -- say nothing, don't clutter
+  renderDeathsInto(box, res, pull);
+}
+
+/* Ported from analysis/static/app.js -- same StarParse-style timeline
+   scrubber the corpus browser uses, just fed from a live/History pull
+   instead of the corpus index. */
+function timelineChart(box, summaryEl, tl, totalDuration) {
+  const names = Object.keys(tl.players);
+  const n = tl.duration > 0 ? Math.max(1, Math.ceil(tl.duration / tl.bucket_seconds)) : 1;
+  const totalDmg = new Array(n).fill(0);
+  names.forEach(name => tl.players[name].damage.forEach((v, i) => { totalDmg[i] += v; }));
+
+  const H = 220, pad = { l: 60, r: 16, t: 26, b: 30 };
+  const W = Math.max(560, Math.round(box.clientWidth || 900));
+  const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+  const hiRaw = Math.max(...totalDmg, 1) / tl.bucket_seconds;
+  const mag = Math.pow(10, Math.floor(Math.log10(hiRaw || 1)));
+  const hi = Math.ceil((hiRaw * 1.1) / (mag / 2 || 1)) * (mag / 2 || 1) || 1;
+
+  const X = i => pad.l + (i / Math.max(n - 1, 1)) * iw;
+  const Y = v => pad.t + ih - Math.min(v / hi, 1) * ih;
+
+  let grid = '';
+  for (let k = 0; k <= 3; k++) {
+    const v = hi * k / 3, y = Y(v);
+    grid += `<line class="gridline" x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}"/>
+             <text x="${pad.l - 8}" y="${y + 3.5}" text-anchor="end">${compact(v)}</text>`;
+  }
+
+  const totalLine = totalDmg.map((v, i) =>
+    `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v / tl.bucket_seconds).toFixed(1)}`).join('');
+  const totalArea = `${totalLine}L${X(n - 1).toFixed(1)},${Y(0)}L${X(0).toFixed(1)},${Y(0)}Z`;
+
+  let phaseMarks = '';
+  (tl.phases || []).forEach(p => {
+    const bi = Math.min(n - 1, p.start_offset / tl.bucket_seconds);
+    const x = X(bi);
+    phaseMarks += `<line x1="${x.toFixed(1)}" y1="${pad.t}" x2="${x.toFixed(1)}" y2="${pad.t + ih}"
+        stroke="var(--ink-muted)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+      <text x="${x.toFixed(1)}" y="${pad.t - 8}" text-anchor="start" transform="rotate(0)"
+        style="font-size:9.5px">${esc(p.name)}</text>`;
+  });
+
+  const playerOptions = names
+    .sort((a, b) => tl.players[b].damage.reduce((s, v) => s + v, 0) - tl.players[a].damage.reduce((s, v) => s + v, 0))
+    .map(nm => `<option value="${esc(nm)}">${esc(nm)}</option>`).join('');
+
+  box.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <label class="fld"><span>Highlight</span>
+        <select id="tl-player"><option value="">— total raid damage only —</option>${playerOptions}</select>
+      </label>
+      <button id="tl-reset" class="ghost" style="display:none">Clear selection</button>
+    </div>
+    <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Damage over time for this pull">
+      ${grid}
+      <path d="${totalArea}" fill="var(--s1)" opacity=".12"/>
+      <path d="${totalLine}" fill="none" stroke="var(--s1)" stroke-width="2"
+            stroke-linejoin="round" stroke-linecap="round" opacity=".55"/>
+      <path id="tl-hl" d="" fill="none" stroke="var(--s2)" stroke-width="2"
+            stroke-linejoin="round" stroke-linecap="round"/>
+      ${phaseMarks}
+      <rect id="tl-sel" x="0" y="${pad.t}" width="0" height="${ih}" fill="var(--s1)" opacity=".14" style="display:none"/>
+      <line class="axis" x1="${pad.l}" y1="${pad.t + ih}" x2="${W - pad.r}" y2="${pad.t + ih}"/>
+      <rect id="tl-hit" x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}" fill="transparent" style="cursor:crosshair"/>
+    </svg>
+    <div class="tooltip" id="tl-tip"></div>`;
+
+  const svg = box.querySelector('svg'), sel = box.querySelector('#tl-sel'), hit = box.querySelector('#tl-hit');
+  const hl = box.querySelector('#tl-hl'), tip = box.querySelector('#tl-tip'), resetBtn = box.querySelector('#tl-reset');
+  const playerSel = box.querySelector('#tl-player');
+
+  const bucketAt = clientX => {
+    const r = svg.getBoundingClientRect();
+    const sx = (clientX - r.left) / r.width * W;
+    return Math.max(0, Math.min(n - 1, Math.round((sx - pad.l) / iw * (n - 1))));
+  };
+
+  function drawHighlight() {
+    const name = playerSel.value;
+    if (!name) { hl.setAttribute('d', ''); return; }
+    const arr = tl.players[name].damage;
+    hl.setAttribute('d', arr.map((v, i) =>
+      `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v / tl.bucket_seconds).toFixed(1)}`).join(''));
+  }
+  playerSel.onchange = drawHighlight;
+
+  function renderSummary(fromBucket, toBucket) {
+    const lo = Math.min(fromBucket, toBucket), hi2 = Math.max(fromBucket, toBucket);
+    const span = (hi2 - lo + 1) * tl.bucket_seconds;
+    const rows = names.map(name => {
+      const p = tl.players[name];
+      const dmg = p.damage.slice(lo, hi2 + 1).reduce((a, b) => a + b, 0);
+      const heal = p.healing.slice(lo, hi2 + 1).reduce((a, b) => a + b, 0);
+      return { name, dmg, heal };
+    }).filter(r => r.dmg || r.heal).sort((a, b) => b.dmg - a.dmg);
+    if (!rows.length) { summaryEl.innerHTML = ''; return; }
+    summaryEl.innerHTML = `<div class="sub" style="margin:10px 0 6px">
+        Selected ${dur(span)} (${dur(lo * tl.bucket_seconds)}–${dur((hi2 + 1) * tl.bucket_seconds)} into the pull)</div>
+      <div class="tw"><table><thead><tr><th>Player</th><th>DPS</th><th>Damage</th><th>HPS</th><th>Healing</th></tr></thead>
+      <tbody>${rows.map(r => `<tr><td class="name">${esc(r.name)}</td>
+        <td>${fmt(r.dmg / Math.max(span, 1))}</td><td class="dim">${compact(r.dmg)}</td>
+        <td>${fmt(r.heal / Math.max(span, 1))}</td><td class="dim">${compact(r.heal)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  }
+
+  let dragStart = null;
+  hit.addEventListener('mousedown', e => {
+    dragStart = bucketAt(e.clientX);
+    sel.style.display = 'block';
+    resetBtn.style.display = 'inline-block';
+  });
+  hit.addEventListener('mousemove', e => {
+    const b = bucketAt(e.clientX);
+    tip.classList.add('show');
+    const r = svg.getBoundingClientRect();
+    tip.style.left = (X(b) / W * r.width) + 'px';
+    tip.style.top = '4px';
+    const t = b * tl.bucket_seconds;
+    tip.innerHTML = `<div class="t-row">${dur(t)} into the pull</div>`;
+    if (dragStart === null) return;
+    const lo = Math.min(dragStart, b), hi2 = Math.max(dragStart, b);
+    sel.setAttribute('x', X(lo)); sel.setAttribute('width', Math.max(1, X(hi2) - X(lo)));
+  });
+  hit.addEventListener('mouseleave', () => { tip.classList.remove('show'); });
+  window.addEventListener('mouseup', e => {
+    if (dragStart === null) return;
+    const end = bucketAt(e.clientX);
+    if (end === dragStart) {
+      sel.style.display = 'none'; resetBtn.style.display = 'none';
+      summaryEl.innerHTML = '';
+    } else {
+      renderSummary(dragStart, end);
+    }
+    dragStart = null;
+  });
+  resetBtn.onclick = () => {
+    sel.style.display = 'none'; resetBtn.style.display = 'none'; summaryEl.innerHTML = '';
+  };
+}
+
+/* Ported from analysis/static/app.js -- same death-forensics rendering the
+   corpus browser uses, adapted to write into a given container instead of
+   a fixed page section. */
+function renderDeathsInto(container, res, pull) {
+  if (!res.reports.length) return;
+  const s = res.summary;
+  const top = s.killing_abilities[0];
+  const wipe = res.reports.length >= 5 &&
+    (Math.max(...res.reports.map(r => r.death_time)) - Math.min(...res.reports.map(r => r.death_time))) < 15;
+
+  let html = `<div class="panel"><h2>Deaths in this pull<span class="sub" style="margin-left:8px;font-weight:400">${s.total_deaths} total</span></h2>`;
+
+  if (wipe && top) html += `<div class="callout crit">
+      <span class="ico">!</span><div><b>Looks like a wipe.</b>
+      ${res.reports.length} players died within
+      ${(Math.max(...res.reports.map(r => r.death_time)) - Math.min(...res.reports.map(r => r.death_time))).toFixed(1)}s
+      of each other, most to <b>${esc(top.ability)}</b>.</div></div>`;
+  html += '</div>';
+
+  html += res.reports.map(r => {
+    const mx = Math.max(...r.by_ability.map(a => a.total), 1);
+    const ready = r.defensives.filter(d => d.available_at_death && !d.used_in_window);
+    return `<div class="death">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+        <div><span class="who">${esc(r.victim)}</span>
+          <span class="when"> died at ${r.death_time.toFixed(1)}s</span></div>
+        <div class="when">${fmt(r.damage_in_window)} damage taken in the last ${r.window_seconds}s</div>
+      </div>
+      ${r.killing_blow ? `<div class="callout crit"><span class="ico">✕</span><div>
+        Killed by <b>${esc(r.killing_blow.ability)}</b>
+        from ${esc(r.killing_blow.source || 'unknown')} for
+        <b>${fmt(r.killing_blow.amount)}</b></div></div>` : ''}
+      ${ready.length ? `<div class="callout"><span class="ico">▲</span><div>
+        <b>${ready.map(d => esc(d.ability)).join(', ')}</b> looked available and wasn't used
+        <span class="dim">— inferred from casts seen this pull, so treat as a hint not a verdict</span>
+        </div></div>` : ''}
+      <div class="tw"><table>
+        <thead><tr><th>Incoming</th><th>Total</th><th></th><th>Hits</th><th>Biggest</th><th>From</th></tr></thead>
+        <tbody>${r.by_ability.map(a => `<tr>
+          <td class="name">${esc(a.ability)}</td>
+          <td>${fmt(a.total)}</td>
+          <td style="width:110px"><div class="meter" style="background:rgba(208,59,59,.18)">
+            <i style="width:${(a.total / mx * 100).toFixed(0)}%;background:var(--critical)"></i></div></td>
+          <td class="dim">${a.hits}</td>
+          <td class="warning">${fmt(a.max)}</td>
+          <td class="dim">${esc(a.sources.slice(0, 2).join(', '))}</td></tr>`).join('')}
+        </tbody></table></div>
+    </div>`;
+  }).join('');
+
+  container.innerHTML = html;
 }
 
 async function uploadPull(pullNum) {
