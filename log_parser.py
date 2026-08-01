@@ -73,6 +73,30 @@ THREAT_MODIFIED_KEYWORDS = ("modifythreat",)
 # which this project doesn't have), so this can only answer "how often was
 # I interrupted", not "how many interrupts did I land".
 ABILITY_INTERRUPT_KEYWORDS = ("abilityinterrupt",)
+# Hard CC only (stun/mez/sleep/incapacitate) -- deliberately excludes
+# "slowed", which showed up on nearly every high-frequency damage ability in
+# a real corpus scan (a minor movement-slow tacked onto normal attacks, not
+# an intentional crowd-control choice) and would just be noise for "did we
+# lock the add down". Matched against effect_name, same as every other
+# classification here -- never the ability name (see _classify's comment on
+# why: "Death Field" would misclassify against a "death" keyword the same
+# way "Force Storm" would misfire against an ability-name CC check here).
+HARD_CC_KEYWORDS = ("stunned", "incapacitated", "asleep", "sleeping", "lifted")
+# Raid-wide utility cooldowns -- verified against this user's own 216-log
+# corpus by BEHAVIOR, not by guessing names: one player casts it, and the
+# identical ability name applies as an effect to several OTHER players
+# within about a second (the same structural signature Inspiration and
+# Predation both showed). Unlike HARD_CC_KEYWORDS this is matched by EXACT
+# ability name, not a substring: it's a small curated list of real,
+# corpus-verified abilities, not a generic keyword that could misfire
+# against an unrelated ability sharing a word (same reasoning dots_hots.py
+# and boss ability_cast triggers already rely on for exact-name matching).
+RAID_BUFF_ABILITY_NAMES = frozenset({
+    "Transcendence", "Aegis Shield", "Predation", "Warding Shield",
+    "Unlimited Power", "Inspiration", "Tactical Superiority",
+    "Supercharged Celerity", "Stack the Deck", "Force Empowerment",
+    "Bloodthirst", "Rally",
+})
 
 
 @dataclass
@@ -148,6 +172,16 @@ class CombatEvent:
     # ABILITY_INTERRUPT_KEYWORDS -- source is the player who GOT
     # interrupted, not the interrupter.
     is_interrupted: bool = False
+    # True when a player applied hard CC (stun/mez/sleep) to an NPC -- see
+    # HARD_CC_KEYWORDS. Scoped to player->NPC only: the same effect names
+    # fire in the other direction (a boss stunning a player) and that's a
+    # different question ("was I CC'd") from what this answers ("did we CC
+    # the add").
+    is_hard_cc: bool = False
+    # True for the actual cast (not the broadcast applications) of a
+    # RAID_BUFF_ABILITY_NAMES ability -- one per activation, so casting
+    # Predation on 15 people counts as 1, not 15. See RAID_BUFF_ABILITY_NAMES.
+    is_raid_buff_cast: bool = False
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -424,6 +458,15 @@ def _classify(event: CombatEvent, tail: str) -> None:
     )
     event.is_interrupted = any(
         k in effect_name_tight for k in ABILITY_INTERRUPT_KEYWORDS
+    )
+    event.is_hard_cc = (
+        event.source_is_player and not event.target_is_player
+        and not event.is_effect_removed
+        and any(k in effect_name_tight for k in HARD_CC_KEYWORDS)
+    )
+    event.is_raid_buff_cast = (
+        event.is_ability_activate and event.source_is_player
+        and event.ability in RAID_BUFF_ABILITY_NAMES
     )
 
     if event.is_damage or event.is_heal:
