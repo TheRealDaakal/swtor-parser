@@ -252,6 +252,13 @@ class TimerEngine:
                     continue
                 if rule.event_type == "applied" and event.is_effect_removed:
                     continue
+                # A charge-shield's per-hit ModifyCharges line isn't a fresh
+                # cast -- without this an "applied"-scoped rule (e.g. Kolto
+                # Shell/Trauma Probe's buff timer) would refresh to full
+                # duration on every single absorb, never counting down while
+                # the shield is actually being used.
+                if rule.event_type == "applied" and event.is_charges_modified:
+                    continue
                 if rule.event_type == "removed" and not event.is_effect_removed:
                     continue
                 if rule.only_target and event.target != rule.only_target:

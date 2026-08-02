@@ -7,9 +7,10 @@ dedupe_key: reapplying the same (label, category, dedupe_key) refreshes the
 existing entry instead of stacking a new one, while a different dedupe_key
 (different target) still gets its own row.
 """
+from conftest import log_line
+from log_parser import parse_line
 from timers import TimerEngine, TimerRule
 from cooldowns import register_defensive_cooldowns
-from log_parser import CombatEvent
 
 
 def test_same_dedupe_key_refreshes_in_place(sim_clock):
@@ -88,9 +89,6 @@ def test_adrenaline_rush_ticks_dont_pile_up(sim_clock):
     ("dot", "hot"), so every tick appended a fresh "Adrenaline Rush" buff
     row instead of refreshing the one already counting down -- reported
     live as "multiple Adrenaline Rushes" showing at once."""
-    from log_parser import parse_line
-    from conftest import log_line
-
     engine = TimerEngine()
     register_defensive_cooldowns(engine)
     log_name = "@Vanguard#1"  # source/target as written in the log line
@@ -113,4 +111,44 @@ def test_adrenaline_rush_ticks_dont_pile_up(sim_clock):
     assert len(rush_rows) == 1, (
         f"expected exactly one 'Adrenaline Rush' buff row after repeated ticks, "
         f"got {len(rush_rows)}"
+    )
+
+
+def test_modify_charges_does_not_refresh_an_applied_scoped_rule(sim_clock):
+    """A charge-shield's per-hit ModifyCharges line (Kolto Shell, Trauma
+    Probe) isn't a fresh cast. An "applied"-scoped rule matching on the
+    ability name would otherwise keep resetting to full duration on every
+    single absorb, never actually counting down while the shield is being
+    used -- the same category of bug as Adrenaline Rush's ticks, just for a
+    rule with event_type="applied" instead of dedupe_key."""
+    engine = TimerEngine()
+    engine.add_rule(TimerRule(
+        keyword="Kolto Shell", label="Kolto Shell", duration_seconds=180.0,
+        voice_alert=False, category="hot", event_type="applied", only_local_player=True,
+    ))
+
+    sim_clock(0.0)
+    ev = parse_line(
+        log_line("00:00:00.000", "@Healer#1", target="@Tank#1", ability="Kolto Shell {1}",
+                  effect_type="ApplyEffect", effect_name="Kolto Shell {1}", amount="7 charges {2}"),
+        line_number=1,
+    )
+    engine.feed(ev, local_player_name="Healer")
+    assert len(engine.active) == 1
+    assert engine.active[0].remaining() == 180.0
+
+    sim_clock(50.0)
+    modify_ev = parse_line(
+        log_line("00:00:50.000", "@Healer#1", target="@Tank#1", ability="Kolto Shell {1}",
+                  effect_type="ModifyCharges", effect_name="Kolto Shell {1}", amount="4 charges {2}"),
+        line_number=2,
+    )
+    assert modify_ev.is_charges_modified
+    engine.feed(modify_ev, local_player_name="Healer")
+
+    assert len(engine.active) == 1, "a charge-loss event must not spawn a second timer"
+    remaining = engine.active[0].remaining()
+    assert remaining == 130.0, (
+        f"expected the countdown to keep running from the original cast (130s left after "
+        f"50s), but a ModifyCharges line reset it to {remaining}s"
     )

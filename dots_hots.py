@@ -31,11 +31,24 @@ mechanism, same category of limitation as cooldowns.py not implementing
 the player's alacrity stat, also not implemented for defensive cooldowns).
 """
 
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple
 
 from timers import TimerRule
+
+_CHARGES_RE = re.compile(r"(\d+)\s+charges?", re.IGNORECASE)
+
+
+def _extract_remaining_charges(values: List[str]) -> Optional[int]:
+    """Pulls the charge count out of a ModifyCharges line's value group,
+    e.g. values=["3 charges {836045448953667}"] -> 3."""
+    for v in values:
+        m = _CHARGES_RE.search(v)
+        if m:
+            return int(m.group(1))
+    return None
 
 
 @dataclass
@@ -52,6 +65,15 @@ class DotHotDefinition:
     # this: a teammate's Kolto Shell landing on the local player never
     # matched a source=local_player rule at all.
     track_by: str = "source"
+    # Charge-based shields (Kolto Shell, Trauma Probe) disappear once their
+    # charges run out even if the nominal duration hasn't elapsed -- each
+    # absorbed hit logs its own ModifyCharges line (see log_parser.py's
+    # is_charges_modified) with the charge count remaining. None for plain
+    # time-based HoTs, which have no such mechanic. 7 confirmed as this
+    # user's actual max (not the base 6 -- their utility/gear setup grants
+    # the extra charge) by scanning their own log corpus for the highest
+    # charge count either ability ever logged.
+    max_charges: Optional[int] = None
 
 
 # -- DoTs (translated from BARAS's dots.toml) --------------------------------
@@ -106,13 +128,19 @@ HOTS: List[DotHotDefinition] = [
     # TimerRule's countdown runs off its own fixed duration_seconds and
     # doesn't need one; each new tick just re-arms the same short window.
     DotHotDefinition('Kolto Pods', duration_seconds=2.5),
-    DotHotDefinition('Kolto Shell', duration_seconds=180.0, track_by="target"),
+    DotHotDefinition('Kolto Shell', duration_seconds=180.0, track_by="target", max_charges=7),
     DotHotDefinition('Rejuvenate', duration_seconds=15.0),
     DotHotDefinition('Resurgence', duration_seconds=15.0),
     DotHotDefinition('Slow-release Medpac', duration_seconds=21.0),
     DotHotDefinition('Static Barrier', duration_seconds=30.0),
-    DotHotDefinition('Trauma Probe', duration_seconds=180.0, track_by="target"),
+    DotHotDefinition('Trauma Probe', duration_seconds=180.0, track_by="target", max_charges=7),
 ]
+
+
+@dataclass
+class _ActiveHot:
+    expires_at: float  # wall clock
+    charges_lost: int = 0
 
 
 class HotTracker:
@@ -130,8 +158,7 @@ class HotTracker:
 
     def __init__(self, hots: List[DotHotDefinition] = HOTS):
         self._by_name = {h.label.lower(): h for h in hots}
-        # (target, effect_label) -> expires_at (wall clock)
-        self._active: Dict[Tuple[str, str], float] = {}
+        self._active: Dict[Tuple[str, str], _ActiveHot] = {}
 
     def _match(self, effect_name: Optional[str]) -> Optional[DotHotDefinition]:
         if not effect_name:
@@ -154,26 +181,47 @@ class HotTracker:
         key = (event.target, definition.label)
         if event.is_effect_removed:
             self._active.pop(key, None)
-        else:
-            self._active[key] = now + definition.duration_seconds
+            return
+        if definition.max_charges and event.is_charges_modified:
+            # A charge just got consumed absorbing a hit -- not a fresh
+            # cast, so don't touch expires_at. Read the ABSOLUTE remaining
+            # count off the line rather than just decrementing by one, so a
+            # missed/duplicated event can't drift the tracked count out of
+            # sync with what the game actually shows.
+            active = self._active.get(key)
+            if active is None:
+                return  # a charge-loss line with no known active instance to update
+            remaining = _extract_remaining_charges(event.values)
+            if remaining is not None:
+                active.charges_lost = max(0, definition.max_charges - remaining)
+            return
+        self._active[key] = _ActiveHot(expires_at=now + definition.duration_seconds)
 
     def expiring(self, within_seconds: Optional[float] = None,
                  now: Optional[float] = None) -> List[dict]:
         """Soonest-to-drop first. Expired entries are pruned as we go."""
         now = now if now is not None else time.time()
         rows = []
-        for (target, label), expires in list(self._active.items()):
-            remaining = expires - now
+        for (target, label), active in list(self._active.items()):
+            total = self._by_name.get(label.lower())
+            duration = total.duration_seconds if total else None
+            remaining = active.expires_at - now
+            if total and total.max_charges and active.charges_lost:
+                # Each consumed charge costs an equal share of the shield's
+                # nominal duration, so a shield taking frequent hits visibly
+                # drains faster than the wall-clock countdown alone would
+                # show -- otherwise the bar looks nearly full right up until
+                # it vanishes the instant the last charge is spent.
+                remaining -= (duration / total.max_charges) * active.charges_lost
             if remaining <= 0:
                 del self._active[(target, label)]
                 continue
             if within_seconds is not None and remaining > within_seconds:
                 continue
-            total = self._by_name.get(label.lower())
             rows.append({
                 "target": target, "effect": label,
                 "remaining": remaining,
-                "duration": total.duration_seconds if total else remaining,
+                "duration": duration if duration else remaining,
             })
         rows.sort(key=lambda r: r["remaining"])
         return rows

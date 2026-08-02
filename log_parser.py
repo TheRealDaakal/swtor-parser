@@ -58,6 +58,11 @@ COMBAT_START_KEYWORDS = ("entercombat",)
 COMBAT_END_KEYWORDS = ("exitcombat",)
 AREA_ENTERED_KEYWORDS = ("areaentered",)
 EFFECT_REMOVED_KEYWORDS = ("removeeffect",)
+# Shield abilities with a charge count (Kolto Shell, Trauma Probe) log a
+# distinct "[ModifyCharges {id}: <ability> {id}] (N charges {id})" line each
+# time a charge is consumed, separate from the ApplyEffect that first cast
+# it -- e.g. "[ModifyCharges {id}: Kolto Shell {id}] (3 charges {id})".
+MODIFY_CHARGES_KEYWORDS = ("modifycharges",)
 # Identifies the log's own "this entity actually activated an ability" event,
 # as distinct from the damage ticks / effect applications that ability then
 # produces (all of which carry the SAME ability name in the log line).
@@ -131,6 +136,11 @@ class CombatEvent:
     source_is_player: bool = False
     target_is_player: bool = False
     is_effect_removed: bool = False
+    # True for a charge-shield's "a charge was just consumed" line -- see
+    # MODIFY_CHARGES_KEYWORDS. Distinct from is_effect_removed: the shield is
+    # still up after this (unless it was the last charge, which logs
+    # RemoveEffect instead, not a ModifyCharges down to 0).
+    is_charges_modified: bool = False
     # The game's *type* id for a non-player source/target (the `{...}` on an
     # NPC entity), or None for players and empty fields. Display names aren't
     # unique across fights -- these ids are what BARAS matches on, and what
@@ -472,6 +482,7 @@ def _classify(event: CombatEvent, tail: str) -> None:
     event.is_area_entered = any(k in tight for k in AREA_ENTERED_KEYWORDS)
     effect_type_tight = (event.effect_type or "").lower().replace(" ", "")
     event.is_effect_removed = any(k in effect_type_tight for k in EFFECT_REMOVED_KEYWORDS)
+    event.is_charges_modified = any(k in effect_type_tight for k in MODIFY_CHARGES_KEYWORDS)
     effect_name_tight = (event.effect_name or "").lower().replace(" ", "")
     event.is_ability_activate = any(
         k in effect_name_tight for k in ABILITY_ACTIVATE_KEYWORDS
