@@ -12,8 +12,9 @@ player in an always-on-top window while you raid.
   for Parsely uploads
 - SWTOR combat logging enabled: in-game, press **Ctrl+P** → Preferences →
   Combat Logging → check "Enable combat logging to file"
-- Optional, for spoken (not just beeped) timer alerts:
-  `pip install pyttsx3`
+- Spoken timer alerts use SAPI5 via `pywin32` (`win32com`), already pulled
+  in by pywebview on Windows -- nothing extra to install. Falls back to a
+  beep if it's ever unavailable.
 
 ## Run it
 
@@ -104,8 +105,8 @@ per-session testing had missed.
   lost or misattributed to the next pull. It also tracks a per-ability
   breakdown of damage/healing for every player, not just totals.
 - `audio.py` provides the alert sounds: a beep via `winsound` on Windows
-  (terminal bell fallback elsewhere), and spoken alerts via `pyttsx3` if
-  it's installed (`pip install pyttsx3`) — falls back to a beep if not.
+  (terminal bell fallback elsewhere), and spoken alerts via SAPI5
+  (`win32com.client`) — falls back to a beep if that's ever unavailable.
 - `timers.py` is an ORBS-style custom timer engine: define a keyword (matched
   against an ability/effect name), a label, and a duration, and it tracks a
   live countdown from the moment that trigger is seen. Each rule can speak
