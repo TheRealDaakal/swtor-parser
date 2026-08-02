@@ -12,7 +12,39 @@ memory, injects into the game process, or modifies any game file. Same
 category of tool as BARAS, StarParse, and ACT: a plain text-file reader that
 happens to run alongside the game, not something that touches it.
 
+## Installing (no Python required)
+
+Grab the latest installer from
+[Releases](https://github.com/TheRealDaakal/swtor-parser/releases/latest) —
+`swtor-parser-v<version>-setup.exe`. Run it, follow the wizard, and launch
+"DPS - Dynamic Parse System" from the Start Menu. (A portable
+`swtor-parser-v<version>-win64.zip` is also attached to each release if you'd
+rather not install anything — unzip it anywhere and run
+`DPS-Dynamic-Parse-System.exe` from inside the extracted folder.)
+
+**About the security warnings:** this build isn't code-signed yet (a real
+certificate costs money or requires an open-source-project application we've
+just started — see below), so Windows will flag it as coming from an
+"Unknown Publisher." This is expected, not a sign anything is actually
+wrong — nothing here touches game files or memory (see
+["Is this safe to use?"](#is-this-safe-to-use) above).
+
+- **SmartScreen ("Windows protected your PC")** — click **More info**, then
+  **Run anyway**. This shows up once per new build.
+- **Windows Defender silently deletes the .exe after extraction** — this
+  happens occasionally with unsigned executables and can look like the file
+  was just never there. Check **Windows Security → Virus & threat
+  protection → Protection history** for an entry mentioning
+  `DPS-Dynamic-Parse-System.exe` or `setup.exe`; restore it from quarantine,
+  or add a one-time exclusion for the extracted folder before re-downloading.
+
+We've applied to [SignPath Foundation](https://signpath.io)'s free
+code-signing program for open-source projects, which should eliminate both
+warnings once approved — this section will be updated when that lands.
+
 ## Requirements
+
+Only needed if you're running from source instead of the installer above.
 
 - Python 3.8+ (tkinter is included with standard Python on Windows)
 - `pip install pywebview requests` — pywebview drives the whole tabbed UI
