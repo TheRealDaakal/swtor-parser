@@ -144,7 +144,8 @@ class OverlayManager:
         for o in self.bar_overlays:
             key = getattr(o, "kind", None)
             if key:
-                frames[key] = {"x": o.win.winfo_x(), "y": o.win.winfo_y()}
+                frames[key] = {"x": o.win.winfo_x(), "y": o.win.winfo_y(),
+                               "width": o.width, "height": o.height}
             if key == "notes":
                 notes_text = o.current_text()
         if notes_text is None:
@@ -164,8 +165,10 @@ class OverlayManager:
 
     def _apply_overlay(self, key, pos=None, persist=True):
         """Show or hide one frame, honouring self._overlay_state[key].
-        pos: optional {"x": int, "y": int} to restore a saved position
-        instead of the default stacked placement -- used on startup only."""
+        pos: optional {"x": int, "y": int, "width": int, "height": int} to
+        restore a saved position/size instead of the default stacked
+        placement and each kind's own default size -- used on startup and
+        whenever a frame is dragged, resized, or the lock toggles."""
         import overlay as ov
         want = self._overlay_state.get(key, False)
         existing = next((o for o in self.bar_overlays if getattr(o, "kind", None) == key), None)
@@ -184,23 +187,32 @@ class OverlayManager:
         # other, unless we're restoring a specific saved position
         x = pos["x"] if pos else 40
         y = pos["y"] if pos else 180 + 150 * len(self.bar_overlays)
+        # A previously resized frame's saved width/height win over each
+        # kind's own default; omitted entirely (old saved layouts predate
+        # resizing) so the class default still applies.
+        size_kwargs = {}
+        if pos and "width" in pos:
+            size_kwargs["width"] = pos["width"]
+        if pos and "height" in pos:
+            size_kwargs["height"] = pos["height"]
         if key == "timers":
-            o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key == "alerts":
-            o = ov.AlertOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.AlertOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key == "hots":
-            o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key == "hots_grid":
-            o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key in ("cooldowns", "dots"):
-            o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
             o.kind = key
         elif key == "notes":
             saved_text = storage.load_overlay_layout(self._current_character()).get("notes", "")
             o = ov.NotesOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved,
-                                initial_text=saved_text, on_text_change=self._on_notes_changed)
+                                initial_text=saved_text, on_text_change=self._on_notes_changed,
+                                **size_kwargs)
         else:
-            o = ov.BarOverlay(self.root, kind=key, x=x, y=y, on_close=drop, on_move=moved)
+            o = ov.BarOverlay(self.root, kind=key, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         # a frame opened while "Lock positions" is already checked should
         # start locked too, not silently draggable until the next toggle
         if self._locked:

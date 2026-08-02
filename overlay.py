@@ -156,17 +156,25 @@ def compact(v):
 
 
 class BarOverlay:
-    """One floating metric list (DPS, HPS, ...). Drag anywhere to move."""
+    """One floating metric list (DPS, HPS, ...). Drag anywhere to move, drag
+    the bottom-right corner grip to resize."""
+
+    MIN_WIDTH = 160
+    # Room for the header plus at least one row -- matches the (rows+2)*
+    # ROW_H+10 sizing formula at rows=1, so it lines up exactly with
+    # _rows_for_height(MIN_HEIGHT) == 1.
+    MIN_HEIGHT = 3 * ROW_H + 10
+    GRIP_SIZE = 14
 
     def __init__(self, root, kind="dps", x=40, y=200, width=250, rows=8,
-                 on_close=None, on_move=None):
+                 on_close=None, on_move=None, height=None):
         self.kind = kind
-        self.max_rows = rows
         self.width = width
         self.on_close = on_close
-        self.on_move = on_move  # called once per drag, on release -- not per pixel
+        self.on_move = on_move  # called once per drag/resize, on release -- not per pixel
         self.locked = False
         self._drag = (0, 0)
+        self._resize_origin = None  # (pointer_x, pointer_y, start_width, start_height)
         self._last_render = None  # (args, kwargs) of the last render() call,
                                    # so toggling the lock can repaint immediately
 
@@ -183,11 +191,14 @@ class BarOverlay:
             self.transparent = False
             self.win.attributes("-alpha", 0.88)
 
-        height = (rows + 2) * ROW_H + 10
-        self.win.geometry(f"{width}x{height}+{x}+{y}")
+        # An explicit height (restoring a previously resized frame) wins;
+        # otherwise derive it from `rows` the way this always worked.
+        self.height = int(height) if height is not None else (rows + 2) * ROW_H + 10
+        self.max_rows = self._rows_for_height(self.height)
+        self.win.geometry(f"{width}x{self.height}+{x}+{y}")
 
         self.canvas = tk.Canvas(self.win, bg=TRANSPARENT_KEY, highlightthickness=0,
-                                bd=0, width=width, height=height)
+                                bd=0, width=width, height=self.height)
         self.canvas.pack(fill="both", expand=True)
 
         for seq, fn in (("<ButtonPress-1>", self._drag_start),
@@ -195,6 +206,21 @@ class BarOverlay:
                         ("<ButtonRelease-1>", self._drag_end),
                         ("<Button-3>", self._close)):
             self.canvas.bind(seq, fn)
+
+        # Resize grip: a separate tiny widget pinned to the corner via
+        # place() rather than a canvas item, so it survives every render()
+        # call's canvas.delete("all") without special-casing (NotesOverlay
+        # in particular can't have canvas items coming and going under its
+        # embedded Text widget).
+        self.grip = tk.Canvas(self.win, width=self.GRIP_SIZE, height=self.GRIP_SIZE,
+                              bg=TRANSPARENT_KEY, highlightthickness=0, bd=0,
+                              cursor="size_nw_se")
+        self.grip.place(relx=1.0, rely=1.0, anchor="se")
+        for seq, fn in (("<ButtonPress-1>", self._resize_start),
+                        ("<B1-Motion>", self._resize_move),
+                        ("<ButtonRelease-1>", self._resize_end)):
+            self.grip.bind(seq, fn)
+        self._draw_grip()
 
     # ---------------------------------------------------------------- lock
 
@@ -206,6 +232,7 @@ class BarOverlay:
         self.locked = locked
         if self.transparent:
             _set_clickthrough(self.win, locked)
+        self._draw_grip()
         self._redraw()
 
     def _redraw(self):
@@ -240,6 +267,58 @@ class BarOverlay:
         if self.on_close:
             self.on_close(self)
         self.win.destroy()
+
+    # -------------------------------------------------------------- resize
+
+    @staticmethod
+    def _rows_for_height(height):
+        """Inverse of the (rows+2)*ROW_H+10 sizing formula -- how many
+        rows fit in a given window height."""
+        return max(1, int((height - 10) / ROW_H) - 2)
+
+    def _draw_grip(self):
+        """Small diagonal-lines resize handle, hidden while locked -- a
+        locked overlay is meant to be untouchable, same as drag-to-move."""
+        self.grip.delete("all")
+        if self.locked:
+            return
+        s = self.GRIP_SIZE
+        for offset in (4, 8, 12):
+            self.grip.create_line(s - offset, s - 2, s - 2, s - offset,
+                                  fill=PANEL_EDGE, width=1)
+
+    def _resize_start(self, _e=None):
+        if self.locked:
+            return
+        self._resize_origin = (self.win.winfo_pointerx(), self.win.winfo_pointery(),
+                               self.width, self.height)
+
+    def _resize_move(self, _e=None):
+        if self.locked or self._resize_origin is None:
+            return
+        ox, oy, ow, oh = self._resize_origin
+        dx = self.win.winfo_pointerx() - ox
+        dy = self.win.winfo_pointery() - oy
+        self._apply_size(max(self.MIN_WIDTH, ow + dx), max(self.MIN_HEIGHT, oh + dy))
+
+    def _resize_end(self, _e=None):
+        if self.locked:
+            return
+        self._resize_origin = None
+        if self.on_move:
+            self.on_move(self)
+
+    def _apply_size(self, width, height):
+        """Live-resizes the window/canvas and recomputes how many rows fit,
+        then repaints with the last known data. NotesOverlay overrides this
+        -- its content isn't row-based, it resizes an embedded Text widget
+        instead."""
+        self.width = int(width)
+        self.height = int(height)
+        self.win.geometry(f"{self.width}x{self.height}")
+        self.canvas.configure(width=self.width, height=self.height)
+        self.max_rows = self._rows_for_height(self.height)
+        self._redraw()
 
     # ---------------------------------------------------------------- draw
 
@@ -359,10 +438,10 @@ class HotOverlay(BarOverlay):
     SOON = 8.0     # seconds -- amber
 
     def __init__(self, root, x=40, y=760, width=250, rows=8, on_close=None,
-                 on_move=None, within_seconds=None):
+                 on_move=None, within_seconds=None, height=None):
         self.within_seconds = within_seconds
-        super().__init__(root, kind="hots", x=x, y=y, width=width,
-                         rows=rows, on_close=on_close, on_move=on_move)
+        super().__init__(root, kind="hots", x=x, y=y, width=width, rows=rows,
+                         on_close=on_close, on_move=on_move, height=height)
 
     def render(self, rows, total=None, subtitle=None):
         """rows: dicts from HotTracker.expiring()."""
@@ -422,10 +501,10 @@ class HotGridOverlay(HotOverlay):
     CELL_GAP = 6
 
     def __init__(self, root, x=40, y=760, width=280, rows=12, on_close=None,
-                 on_move=None, within_seconds=None):
+                 on_move=None, within_seconds=None, height=None):
         super().__init__(root, x=x, y=y, width=width, rows=rows,
                          on_close=on_close, on_move=on_move,
-                         within_seconds=within_seconds)
+                         within_seconds=within_seconds, height=height)
         self.kind = "hots_grid"
 
     def render(self, rows, total=None, subtitle=None):
@@ -480,9 +559,9 @@ class TimerOverlay(BarOverlay):
     """Countdown bars -- same floating treatment, bar shrinks as it runs."""
 
     def __init__(self, root, x=40, y=520, width=250, rows=6, on_close=None,
-                 on_move=None):
-        super().__init__(root, kind="timers", x=x, y=y, width=width,
-                         rows=rows, on_close=on_close, on_move=on_move)
+                 on_move=None, height=None):
+        super().__init__(root, kind="timers", x=x, y=y, width=width, rows=rows,
+                         on_close=on_close, on_move=on_move, height=height)
 
     def render(self, timers, total=None, subtitle=None):
         """timers: list of (label, remaining, total_seconds, category,
@@ -523,9 +602,9 @@ class AlertOverlay(BarOverlay):
     point is a fast, unambiguous glance, not a duration to read."""
 
     def __init__(self, root, x=40, y=20, width=260, rows=4, on_close=None,
-                 on_move=None):
-        super().__init__(root, kind="alerts", x=x, y=y, width=width,
-                         rows=rows, on_close=on_close, on_move=on_move)
+                 on_move=None, height=None):
+        super().__init__(root, kind="alerts", x=x, y=y, width=width, rows=rows,
+                         on_close=on_close, on_move=on_move, height=height)
 
     def render(self, timers, total=None, subtitle=None):
         """timers: list of (label, remaining, total_seconds, category,
@@ -565,19 +644,20 @@ class NotesOverlay(BarOverlay):
     untouched across repeated calls.
     """
 
+    MIN_WIDTH = 180
+    MIN_HEIGHT = 90
+
     def __init__(self, root, x=40, y=340, width=260, height=200, on_close=None,
                  on_move=None, initial_text="", on_text_change=None):
         self.on_text_change = on_text_change
-        self._panel_height = height
         super().__init__(root, kind="notes", x=x, y=y, width=width, rows=0,
-                         on_close=on_close, on_move=on_move)
-        # BarOverlay.__init__ sized the window off `rows`, which notes has
-        # none of -- override with a fixed text-area height instead.
-        self.win.geometry(f"{width}x{height}+{x}+{y}")
-        self.canvas.configure(height=height)
+                         on_close=on_close, on_move=on_move, height=height)
+        # self.height is now exactly `height` (BarOverlay honours an
+        # explicit height over the rows-derived default) -- notes has no
+        # row concept, it just sizes the embedded Text widget directly.
 
         text_top = PAD_TOP + HEADER_H
-        text_h = height - text_top - PAD_BOTTOM
+        text_h = self.height - text_top - PAD_BOTTOM
         cx = self.content_x()
         self.text = tk.Text(self.canvas, wrap="word", bg=PANEL, fg=TEXT,
                             insertbackground=TEXT, relief="flat", bd=0,
@@ -585,8 +665,9 @@ class NotesOverlay(BarOverlay):
         if initial_text:
             self.text.insert("1.0", initial_text)
         self.text.bind("<FocusOut>", self._on_focus_out)
-        self.canvas.create_window(cx, text_top, anchor="nw", window=self.text,
-                                  width=width - cx - PAD_X, height=text_h)
+        self._text_window_id = self.canvas.create_window(
+            cx, text_top, anchor="nw", window=self.text,
+            width=width - cx - PAD_X, height=text_h)
 
         self.render()
 
@@ -604,13 +685,28 @@ class NotesOverlay(BarOverlay):
         # via mouse, which defeats "notes you can glance at while locked".
         self.locked = locked
         self.text.configure(state="disabled" if locked else "normal")
+        self._draw_grip()
+        self._redraw()
+
+    def _apply_size(self, width, height):
+        """Notes has no row concept -- resize the embedded Text widget
+        directly instead of recomputing max_rows."""
+        self.width = int(width)
+        self.height = int(height)
+        self.win.geometry(f"{self.width}x{self.height}")
+        self.canvas.configure(width=self.width, height=self.height)
+        cx = self.content_x()
+        text_top = PAD_TOP + HEADER_H
+        text_h = self.height - text_top - PAD_BOTTOM
+        self.canvas.itemconfig(self._text_window_id,
+                               width=self.width - cx - PAD_X, height=text_h)
         self._redraw()
 
     def render(self, *_args, **_kwargs):
         self._last_render = ((), {})
         c = self.canvas
         c.delete("chrome")
-        h = self._panel_height
+        h = self.height
         edge = LOCK_EDGE if self.locked else PANEL_EDGE
         border = 2 if self.locked else 1
         panel_id = self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
