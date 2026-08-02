@@ -181,7 +181,20 @@ class Condition:
                 return False
             if (event.hp_current / event.hp_max) * 100 > (self.percent or 0):
                 return False
-            key = (tuple(sorted(sel)), self.percent)
+            # id(self) disambiguates between two SEPARATE hp_below timer
+            # definitions that happen to share the same (selector, percent)
+            # -- common after merging BARAS + ORBS data, since both sources
+            # often independently define a timer for the same real
+            # threshold. Without it, whichever definition's condition gets
+            # evaluated first on the crossing event silently "claims" the
+            # shared key, and the OTHER definition's condition -- a
+            # different Condition object, functionally identical -- finds
+            # it already consumed and never fires again for that pull, even
+            # though it was never actually checked. Confirmed live: two
+            # separate 75%/30% timers on Soa, only the non-alert one (which
+            # happened to come first in the JSON array) ever fired; the
+            # is_alert=true one chained off the other never did.
+            key = (id(self), tuple(sorted(sel)), self.percent)
             if key in ctx.fired_hp_thresholds:
                 return False
             if commit:
@@ -276,7 +289,10 @@ class Condition:
             target = self.value if self.value is not None else 0
             if current < target:
                 return False
-            key = (self.counter_id, target)
+            # id(self) -- same reasoning as hp_below above: without it, two
+            # separate counter_reaches timers sharing a (counter_id, value)
+            # pair collide on one shared one-time edge trigger.
+            key = (id(self), self.counter_id, target)
             if key in ctx.fired_counter_reaches:
                 return False
             if commit:
