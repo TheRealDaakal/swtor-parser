@@ -4,6 +4,14 @@ A lightweight, BARAS-style desktop combat log parser for SWTOR. Watches your
 CombatLogs folder live and shows DPS, HPS, damage taken, and deaths per
 player in an always-on-top window while you raid.
 
+## Is this safe to use?
+
+Yes. This only reads the combat log text files SWTOR already writes to disk
+(`Documents\Star Wars - The Old Republic\CombatLogs`) — it never reads game
+memory, injects into the game process, or modifies any game file. Same
+category of tool as BARAS, StarParse, and ACT: a plain text-file reader that
+happens to run alongside the game, not something that touches it.
+
 ## Requirements
 
 - Python 3.8+ (tkinter is included with standard Python on Windows)
