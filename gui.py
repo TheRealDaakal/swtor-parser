@@ -253,7 +253,12 @@ class OverlayManager:
         if not self.bar_overlays:
             return
         rows, duration = self.tracker.snapshot()
-        boss = self.boss_state.status_text() if self.boss_state else None
+        # None (not "No boss encounter active") when idle -- that placeholder
+        # string is long enough to visibly collide with the overlay's own
+        # title text (reported live: "words are clipping each other"), and
+        # it's not useful clutter on a DPS meter when there's nothing to
+        # report anyway.
+        boss = self.boss_state.status_text() if self.boss_state and self.boss_state.active_boss else None
         for o in self.bar_overlays:
             kind = getattr(o, "kind", None)
             if kind == "taken":

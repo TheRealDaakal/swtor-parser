@@ -152,3 +152,52 @@ def test_modify_charges_does_not_refresh_an_applied_scoped_rule(sim_clock):
         f"expected the countdown to keep running from the original cast (130s left after "
         f"50s), but a ModifyCharges line reset it to {remaining}s"
     )
+
+
+def test_ability_activate_does_not_spawn_a_ghost_dot_entry(sim_clock):
+    """Reported live: a DoT tracker panel showing two simultaneous entries
+    for the same DoT (e.g. Interrogation Probe) on one boss. Root cause:
+    the AbilityActivate line (the cast itself) carries the same ability
+    name as the ApplyEffect line that follows it, so it also matches an
+    "applied"-scoped rule's keyword -- but AbilityActivate's target logs as
+    "=" (same as source, i.e. the CASTER), not the real recipient. That
+    created a permanent ghost entry keyed to the caster's own name, which
+    never gets refreshed again since every real tick targets the actual
+    recipient (the boss) instead -- one real entry, one stuck ghost,
+    showing as "two of the same DoT"."""
+    engine = TimerEngine()
+    engine.add_rule(TimerRule(
+        keyword="Interrogation Probe", label="Interrogation Probe", duration_seconds=18.0,
+        voice_alert=False, category="dot", event_type="applied", only_local_player=True,
+    ))
+
+    sim_clock(0.0)
+    # The AbilityActivate line: real logs mark the target "=" (same as
+    # source) here -- log_line() doesn't have a literal "=" mode, so this
+    # passes the caster's own name as target to reach the same end state
+    # (event.target == event.source), which is what actually matters for
+    # this bug. Ability name is already "Interrogation Probe" even though
+    # nothing has actually been applied to anything yet.
+    activate_ev = parse_line(
+        log_line("00:00:00.000", "@Sniper#1", target="@Sniper#1", ability="Interrogation Probe {1}",
+                  effect_type="Event", effect_name="AbilityActivate {2}"),
+        line_number=1,
+    )
+    assert activate_ev.is_ability_activate
+    engine.feed(activate_ev, local_player_name="Sniper")
+    assert len(engine.active) == 0, "AbilityActivate alone must not start a timer"
+
+    sim_clock(0.2)
+    apply_ev = parse_line(
+        log_line("00:00:00.200", "@Sniper#1", target="Boss", ability="Interrogation Probe {1}",
+                  effect_type="ApplyEffect", effect_name="Interrogation Probe {1}"),
+        line_number=2,
+    )
+    engine.feed(apply_ev, local_player_name="Sniper")
+
+    dot_rows = engine.snapshot("dot")
+    assert len(dot_rows) == 1, (
+        f"expected exactly one 'Interrogation Probe' entry (keyed to the boss), "
+        f"got {len(dot_rows)}: {dot_rows}"
+    )
+    assert dot_rows[0][0] == "Interrogation Probe"

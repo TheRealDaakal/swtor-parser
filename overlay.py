@@ -27,6 +27,7 @@ this degrades instead of breaking off-Windows.
 import ctypes
 import os
 import tkinter as tk
+import tkinter.font as tkfont
 
 # Any colour that will never be drawn deliberately. Pure magenta is the
 # convention; a near-black is used here so the fallback (opaque) case still
@@ -357,6 +358,24 @@ class BarOverlay:
         """Left edge for text/tracks -- clears the accent stripe."""
         return PAD_X + STRIPE_W + 6
 
+    def _truncate_to_width(self, text, max_width, font=FONT_SMALL):
+        """Shrinks text (appending an ellipsis as needed) until it actually
+        fits within max_width pixels, measured with real font metrics --
+        unlike a fixed character-count slice, this can't still overflow
+        depending on what's actually in the string. Used for header
+        subtitles (e.g. a boss + phase name) sharing the same row as the
+        title text: a fixed-length slice left them visibly colliding
+        ("words are clipping each other") whenever the title itself ran
+        long enough to eat into the subtitle's assumed space."""
+        if max_width <= 0:
+            return ""
+        fnt = tkfont.Font(font=font)
+        if fnt.measure(text) <= max_width:
+            return text
+        while text and fnt.measure(text + "…") > max_width:
+            text = text[:-1]
+        return (text + "…") if text else ""
+
     def _panel(self, rows_drawn, has_total):
         """Rounded card sized to the content actually drawn, with a
         coloured left accent stripe (rounded-cap line, not a hard-edged
@@ -391,10 +410,13 @@ class BarOverlay:
         head = KIND_TITLES.get(self.kind, self.kind.upper())
         if self.locked:
             head = f"\U0001F512 {head}"
-        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
+        head_id = self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
         if subtitle:
-            self._text(self.width - PAD_X, PAD_TOP + 12, subtitle[:26],
-                       fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
+            _x0, _y0, head_right, _y1 = c.bbox(head_id)
+            fitted = self._truncate_to_width(subtitle, (self.width - PAD_X) - (head_right + 10))
+            if fitted:
+                self._text(self.width - PAD_X, PAD_TOP + 12, fitted,
+                           fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
 
         y = PAD_TOP + HEADER_H
         top = max((r[1] for r in rows), default=0) or 1
@@ -667,10 +689,13 @@ class BossHealthOverlay(BarOverlay):
         head = (boss_name or "Boss Health")[:26]
         if self.locked:
             head = f"\U0001F512 {head}"
-        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
+        head_id = self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
         if subtitle:
-            self._text(self.width - PAD_X, PAD_TOP + 12, subtitle[:16],
-                       fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
+            _x0, _y0, head_right, _y1 = c.bbox(head_id)
+            fitted = self._truncate_to_width(subtitle, (self.width - PAD_X) - (head_right + 10))
+            if fitted:
+                self._text(self.width - PAD_X, PAD_TOP + 12, fitted,
+                           fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
         self.canvas.create_line(cx, PAD_TOP + HEADER_H - 6, self.width - PAD_X,
                                 PAD_TOP + HEADER_H - 6, fill=DIVIDER)
 

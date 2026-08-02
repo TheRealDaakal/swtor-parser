@@ -259,6 +259,19 @@ class TimerEngine:
                 # the shield is actually being used.
                 if rule.event_type == "applied" and event.is_charges_modified:
                     continue
+                # The AbilityActivate line (the cast itself) carries the same
+                # ability name as the ApplyEffect line that follows it, so it
+                # matches this rule's keyword too -- but its target defaults
+                # to "=" (same as source, i.e. the CASTER), not whoever the
+                # effect actually lands on. Letting it through created a
+                # permanent ghost entry keyed to the caster's own name that
+                # never gets refreshed again (every real tick targets the
+                # actual recipient instead), showing up as "two of the same
+                # DoT/HoT" -- one real, one stuck. "applied" must mean the
+                # effect actually landed on something, not merely that the
+                # ability was cast.
+                if rule.event_type == "applied" and event.is_ability_activate:
+                    continue
                 if rule.event_type == "removed" and not event.is_effect_removed:
                     continue
                 if rule.only_target and event.target != rule.only_target:
