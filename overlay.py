@@ -102,7 +102,13 @@ PANEL_ALPHA = 0.85
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
                 "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR,
                 "effective_hps": EFFECTIVE_HEAL_BAR, "boss_dps": BOSS_DAMAGE_BAR,
-                "notes": NOTES_BAR, "hots_grid": "#3aa876", "boss_hp": BOSS_DAMAGE_BAR}
+                "notes": NOTES_BAR, "hots_grid": "#3aa876", "boss_hp": BOSS_DAMAGE_BAR,
+                # Matches TimerOverlay.render()'s own internal row palette
+                # (boss/cooldown/dot categories) -- without these, all three
+                # of "timers"/"cooldowns"/"dots" fell back to the same red
+                # DAMAGE_BAR stripe, on top of already sharing the same
+                # "Timers" header text (see KIND_TITLES).
+                "timers": "#3170b8", "cooldowns": "#d9a53a", "dots": "#3aa876"}
 KIND_TITLES = {
     # "hps" is raw healing power output, overheal included -- see
     # PlayerStats.healing_done. Used to be mislabeled "Effective Healing"
@@ -120,6 +126,9 @@ KIND_TITLES = {
     "notes": "Notes",
     "hots_grid": "HoTs expiring (grid)",
     "boss_hp": "Boss Health",
+    "timers": "Timers",
+    "cooldowns": "Cooldowns",
+    "dots": "DoT Tracker",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
@@ -598,7 +607,13 @@ class TimerOverlay(BarOverlay):
         self._panel(len(timers), False)
         cx = self.content_x()
 
-        head = "\U0001F512 Timers" if self.locked else "Timers"
+        # gui.py reuses this one class for three different overlay kinds
+        # ("timers", "cooldowns", "dots") -- the header must reflect
+        # whichever one this instance actually is, not a fixed string, or
+        # all three read identically ("Timers") and there's no way to tell
+        # them apart on screen.
+        title = KIND_TITLES.get(self.kind, "Timers")
+        head = f"\U0001F512 {title}" if self.locked else title
         self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
 
         y = PAD_TOP + HEADER_H
