@@ -27,3 +27,9 @@ data, DoT/HoT data, and the parsely.io upload protocol) are translated from
 BARAS (https://github.com/baras-app/baras), Copyright (c) 2025 The BARAS
 Authors, used under the same MIT License above. This project is not
 affiliated with or endorsed by BARAS.
+
+Portions of this project (additional boss/encounter timer data) are
+translated from ORBS (https://github.com/L34T/ORBS), a fork of
+SWTORCombatParser (https://github.com/dubada01/SWTORCombatParser),
+Copyright (c) 2024 David Duba, used under the same MIT License above. This
+project is not affiliated with or endorsed by ORBS or SWTORCombatParser.

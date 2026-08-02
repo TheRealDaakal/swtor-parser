@@ -373,6 +373,13 @@ parser for SWTOR written in Rust, used under its MIT license
 (Copyright (c) 2025 The BARAS Authors). This project is not affiliated with
 or endorsed by BARAS; any translation errors here are this project's own.
 
+Additional boss/encounter timer data is translated from
+[ORBS](https://github.com/L34T/ORBS) (`L34T/ORBS`), a fork of
+[SWTORCombatParser](https://github.com/dubada01/SWTORCombatParser), used
+under its MIT license (Copyright (c) 2024 David Duba). This project is not
+affiliated with or endorsed by ORBS or SWTORCombatParser; any translation
+errors here are this project's own.
+
 ## Known limitations (v12)
 
 - Companion damage/healing counts under the companion's own name, not
