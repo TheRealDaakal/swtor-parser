@@ -92,51 +92,70 @@ def find_local_player_name(path: str) -> Optional[str]:
     return last_match
 
 
-def tail_file(path: str, poll_interval: float = 0.25) -> Iterator[Tuple[int, str]]:
-    """Yields (absolute_line_number, line) for new lines appended to `path`,
-    forever. Line numbers are 1-based and account for lines already in the
-    file before we started watching. If the file shrinks or a newer file
-    appears in the same directory, the caller should re-invoke with the new
-    path (see watch_folder)."""
-    line_number = _count_existing_lines(path)
-    # SWTOR writes combat logs as Windows-1252, not UTF-8 -- reading them as
-    # UTF-8 doesn't just render accented player names wrong, it silently
-    # drops the offending bytes entirely (e.g. "Daust\xe9n" -> "Daustn"),
-    # which also breaks exact-name matching for boss/timer rules whose
-    # target name has an accent.
-    with open(path, "r", encoding="cp1252", errors="replace") as f:
-        f.seek(0, os.SEEK_END)
-        while True:
-            line = f.readline()
-            if line:
-                line_number += 1
-                yield line_number, line
-            else:
-                time.sleep(poll_interval)
-                # Detect log rotation: file truncated/replaced
-                try:
-                    if os.path.getsize(path) < f.tell():
-                        break
-                except OSError:
-                    break
-
-
 def watch_folder(log_dir: str, poll_interval: float = 0.25) -> Iterator[Tuple[str, int, str]]:
     """Continuously watches log_dir, always tailing whichever file is
-    currently the newest (SWTOR starts a new log file each session).
-    Yields (file_path, absolute_line_number, line)."""
+    currently the newest (SWTOR starts a new log file each session --
+    including after a game crash + relog, which is exactly when picking
+    this up matters most). Yields (file_path, absolute_line_number, line).
+
+    The newer-file check happens on every idle poll tick, not just after a
+    new line arrives on the current file. That distinction matters: a
+    crash doesn't truncate or shrink the old file, it just stops writing
+    to it forever, so a version of this that only re-checked "did the
+    current file rotate" from inside the read loop would block on that
+    dead file indefinitely and never notice a new one had appeared --
+    which is exactly the bug this replaced (reported live: "when I crash
+    it stops the parser... need it to activate after a relog and crash").
+
+    Only the very first file ever opened is tailed from its end (the
+    normal "don't replay history from before the app started" startup
+    behaviour). Every subsequent file this switches to -- a newly
+    discovered rotation, or a truncated-and-replaced same-named file --
+    is read from byte 0 instead, because by definition none of its
+    content has been seen yet. Seeking to the end there would silently
+    drop whatever was already written in the (usually brief, but
+    sometimes not -- see the crash+relog case) gap between the file
+    appearing and this loop noticing it, which for a fresh post-relog
+    session can include the AreaEntered line main.py relies on to
+    identify the local player."""
     current_path = find_latest_log(log_dir)
     while current_path is None:
         time.sleep(1.0)
         current_path = find_latest_log(log_dir)
 
+    first_file = True
     while True:
-        for line_number, line in tail_file(current_path, poll_interval):
-            latest = find_latest_log(log_dir)
-            if latest and latest != current_path:
-                current_path = latest
-                break
-            yield current_path, line_number, line
-        else:
-            continue
-        # A newer file appeared -- loop again and start tailing it
+        # SWTOR writes combat logs as Windows-1252, not UTF-8 -- reading
+        # them as UTF-8 doesn't just render accented player names wrong,
+        # it silently drops the offending bytes entirely (e.g.
+        # "Daust\xe9n" -> "Daustn"), which also breaks exact-name matching
+        # for boss/timer rules whose target name has an accent.
+        f = open(current_path, "r", encoding="cp1252", errors="replace")
+        try:
+            if first_file:
+                line_number = _count_existing_lines(current_path)
+                f.seek(0, os.SEEK_END)
+                first_file = False
+            else:
+                line_number = 0
+            while True:
+                line = f.readline()
+                if line:
+                    line_number += 1
+                    yield current_path, line_number, line
+                    continue
+                latest = find_latest_log(log_dir)
+                if latest and latest != current_path:
+                    current_path = latest
+                    break
+                try:
+                    if os.path.getsize(current_path) < f.tell():
+                        break  # truncated/replaced in place -- current_path unchanged
+                except OSError:
+                    break  # file disappeared entirely -- current_path unchanged
+                time.sleep(poll_interval)
+        finally:
+            f.close()
+        # Falls through to the outer while True, which reopens current_path
+        # (either the newly-discovered file, or the same path re-read from
+        # scratch after truncation/a transient disappearance).
