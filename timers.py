@@ -341,13 +341,23 @@ class TimerEngine:
 
     def snapshot(self, category: Optional[str] = None):
         """Returns list of (label, remaining_seconds, total_seconds, category,
-        is_alert) sorted soonest-expiring first. Pass category to filter
-        (e.g. "cooldown" for the personal-cooldowns panel vs everything
-        else)."""
+        is_alert, target) sorted soonest-expiring first. Pass category to
+        filter (e.g. "cooldown" for the personal-cooldowns panel vs
+        everything else).
+
+        target is dedupe_key, exposed under a clearer name here -- for
+        "dot"/"hot" rows specifically it's who the effect is actually on,
+        which callers need to display: an AoE DoT genuinely landing on
+        several different adds at once is several REAL simultaneous rows,
+        all sharing the same label with nothing else to tell them apart
+        (reported live: "still showing more than one plasma probe" --
+        which turned out to be four correct, distinct instances on four
+        different mobs, not a duplicate bug). None for categories that
+        don't key on it (boss mechanics, mainly)."""
         with self._lock:
             now = time.time()
             rows = [
-                (t.label, t.remaining(now), t.duration_seconds, t.category, t.is_alert)
+                (t.label, t.remaining(now), t.duration_seconds, t.category, t.is_alert, t.dedupe_key)
                 for t in self.active
                 if category is None or t.category == category
             ]

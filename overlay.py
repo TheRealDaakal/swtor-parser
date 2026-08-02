@@ -381,9 +381,15 @@ class BarOverlay:
         fnt = tkfont.Font(font=font)
         if fnt.measure(text) <= max_width:
             return text
-        while text and fnt.measure(text + "…") > max_width:
+        # Plain ASCII "..." rather than the single-character ellipsis (…):
+        # that glyph came back as a literal U+FFFD replacement character
+        # from Tk's canvas text items on this setup (confirmed via repr()
+        # on the round-tripped string, not just a console-print artifact --
+        # the corruption is real, whatever Tcl/Tk layer causes it). Not
+        # worth chasing further when three periods work everywhere.
+        while text and fnt.measure(text + "...") > max_width:
             text = text[:-1]
-        return (text + "…") if text else ""
+        return (text + "...") if text else ""
 
     def _panel(self, rows_drawn, has_total):
         """Rounded card sized to the content actually drawn, with a
@@ -598,8 +604,9 @@ class TimerOverlay(BarOverlay):
 
     def render(self, timers, total=None, subtitle=None):
         """timers: list of (label, remaining, total_seconds, category,
-        is_alert). Caller filters out is_alert rows before this (they go to
-        AlertOverlay instead), but tolerate them here too just in case."""
+        is_alert, target). Caller filters out is_alert rows before this
+        (they go to AlertOverlay instead), but tolerate them here too just
+        in case."""
         self._last_render = ((timers,), {"total": total, "subtitle": subtitle})
         c = self.canvas
         c.delete("all")
@@ -622,8 +629,35 @@ class TimerOverlay(BarOverlay):
                    "dot": "#3aa876", "hot": "#3aa876"}
         for row in timers:
             label, remaining, total_s, category = row[0], row[1], row[2], row[3]
+            target = row[5] if len(row) > 5 else None
             colour = palette.get(category, "#3170b8")
-            self._text(cx, y + 12, label[:20], font=FONT)
+            # An AoE DoT genuinely landing on several different mobs at once
+            # is several real simultaneous rows sharing one label -- without
+            # the target, they're indistinguishable ("still showing more
+            # than one plasma probe", which turned out to be 4 correct
+            # instances on 4 different adds, not a duplicate bug). Target
+            # leads (same convention as HotOverlay: "you re-target by name,
+            # not by buff name") since it's the more differentiating half
+            # once several rows share a label. Only shown for "dot" --
+            # "cooldown"'s target is almost always yourself (redundant
+            # clutter), and "boss"/"hot" don't carry a meaningful one here.
+            if category == "dot" and target:
+                # Cap the target itself first (matches HotOverlay's own
+                # [:14] convention) so a real, often-long NPC name
+                # ("Attack-Science Technician") can't eat the whole row on
+                # its own and push the ability name off entirely -- the
+                # pixel-width truncation below is then just a safety net
+                # for narrow resized widths, not doing all the work alone.
+                target_short = target if len(target) <= 14 else target[:13] + "..."
+                row_label = f"{target_short}: {label}"
+            else:
+                row_label = label
+            # Reserve room for the right-aligned remaining-time text so the
+            # row text can't run underneath it; measured to fit rather than
+            # a fixed character-count slice, which chopped names mid-word
+            # regardless of how much space was actually free.
+            self._text(cx, y + 12, self._truncate_to_width(row_label, self.width - PAD_X - cx - 46),
+                       font=FONT)
             self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
                        fill=colour, anchor="e", font=FONT_VALUE)
             c.create_line(cx, y + 26, self.width - PAD_X, y + 26,

@@ -33,8 +33,8 @@ _OWN_PANEL_CATEGORIES = ("cooldown", "dot", "hot")
 
 def _timer_rows(rows):
     return [
-        {"label": label, "remaining": round(remaining, 1), "total": total}
-        for label, remaining, total, _category, _is_alert in rows
+        {"label": label, "remaining": round(remaining, 1), "total": total, "target": target}
+        for label, remaining, total, _category, _is_alert, target in rows
     ]
 
 
@@ -62,8 +62,8 @@ def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status
     dots_hots_raw.sort(key=lambda r: r[1])
     dots_hots = [
         {"tag": "DoT" if category == "dot" else "HoT", "label": label,
-         "remaining": round(remaining, 1), "total": total}
-        for label, remaining, total, category, _is_alert in dots_hots_raw
+         "remaining": round(remaining, 1), "total": total, "target": target}
+        for label, remaining, total, category, _is_alert, target in dots_hots_raw
     ]
 
     now = time.time()

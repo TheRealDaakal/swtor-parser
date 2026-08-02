@@ -111,7 +111,16 @@ function renderDotsHots(rows) {
   const empty = $('#dotshots-empty');
   if (!rows.length) { box.innerHTML = ''; empty.style.display = ''; return; }
   empty.style.display = 'none';
-  box.innerHTML = rows.map(r => timerRow(`${r.tag}  ${r.label}`, r.remaining, r.total)).join('');
+  // target tells apart e.g. an AoE DoT genuinely landing on several
+  // different adds at once -- several real simultaneous rows that would
+  // otherwise all read as the exact same label with no way to tell which
+  // is which. Leads with target, same convention as the floating HoT
+  // overlay ("you re-target by name, not by buff name"). timerRow() itself
+  // escapes the whole label string -- don't pre-escape the pieces here too.
+  box.innerHTML = rows.map(r => timerRow(
+    r.target ? `${r.target}: ${r.tag} ${r.label}` : `${r.tag}  ${r.label}`,
+    r.remaining, r.total
+  )).join('');
 }
 
 function renderTaunts(taunts) {
