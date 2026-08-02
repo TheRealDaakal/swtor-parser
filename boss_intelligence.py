@@ -61,6 +61,18 @@ class BossEncounterState:
         # uses -- not a guaranteed-correct identification in a full group,
         # but a reasonable one since it's your own client's log.
         self.local_player_name: Optional[str] = None
+        # Live HP snapshot for the boss overlay -- updated from whichever
+        # event most recently carried an HP fraction for an entity matching
+        # active_boss.boss_names (the same selector hp_below conditions
+        # already use). None until the first such event arrives.
+        self.boss_hp_current: Optional[float] = None
+        self.boss_hp_max: Optional[float] = None
+        # Who the boss is currently attacking -- the target of the most
+        # recent event where a boss_names entity was the SOURCE and the
+        # target was a player. Multi-body encounters (several simultaneous
+        # boss_names entities) can make this jump between bodies; same
+        # known trade-off hp_below's selector already accepts.
+        self.boss_target: Optional[str] = None
 
     def _note_local_player(self, event: CombatEvent) -> None:
         if self.local_player_name is not None:
@@ -69,6 +81,25 @@ class BossEncounterState:
             self.local_player_name = event.source
         elif event.target_is_player and event.target:
             self.local_player_name = event.target
+
+    def _update_hp_and_target(self, event: CombatEvent) -> None:
+        """No-op until a boss is recognized -- called both before and after
+        recognition happens within the same feed() call, so the very event
+        that identifies the boss can also seed its first HP/target reading
+        if that line happens to carry one."""
+        if self.active_boss is None:
+            return
+        names = self.active_boss.boss_names
+        if event.target in names and event.hp_current is not None and event.hp_max:
+            self.boss_hp_current = event.hp_current
+            self.boss_hp_max = event.hp_max
+        if event.source in names and event.target_is_player and event.target:
+            self.boss_target = event.target
+
+    def boss_hp_percent(self) -> Optional[float]:
+        if self.boss_hp_current is None or not self.boss_hp_max:
+            return None
+        return max(0.0, min(100.0, (self.boss_hp_current / self.boss_hp_max) * 100))
 
     def reset(self) -> None:
         """Call when a new pull starts (StatsTracker rolled over to a fresh
@@ -81,6 +112,9 @@ class BossEncounterState:
         self.fired_hp_thresholds = set()
         self.fired_counter_reaches = set()
         self._changed_counter_ids = set()
+        self.boss_hp_current = None
+        self.boss_hp_max = None
+        self.boss_target = None
 
     def _init_counters(self) -> None:
         self.counters = {c.id: c.initial_value for c in self.active_boss.counters}
@@ -123,6 +157,7 @@ class BossEncounterState:
 
     def feed(self, event: CombatEvent, timer_engine=None) -> Optional[PhaseChange]:
         self._note_local_player(event)
+        self._update_hp_and_target(event)
         expired_ids = timer_engine.pop_recently_expired_ids() if timer_engine else []
         started_ids = timer_engine.pop_recently_started_ids() if timer_engine else []
         # `counter_changes` means "changed on this event" -- reset the scratch
@@ -145,6 +180,7 @@ class BossEncounterState:
             if matched is None or not matched.phases:
                 return None
             self.active_boss = matched
+            self._update_hp_and_target(event)  # active_boss was still None on this event's first call above
             self._init_counters()
             first = matched.phases[0]
             self.active_phase_id = first.id

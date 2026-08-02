@@ -203,6 +203,8 @@ class OverlayManager:
             o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key == "hots_grid":
             o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
+        elif key == "boss_hp":
+            o = ov.BossHealthOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key in ("cooldowns", "dots"):
             o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
             o.kind = key
@@ -316,6 +318,20 @@ class OverlayManager:
                 o.render(data, total=sum(r[1] for r in data))
             elif kind in ("hots", "hots_grid"):
                 o.render(self.hot_tracker.expiring(within_seconds=o.within_seconds))
+            elif kind == "boss_hp":
+                active = self.boss_state.active_boss if self.boss_state else None
+                phase_name = None
+                if active and self.boss_state.active_phase_id:
+                    phase = active.phase_by_id(self.boss_state.active_phase_id)
+                    phase_name = phase.name if phase else None
+                o.render(
+                    boss_name=active.name if active else None,
+                    hp_percent=self.boss_state.boss_hp_percent() if self.boss_state else None,
+                    hp_current=self.boss_state.boss_hp_current if self.boss_state else None,
+                    hp_max=self.boss_state.boss_hp_max if self.boss_state else None,
+                    boss_target=self.boss_state.boss_target if self.boss_state else None,
+                    subtitle=phase_name,
+                )
             elif kind == "cooldowns":
                 o.render(self.timer_engine.snapshot("cooldown"))
             elif kind == "dots":

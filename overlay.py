@@ -101,7 +101,7 @@ PANEL_ALPHA = 0.85
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
                 "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR,
                 "effective_hps": EFFECTIVE_HEAL_BAR, "boss_dps": BOSS_DAMAGE_BAR,
-                "notes": NOTES_BAR, "hots_grid": "#3aa876"}
+                "notes": NOTES_BAR, "hots_grid": "#3aa876", "boss_hp": BOSS_DAMAGE_BAR}
 KIND_TITLES = {
     # "hps" is raw healing power output, overheal included -- see
     # PlayerStats.healing_done. Used to be mislabeled "Effective Healing"
@@ -118,12 +118,14 @@ KIND_TITLES = {
     "boss_dps": "Boss DPS",
     "notes": "Notes",
     "hots_grid": "HoTs expiring (grid)",
+    "boss_hp": "Boss Health",
 }
 
 # Which frames can be toggled, grouped the way BARAS groups them. Each entry
 # is (key, label, group). The key is what gui.py switches on when building
 # and refreshing the frame.
 AVAILABLE_OVERLAYS = [
+    ("boss_hp",       "Boss Health + Target",       "Encounter"),
     ("dps",           "Damage (Raw, all targets)", "Metrics"),
     ("boss_dps",      "Boss DPS (no fluff)",        "Metrics"),
     ("hps",           "Healing (Raw)",              "Metrics"),
@@ -628,6 +630,77 @@ class AlertOverlay(BarOverlay):
             self._text(cx, y + 14, label.upper()[:24], fill="#ff7a68",
                        font=("Segoe UI", 13, "bold"))
             y += ROW_H
+
+
+class BossHealthOverlay(BarOverlay):
+    """The active boss's HP and current target -- "who is it looking at"
+    (tank swaps, cleave targets) alongside "how much longer". Not a row
+    list like the other bars; one big health bar plus a target line, so it
+    gets its own fully custom render() rather than reusing _panel().
+    """
+
+    URGENT_HP = 25.0  # percent -- red, execute-range
+    SOON_HP = 50.0    # percent -- amber
+    BAR_H = 28
+
+    def __init__(self, root, x=40, y=460, width=280, height=130, on_close=None, on_move=None):
+        super().__init__(root, kind="boss_hp", x=x, y=y, width=width, rows=0,
+                         on_close=on_close, on_move=on_move, height=height)
+
+    def render(self, boss_name=None, hp_percent=None, hp_current=None,
+               hp_max=None, boss_target=None, subtitle=None):
+        self._last_render = ((), {
+            "boss_name": boss_name, "hp_percent": hp_percent, "hp_current": hp_current,
+            "hp_max": hp_max, "boss_target": boss_target, "subtitle": subtitle,
+        })
+        c = self.canvas
+        c.delete("all")
+        h = self.height
+        edge = LOCK_EDGE if self.locked else PANEL_EDGE
+        border = 2 if self.locked else 1
+        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
+                           fill=PANEL, outline=edge, width=border)
+        self.canvas.create_line(6, 12, 6, h - 12, fill=BOSS_DAMAGE_BAR,
+                                width=STRIPE_W, capstyle=tk.ROUND)
+        cx = self.content_x()
+
+        head = (boss_name or "Boss Health")[:26]
+        if self.locked:
+            head = f"\U0001F512 {head}"
+        self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
+        if subtitle:
+            self._text(self.width - PAD_X, PAD_TOP + 12, subtitle[:16],
+                       fill=TEXT_DIM, anchor="e", font=FONT_SMALL)
+        self.canvas.create_line(cx, PAD_TOP + HEADER_H - 6, self.width - PAD_X,
+                                PAD_TOP + HEADER_H - 6, fill=DIVIDER)
+
+        bar_y = PAD_TOP + HEADER_H + 6
+        bar_right = self.width - PAD_X
+        if hp_percent is None:
+            self._text(cx, bar_y + self.BAR_H / 2 + 4, "no boss active",
+                       fill=TEXT_DIM, font=FONT_SMALL)
+        else:
+            if hp_percent <= self.URGENT_HP:
+                colour = "#e2564a"
+            elif hp_percent <= self.SOON_HP:
+                colour = "#d9a53a"
+            else:
+                colour = "#3aa876"
+            c.create_rectangle(cx, bar_y, bar_right, bar_y + self.BAR_H,
+                               fill=PANEL_EDGE, outline="")
+            frac = max(0.0, min(1.0, hp_percent / 100.0))
+            if frac > 0:
+                c.create_rectangle(cx, bar_y, cx + (bar_right - cx) * frac, bar_y + self.BAR_H,
+                                   fill=colour, outline="")
+            label = f"{hp_percent:.0f}%"
+            if hp_current is not None and hp_max is not None:
+                label += f"  ({compact(hp_current)}/{compact(hp_max)})"
+            self._text(cx + 8, bar_y + self.BAR_H / 2 + 1, label,
+                       fill=TEXT, anchor="w", font=FONT_VALUE)
+
+        target_y = bar_y + self.BAR_H + 16
+        self._text(cx, target_y, "Target:", fill=TEXT_DIM, font=FONT_SMALL)
+        self._text(cx + 52, target_y, (boss_target or "—")[:20], fill=TEXT, font=FONT)
 
 
 class NotesOverlay(BarOverlay):
