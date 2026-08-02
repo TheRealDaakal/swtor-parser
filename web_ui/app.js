@@ -8,6 +8,14 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// parsely_upload.py's <file> response field is documented as already being
+// the full report link, but the API isn't ours to fully trust the shape
+// of -- if it ever comes back as a bare path/id instead, prefix it onto
+// the site's own domain rather than rendering an unclickable half-URL.
+const parselyLinkHtml = link => {
+  const href = /^https?:\/\//i.test(link) ? link : `https://parsely.io/${link.replace(/^\/+/, '')}`;
+  return `Uploaded. <a class="btn-link" href="${esc(href)}" target="_blank" rel="noopener">Go to Parsely &rarr;</a>`;
+};
 const fmt = n => n == null ? '—' : Math.round(n).toLocaleString();
 // Stat-tile contract: 1,284 / 12.9K / $4.2M -- anything under 10K keeps its
 // exact digits. Compacting 1,983 to "2K" throws away real precision.
@@ -425,8 +433,8 @@ async function uploadPull(pullNum) {
   const notes = prompt('Optional note for this upload:') || null;
   $('#modal-upload-status').textContent = 'Uploading...';
   const result = await post(`/api/history/${pullNum}/upload`, { notes });
-  $('#modal-upload-status').textContent = result.success
-    ? `Uploaded: ${result.link}` : `Failed: ${result.error}`;
+  $('#modal-upload-status').innerHTML = result.success
+    ? parselyLinkHtml(result.link) : esc(`Failed: ${result.error}`);
 }
 
 async function openBreakdown(pullNum, name) {
@@ -593,14 +601,16 @@ $('#p-upload-file').addEventListener('click', async () => {
   const notes = prompt('Optional note for this upload:') || null;
   $('#p-status').textContent = 'Uploading...';
   const result = await post('/api/parsely/upload_path', { path, notes });
-  $('#p-status').textContent = result.success ? `Uploaded: ${result.link}` : `Upload failed: ${result.error}`;
+  $('#p-status').innerHTML = result.success
+    ? parselyLinkHtml(result.link) : esc(`Upload failed: ${result.error}`);
 });
 
 $('#p-upload-current').addEventListener('click', async () => {
   const notes = prompt('Optional note for this upload:') || null;
   $('#p-status').textContent = 'Uploading...';
   const result = await post('/api/parsely/upload_current', { notes });
-  $('#p-status').textContent = result.success ? `Uploaded: ${result.link}` : `Upload failed: ${result.error}`;
+  $('#p-status').innerHTML = result.success
+    ? parselyLinkHtml(result.link) : esc(`Upload failed: ${result.error}`);
 });
 
 // --------------------------------------------------------- update banner

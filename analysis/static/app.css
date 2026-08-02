@@ -91,6 +91,16 @@ button:hover:not(:disabled) { background: var(--surface-3); color: var(--ink); }
 button:disabled { opacity: .45; cursor: default; }
 button.ghost { background: transparent; }
 button.on { background: var(--surface-3); color: var(--ink); border-color: var(--hairline); }
+/* Same visual language as <button> for an <a> that needs to read as a
+   clickable action (e.g. "Go to Parsely" after a successful upload), not
+   a plain inline text link. */
+a.btn-link {
+  display: inline-block; background: var(--surface-2); color: var(--ink-2);
+  border: 1px solid var(--hairline); border-radius: 7px;
+  padding: 4px 11px; font-size: 12px; text-decoration: none; cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+}
+a.btn-link:hover { background: var(--surface-3); color: var(--ink); }
 
 select {
   background: var(--surface-2); color: var(--ink-2);
