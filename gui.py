@@ -144,7 +144,13 @@ class OverlayManager:
         return self.boss_state.local_player_name if self.boss_state else None
 
     def _persist_overlay_layout(self):
-        frames = {}
+        # Seed from what's already saved so a frame the user just closed
+        # keeps its last position on disk -- only overwrite entries for
+        # frames that are currently open. Otherwise disabling a frame wipes
+        # its saved spot, and re-enabling it later drops back to the
+        # default stacked position (reported by a tester: overlays "return
+        # to their original positions" after a disable/re-enable).
+        frames = dict(storage.load_overlay_layout(self._current_character()).get("frames", {}))
         notes_text = None
         hot_grid_slots = None
         for o in self.bar_overlays:
@@ -192,6 +198,13 @@ class OverlayManager:
             return
         if existing:
             return
+        if pos is None:
+            # Toggling a frame back on (as opposed to _restore_overlay_layout's
+            # startup call, which always passes pos already) should reappear
+            # where the user last put it, not the default stacked spot.
+            saved = storage.load_overlay_layout(self._current_character()).get("frames", {}).get(key)
+            if saved:
+                pos = saved
         drop = lambda o: self._on_overlay_closed(o)
         moved = lambda o: self._persist_overlay_layout()
         # stack new frames down the left so two don't land on top of each
