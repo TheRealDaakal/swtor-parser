@@ -208,7 +208,7 @@ def _clean_name(text: str) -> Optional[str]:
     """
     if text is None:
         return None
-    text = re.sub(r"\{[^{}]*\}", "", text).strip()
+    text = ENTITY_ID_RE.sub("", text).strip()
     text = text.lstrip("@").strip()
     return text or None
 

@@ -28,10 +28,8 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
-from stats import Encounter
+from stats import Encounter, HISTORY_LIMIT
 from timers import TimerRule
-
-HISTORY_LIMIT = 200  # keep at most this many past encounters on disk
 
 
 def data_dir() -> Path:

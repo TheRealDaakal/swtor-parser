@@ -8,7 +8,10 @@ Covers three P1 fixes in StatsTracker/PlayerStats:
 Plus the raw/effective healing and boss-only DPS additions.
 """
 from log_parser import parse_line
-from stats import StatsTracker, PlayerStats, NEW_PULL_MIN_GAP_SECONDS
+from stats import (
+    StatsTracker, PlayerStats, Encounter, NEW_PULL_MIN_GAP_SECONDS, HISTORY_LIMIT,
+    TRAILING_CAPTURE_SECONDS,
+)
 from conftest import log_line
 
 
@@ -31,6 +34,17 @@ def _damage_tick(tracker, sim_clock, t, source="@Dps#1", target="Training Dummy"
                   effect_name="Damage {2}", amount=amount),
         line_number=1,
     )
+    return tracker.feed(ev)
+
+
+def _exit_combat(tracker, sim_clock, t, source="@Dps#1"):
+    sim_clock(t)
+    ev = parse_line(
+        log_line(f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}",
+                  source, effect_type="Event", effect_name="ExitCombat {1}"),
+        line_number=1,
+    )
+    ev.is_combat_end = True  # explicit, matching the EnterCombat tests' own convention
     return tracker.feed(ev)
 
 
@@ -214,3 +228,82 @@ class TestBossDps:
         # total damage_done (not summed here) would include the adds too --
         # boss_dps must never silently include them.
         assert p.boss_dps(["Boss"], duration=10.0) < sum(p.damage_by_target.values()) / 10.0
+
+
+class TestTrailingCapture:
+    """StarParse-style behavior: damage/heal events arriving up to
+    TRAILING_CAPTURE_SECONDS after ExitCombat still count toward the fight
+    that just ended, instead of being dropped or bleeding into the next
+    pull -- SWTOR can log a DoT/HoT tick after the official combat-exit
+    event. Previously unexercised by any test."""
+
+    def test_damage_within_the_grace_window_still_counts_toward_the_closed_pull(self, sim_clock):
+        tracker = StatsTracker()
+        for i in range(6):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0)  # 100..110
+
+        completed = _exit_combat(tracker, sim_clock, 110.0)
+        assert completed is None, "ExitCombat alone must not roll the pull over immediately"
+
+        # A trailing DoT tick lands well inside TRAILING_CAPTURE_SECONDS (4.0).
+        assert TRAILING_CAPTURE_SECONDS == 4.0, "test assumes the documented default"
+        trailing = _damage_tick(tracker, sim_clock, 112.0, amount="777")
+        assert trailing is None, "still within the grace window -- must not roll over yet"
+
+        # Push well past the grace window and feed a stray event -- THAT
+        # finally triggers the rollover.
+        stray = _stray_ability_activate(tracker, sim_clock, 130.0)
+        assert stray is not None
+        total_expected = 6 * 1000.0 + 777.0  # six default-amount ticks (see _damage_tick) + the trailing one
+        assert stray.players["Dps"].damage_done == total_expected, (
+            "the trailing tick must be attributed to the FINISHED pull, not dropped "
+            "and not bled into whatever comes next"
+        )
+
+    def test_damage_past_the_grace_window_starts_a_new_pull_instead(self, sim_clock):
+        tracker = StatsTracker()
+        _damage_tick(tracker, sim_clock, 100.0)
+        completed = _exit_combat(tracker, sim_clock, 101.0)
+        assert completed is None
+
+        # Arrives after the grace window has elapsed -- this event itself
+        # both closes the old pull AND becomes the first hit of a new one.
+        _damage_tick(tracker, sim_clock, 101.0 + TRAILING_CAPTURE_SECONDS + 5.0, amount="999")
+
+        assert len(tracker.history) == 0, "the old pull was a sub-5s sliver, correctly discarded"
+        assert tracker.current.players["Dps"].damage_done == 999.0, (
+            "the late hit must start the NEW current encounter, not get folded into the old one"
+        )
+
+
+class TestHistoryMemoryCap:
+    """StatsTracker.history used to grow without bound in memory -- only the
+    on-disk file was ever trimmed to HISTORY_LIMIT. A long session, or one
+    big 'Import an old session log' click (which can add hundreds of pulls
+    in a single loop -- see web_server.py's /api/import/session), kept every
+    Encounter (each with its own per-player event lists) in RAM forever."""
+
+    def test_rollover_trims_in_memory_history_to_the_limit(self, sim_clock):
+        tracker = StatsTracker()
+        t = 0.0
+        for _ in range(HISTORY_LIMIT + 5):
+            _damage_tick(tracker, sim_clock, t)
+            t += NEW_PULL_MIN_GAP_SECONDS + 1.0
+            _damage_tick(tracker, sim_clock, t)  # forces the previous one to roll over
+        assert len(tracker.history) <= HISTORY_LIMIT
+
+    def test_flush_current_also_respects_the_cap(self, sim_clock):
+        tracker = StatsTracker()
+        tracker.history = [Encounter() for _ in range(HISTORY_LIMIT)]
+        for i in range(10):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0)
+        tracker.flush_current()
+        assert len(tracker.history) == HISTORY_LIMIT
+
+    def test_imported_encounters_are_capped_and_dont_bypass_the_lock(self, sim_clock):
+        tracker = StatsTracker()
+        tracker.history = [Encounter() for _ in range(HISTORY_LIMIT)]
+        newest = Encounter(label="Imported")
+        tracker.add_imported_encounter(newest)
+        assert len(tracker.history) == HISTORY_LIMIT
+        assert tracker.history[-1] is newest, "trimming must drop the OLDEST entries, not the new one"

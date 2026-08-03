@@ -121,6 +121,44 @@ def test_reapplying_resets_both_the_clock_and_the_charge_penalty(sim_clock):
     assert abs(rows[0]["remaining"] - 180.0) < 0.01
 
 
+def test_same_hot_on_two_simultaneous_targets_tracks_both_independently(sim_clock):
+    """A healer's AoE-ish HoT usage (or just healing two people with the
+    same spell close together) lands the SAME label on two different
+    targets at once -- _active is keyed by (target, label), not label
+    alone, so both must stay tracked as separate entries, and refreshing
+    one must not touch the other's countdown."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+    _feed(tracker, sim_clock, 3.0, "@Healer#1", "@Dps#2",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+
+    rows = tracker.expiring(now=5.0)
+    assert len(rows) == 2
+    by_target = {r["target"]: r for r in rows}
+    assert set(by_target) == {"Tank", "Dps"}
+    # Tank's was cast at t=0 (5s elapsed), Dps's at t=3 (2s elapsed) --
+    # different remaining times, proving these are two independent
+    # countdowns, not one shared entry that a second cast just overwrote.
+    assert abs(by_target["Tank"]["remaining"] - 16.0) < 0.01  # 21 - 5
+    assert abs(by_target["Dps"]["remaining"] - 19.0) < 0.01   # 21 - 2
+
+    # Refreshing the Tank's HoT must not affect Dps's independent countdown.
+    _feed(tracker, sim_clock, 5.0, "@Healer#1", "@Tank#1",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+    rows = tracker.expiring(now=5.0)
+    by_target = {r["target"]: r for r in rows}
+    assert abs(by_target["Tank"]["remaining"] - 21.0) < 0.01  # fully refreshed
+    assert abs(by_target["Dps"]["remaining"] - 19.0) < 0.01   # untouched
+
+    # Tank's was refreshed at t=5 (expires t=26); Dps's was never refreshed
+    # (cast at t=3, expires t=24). At t=25, Dps's must have expired on its
+    # own while Tank's -- independently -- is still counting down.
+    rows = tracker.expiring(now=25.0)
+    assert len(rows) == 1
+    assert rows[0]["target"] == "Tank"
+
+
 def test_non_charge_hot_is_unaffected(sim_clock):
     """A plain time-based HoT (no max_charges) must ignore ModifyCharges
     entirely and just be a normal countdown -- this mechanic is specific to

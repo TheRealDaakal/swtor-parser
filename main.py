@@ -223,7 +223,8 @@ def main():
         timer_engine.add_rule(rule)
     loaded_history = storage.load_history()
     if loaded_history:
-        tracker.history = loaded_history + tracker.history
+        from stats import HISTORY_LIMIT
+        tracker.history = (loaded_history + tracker.history)[-HISTORY_LIMIT:]
 
     if not log_dir:
         status.text = (

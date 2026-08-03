@@ -502,7 +502,7 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                         "imported": 0,
                         "message": "No recognizable combat events found in the selected file(s).",
                     })
-                tracker.history.append(encounter)
+                tracker.add_imported_encounter(encounter)
                 storage.append_history_entry(encounter)
                 return self._json({
                     "imported": 1,
@@ -533,7 +533,7 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                                 duplicates += 1
                                 continue
                             encounter.label = pull["boss_name"] or "Unknown fight"
-                            tracker.history.append(encounter)
+                            tracker.add_imported_encounter(encounter)
                             storage.append_history_entry(encounter)
                             existing.add(key)
                             imported += 1

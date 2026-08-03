@@ -60,6 +60,16 @@ NEW_PULL_MIN_GAP_SECONDS = 30.0
 # see StatsTracker.flush_current().
 MIN_ENCOUNTER_SECONDS = 5.0
 
+# Caps StatsTracker.history in memory, not just on disk. storage.py's
+# save_history()/append_history_entry() already trim the FILE to this many
+# pulls, but the in-memory list itself was never capped -- a long-running
+# session, or one big "Import an old session log" click (which can add
+# hundreds of pulls in a loop, see web_server.py's /api/import/session), grew
+# it forever, each entry carrying its own per-player bucketed event lists.
+# storage.py imports this constant rather than defining its own so the two
+# caps can't drift apart.
+HISTORY_LIMIT = 200
+
 
 def _append_bucketed(events: List[Tuple[float, float]], now: float, amount: float) -> None:
     """Adds `amount` to events, merging into the current whole-second bucket
@@ -608,7 +618,7 @@ class StatsTracker:
 
     def __init__(self, preloaded_history: Optional[List[Encounter]] = None):
         self.current = Encounter()
-        self.history: List[Encounter] = list(preloaded_history or [])
+        self.history: List[Encounter] = list(preloaded_history or [])[-HISTORY_LIMIT:]
         self.current_log_path: Optional[str] = None
         self.last_area_entered_line: Optional[int] = None
         # The last encounter that had real damage/healing in it -- see
@@ -633,6 +643,27 @@ class StatsTracker:
     def set_log_path(self, path: str) -> None:
         self.current_log_path = path
         self.current.log_path = path
+
+    def _append_history_unlocked(self, encounter: "Encounter") -> None:
+        """Appends and trims to HISTORY_LIMIT. Callers already inside
+        `with self._lock:` use this directly; external callers (imports)
+        go through add_imported_encounter() instead -- self._lock is a
+        plain, non-reentrant Lock, so this must never acquire it itself."""
+        self.history.append(encounter)
+        if len(self.history) > HISTORY_LIMIT:
+            self.history = self.history[-HISTORY_LIMIT:]
+
+    def add_imported_encounter(self, encounter: "Encounter") -> None:
+        """For callers outside this class adding an already-built Encounter
+        (log merge / session import) -- takes the lock itself, unlike
+        feed()/flush_current() which are already inside one. Without this,
+        those importers were reaching into tracker.history.append(...)
+        directly: unlocked, so a concurrent feed() on the live reader thread
+        could race it, and uncapped, the actual worst case for unbounded
+        growth -- a single "Import an old session log" can add hundreds of
+        pulls in one loop, not just an unusually long live session."""
+        with self._lock:
+            self._append_history_unlocked(encounter)
 
     def feed(self, event: CombatEvent) -> Optional[Encounter]:
         """Feeds one event in. Returns the just-completed Encounter if this
@@ -671,7 +702,7 @@ class StatsTracker:
                 # exactly 93, matching the offline count precisely.
                 if self.current.duration() >= MIN_ENCOUNTER_SECONDS:
                     completed = self.current
-                    self.history.append(completed)
+                    self._append_history_unlocked(completed)
                 if self._has_meter_data(self.current):
                     self._last_meaningful = self.current
                 self.current = Encounter()
@@ -702,7 +733,7 @@ class StatsTracker:
             if self.current.duration() < MIN_ENCOUNTER_SECONDS:
                 return None
             completed = self.current
-            self.history.append(completed)
+            self._append_history_unlocked(completed)
             self.current = Encounter()
             self.current.log_path = self.current_log_path
             self.current.area_entered_line = self.last_area_entered_line
