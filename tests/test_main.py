@@ -11,7 +11,8 @@ avoid depending on real machine state: APPDATA is monkeypatched to a
 pytest tmp_path before any storage.py call.
 """
 import storage
-from main import CharacterSettingsHolder
+from conftest import log_line
+from main import CharacterSettingsHolder, background_reader, PHASE_ALERT_SECONDS
 
 
 def _isolate_appdata(monkeypatch, tmp_path):
@@ -105,3 +106,84 @@ def test_set_alacrity_pct_with_no_character_known_does_not_crash_or_persist_anyw
     holder.set_alacrity_pct(10.0)  # no character synced yet
     assert holder.alacrity_pct == 10.0
     assert holder.character is None
+
+
+# ---------------------------------------------------------------------
+# background_reader's phase-change -> is_alert timer wiring. Covers the
+# actual reader loop (not just TimerEngine.start_timer() in isolation,
+# already covered by tests/test_timers.py) by monkeypatching
+# log_watcher.watch_folder to replay synthetic lines through the real
+# function.
+
+class _NullHistoryWriter:
+    def submit(self, encounter):
+        pass  # no pull ever completes in this short synthetic feed
+
+
+def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp_path, sim_clock):
+    """Every genuine phase transition -- including the initial one, when
+    the boss is first recognized -- should start a voice_alert/is_alert
+    timer carrying the new phase's name (main.py's PHASE_ALERT_SECONDS
+    block), so "burn phase started" (or any other phase) gets called out
+    instead of only updating the passive header text."""
+    import main
+    import log_watcher
+    from stats import StatsTracker
+    from timers import TimerEngine
+    from boss_definitions import _definition_from_dict
+    from boss_intelligence import BossEncounterState
+    from dots_hots import HotTracker
+    from taunt_tracker import TauntTracker
+    from main import StatusHolder, CharacterSettingsHolder
+
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+
+    definition = _definition_from_dict({
+        "id": "test_boss", "name": "Test Boss", "boss_names": ["Test Boss"],
+        "phases": [
+            {"id": "p1", "name": "Phase 1"},
+            {"id": "p2", "name": "Phase 2 (Burn)", "start_trigger": {"type": "hp_below", "percent": 50}},
+        ],
+    })
+
+    tracker = StatsTracker()
+    timer_engine = TimerEngine()
+    boss_state = BossEncounterState({"test_boss": definition})
+    hot_tracker = HotTracker()
+    taunt_tracker = TauntTracker()
+    status = StatusHolder()
+    character_settings = CharacterSettingsHolder()
+
+    log_path = tmp_path / "combat.txt"
+    log_path.write_text("", encoding="cp1252")  # find_last_area_entered_line just needs a real file to open
+
+    lines = [
+        # Recognizes the boss and enters phase 1 (the initial phase).
+        log_line("00:00:00.000", "Test Boss", ability="Intro", effect_name="AbilityActivate {1}"),
+        # Player damages the boss down to 40% -- phase 2's hp_below(50) start_trigger.
+        log_line("00:00:01.000", "@Player#1", target="Test Boss", ability="Smash",
+                  effect_name="Damage {2}", amount="600000", target_hp="400000/1000000"),
+    ]
+
+    def fake_watch_folder(log_dir, poll_interval=0.25):
+        for i, raw in enumerate(lines, 1):
+            yield (str(log_path), i, raw)
+
+    monkeypatch.setattr(log_watcher, "watch_folder", fake_watch_folder)
+
+    main.background_reader(
+        str(tmp_path), tracker, timer_engine, boss_state, hot_tracker, taunt_tracker,
+        status, _NullHistoryWriter(), character_settings,
+    )
+
+    assert status.text == f"Watching: {tmp_path}", f"reader loop hit an unexpected error: {status.text}"
+
+    phase_alerts = [t for t in timer_engine.active if t.category == "phase"]
+    labels = sorted(t.label for t in phase_alerts)
+    assert labels == ["Phase 1", "Phase 2 (Burn)"], (
+        f"expected both phase transitions to fire an alert timer, got {labels}"
+    )
+    for t in phase_alerts:
+        assert t.is_alert is True
+        assert t.voice_alert is True
+        assert t.duration_seconds == PHASE_ALERT_SECONDS

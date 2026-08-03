@@ -35,6 +35,14 @@ from gui import OverlayManager
 BUNDLED_BOSS_DIR = Path(__file__).parent / "boss_definitions_bundled"
 USER_BOSS_DIR = Path(storage.data_dir()) / "boss_definitions"
 
+# How long a phase-change callout stays up in the alert banner (and how long
+# after the voice line before it can fire again for the SAME transition --
+# each real transition only fires once anyway, this just bounds how long it
+# lingers on screen). Deliberately generic -- announces every phase, not
+# just ones named "Burn"/"Enrage": which phase matters is a per-fight,
+# per-strat judgment call, not something to hardcode by name.
+PHASE_ALERT_SECONDS = 5.0
+
 
 class StatusHolder:
     """Replaces the old status_q -- that only ever had one consumer (the Tk
@@ -182,7 +190,17 @@ def background_reader(
                 character_settings.sync_for_character(boss_state.local_player_name)
                 completed = tracker.feed(event)
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
-                boss_state.feed(event, timer_engine=timer_engine)
+                change = boss_state.feed(event, timer_engine=timer_engine)
+                if change is not None:
+                    # Reuses the same is_alert/voice_alert pipeline authored
+                    # boss timers already get (timers.py's start_timer ->
+                    # audio.speak) -- a phase change just starts one of
+                    # those automatically instead of requiring every boss
+                    # definition to hand-author a phase_entered timer for it.
+                    timer_engine.start_timer(
+                        change.phase_name, PHASE_ALERT_SECONDS,
+                        voice_alert=True, category="phase", is_alert=True,
+                    )
                 timer_engine.feed(
                     event, boss_id=boss_state.active_boss and boss_state.active_boss.id,
                     phase_id=boss_state.active_phase_id,
