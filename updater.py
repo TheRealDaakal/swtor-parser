@@ -147,6 +147,16 @@ while ((Get-Process -Id $targetPid -ErrorAction SilentlyContinue) -and (Get-Date
     Start-Sleep -Milliseconds 300
 }
 
+# If the process is STILL alive past the deadline, its own DLLs are still
+# open -- attempting the swap now would very likely fail partway through
+# (reported live as a silent "no restart happened, old version stays"
+# after an update). Bail out instead of risking a half-swapped install;
+# the old app just keeps running untouched, same as before self-update
+# existed.
+if (Get-Process -Id $targetPid -ErrorAction SilentlyContinue) {
+    exit 1
+}
+
 $backup = "$installDir.old"
 try {
     if (Test-Path $backup) { Remove-Item $backup -Recurse -Force }

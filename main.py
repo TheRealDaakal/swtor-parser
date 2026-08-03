@@ -11,6 +11,7 @@ Run with:  python main.py
 Optional:  python main.py "C:\\path\\to\\CombatLogs"
 """
 
+import os
 import queue
 import sys
 import threading
@@ -286,6 +287,9 @@ def main():
     else:
         log_dir = log_watcher.find_log_dir()
 
+    import audio
+    audio.apply_settings(storage.load_audio_settings())
+
     tracker = StatsTracker()
     timer_engine = TimerEngine()
     definitions = load_definitions(BUNDLED_BOSS_DIR, USER_BOSS_DIR)
@@ -392,7 +396,29 @@ def main():
     window_ref = {}
 
     def request_shutdown():
+        # Used by the self-updater (web_server.py's /api/update/apply) right
+        # after it launches the relaunch helper, which waits up to 60s for
+        # THIS process's pid to exit before swapping the install directory
+        # in place (see updater.py). window.destroy() alone isn't enough:
+        # it closes the visible window, but doesn't reliably unblock
+        # webview.start() (destroy() is being called from a background
+        # thread, off the pywebview main loop) -- reported live as "the
+        # viewer closed, but it didn't restart" and the update banner still
+        # showing the old version after reopening manually. If this process
+        # is still alive when the helper's wait times out, the swap fails
+        # (its own DLLs are still open) and it silently gives up -- no
+        # relaunch, no error shown, since the old window is already gone.
+        # Flush explicitly first (mirrors the normal-close path below,
+        # which os._exit(0) would otherwise skip) then hard-exit so the
+        # helper always sees this pid gone well within its wait window.
+        try:
+            completed = tracker.flush_current()
+            if completed is not None:
+                storage.append_history_entry(completed)
+        except Exception:
+            pass
         window_ref["window"].destroy()
+        os._exit(0)
 
     web_port = 8766
     server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
