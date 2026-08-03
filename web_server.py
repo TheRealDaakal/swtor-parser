@@ -187,7 +187,7 @@ def build_ability_breakdown(encounter, player_name, boss_state):
 
 
 def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                  update_holder=None, request_shutdown=None):
+                  update_holder=None, request_shutdown=None, character_settings=None):
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
 
@@ -366,6 +366,18 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 settings.pop("password", None)  # never echo the stored password back
                 return self._json(settings)
 
+            if u.path == "/api/character_settings":
+                # None until the local player's been identified from the
+                # log (see boss_intelligence.BossEncounterState) -- the
+                # frontend shows a "not detected yet" state for that case
+                # rather than a misleading 0%.
+                if character_settings is None:
+                    return self._json({"character": None, "alacrity_pct": 0.0})
+                return self._json({
+                    "character": character_settings.character,
+                    "alacrity_pct": character_settings.alacrity_pct,
+                })
+
             return self._send(b"not found", "text/plain", 404)
 
         # ----------------------------------------------------------- POST
@@ -425,6 +437,19 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             if u.path == "/api/overlays/clear":
                 overlay_manager.clear_all()
                 return self._json({"ok": True})
+
+            if u.path == "/api/character_settings":
+                if character_settings is None or character_settings.character is None:
+                    return self._json({"error": "No character detected yet -- "
+                                                 "start watching a live log first."}, 400)
+                try:
+                    pct = float(body.get("alacrity_pct"))
+                except (TypeError, ValueError):
+                    return self._json({"error": "alacrity_pct must be a number"}, 400)
+                if pct < 0:
+                    return self._json({"error": "alacrity_pct can't be negative"}, 400)
+                character_settings.set_alacrity_pct(pct)
+                return self._json({"ok": True, "alacrity_pct": pct})
 
             if u.path == "/api/parsely_settings":
                 settings = self._parsely_settings_from_body(body)
@@ -585,7 +610,9 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
 
 
 def make_server(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                 port: int = 8766, update_holder=None, request_shutdown=None) -> ThreadingHTTPServer:
+                 port: int = 8766, update_holder=None, request_shutdown=None,
+                 character_settings=None) -> ThreadingHTTPServer:
     handler = make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                            update_holder=update_holder, request_shutdown=request_shutdown)
+                            update_holder=update_holder, request_shutdown=request_shutdown,
+                            character_settings=character_settings)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)

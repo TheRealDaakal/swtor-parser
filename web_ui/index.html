@@ -179,6 +179,20 @@
       </div>
       <div id="overlay-groups" class="live-grid"></div>
     </div>
+    <div class="panel">
+      <h2>Character Settings</h2>
+      <p class="sub" id="cs-character">No character detected yet -- start watching a live log first.</p>
+      <div class="filters">
+        <label class="fld">Alacrity %
+          <input type="number" id="cs-alacrity" step="0.1" min="0" style="width:80px" disabled>
+        </label>
+        <button id="cs-save" disabled>Save</button>
+      </div>
+      <p class="sub">SWTOR's combat log never reports your actual Alacrity stat, so this has to be typed
+        in from your character sheet. Used to scale DoT/HoT countdown durations to match how fast they
+        actually tick for you -- e.g. Corrosive Dart ticks 6 times regardless of Alacrity, so more
+        Alacrity means those ticks (and the debuff itself) finish sooner.</p>
+    </div>
   </section>
 
   <!-- ============================== import ============================== -->

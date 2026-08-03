@@ -315,7 +315,10 @@ per-session testing had missed.
   log at all, so the same name showing up again in the log line that ends
   the buff can't spuriously restart it. Not translated: `cooldown_ready_secs`
   (a distinct "ready" glow after the cooldown ends) and alacrity-scaled
-  durations — both real BARAS features, not implemented here yet.
+  activation times for cooldowns specifically — both real BARAS features,
+  not implemented here yet. (Alacrity-scaled DoT/HoT *durations* are a
+  separate, now-implemented feature — see the DoT/HoT bullet under
+  "Known limitations" below.)
 - `gui.py` / `main.py` tie it together in five tabs — **Live** (the meter,
   current boss/phase status, active timer countdowns, plus separate
   **Cooldowns** and **DoTs / HoTs** panels — double-click a player for
@@ -454,16 +457,23 @@ errors here are this project's own.
   `dcds.toml` with real names/durations, now scoped to the detected local
   player. It still doesn't scope by discipline/class (you'll see rules for
   abilities your class doesn't have — harmless, they just never fire), and
-  doesn't implement the "ready" glow state or alacrity-scaled durations
-  BARAS's real schema supports.
+  doesn't implement the "ready" glow state or alacrity-scaled
+  *activation times* BARAS's real schema supports for cooldowns
+  specifically (a separate mechanic from the DoT/HoT alacrity scaling
+  below — activation-time reduction, not tick-count-based duration).
 - DoT/HoT tracking doesn't implement BARAS's `refresh_abilities` (re-applying
   a DoT should *refresh* the existing countdown; here it stacks a second
-  one) or alacrity scaling. Abilities whose display text is identical across
-  disciplines collapse to one rule, since matching is by text, not spec —
-  so a duration that differs by discipline uses a single representative
-  value. 5 of the 45 keywords are BARAS's own curated names that this
-  corpus never logged (other classes' variants); they're flagged inline in
-  `dots_hots.py`.
+  one). Abilities whose display text is identical across disciplines
+  collapse to one rule, since matching is by text, not spec — so a duration
+  that differs by discipline uses a single representative value. 5 of the
+  45 keywords are BARAS's own curated names that this corpus never logged
+  (other classes' variants); they're flagged inline in `dots_hots.py`.
+  Alacrity-scaled durations ARE implemented, as of the manual Alacrity %
+  setting on the Overlays tab — SWTOR's combat log never reports a
+  character's actual Alacrity Rating/% directly (no line reports raw
+  stats, only events), so it can't be read automatically; every
+  `is_affected_by_alacrity` flag was re-verified against BARAS's current
+  source rather than guessed (see `dots_hots.py`'s module docstring).
 - Boss coverage: **63 definitions, 188 phases, 944 timers**, machine-
   translated from all 53 of BARAS's encounter files. That is every boss in
   BARAS's data that actually *has* timers: of its 236 boss entries, 175 have

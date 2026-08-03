@@ -56,7 +56,7 @@ $$('.tab').forEach(t => {
 function refreshActiveTab() {
   if (activeView === 'history') loadHistory();
   else if (activeView === 'timers') loadTimerRules();
-  else if (activeView === 'overlays') loadOverlays();
+  else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
   else if (activeView === 'parsely') loadParselySettings();
 }
 
@@ -597,6 +597,36 @@ $('#ov-lock').addEventListener('change', async e => {
 $('#ov-clear').addEventListener('click', async () => {
   await post('/api/overlays/clear');
   loadOverlays();
+});
+
+// ---------------------------------------------------- character settings
+async function loadCharacterSettings() {
+  const data = await api('/api/character_settings');
+  const input = $('#cs-alacrity');
+  const saveBtn = $('#cs-save');
+  if (data.character) {
+    $('#cs-character').textContent = `Settings for: ${data.character}`;
+    input.disabled = false;
+    saveBtn.disabled = false;
+    // Don't stomp on a value the user is actively typing mid-poll.
+    if (document.activeElement !== input) input.value = data.alacrity_pct;
+  } else {
+    $('#cs-character').textContent = 'No character detected yet -- start watching a live log first.';
+    input.disabled = true;
+    saveBtn.disabled = true;
+  }
+}
+
+$('#cs-save').addEventListener('click', async () => {
+  const pct = parseFloat($('#cs-alacrity').value);
+  if (Number.isNaN(pct) || pct < 0) return;
+  const btn = $('#cs-save');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  const result = await post('/api/character_settings', { alacrity_pct: pct });
+  btn.textContent = result.ok ? 'Saved!' : (result.error || 'Failed');
+  setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1200);
 });
 
 // ------------------------------------------------------------ import tab

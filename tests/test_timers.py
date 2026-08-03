@@ -201,3 +201,77 @@ def test_ability_activate_does_not_spawn_a_ghost_dot_entry(sim_clock):
         f"got {len(dot_rows)}: {dot_rows}"
     )
     assert dot_rows[0][0] == "Interrogation Probe"
+
+
+class TestAlacrityScaling:
+    """apply_alacrity() and TimerRule.alacrity_affected -- SWTOR's combat
+    log never reports a character's actual Alacrity%, so this is driven by
+    a manually-entered value (see main.CharacterSettingsHolder), applied
+    at the moment a rule fires rather than baked into the rule at
+    registration time -- the character (and their typed-in Alacrity%)
+    usually isn't known yet when dot/hot rules are registered at startup."""
+
+    def test_apply_alacrity_formula(self):
+        from timers import apply_alacrity
+        assert apply_alacrity(18.0, 0.0) == 18.0, "0% alacrity must not change anything"
+        assert apply_alacrity(18.0, 100.0) == 9.0, "100% alacrity halves duration (SWTOR's own formula)"
+        assert abs(apply_alacrity(18.0, 20.0) - 15.0) < 0.001  # 18 / 1.2 = 15.0
+
+    def test_negative_alacrity_is_a_noop_not_a_lengthening(self):
+        from timers import apply_alacrity
+        assert apply_alacrity(18.0, -5.0) == 18.0
+
+    def test_feed_scales_duration_for_alacrity_affected_rules(self, sim_clock):
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.add_rule(TimerRule(
+            keyword="Affliction", label="Affliction", duration_seconds=18.0,
+            category="dot", event_type="applied", only_local_player=True,
+            alacrity_affected=True,
+        ))
+        event = parse_line(
+            log_line("00:00:00.000", "@Sorc#1", target="Boss", ability="Affliction {1}",
+                      effect_type="ApplyEffect", effect_name="Affliction {1}"),
+            line_number=1,
+        )
+        engine.feed(event, local_player_name="Sorc", alacrity_pct=20.0)
+        assert len(engine.active) == 1
+        assert abs(engine.active[0].duration_seconds - 15.0) < 0.001  # 18 / 1.2
+
+    def test_feed_ignores_alacrity_for_unaffected_rules(self, sim_clock):
+        """e.g. Kolto Shell -- a charge-based shield, not tick-based, must
+        keep its full nominal duration regardless of alacrity_pct."""
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.add_rule(TimerRule(
+            keyword="Kolto Shell", label="Kolto Shell", duration_seconds=180.0,
+            category="hot", event_type="applied", only_target_is_local_player=True,
+            alacrity_affected=False,
+        ))
+        event = parse_line(
+            log_line("00:00:00.000", "@Healer#1", target="@Tank#1", ability="Kolto Shell {1}",
+                      effect_type="ApplyEffect", effect_name="Kolto Shell {1}"),
+            line_number=1,
+        )
+        engine.feed(event, local_player_name="Tank", alacrity_pct=20.0)
+        assert len(engine.active) == 1
+        assert engine.active[0].duration_seconds == 180.0, "unaffected rules must ignore alacrity_pct entirely"
+
+    def test_feed_with_no_alacrity_pct_behaves_exactly_as_before(self, sim_clock):
+        """Default alacrity_pct=0.0 -- an affected rule with no alacrity
+        set yet must produce its plain nominal duration, same as
+        pre-alacrity-feature behavior."""
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.add_rule(TimerRule(
+            keyword="Affliction", label="Affliction", duration_seconds=18.0,
+            category="dot", event_type="applied", only_local_player=True,
+            alacrity_affected=True,
+        ))
+        event = parse_line(
+            log_line("00:00:00.000", "@Sorc#1", target="Boss", ability="Affliction {1}",
+                      effect_type="ApplyEffect", effect_name="Affliction {1}"),
+            line_number=1,
+        )
+        engine.feed(event, local_player_name="Sorc")  # no alacrity_pct passed
+        assert engine.active[0].duration_seconds == 18.0

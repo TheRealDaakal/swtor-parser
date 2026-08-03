@@ -170,3 +170,59 @@ def test_non_charge_hot_is_unaffected(sim_clock):
     rows = tracker.expiring(now=5.0)
     assert len(rows) == 1
     assert abs(rows[0]["remaining"] - 16.0) < 0.01  # 21s duration - 5s elapsed
+
+
+def test_alacrity_scales_duration_for_affected_definitions(sim_clock):
+    """Kolto Probe is_affected_by_alacrity=True (verified against BARAS's
+    current source, see the module docstring) -- 20% alacrity must scale
+    its 21s nominal duration down to 21/1.2 = 17.5s, matching
+    timers.apply_alacrity()'s formula."""
+    tracker = HotTracker()
+    sim_clock(0.0)
+    ev = _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Ally#1",
+               "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+    # _feed() doesn't thread alacrity_pct through -- feed it directly here.
+    tracker.feed(ev, local_player_name="Healer", now=0.0, alacrity_pct=20.0)
+
+    rows = tracker.expiring(now=0.0)
+    assert len(rows) == 1
+    assert abs(rows[0]["remaining"] - 17.5) < 0.001
+    assert abs(rows[0]["duration"] - 17.5) < 0.001, (
+        "duration (the progress bar's denominator) must reflect the SCALED "
+        "value actually used, not the raw nominal one -- otherwise the bar "
+        "looks wrong relative to its own countdown"
+    )
+
+
+def test_alacrity_does_not_affect_charge_based_shields(sim_clock):
+    """Kolto Shell is_affected_by_alacrity=False -- a charge-based shield
+    isn't tick-based, so alacrity_pct must be a complete no-op for it."""
+    tracker = HotTracker()
+    ev = parse_line(
+        log_line("00:00:00.000", "@Healer#1", target="@Tank#1", ability="Kolto Shell {1}",
+                  effect_type="ApplyEffect", effect_name="Kolto Shell {1}", amount="7 charges {2}"),
+        line_number=1,
+    )
+    tracker.feed(ev, local_player_name="Healer", now=0.0, alacrity_pct=20.0)
+
+    rows = tracker.expiring(now=0.0)
+    assert len(rows) == 1
+    assert abs(rows[0]["remaining"] - 180.0) < 0.001, "alacrity must not touch a non-tick-based shield"
+
+
+def test_register_dots_hots_wires_alacrity_affected_flag_through():
+    """register_dots_hots() must copy each DotHotDefinition's
+    is_affected_by_alacrity onto the TimerRule it creates -- otherwise the
+    flags set on DOTS/HOTS above would be dead data, never reaching
+    TimerEngine.feed()'s actual scaling logic."""
+    from timers import TimerEngine
+    from dots_hots import register_dots_hots, DotHotDefinition
+
+    engine = TimerEngine()
+    dots = [DotHotDefinition("Affected Dot", duration_seconds=18.0, is_affected_by_alacrity=True)]
+    hots = [DotHotDefinition("Unaffected Hot", duration_seconds=180.0, is_affected_by_alacrity=False)]
+    register_dots_hots(engine, dots=dots, hots=hots)
+
+    by_label = {r.label: r for r in engine.rules}
+    assert by_label["Affected Dot"].alacrity_affected is True
+    assert by_label["Unaffected Hot"].alacrity_affected is False

@@ -41,6 +41,22 @@ from log_parser import CombatEvent
 import audio
 
 
+def apply_alacrity(duration_seconds: float, alacrity_pct: float) -> float:
+    """SWTOR's own formula: Alacrity is a positive percentage that REDUCES
+    time-based values (activation time, GCD, and -- for effects flagged
+    is_affected_by_alacrity -- tick interval). A dot/hot ticks a FIXED
+    number of times; shrinking the interval between ticks while the tick
+    count stays fixed shrinks the effect's total on-target duration too,
+    same formula pattern SWTOR uses for activation time. Confirmed against
+    BARAS's own dots.toml/hots.toml source (core/definitions/effects/):
+    charge-based shields (Kolto Shell, Trauma Probe, Static Barrier, Force
+    Armor) are explicitly NOT affected -- they're absorb-until-consumed,
+    not tick-based -- while the large majority of real dots/hots are."""
+    if alacrity_pct <= 0:
+        return duration_seconds
+    return duration_seconds / (1.0 + alacrity_pct / 100.0)
+
+
 @dataclass
 class TimerRule:
     keyword: str          # matched case-insensitively against ability/effect name
@@ -81,6 +97,11 @@ class TimerRule:
     # through the legacy keyword path too so a manually/boss-registered
     # TimerRule can request the callout display instead of a countdown.
     is_alert: bool = False
+    # DoT/HoT registrations only (see dots_hots.py's DotHotDefinition) --
+    # whether this effect's on-target duration actually shrinks with the
+    # caster's alacrity. See apply_alacrity() for the formula and why only
+    # some dots/hots qualify (tick-based, not charge-based).
+    alacrity_affected: bool = False
 
     def armed_for(self, boss_id: Optional[str], phase_id: Optional[str]) -> bool:
         if self.required_boss is None:
@@ -241,7 +262,7 @@ class TimerEngine:
 
     def feed(
         self, event: CombatEvent, boss_id: Optional[str] = None, phase_id: Optional[str] = None,
-        local_player_name: Optional[str] = None,
+        local_player_name: Optional[str] = None, alacrity_pct: float = 0.0,
     ) -> None:
         with self._lock:
             haystack = " ".join(filter(None, [event.ability, event.effect_name])).lower()
@@ -291,8 +312,12 @@ class TimerEngine:
                 ):
                     continue
 
+                duration = (
+                    apply_alacrity(rule.duration_seconds, alacrity_pct)
+                    if rule.alacrity_affected else rule.duration_seconds
+                )
                 self.start_timer(
-                    rule.label, rule.duration_seconds, rule.warn_seconds_before, rule.voice_alert,
+                    rule.label, duration, rule.warn_seconds_before, rule.voice_alert,
                     category=rule.category, is_alert=rule.is_alert,
                     # "cooldown" belongs here alongside dot/hot for the same
                     # reason Kolto Pods needed it: some personal defensives

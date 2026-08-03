@@ -14,6 +14,7 @@ Optional:  python main.py "C:\\path\\to\\CombatLogs"
 import queue
 import sys
 import threading
+from typing import Optional
 from pathlib import Path
 
 import log_watcher
@@ -53,6 +54,58 @@ class UpdateHolder:
 
     def __init__(self):
         self.result = None
+
+
+class CharacterSettingsHolder:
+    """The one per-character setting that isn't overlay-layout-shaped:
+    Alacrity %, used to scale DoT/HoT durations (see timers.apply_alacrity
+    -- SWTOR's combat log never reports a character's actual Alacrity
+    Rating/% directly, so this has to be typed in manually). Still
+    persisted alongside the overlay layout blob (storage.py's
+    load_overlay_layout/save_overlay_layout already key everything by
+    character; no reason for a second per-character file).
+
+    Read from the background log-reader thread (background_reader, every
+    event) and written from web_server.py's HTTP handler thread (the
+    Overlays tab's Alacrity % field) -- a plain float attribute read/write
+    is atomic enough under the GIL for this (worst case, one event uses
+    the old value a moment longer), so this doesn't need its own lock the
+    way StatsTracker/TimerEngine do for their multi-step mutations."""
+
+    def __init__(self):
+        self.alacrity_pct: float = 0.0
+        self._character: Optional[str] = None
+
+    def sync_for_character(self, character: Optional[str]) -> None:
+        """Called every event from background_reader -- cheap (just a
+        comparison) unless the character actually changed, in which case
+        it reloads from disk once. Without this, an alt-swap mid-session
+        would keep using the PREVIOUS character's alacrity setting."""
+        if character == self._character:
+            return
+        self._character = character
+        if character:
+            layout = storage.load_overlay_layout(character)
+            try:
+                self.alacrity_pct = float(layout.get("alacrity_pct", 0.0) or 0.0)
+            except (TypeError, ValueError):
+                self.alacrity_pct = 0.0
+        else:
+            self.alacrity_pct = 0.0
+
+    def set_alacrity_pct(self, pct: float) -> None:
+        """From the web UI's Save button -- updates the in-memory value
+        immediately (the very next dot/hot to fire uses it, no restart
+        needed) and persists it for next launch."""
+        self.alacrity_pct = pct
+        if self._character:
+            layout = storage.load_overlay_layout(self._character)
+            layout["alacrity_pct"] = pct
+            storage.save_overlay_layout(layout, character=self._character)
+
+    @property
+    def character(self) -> Optional[str]:
+        return self._character
 
 
 def _check_for_update_once(holder: "UpdateHolder"):
@@ -109,6 +162,7 @@ def background_reader(
     taunt_tracker: TauntTracker,
     status: StatusHolder,
     history_writer: "HistoryWriter",
+    character_settings: "CharacterSettingsHolder",
 ):
     status.text = f"Watching: {log_dir}"
     try:
@@ -125,6 +179,7 @@ def background_reader(
                         boss_state.local_player_name = seeded_name
             event = parse_line(raw_line, line_number=line_number)
             if event is not None:
+                character_settings.sync_for_character(boss_state.local_player_name)
                 completed = tracker.feed(event)
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
                 boss_state.feed(event, timer_engine=timer_engine)
@@ -132,8 +187,10 @@ def background_reader(
                     event, boss_id=boss_state.active_boss and boss_state.active_boss.id,
                     phase_id=boss_state.active_phase_id,
                     local_player_name=boss_state.local_player_name,
+                    alacrity_pct=character_settings.alacrity_pct,
                 )
-                hot_tracker.feed(event, local_player_name=boss_state.local_player_name)
+                hot_tracker.feed(event, local_player_name=boss_state.local_player_name,
+                                  alacrity_pct=character_settings.alacrity_pct)
                 taunt_tracker.feed(event, local_player_name=boss_state.local_player_name)
                 if completed is not None:
                     history_writer.submit(completed)
@@ -214,6 +271,7 @@ def main():
     status = StatusHolder()
     history_writer = HistoryWriter(status)
     update_holder = UpdateHolder()
+    character_settings = CharacterSettingsHolder()
     threading.Thread(target=_check_for_update_once, args=(update_holder,), daemon=True).start()
 
     # Custom (Timers-tab) rules and completed pulls both need to survive a
@@ -236,7 +294,7 @@ def main():
         thread = threading.Thread(
             target=background_reader,
             args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status,
-                  history_writer),
+                  history_writer, character_settings),
             daemon=True,
         )
         thread.start()
@@ -280,7 +338,8 @@ def main():
     web_port = 8766
     server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
                                      overlay_manager, status, port=web_port,
-                                     update_holder=update_holder, request_shutdown=request_shutdown)
+                                     update_holder=update_holder, request_shutdown=request_shutdown,
+                                     character_settings=character_settings)
     threading.Thread(target=server.serve_forever, daemon=True).start()
 
     window_ref["window"] = webview.create_window(
