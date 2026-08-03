@@ -19,9 +19,10 @@ import json
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import unquote, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 import storage
+from stats import rotation_segments
 
 STATIC_DIR = Path(__file__).resolve().parent / "web_ui"
 SHARED_CSS = Path(__file__).resolve().parent / "analysis" / "static" / "app.css"
@@ -315,6 +316,37 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                                                                     encounter.end_line))
                 except OSError as exc:
                     return self._json({"error": str(exc)}, 500)
+
+            # /api/history/<idx>/player/<name>/rotation?keyword=...
+            # Splits the pull into segments bounded by every occurrence of
+            # `keyword` and shows this player's own cast sequence + DPS/EHPS/
+            # crit% within each -- re-parses the raw log's own line range on
+            # demand rather than being backed by stored per-event data (see
+            # stats.rotation_segments' own comment on why).
+            if (len(parts) == 6 and parts[:2] == ["api", "history"] and parts[2].isdigit()
+                    and parts[3] == "player" and parts[5] == "rotation"):
+                idx = int(parts[2]) - 1
+                if not (0 <= idx < len(tracker.history)):
+                    return self._json({"error": "no such pull"}, 404)
+                encounter = tracker.history[idx]
+                if not encounter.log_path or encounter.start_line is None or encounter.end_line is None:
+                    return self._json({"error": "This pull doesn't have line-range data "
+                                                 "(imported/merged, or recorded before this feature)."}, 404)
+                keyword = (parse_qs(u.query).get("keyword", [""])[0]).strip()
+                if not keyword:
+                    return self._json({"error": "keyword is required"}, 400)
+                try:
+                    lo = encounter.start_line or 1
+                    hi = encounter.end_line or float("inf")
+                    with open(encounter.log_path, "r", encoding="cp1252", errors="replace") as f:
+                        lines = [line for i, line in enumerate(f, 1) if lo <= i <= hi]
+                except OSError as exc:
+                    return self._json({"error": str(exc)}, 500)
+                segments = rotation_segments(lines, unquote(parts[4]), keyword)
+                if not segments:
+                    return self._json({"error": f'"{keyword}" doesn\'t occur at least twice in this pull '
+                                                 "(need two occurrences to bound a segment)."}, 404)
+                return self._json({"segments": segments})
 
             if u.path == "/api/timer_rules":
                 custom = [r for r in timer_engine.rules if r.category == "custom"]

@@ -484,9 +484,51 @@ async function openBreakdown(pullNum, name) {
     ${abilityTable(b.cc_by_ability, 'Ability')}
     <h2 style="font-size:13px;margin-top:14px">Raid buffs used</h2>
     ${abilityTable(b.raid_buff_by_ability, 'Ability')}
+    <h2 style="font-size:13px;margin-top:14px">Rotation Viewer</h2>
+    <div class="sub" style="margin-bottom:8px">Splits this pull into segments bounded by every
+      occurrence of an ability/effect name -- e.g. a recurring boss mechanic -- and shows this
+      player's own cast sequence within each.</div>
+    <div class="rotation-controls">
+      <input type="text" id="rot-keyword" placeholder="e.g. Creeping Terror">
+      <button id="rot-create">Create</button>
+    </div>
+    <div id="rot-results"></div>
     <div style="margin-top:14px"><button onclick="openPull(${pullNum})">&larr; Back to pull</button></div>`;
   $('#modal').classList.add('open');
+  $('#rot-create').addEventListener('click', () => createRotation(pullNum, b.name));
+  $('#rot-keyword').addEventListener('keydown', e => {
+    if (e.key === 'Enter') createRotation(pullNum, b.name);
+  });
 }
+
+async function createRotation(pullNum, name) {
+  const keyword = $('#rot-keyword').value.trim();
+  const results = $('#rot-results');
+  if (!keyword) { results.innerHTML = '<p class="empty">Enter a keyword first.</p>'; return; }
+  results.innerHTML = '<p class="empty">Loading…</p>';
+  const r = await api(`/api/history/${pullNum}/player/${encodeURIComponent(name)}/rotation`
+    + `?keyword=${encodeURIComponent(keyword)}`);
+  if (r.error) { results.innerHTML = `<p class="empty">${esc(r.error)}</p>`; return; }
+  results.innerHTML = r.segments.map(seg => {
+    const statLine = [`DPS ${fmt(seg.dps)}`];
+    if (seg.ehps) statLine.push(`EHPS ${fmt(seg.ehps)}`);
+    if (seg.crit_pct) statLine.push(`Crit ${seg.crit_pct}%`);
+    const chips = seg.casts.length ? seg.casts.map(c => `
+      <div class="rot-chip${c.is_heal ? ' heal' : ''}${c.is_critical ? ' crit' : ''}">
+        <div class="rot-chip-name">${esc(c.ability)}</div>
+        <div class="rot-chip-amount">${fmt(c.amount)}</div>
+      </div>`).join('') : '<span class="empty">no casts landed</span>';
+    return `
+      <div class="rot-segment">
+        <div class="rot-segment-head">
+          <span class="accent" style="font-weight:600">${statLine.join('   ')}</span>
+          <span class="sub">${seg.duration}s</span>
+        </div>
+        <div class="rot-chips">${chips}</div>
+      </div>`;
+  }).join('');
+}
+window.createRotation = createRotation;
 
 window.openPull = openPull;
 window.openBreakdown = openBreakdown;
