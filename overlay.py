@@ -120,7 +120,7 @@ KIND_TITLES = {
     # live table's "Mitigated" column already carries the per-person %).
     "absorbed": "Shield Absorbed",
     "alerts": "Alerts",
-    "threat": "Threat",
+    "threat": "Threat (TPS)",
     "effective_hps": "Healing (Effective)",
     "boss_dps": "Boss DPS",
     "notes": "Notes",
@@ -142,7 +142,7 @@ AVAILABLE_OVERLAYS = [
     ("effective_hps", "Healing (Effective)",        "Metrics"),
     ("taken",         "Damage Taken",                "Metrics"),
     ("absorbed",      "Shield Absorbed",             "Metrics"),
-    ("threat",        "Threat",                      "Metrics"),
+    ("threat",        "Threat (TPS)",                "Metrics"),
     ("timers",        "Timers",                      "Encounter"),
     ("alerts",        "Mechanic Alerts (Stack/Move/Spread)", "Encounter"),
     ("cooldowns",     "Cooldowns",                    "Effects"),

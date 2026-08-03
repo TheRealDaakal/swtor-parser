@@ -330,10 +330,13 @@ class OverlayManager:
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
             elif kind == "threat":
-                # Same reasoning as "absorbed": reads PlayerStats directly
-                # since the compact snapshot() tuple doesn't carry threat.
+                # TPS (rate), not the raw cumulative total -- a running total
+                # only ever grows and says nothing comparable moment-to-
+                # moment; TPS is what actually answers "am I about to pull."
+                # Reads PlayerStats directly since the compact snapshot()
+                # tuple doesn't carry threat.
                 entities = [p for p in enc.players.values() if p.is_player]
-                data = sorted(((p.name, p.threat) for p in entities), key=lambda r: -r[1])
+                data = sorted(((p.name, p.tps(duration)) for p in entities), key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
             elif kind in ("hots", "hots_grid"):
