@@ -46,12 +46,26 @@ jobs:
               Write-Error "Tag $tag does not match version.py's __version__ ($version)"
           }
 
+      - name: Checksum the zip
+        # Sidecar .sha256 file, same convention as most projects that ship
+        # one -- the self-updater (updater.py) uses this to verify the
+        # download landed intact before ever unpacking/running it. Not a
+        # security signature (we're still unsigned), just corruption/
+        # truncation detection.
+        shell: pwsh
+        run: |
+          $version = (Get-Content version.py | Select-String '__version__\s*=\s*"([^"]+)"').Matches[0].Groups[1].Value
+          $zip = "dist\swtor-parser-v$version-win64.zip"
+          (Get-FileHash $zip -Algorithm SHA256).Hash.ToLower() | Out-File -Encoding ascii -NoNewline "$zip.sha256"
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
         run: |
           $version = (Get-Content version.py | Select-String '__version__\s*=\s*"([^"]+)"').Matches[0].Groups[1].Value
-          gh release create "${{ github.ref_name }}" "dist\swtor-parser-v$version-win64.zip" `
+          gh release create "${{ github.ref_name }}" `
+            "dist\swtor-parser-v$version-win64.zip" `
+            "dist\swtor-parser-v$version-win64.zip.sha256" `
             --title "${{ github.ref_name }}" `
             --generate-notes

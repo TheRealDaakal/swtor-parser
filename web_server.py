@@ -16,6 +16,7 @@ receives the paths that bridge already resolved.
 """
 
 import json
+import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -186,7 +187,7 @@ def build_ability_breakdown(encounter, player_name, boss_state):
 
 
 def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                  update_holder=None):
+                  update_holder=None, request_shutdown=None):
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
 
@@ -555,13 +556,36 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                                f"({skipped} trivial slivers skipped{extra}): {preview}. See History tab.",
                 })
 
+            if u.path == "/api/update/apply":
+                # Blocks on the download (a few seconds for a ~20MB zip) --
+                # acceptable for a one-off, explicitly user-triggered action;
+                # the frontend shows a "Downloading..." state for it. The
+                # actual file swap happens in a detached helper AFTER this
+                # process exits (see updater.py's module docstring for why
+                # it can't happen from inside the running app) -- so once
+                # this returns success, the window closes shortly after via
+                # request_shutdown, on a short delay so this HTTP response
+                # has time to actually reach the browser first.
+                import updater
+                result = update_holder.result if update_holder else None
+                if not result:
+                    return self._json({"error": "No update is available."}, 400)
+                try:
+                    staged = updater.prepare_update(result.get("zip_url"), result.get("sha256_url"))
+                    updater.stage_relaunch(staged)
+                except updater.UpdateError as exc:
+                    return self._json({"error": str(exc)}, 500)
+                if request_shutdown is not None:
+                    threading.Timer(1.0, request_shutdown).start()
+                return self._json({"success": True})
+
             return self._send(b"not found", "text/plain", 404)
 
     return Handler
 
 
 def make_server(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                 port: int = 8766, update_holder=None) -> ThreadingHTTPServer:
+                 port: int = 8766, update_holder=None, request_shutdown=None) -> ThreadingHTTPServer:
     handler = make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                            update_holder=update_holder)
+                            update_holder=update_holder, request_shutdown=request_shutdown)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)

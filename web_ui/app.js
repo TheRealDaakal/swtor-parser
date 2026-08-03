@@ -677,6 +677,9 @@ async function checkForUpdate() {
     if (data.available && !updateDismissed) {
       $('#update-banner-text').textContent = `A new version is available: v${data.version}`;
       $('#update-banner-link').href = data.url;
+      // Older releases (or a hand-cut one) might not have a zip attached --
+      // self-update needs it, manual download from the link always works.
+      $('#update-banner-apply').style.display = data.zip_url ? '' : 'none';
       $('#update-banner').style.display = '';
     }
   } catch (e) { /* silent -- an update check failing is never worth surfacing */ }
@@ -684,6 +687,27 @@ async function checkForUpdate() {
 $('#update-banner-dismiss').addEventListener('click', () => {
   updateDismissed = true;
   $('#update-banner').style.display = 'none';
+});
+$('#update-banner-apply').addEventListener('click', async () => {
+  const btn = $('#update-banner-apply');
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.textContent = 'Downloading...';
+  $('#update-banner-text').textContent = 'Downloading the update -- this window will restart automatically.';
+  try {
+    const result = await post('/api/update/apply', {});
+    if (!result.success) {
+      btn.disabled = false;
+      btn.textContent = original;
+      $('#update-banner-text').textContent = `Update failed: ${result.error}`;
+    }
+    // On success the app closes and relaunches on its own shortly after --
+    // nothing further to do here; the page just goes away.
+  } catch (e) {
+    btn.disabled = false;
+    btn.textContent = original;
+    $('#update-banner-text').textContent = 'Update failed: could not reach the app.';
+  }
 });
 checkForUpdate();
 setTimeout(checkForUpdate, 5000);

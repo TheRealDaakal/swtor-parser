@@ -41,12 +41,20 @@ def _parse_version(v: str) -> tuple:
 
 
 def check_for_update(current_version: str) -> Optional[dict]:
-    """Returns {"version": "1.2.3", "url": "https://..."} if GitHub's
+    """Returns {"version", "url", "zip_url", "sha256_url"} if GitHub's
     latest release is newer than current_version, else None -- including
     on any failure (offline, GitHub down, repo still private and 404ing,
     unexpected response shape). This must never raise: it runs on a
     background thread at startup and a broken update check should never
-    be the reason the app doesn't come up."""
+    be the reason the app doesn't come up.
+
+    zip_url/sha256_url are the direct asset download links (same assets
+    the landing page's Downloads section already parses out of this same
+    API response) -- None if the release doesn't have that asset attached
+    (e.g. an older release cut before the checksum file existed, or a
+    hand-cut release missing the zip). The self-updater (see updater.py)
+    requires zip_url; sha256_url is used opportunistically for integrity
+    verification when present, not required."""
     try:
         resp = requests.get(LATEST_RELEASE_URL, timeout=REQUEST_TIMEOUT_SECONDS)
         if resp.status_code != 200:
@@ -56,8 +64,20 @@ def check_for_update(current_version: str) -> Optional[dict]:
         url = data.get("html_url")
         if not tag or not url:
             return None
-        if _parse_version(tag) > _parse_version(current_version):
-            return {"version": tag.lstrip("v"), "url": url}
-        return None
+        if _parse_version(tag) <= _parse_version(current_version):
+            return None
+        assets = data.get("assets") or []
+        zip_url = next(
+            (a.get("browser_download_url") for a in assets
+             if (a.get("name") or "").endswith("-win64.zip")), None,
+        )
+        sha256_url = next(
+            (a.get("browser_download_url") for a in assets
+             if (a.get("name") or "").endswith("-win64.zip.sha256")), None,
+        )
+        return {
+            "version": tag.lstrip("v"), "url": url,
+            "zip_url": zip_url, "sha256_url": sha256_url,
+        }
     except Exception:
         return None

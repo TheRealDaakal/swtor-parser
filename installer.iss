@@ -25,7 +25,15 @@ AppId={{7E6C2F1A-6C39-4C86-9C0B-2F6E6E2A6F41}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-DefaultDirName={autopf}\DPS-Dynamic-Parse-System
+; Per-user (not {autopf}\Program Files) -- required for the in-app
+; self-updater to be able to swap files in place without ever needing a
+; UAC elevation prompt, the same reason Chrome/Discord/VS Code/Slack all
+; install per-user by default. AppId is unchanged, so Inno Setup still
+; recognises an existing install and reuses ITS location on upgrade
+; (UsePreviousAppDir defaults on) -- an existing Program Files install
+; from an older version stays there until a clean reinstall; only fresh
+; installs land here going forward.
+DefaultDirName={localappdata}\Programs\DPS-Dynamic-Parse-System
 DefaultGroupName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=dist

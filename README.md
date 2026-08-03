@@ -106,6 +106,18 @@ whether to show the "update available" banner (see `update_check.py`; it
 checks once at startup and never blocks the app if the check fails or the
 repo isn't public yet).
 
+That banner has a one-click **"Update & Restart"** button, not just a link
+to the release page — `updater.py` downloads the release zip (verifying it
+against a published SHA256 checksum when one's attached, see
+`release.yml`), extracts it, and hands off to a detached PowerShell helper
+that waits for the app to exit, swaps the install folder in place, and
+relaunches. Only works in the packaged app (there's no fixed install
+directory to swap when running from source), and only ever needs a fresh
+zip on the release — no separate "updater build" to maintain. This is why
+the installer targets `{localappdata}\Programs\...` rather than Program
+Files: a per-user install directory never needs a UAC prompt to update
+itself, the same reason Chrome/Discord/VS Code do the same.
+
 Pushing a `v*` tag (e.g. `git tag v0.2.0 && git push origin v0.2.0`) runs
 `.github/workflows/release.yml`, which does the same build + zip on a clean
 CI machine and publishes it as a GitHub Release automatically -- the manual

@@ -21,9 +21,14 @@
     padding: 8px 16px; background: var(--good); color: #fff;
     font-size: 13px; }
   .update-banner a { color: #fff; font-weight: 700; text-decoration: underline; }
-  .update-banner button { margin-left: auto; background: none; border: none;
+  .update-banner #update-banner-apply { background: #fff; color: var(--good);
+    border: none; border-radius: 5px; padding: 4px 12px; font-weight: 700;
+    font-size: 12.5px; cursor: pointer; }
+  .update-banner #update-banner-apply:hover { opacity: .9; }
+  .update-banner #update-banner-apply:disabled { opacity: .6; cursor: default; }
+  .update-banner #update-banner-dismiss { margin-left: auto; background: none; border: none;
     color: #fff; font-size: 16px; line-height: 1; cursor: pointer; opacity: .8; }
-  .update-banner button:hover { opacity: 1; }
+  .update-banner #update-banner-dismiss:hover { opacity: 1; }
   .live-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   @media (max-width: 820px) { .live-grid { grid-template-columns: 1fr; } }
 
@@ -79,7 +84,8 @@
 
 <div class="update-banner" id="update-banner" style="display:none">
   <span id="update-banner-text"></span>
-  <a id="update-banner-link" href="#" target="_blank" rel="noopener">Download</a>
+  <button type="button" id="update-banner-apply">Update &amp; Restart</button>
+  <a id="update-banner-link" href="#" target="_blank" rel="noopener">Download manually</a>
   <button type="button" id="update-banner-dismiss" aria-label="Dismiss">&times;</button>
 </div>
 

@@ -268,18 +268,26 @@ def main():
     overlay_manager_ready.wait()  # web_server needs the manager before it can start
     overlay_manager = overlay_manager_ref["manager"]
 
+    # Created before make_server() so request_shutdown can close over it --
+    # the callback only reads window_ref["window"] when actually CALLED (by
+    # the self-updater, well after the window exists below), not at
+    # definition time, so the not-yet-populated dict here is fine.
+    window_ref = {}
+
+    def request_shutdown():
+        window_ref["window"].destroy()
+
     web_port = 8766
     server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
                                      overlay_manager, status, port=web_port,
-                                     update_holder=update_holder)
+                                     update_holder=update_holder, request_shutdown=request_shutdown)
     threading.Thread(target=server.serve_forever, daemon=True).start()
 
-    window_ref = {}
     window_ref["window"] = webview.create_window(
         "DPS — Dynamic Parse System", url=f"http://127.0.0.1:{web_port}/",
         width=960, height=720, js_api=Api(window_ref),
     )
-    webview.start()  # blocks until the window closes
+    webview.start()  # blocks until the window closes (or self-update calls .destroy())
 
     # Without this, the pull in progress when the app is closed is never
     # rolled over (StatsTracker.feed only does that when the NEXT event
