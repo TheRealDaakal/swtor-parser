@@ -13,6 +13,81 @@ from timers import TimerEngine, TimerRule
 from cooldowns import register_defensive_cooldowns
 
 
+def test_a_targets_death_clears_a_dot_still_ticking_on_it(sim_clock):
+    """Reported live: a dot kept showing as "ticking" on an NPC well after
+    it actually died. SWTOR doesn't reliably log a RemoveEffect line for
+    every dot at the moment of death, so the target's own Death event has
+    to be a second, independent clear signal alongside RemoveEffect and
+    the dot's own timer running out -- otherwise it just sits there
+    counting down on an entity that's already gone."""
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.add_rule(TimerRule(
+        keyword="Affliction", label="Affliction", duration_seconds=18.0,
+        category="dot", event_type="applied", only_local_player=True,
+    ))
+    applied = parse_line(
+        log_line("00:00:00.000", "@Sorc#1", target="Add", ability="Affliction {1}",
+                  effect_type="ApplyEffect", effect_name="Affliction {1}"),
+        line_number=1,
+    )
+    engine.feed(applied, local_player_name="Sorc")
+    assert len(engine.active) == 1, "sanity check: the dot is tracked before the death"
+
+    death = parse_line(
+        log_line("00:00:02.000", "Add", target="Add", effect_type="ApplyEffect", effect_name="Death {1}"),
+        line_number=2,
+    )
+    engine.feed(death, local_player_name="Sorc")
+
+    assert engine.active == [], (
+        "the dot must be cleared the instant its target dies, not linger until its own timer runs out"
+    )
+
+
+def test_a_different_targets_death_does_not_clear_unrelated_dots(sim_clock):
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.add_rule(TimerRule(
+        keyword="Affliction", label="Affliction", duration_seconds=18.0,
+        category="dot", event_type="applied", only_local_player=True,
+    ))
+    for target in ("Add1", "Add2"):
+        applied = parse_line(
+            log_line("00:00:00.000", "@Sorc#1", target=target, ability="Affliction {1}",
+                      effect_type="ApplyEffect", effect_name="Affliction {1}"),
+            line_number=1,
+        )
+        engine.feed(applied, local_player_name="Sorc")
+    assert len(engine.active) == 2
+
+    death = parse_line(
+        log_line("00:00:02.000", "Add1", target="Add1", effect_type="ApplyEffect", effect_name="Death {1}"),
+        line_number=3,
+    )
+    engine.feed(death, local_player_name="Sorc")
+
+    assert len(engine.active) == 1
+    assert engine.active[0].dedupe_key == "Add2"
+
+
+def test_death_of_an_unrelated_entity_does_not_touch_cooldown_category_timers(sim_clock):
+    """Cooldown-category entries track the LOCAL PLAYER's own defensives,
+    keyed by dedupe_key too -- some other entity dying must not clear
+    those, only dot/hot entries."""
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.start_timer("Deflection", 120.0, category="cooldown", dedupe_key="Sorc")
+
+    death = parse_line(
+        log_line("00:00:02.000", "Add", target="Add", effect_type="ApplyEffect", effect_name="Death {1}"),
+        line_number=1,
+    )
+    engine.feed(death, local_player_name="Sorc")
+
+    assert len(engine.active) == 1, "a cooldown entry must survive an unrelated entity's death"
+
+
 def test_same_dedupe_key_refreshes_in_place(sim_clock):
     engine = TimerEngine()
     sim_clock(0.0)

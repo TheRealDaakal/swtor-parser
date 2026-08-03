@@ -281,6 +281,22 @@ class TimerEngine:
         local_player_name: Optional[str] = None, alacrity_pct: float = 0.0,
     ) -> None:
         with self._lock:
+            if event.is_death and event.target:
+                # A dead target can't still have a dot/hot ticking on it, no
+                # matter what the countdown says -- SWTOR doesn't reliably
+                # log a RemoveEffect line for every dot/hot at the moment of
+                # death (reported live: a dot kept "ticking" on an NPC well
+                # after it actually died). dot/hot ActiveTimers are keyed by
+                # dedupe_key=event.target (see the dedupe_key= call below),
+                # so the target's own death is a second, independent clear
+                # signal alongside RemoveEffect and natural expiry. Scoped to
+                # dot/hot only -- cooldown-category entries track the LOCAL
+                # PLAYER's own defensives and aren't affected by some other
+                # entity's death.
+                self.active = [
+                    t for t in self.active
+                    if not (t.category in ("dot", "hot") and t.dedupe_key == event.target)
+                ]
             haystack = " ".join(filter(None, [event.ability, event.effect_name])).lower()
             for rule in self.rules:
                 if not rule.armed_for(boss_id, phase_id):

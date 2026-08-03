@@ -101,6 +101,39 @@ def test_remove_effect_still_clears_it_regardless_of_charges_tracked(sim_clock):
     assert tracker.expiring(now=2.0) == []
 
 
+def test_targets_death_clears_a_hot_still_ticking_on_it(sim_clock):
+    """Same class of live-reported bug as timers.py's TimerEngine.feed()
+    fix (a dot kept "ticking" on an NPC well after it died): SWTOR doesn't
+    reliably log a RemoveEffect line for every dot/hot at the moment of
+    death, so the target's own Death event has to be a second, independent
+    clear signal here too -- not just relying on RemoveEffect or the hot's
+    own timer running out on its own."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+    assert len(tracker.expiring(now=1.0)) == 1, "sanity check: the hot is tracked before the death"
+
+    _feed(tracker, sim_clock, 2.0, "@Tank#1", "@Tank#1", "", "ApplyEffect", "Death {1}")
+
+    assert tracker.expiring(now=3.0) == [], (
+        "the hot must be cleared the instant its target dies, not linger until its own timer runs out"
+    )
+
+
+def test_a_different_targets_death_does_not_clear_unrelated_hots(sim_clock):
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Dps#1",
+          "Kolto Probe {1}", "ApplyEffect", "Kolto Probe {1}")
+
+    _feed(tracker, sim_clock, 2.0, "@Tank#1", "@Tank#1", "", "ApplyEffect", "Death {1}")
+
+    rows = tracker.expiring(now=3.0)
+    assert len(rows) == 1
+    assert rows[0]["target"] == "Dps"
+
+
 def test_reapplying_resets_both_the_clock_and_the_charge_penalty(sim_clock):
     tracker = HotTracker()
     _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",

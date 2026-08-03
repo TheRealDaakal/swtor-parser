@@ -216,6 +216,20 @@ class HotTracker:
               alacrity_pct: float = 0.0) -> None:
         """Feed every parsed event. Only HoTs applied BY the local player are
         tracked -- another healer's Kolto Probe isn't yours to refresh."""
+        if event.is_death and event.target:
+            # A dead target can't have anything still ticking on it, no
+            # matter what our own countdown thinks -- SWTOR doesn't
+            # reliably log a RemoveEffect line for every dot/hot at the
+            # moment of death (reported live: a dot kept "ticking" on an
+            # NPC well after it died), so death itself has to be a second,
+            # independent clear signal alongside the explicit removal path
+            # below. Checked before the local_player_name gate below since
+            # a target's death is true regardless of who this event's
+            # source is.
+            stale = [key for key in self._active if key[0] == event.target]
+            for key in stale:
+                del self._active[key]
+            return
         if local_player_name is None or event.source != local_player_name:
             return
         definition = self._match(event.effect_name)
