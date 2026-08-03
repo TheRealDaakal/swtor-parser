@@ -277,6 +277,17 @@
       <button id="import-session-btn">Load Old Session Log(s)...</button>
       <p id="import-session-result" class="sub"></p>
     </div>
+    <div class="panel">
+      <h2>Anonymize a log</h2>
+      <p class="sub">Before sharing a log publicly (posting for help, attaching to a bug report):
+        replaces every player's exact character name/account id with a generic placeholder
+        (Player1, Player2, ...) -- the same real player always gets the same placeholder within
+        the file, so rotation/interaction timing stays readable, just not who's who. Boss/NPC
+        names are left as-is. Saves a new "..._anonymized.txt" copy next to the original; the
+        original file is never modified.</p>
+      <button id="anon-btn">Choose Log File...</button>
+      <p id="anon-result" class="sub"></p>
+    </div>
   </section>
 
   <!-- ============================== parsely ============================== -->

@@ -687,6 +687,18 @@ $('#import-session-btn').addEventListener('click', async () => {
   $('#import-session-result').textContent = result.message || result.error || '';
 });
 
+$('#anon-btn').addEventListener('click', async () => {
+  const capi = pywebviewApi();
+  if (!capi) { $('#anon-result').textContent = 'File picker unavailable.'; return; }
+  const path = await capi.pick_file();
+  if (!path) return;
+  $('#anon-result').textContent = 'Anonymizing...';
+  const result = await post('/api/anonymize_log', { path });
+  $('#anon-result').textContent = result.ok
+    ? `Saved ${result.players_replaced} player name(s) scrubbed -> ${result.dest_path}`
+    : (result.error || 'Failed');
+});
+
 // ----------------------------------------------------------- parsely tab
 async function loadParselySettings() {
   const s = await api('/api/parsely_settings');

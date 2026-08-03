@@ -633,6 +633,23 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                                f"({skipped} trivial slivers skipped{extra}): {preview}. See History tab.",
                 })
 
+            if u.path == "/api/anonymize_log":
+                from anonymize import anonymize_file
+                source = (body.get("path") or "").strip()
+                if not source:
+                    return self._json({"error": "no file selected"}, 400)
+                source_path = Path(source)
+                if not source_path.exists():
+                    return self._json({"error": "file not found"}, 404)
+                dest_path = source_path.with_name(f"{source_path.stem}_anonymized{source_path.suffix}")
+                try:
+                    name_map = anonymize_file(str(source_path), str(dest_path))
+                except OSError as exc:
+                    return self._json({"error": str(exc)}, 500)
+                return self._json({
+                    "ok": True, "dest_path": str(dest_path), "players_replaced": len(name_map),
+                })
+
             if u.path == "/api/encounters":
                 if user_boss_dir is None or bundled_boss_dir is None:
                     return self._json({"error": "encounter editor not configured"}, 501)
