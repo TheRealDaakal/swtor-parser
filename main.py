@@ -339,7 +339,8 @@ def main():
     server = web_server.make_server(tracker, timer_engine, boss_state, taunt_tracker,
                                      overlay_manager, status, port=web_port,
                                      update_holder=update_holder, request_shutdown=request_shutdown,
-                                     character_settings=character_settings)
+                                     character_settings=character_settings,
+                                     bundled_boss_dir=BUNDLED_BOSS_DIR, user_boss_dir=USER_BOSS_DIR)
     threading.Thread(target=server.serve_forever, daemon=True).start()
 
     window_ref["window"] = webview.create_window(

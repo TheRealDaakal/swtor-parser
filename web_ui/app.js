@@ -56,6 +56,7 @@ $$('.tab').forEach(t => {
 function refreshActiveTab() {
   if (activeView === 'history') loadHistory();
   else if (activeView === 'timers') loadTimerRules();
+  else if (activeView === 'encounters') loadEncounters();
   else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
   else if (activeView === 'parsely') loadParselySettings();
 }
@@ -748,6 +749,317 @@ $('#update-banner-apply').addEventListener('click', async () => {
 });
 checkForUpdate();
 setTimeout(checkForUpdate, 5000);
+
+// --------------------------------------------------------- encounters tab
+// Full-schema visual editor for boss_definitions.py's Condition/BossPhase/
+// BossCounter/BossTimerDef dataclasses. `encDraft` mirrors the exact JSON
+// shape the backend reads/writes -- no separate frontend model -- so
+// saving is just `post('/api/encounters', encDraft)`. Editing is done via
+// `data-path` attributes (a dot-joined path into encDraft, e.g.
+// "timers.2.trigger.conditions.0.percent") read by one delegated
+// input/change/click listener on #modal-body, which the History/Rotation
+// modals also use -- safe to share since those never emit data-path/
+// data-action attributes (grepped for collisions before adding this).
+const COND_TYPES = [
+  'combat_start', 'combat_end', 'hp_below', 'ability_cast', 'effect_applied',
+  'effect_removed', 'npc_appears', 'entity_death', 'timer_expires', 'timer_started',
+  'timer_time_remaining', 'phase_ended', 'phase_entered', 'phase_active',
+  'any_phase_change', 'counter_compare', 'counter_reaches', 'counter_changes',
+  'any_of', 'all_of', 'not',
+];
+const COND_FIELDS = {
+  combat_start: [], combat_end: [], any_phase_change: [],
+  hp_below: ['percent', 'selector'],
+  ability_cast: ['keyword', 'selector'],
+  effect_applied: ['keyword', 'selector'],
+  effect_removed: ['keyword', 'selector'],
+  npc_appears: ['selector'],
+  entity_death: ['selector'],
+  timer_expires: ['timer_id'],
+  timer_started: ['timer_id'],
+  timer_time_remaining: ['timer_id', 'operator', 'value'],
+  phase_ended: ['phase_id'],
+  phase_entered: ['phase_id'],
+  phase_active: ['phase_ids'],
+  counter_compare: ['counter_id', 'operator', 'value'],
+  counter_reaches: ['counter_id', 'value'],
+  counter_changes: ['counter_id'],
+  any_of: ['conditions'],
+  all_of: ['conditions'],
+  not: ['condition'],
+};
+
+let encDraft = null;
+let encSourceId = null; // id being edited/customized; null while creating new
+
+function getAtPath(path) {
+  return path.split('.').reduce((o, k) => (o == null ? o : o[k]), encDraft);
+}
+function setAtPath(path, value) {
+  const parts = path.split('.');
+  let obj = encDraft;
+  for (let i = 0; i < parts.length - 1; i++) obj = obj[parts[i]];
+  obj[parts[parts.length - 1]] = value;
+}
+function removeAtPath(path) {
+  const parts = path.split('.');
+  const idx = Number(parts.pop());
+  const arr = parts.length ? getAtPath(parts.join('.')) : encDraft;
+  if (Array.isArray(arr)) arr.splice(idx, 1);
+}
+
+function encFieldValue(el) {
+  let value = el.type === 'checkbox' ? el.checked : el.value;
+  if (el.dataset.num) value = value === '' ? null : parseFloat(value);
+  if (el.dataset.list) value = String(value).split(',').map(s => s.trim()).filter(Boolean);
+  return value;
+}
+
+function renderCondField(path, cond, field) {
+  const v = k => cond[k];
+  if (field === 'percent') return `<label class="fld"><span>HP % below</span>
+    <input type="number" step="0.1" value="${v('percent') ?? ''}" data-path="${path}.percent" data-num="1"></label>`;
+  if (field === 'keyword') return `<label class="fld"><span>Keyword (substring match)</span>
+    <input value="${esc(v('keyword') ?? '')}" data-path="${path}.keyword"></label>`;
+  if (field === 'selector') return `<label class="fld"><span>Selector (names, comma-sep; blank = boss's own names)</span>
+    <input value="${esc((v('selector') || []).join(', '))}" data-path="${path}.selector" data-list="1"></label>`;
+  if (field === 'timer_id') return `<label class="fld"><span>Timer ID</span>
+    <input value="${esc(v('timer_id') ?? '')}" data-path="${path}.timer_id"></label>`;
+  if (field === 'phase_id') return `<label class="fld"><span>Phase ID</span>
+    <input value="${esc(v('phase_id') ?? '')}" data-path="${path}.phase_id"></label>`;
+  if (field === 'phase_ids') return `<label class="fld"><span>Phase IDs (comma-sep)</span>
+    <input value="${esc((v('phase_ids') || []).join(', '))}" data-path="${path}.phase_ids" data-list="1"></label>`;
+  if (field === 'counter_id') return `<label class="fld"><span>Counter ID</span>
+    <input value="${esc(v('counter_id') ?? '')}" data-path="${path}.counter_id"></label>`;
+  if (field === 'operator') return `<label class="fld"><span>Operator</span>
+    <select data-path="${path}.operator">${['eq', 'ne', 'gte', 'lte', 'gt', 'lt']
+      .map(op => `<option value="${op}" ${v('operator') === op ? 'selected' : ''}>${op}</option>`).join('')}</select></label>`;
+  if (field === 'value') return `<label class="fld"><span>Value</span>
+    <input type="number" step="0.1" value="${v('value') ?? ''}" data-path="${path}.value" data-num="1"></label>`;
+  if (field === 'conditions') return `<div class="cond-children">
+    ${(v('conditions') || []).map((c, i) => renderCondition(`${path}.conditions.${i}`, c)).join('')}
+    <button type="button" class="cond-add-btn" data-action="add-child" data-path="${path}.conditions">+ condition</button></div>`;
+  if (field === 'condition') return `<div class="cond-children">${renderCondition(`${path}.condition`, v('condition'))}</div>`;
+  return '';
+}
+
+function renderCondition(path, cond, label) {
+  if (!cond) {
+    return `<div class="cond-empty">
+      ${label ? `<span class="cond-label">${label}</span>` : ''}
+      <button type="button" class="cond-add-btn" data-action="set-cond" data-path="${path}">+ condition</button>
+    </div>`;
+  }
+  const type = cond.type || 'combat_start';
+  const fields = COND_FIELDS[type] || [];
+  return `<div class="cond-node">
+    ${label ? `<span class="cond-label">${label}</span>` : ''}
+    <div class="cond-head">
+      <select class="cond-type" data-action="set-type" data-path="${path}">
+        ${COND_TYPES.map(t => `<option value="${t}" ${t === type ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+      <label class="cond-target"><input type="checkbox" data-action="set-target" data-path="${path}.target"
+        ${cond.target === 'local_player' ? 'checked' : ''}> local player only</label>
+      <button type="button" class="cond-remove" data-action="remove-cond" data-path="${path}">remove</button>
+    </div>
+    <div class="cond-fields">${fields.map(f => renderCondField(path, cond, f)).join('')}</div>
+  </div>`;
+}
+
+function renderPhases() {
+  const phases = encDraft.phases || [];
+  return phases.map((p, i) => `
+    <div class="enc-row">
+      <div class="enc-row-head">
+        <input placeholder="phase id" value="${esc(p.id ?? '')}" data-path="phases.${i}.id" style="width:130px">
+        <input placeholder="Display name" value="${esc(p.name ?? '')}" data-path="phases.${i}.name" style="width:170px">
+        <button type="button" class="cond-remove" data-action="remove-phase" data-path="phases.${i}">remove phase</button>
+      </div>
+      <div class="cond-slot">${renderCondition(`phases.${i}.start_trigger`, p.start_trigger,
+        'Start trigger (blank = this is the initial phase)')}</div>
+      <div class="cond-slot">
+        <span class="cond-label">Extra AND-conditions</span>
+        <div class="cond-children">
+          ${(p.conditions || []).map((c, j) => renderCondition(`phases.${i}.conditions.${j}`, c)).join('')}
+          <button type="button" class="cond-add-btn" data-action="add-child" data-path="phases.${i}.conditions">+ condition</button>
+        </div>
+      </div>
+      <div class="cond-slot">${renderCondition(`phases.${i}.end_trigger`, p.end_trigger, 'End trigger (optional)')}</div>
+    </div>`).join('') + `<button type="button" class="cond-add-btn" data-action="add-phase">+ Add Phase</button>`;
+}
+
+function renderCounters() {
+  const counters = encDraft.counters || [];
+  return counters.map((c, i) => `
+    <div class="enc-row">
+      <div class="enc-row-head">
+        <input placeholder="counter id" value="${esc(c.id ?? '')}" data-path="counters.${i}.id" style="width:130px">
+        <input placeholder="Display name" value="${esc(c.name ?? '')}" data-path="counters.${i}.name" style="width:170px">
+        <label class="fld row"><span>Initial</span>
+          <input type="number" step="1" value="${c.initial_value ?? 0}" data-path="counters.${i}.initial_value" data-num="1" style="width:60px"></label>
+        <button type="button" class="cond-remove" data-action="remove-counter" data-path="counters.${i}">remove counter</button>
+      </div>
+      <div class="cond-slot">${renderCondition(`counters.${i}.increment_on`, c.increment_on, 'Increment on')}</div>
+      <div class="cond-slot">${renderCondition(`counters.${i}.decrement_on`, c.decrement_on, 'Decrement on (optional)')}</div>
+      <div class="cond-slot">${renderCondition(`counters.${i}.reset_on`, c.reset_on, 'Reset on (optional)')}</div>
+    </div>`).join('') + `<button type="button" class="cond-add-btn" data-action="add-counter">+ Add Counter</button>`;
+}
+
+function renderTimers() {
+  const timers = encDraft.timers || [];
+  return timers.map((t, i) => `
+    <div class="enc-row">
+      <div class="enc-row-head">
+        <input placeholder="timer id" value="${esc(t.id ?? '')}" data-path="timers.${i}.id" style="width:130px">
+        <input placeholder="Label" value="${esc(t.label ?? '')}" data-path="timers.${i}.label" style="width:170px">
+        <label class="fld row"><span>Seconds</span>
+          <input type="number" step="0.1" value="${t.duration_seconds ?? 10}" data-path="timers.${i}.duration_seconds" data-num="1" style="width:65px"></label>
+        <label class="fld row"><span>Warn before</span>
+          <input type="number" step="0.1" value="${t.warn_seconds_before ?? 0}" data-path="timers.${i}.warn_seconds_before" data-num="1" style="width:65px"></label>
+        <label class="fld row"><input type="checkbox" data-path="timers.${i}.voice_alert" ${t.voice_alert !== false ? 'checked' : ''}><span>Voice</span></label>
+        <label class="fld row"><input type="checkbox" data-path="timers.${i}.is_alert" ${t.is_alert ? 'checked' : ''}><span>Alert style (no bar)</span></label>
+        <button type="button" class="cond-remove" data-action="remove-timer" data-path="timers.${i}">remove timer</button>
+      </div>
+      <div class="enc-row-sub">
+        <label class="fld"><span>Active in phases (comma-sep ids; blank = all)</span>
+          <input value="${esc((t.phases || []).join(', '))}" data-path="timers.${i}.phases" data-list="1"></label>
+        <label class="fld row"><span>Repeat every (s, optional)</span>
+          <input type="number" step="0.1" value="${t.repeat_interval_seconds ?? ''}" data-path="timers.${i}.repeat_interval_seconds" data-num="1" style="width:65px"></label>
+        <label class="fld row"><span>Repeat count (0 = while active)</span>
+          <input type="number" step="1" value="${t.repeat_count ?? 0}" data-path="timers.${i}.repeat_count" data-num="1" style="width:60px"></label>
+      </div>
+      <div class="cond-slot">${renderCondition(`timers.${i}.trigger`, t.trigger, 'Trigger')}</div>
+      <div class="cond-slot">
+        <span class="cond-label">Extra AND-conditions</span>
+        <div class="cond-children">
+          ${(t.conditions || []).map((c, j) => renderCondition(`timers.${i}.conditions.${j}`, c)).join('')}
+          <button type="button" class="cond-add-btn" data-action="add-child" data-path="timers.${i}.conditions">+ condition</button>
+        </div>
+      </div>
+      <div class="cond-slot">${renderCondition(`timers.${i}.cancel_trigger`, t.cancel_trigger, 'Cancel trigger (optional)')}</div>
+    </div>`).join('') + `<button type="button" class="cond-add-btn" data-action="add-timer">+ Add Timer</button>`;
+}
+
+function renderEncEditor() {
+  const d = encDraft;
+  $('#modal-body').innerHTML = `
+    <div class="enc-editor">
+      <h2>${encSourceId ? `Edit "${esc(d.name || d.id)}"` : 'New Encounter'}</h2>
+      <p class="sub" id="enc-error"></p>
+      <div class="stack">
+        <label class="fld"><span>ID (used as the filename; lowercase, no spaces)</span>
+          <input value="${esc(d.id ?? '')}" data-path="id"></label>
+        <label class="fld"><span>Display Name</span><input value="${esc(d.name ?? '')}" data-path="name"></label>
+        <label class="fld"><span>Boss names (comma-sep, as they appear in the log)</span>
+          <input value="${esc((d.boss_names || []).join(', '))}" data-path="boss_names" data-list="1"></label>
+        <label class="fld"><span>Boss NPC ids (comma-sep, optional -- preferred over names when known)</span>
+          <input value="${esc((d.boss_npc_ids || []).join(', '))}" data-path="boss_npc_ids" data-list="1"></label>
+      </div>
+      <div class="cond-slot">${renderCondition('encounter_trigger', d.encounter_trigger,
+        'Encounter trigger (optional -- alternate recognition path)')}</div>
+
+      <h3>Phases</h3>
+      <div id="enc-phases">${renderPhases()}</div>
+      <h3>Counters</h3>
+      <div id="enc-counters">${renderCounters()}</div>
+      <h3>Timers</h3>
+      <div id="enc-timers">${renderTimers()}</div>
+
+      <div class="filters" style="margin-top:16px">
+        <button id="enc-save">${encSourceId ? 'Save' : 'Create'}</button>
+        <button id="enc-cancel" type="button">Cancel</button>
+      </div>
+    </div>`;
+  $('#enc-save').addEventListener('click', saveEncounter);
+  $('#enc-cancel').addEventListener('click', closeModal);
+}
+
+async function saveEncounter() {
+  const result = await post('/api/encounters', encDraft);
+  if (result.error) { $('#enc-error').textContent = result.error; return; }
+  closeModal();
+  loadEncounters();
+}
+
+function blankEncounter() {
+  return { id: '', name: '', boss_names: [], boss_npc_ids: [], phases: [{ id: 'main', name: 'Main' }], counters: [], timers: [] };
+}
+
+async function loadEncounters() {
+  const rows = await api('/api/encounters');
+  const tbody = $('#encounters-table tbody');
+  const empty = $('#encounters-empty');
+  if (!Array.isArray(rows) || !rows.length) { tbody.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${esc(r.name)}</td><td>${esc(r.id)}</td>
+      <td>${r.phase_count}</td><td>${r.timer_count}</td>
+      <td>${r.source === 'user' ? 'Custom' : 'Bundled'}</td>
+      <td>
+        <button class="btn-link" onclick="editEncounter('${esc(r.id)}')">${r.source === 'user' ? 'Edit' : 'Customize'}</button>
+        ${r.source === 'user' ? `<button class="rule-del" onclick="deleteEncounter('${esc(r.id)}')">delete</button>` : ''}
+      </td>
+    </tr>`).join('');
+}
+
+async function editEncounter(id) {
+  const data = await api(`/api/encounters/${encodeURIComponent(id)}`);
+  if (data.error) return;
+  encDraft = data;
+  encSourceId = id;
+  renderEncEditor();
+  $('#modal').classList.add('open');
+}
+window.editEncounter = editEncounter;
+
+async function deleteEncounter(id) {
+  if (!confirm(`Delete your custom "${id}"? (If it customized a bundled fight, the bundled version comes back.)`)) return;
+  await post('/api/encounters/delete', { id });
+  loadEncounters();
+}
+window.deleteEncounter = deleteEncounter;
+
+$('#enc-new').addEventListener('click', () => {
+  encDraft = blankEncounter();
+  encSourceId = null;
+  renderEncEditor();
+  $('#modal').classList.add('open');
+});
+
+$('#modal-body').addEventListener('input', e => {
+  const el = e.target;
+  if (!encDraft || el.dataset.action) return;
+  const path = el.dataset.path;
+  if (!path) return;
+  setAtPath(path, encFieldValue(el));
+});
+$('#modal-body').addEventListener('change', e => {
+  const el = e.target;
+  if (!encDraft) return;
+  if (el.dataset.action === 'set-type') { setAtPath(el.dataset.path + '.type', el.value); renderEncEditor(); return; }
+  if (el.dataset.action === 'set-target') { setAtPath(el.dataset.path, el.checked ? 'local_player' : null); return; }
+  if (el.dataset.action) return;
+  const path = el.dataset.path;
+  if (path) setAtPath(path, encFieldValue(el));
+});
+$('#modal-body').addEventListener('click', e => {
+  const btn = e.target.closest('[data-action]');
+  if (!btn || !encDraft) return;
+  const action = btn.dataset.action;
+  const path = btn.dataset.path;
+  if (action === 'remove-cond') setAtPath(path, null);
+  else if (action === 'set-cond') setAtPath(path, { type: 'combat_start' });
+  else if (action === 'add-child') { const arr = getAtPath(path) || []; arr.push({ type: 'combat_start' }); setAtPath(path, arr); }
+  else if (action === 'add-phase') { if (!encDraft.phases) encDraft.phases = []; encDraft.phases.push({ id: '', name: '' }); }
+  else if (action === 'remove-phase') removeAtPath(path);
+  else if (action === 'add-counter') { if (!encDraft.counters) encDraft.counters = []; encDraft.counters.push({ id: '', name: '', initial_value: 0 }); }
+  else if (action === 'remove-counter') removeAtPath(path);
+  else if (action === 'add-timer') { if (!encDraft.timers) encDraft.timers = []; encDraft.timers.push({ id: '', label: '', duration_seconds: 10 }); }
+  else if (action === 'remove-timer') removeAtPath(path);
+  else return;
+  renderEncEditor();
+});
 
 // ------------------------------------------------------------- tab poll
 setInterval(refreshActiveTab, TAB_POLL_MS);

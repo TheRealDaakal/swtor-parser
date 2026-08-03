@@ -33,6 +33,16 @@ SHARED_CSS = Path(__file__).resolve().parent / "analysis" / "static" / "app.css"
 _OWN_PANEL_CATEGORIES = ("cooldown", "dot", "hot")
 
 
+def _safe_encounter_id(raw: str) -> str:
+    """Encounter ids become filenames (`{id}.json`) under the user boss
+    dir -- reject anything that isn't a plain path segment so a malicious
+    or buggy request body can't escape that directory (e.g. id="../../foo")."""
+    raw = (raw or "").strip()
+    if not raw or "/" in raw or "\\" in raw or raw in (".", ".."):
+        return ""
+    return raw
+
+
 def _timer_rows(rows):
     return [
         {"label": label, "remaining": round(remaining, 1), "total": total, "target": target}
@@ -187,7 +197,8 @@ def build_ability_breakdown(encounter, player_name, boss_state):
 
 
 def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
-                  update_holder=None, request_shutdown=None, character_settings=None):
+                  update_holder=None, request_shutdown=None, character_settings=None,
+                  bundled_boss_dir=None, user_boss_dir=None):
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
 
@@ -387,6 +398,35 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                     "character": character_settings.character,
                     "alacrity_pct": character_settings.alacrity_pct,
                 })
+
+            if u.path == "/api/encounters":
+                if user_boss_dir is None or bundled_boss_dir is None:
+                    return self._json({"error": "encounter editor not configured"}, 501)
+                definitions = boss_state.definitions if boss_state else {}
+                return self._json([
+                    {
+                        "id": d.id, "name": d.name, "boss_names": d.boss_names,
+                        "phase_count": len(d.phases), "timer_count": len(d.timers),
+                        "source": "user" if (user_boss_dir / f"{d.id}.json").exists() else "bundled",
+                    }
+                    for d in definitions.values()
+                ])
+
+            if len(parts) == 3 and parts[:2] == ["api", "encounters"]:
+                if user_boss_dir is None or bundled_boss_dir is None:
+                    return self._json({"error": "encounter editor not configured"}, 501)
+                enc_id = _safe_encounter_id(unquote(parts[2]))
+                if not enc_id:
+                    return self._json({"error": "invalid encounter id"}, 400)
+                user_path = user_boss_dir / f"{enc_id}.json"
+                bundled_path = bundled_boss_dir / f"{enc_id}.json"
+                path = user_path if user_path.exists() else bundled_path
+                if not path.exists():
+                    return self._json({"error": "no such encounter"}, 404)
+                try:
+                    return self._json(json.loads(path.read_text(encoding="utf-8")))
+                except (json.JSONDecodeError, OSError) as exc:
+                    return self._json({"error": str(exc)}, 500)
 
             return self._send(b"not found", "text/plain", 404)
 
@@ -591,6 +631,38 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                                f"({skipped} trivial slivers skipped{extra}): {preview}. See History tab.",
                 })
 
+            if u.path == "/api/encounters":
+                if user_boss_dir is None or bundled_boss_dir is None:
+                    return self._json({"error": "encounter editor not configured"}, 501)
+                import boss_definitions as bd
+                enc_id = _safe_encounter_id(body.get("id") or "")
+                if not enc_id:
+                    return self._json({"error": "id required"}, 400)
+                try:
+                    bd._definition_from_dict(body)
+                except (KeyError, TypeError, ValueError) as exc:
+                    return self._json({"error": f"invalid encounter definition: {exc}"}, 400)
+                user_boss_dir.mkdir(parents=True, exist_ok=True)
+                (user_boss_dir / f"{enc_id}.json").write_text(
+                    json.dumps(body, indent=2), encoding="utf-8"
+                )
+                if boss_state is not None:
+                    boss_state.definitions = bd.load_definitions(bundled_boss_dir, user_boss_dir)
+                return self._json({"ok": True})
+
+            if u.path == "/api/encounters/delete":
+                if user_boss_dir is None:
+                    return self._json({"error": "encounter editor not configured"}, 501)
+                enc_id = _safe_encounter_id(body.get("id") or "")
+                path = user_boss_dir / f"{enc_id}.json"
+                if not enc_id or not path.exists():
+                    return self._json({"error": "no such user encounter"}, 404)
+                path.unlink()
+                if boss_state is not None:
+                    import boss_definitions as bd
+                    boss_state.definitions = bd.load_definitions(bundled_boss_dir, user_boss_dir)
+                return self._json({"ok": True})
+
             if u.path == "/api/update/apply":
                 # Blocks on the download (a few seconds for a ~20MB zip) --
                 # acceptable for a one-off, explicitly user-triggered action;
@@ -621,8 +693,9 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
 
 def make_server(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
                  port: int = 8766, update_holder=None, request_shutdown=None,
-                 character_settings=None) -> ThreadingHTTPServer:
+                 character_settings=None, bundled_boss_dir=None, user_boss_dir=None) -> ThreadingHTTPServer:
     handler = make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
                             update_holder=update_holder, request_shutdown=request_shutdown,
-                            character_settings=character_settings)
+                            character_settings=character_settings,
+                            bundled_boss_dir=bundled_boss_dir, user_boss_dir=user_boss_dir)
     return ThreadingHTTPServer(("127.0.0.1", port), handler)

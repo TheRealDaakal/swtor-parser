@@ -18,7 +18,9 @@ stole the one-time trigger first. A full scan of boss_definitions_bundled
 found this exact collision in 23 different bosses, 55 colliding key
 groups -- this was not a Soa-specific gap.
 """
-from boss_definitions import Condition, EvalContext
+import pytest
+
+from boss_definitions import Condition, EvalContext, _definition_from_dict
 from log_parser import CombatEvent
 
 
@@ -94,3 +96,129 @@ def test_different_hp_below_thresholds_are_independent_regardless():
     ctx = _ctx(_hp_event("Boss", 250, 1000))  # 25% -- below both
     assert cond_75.matches(ctx) is True
     assert cond_30.matches(ctx) is True
+
+
+# ---------------------------------------------------------------------
+# _definition_from_dict -- extracted from _load_one so /api/encounters can
+# validate/construct a definition straight from a POSTed JSON body without
+# touching the filesystem (see web_server.py). These tests cover the
+# extraction itself: a full round-trip through every condition type
+# (including nested any_of/all_of/not) must produce the right dataclasses,
+# and structurally malformed input must raise a catchable error instead of
+# silently producing a broken definition -- the API layer turns that
+# exception into a 400 for the encounter editor's user to see.
+
+def test_definition_from_dict_round_trips_every_condition_type():
+    """One of each of the 21 real condition types boss_definitions.py
+    supports, including the three nesting forms (any_of/all_of/not) two
+    levels deep -- the exact shape the encounter editor's recursive
+    condition-tree UI can produce."""
+    data = {
+        "id": "full_test", "name": "Full Test Boss", "boss_names": ["Full Test Boss"],
+        "boss_npc_ids": ["12345"],
+        "encounter_trigger": {"type": "ability_cast", "keyword": "Intro"},
+        "phases": [
+            {"id": "p1", "name": "Phase 1"},
+            {"id": "p2", "name": "Phase 2", "start_trigger": {"type": "hp_below", "percent": 50},
+             "conditions": [{"type": "phase_active", "phase_ids": ["p1"]}],
+             "end_trigger": {"type": "combat_end"}},
+        ],
+        "counters": [
+            {"id": "adds", "name": "Adds", "initial_value": 0,
+             "increment_on": {"type": "npc_appears", "selector": ["Add"]},
+             "decrement_on": {"type": "entity_death", "selector": ["Add"]},
+             "reset_on": {"type": "any_phase_change"}},
+        ],
+        "timers": [
+            {"id": "t1", "label": "Nested Trigger", "duration_seconds": 20.0,
+             "warn_seconds_before": 5.0, "voice_alert": True, "is_alert": False,
+             "phases": ["p1"], "repeat_interval_seconds": 30.0, "repeat_count": 3,
+             "trigger": {
+                 "type": "all_of",
+                 "conditions": [
+                     {"type": "any_of", "conditions": [
+                         {"type": "ability_cast", "keyword": "Boom", "target": "local_player"},
+                         {"type": "effect_applied", "keyword": "Marked"},
+                     ]},
+                     {"type": "not", "condition": {"type": "phase_ended", "phase_id": "p2"}},
+                 ],
+             },
+             "conditions": [{"type": "counter_compare", "counter_id": "adds", "operator": "gte", "value": 1}],
+             "cancel_trigger": {"type": "timer_expires", "timer_id": "other"}},
+            {"id": "t2", "label": "Simple Ones", "duration_seconds": 5.0,
+             "trigger": {"type": "timer_time_remaining", "timer_id": "t1", "operator": "lte", "value": 3.0}},
+            {"id": "t3", "label": "Effect Removed", "duration_seconds": 5.0,
+             "trigger": {"type": "effect_removed", "keyword": "Shield"}},
+            {"id": "t4", "label": "Timer Started", "duration_seconds": 5.0,
+             "trigger": {"type": "timer_started", "timer_id": "t1"}},
+            {"id": "t5", "label": "Phase Entered", "duration_seconds": 5.0,
+             "trigger": {"type": "phase_entered", "phase_id": "p2"}},
+            {"id": "t6", "label": "Counter Reaches", "duration_seconds": 5.0,
+             "trigger": {"type": "counter_reaches", "counter_id": "adds", "value": 3}},
+            {"id": "t7", "label": "Counter Changes", "duration_seconds": 5.0,
+             "trigger": {"type": "counter_changes", "counter_id": "adds"}},
+            {"id": "t8", "label": "Combat Start", "duration_seconds": 5.0,
+             "trigger": {"type": "combat_start"}},
+        ],
+    }
+
+    definition = _definition_from_dict(data)
+
+    assert definition.id == "full_test"
+    assert definition.boss_npc_ids == ["12345"]
+    assert definition.encounter_trigger.type == "ability_cast"
+    assert len(definition.phases) == 2
+    assert definition.phases[1].start_trigger.type == "hp_below"
+    assert definition.phases[1].conditions[0].type == "phase_active"
+    assert definition.phases[1].end_trigger.type == "combat_end"
+    assert len(definition.counters) == 1
+    assert definition.counters[0].increment_on.type == "npc_appears"
+    assert definition.counters[0].decrement_on.type == "entity_death"
+    assert definition.counters[0].reset_on.type == "any_phase_change"
+
+    t1 = definition.timers[0]
+    assert t1.trigger.type == "all_of"
+    nested_any_of = t1.trigger.conditions[0]
+    assert nested_any_of.type == "any_of"
+    assert nested_any_of.conditions[0].target == "local_player"
+    nested_not = t1.trigger.conditions[1]
+    assert nested_not.type == "not"
+    assert nested_not.condition.type == "phase_ended"
+    assert t1.conditions[0].type == "counter_compare"
+    assert t1.cancel_trigger.type == "timer_expires"
+    assert len(definition.timers) == 8  # every remaining simple type constructed without error
+
+
+def test_definition_from_dict_raises_on_missing_definition_id():
+    with pytest.raises(KeyError):
+        _definition_from_dict({"name": "No ID", "boss_names": [], "phases": [], "timers": []})
+
+
+def test_definition_from_dict_raises_on_missing_phase_id():
+    with pytest.raises(KeyError):
+        _definition_from_dict({
+            "id": "x", "name": "X", "boss_names": [],
+            "phases": [{"name": "no id field"}], "timers": [],
+        })
+
+
+def test_definition_from_dict_raises_on_missing_counter_id():
+    with pytest.raises(KeyError):
+        _definition_from_dict({
+            "id": "x", "name": "X", "boss_names": [], "phases": [],
+            "counters": [{"name": "no id field"}], "timers": [],
+        })
+
+
+def test_definition_from_dict_defaults_are_sane_for_a_minimal_definition():
+    """The encounter editor's "New Encounter" blank draft -- an id/name
+    plus one phase and nothing else -- must construct cleanly with sane
+    defaults, not require every optional field to be present."""
+    definition = _definition_from_dict({
+        "id": "minimal", "name": "Minimal", "boss_names": ["Minimal"],
+        "phases": [{"id": "main", "name": "Main"}],
+    })
+    assert definition.timers == []
+    assert definition.counters == []
+    assert definition.boss_npc_ids == []
+    assert definition.encounter_trigger is None

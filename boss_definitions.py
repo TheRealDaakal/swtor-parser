@@ -481,12 +481,14 @@ class BossDefinition:
         return None
 
 
-def _load_one(path: Path) -> Optional[BossDefinition]:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return None
-
+def _definition_from_dict(data: dict) -> BossDefinition:
+    """Constructs a BossDefinition straight from an already-parsed JSON
+    dict -- the shared core of both _load_one (reads a bundled/user file)
+    and the /api/encounters POST handler (validates+constructs from a
+    request body without touching the filesystem). Raises KeyError/
+    TypeError/ValueError on malformed input; callers that need a soft
+    failure (like _load_one) catch it there, callers that need to report
+    it to a user (the API) catch it at that layer instead."""
     phases = [
         BossPhase(
             id=p["id"], name=p.get("name", p["id"]),
@@ -529,7 +531,7 @@ def _load_one(path: Path) -> Optional[BossDefinition]:
     for t in timers:
         if t.cancel_trigger is not None and not t.id:
             print(
-                f"WARNING [{path.name}]: timer '{t.label}' has a cancel_trigger "
+                f"WARNING [{data.get('id', '?')}]: timer '{t.label}' has a cancel_trigger "
                 f"but no 'id' -- it will never actually be cancelled. Give it an id."
             )
 
@@ -543,6 +545,17 @@ def _load_one(path: Path) -> Optional[BossDefinition]:
         encounter_trigger=_load_condition(data.get("encounter_trigger")),
         boss_npc_ids=[str(i) for i in data.get("boss_npc_ids", [])],
     )
+
+
+def _load_one(path: Path) -> Optional[BossDefinition]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    try:
+        return _definition_from_dict(data)
+    except (KeyError, TypeError, ValueError):
+        return None
 
 
 def load_definitions(*directories: Path) -> Dict[str, BossDefinition]:

@@ -66,6 +66,30 @@
   .rot-chip.gap .rot-chip-name { color: var(--critical); text-transform: uppercase;
     letter-spacing: .04em; }
   .rot-chip.gap .rot-chip-amount { color: var(--critical); }
+
+  /* -------------------------------------------------- encounter editor */
+  .enc-row { border: 1px solid var(--hairline); border-radius: var(--radius);
+    padding: 10px 12px; margin-bottom: 10px; background: var(--surface-2); }
+  .enc-row-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .enc-row-head input[type="text"], .enc-row-head input:not([type]) { width: auto; }
+  .enc-row-sub { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+  .cond-slot { margin: 8px 0; }
+  .cond-label { display: block; font-size: 10.5px; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--ink-muted); margin-bottom: 4px; }
+  .cond-node { border: 1px solid var(--hairline); border-left: 3px solid var(--s1);
+    border-radius: 6px; padding: 8px 10px; background: var(--surface-3); }
+  .cond-node .cond-node { margin-top: 8px; background: var(--surface-2); }
+  .cond-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .cond-target { font-size: 11.5px; color: var(--ink-2); display: flex; align-items: center; gap: 4px; }
+  .cond-fields { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .cond-fields .fld { max-width: 240px; }
+  .cond-children { margin-top: 8px; padding-left: 14px; border-left: 2px dashed var(--hairline); }
+  .cond-empty { border: 1px dashed var(--hairline); border-radius: 6px; padding: 6px 10px;
+    display: flex; align-items: center; gap: 10px; background: var(--surface-3); }
+  .cond-add-btn, .cond-remove { font-size: 11.5px; padding: 3px 8px; }
+  .cond-remove { color: var(--critical); background: none; border: 1px solid var(--hairline); border-radius: 5px; }
+  .enc-editor h3 { margin: 18px 0 8px; font-size: 12.5px; text-transform: uppercase; letter-spacing: .06em; }
+  #enc-error:empty { display: none; }
 </style>
 </head>
 <body>
@@ -76,6 +100,7 @@
     <div class="tab active" data-view="live" role="tab" tabindex="0">Live</div>
     <div class="tab" data-view="history" role="tab" tabindex="0">History</div>
     <div class="tab" data-view="timers" role="tab" tabindex="0">Timers</div>
+    <div class="tab" data-view="encounters" role="tab" tabindex="0">Encounters</div>
     <div class="tab" data-view="overlays" role="tab" tabindex="0">Overlays</div>
     <div class="tab" data-view="import" role="tab" tabindex="0">Import Logs</div>
     <div class="tab" data-view="parsely" role="tab" tabindex="0">Parsely</div>
@@ -168,6 +193,25 @@
         <tbody></tbody>
       </table></div>
       <p class="empty" id="rules-empty" style="display:none">No custom rules yet.</p>
+    </div>
+  </section>
+
+  <!-- ============================= encounters ============================= -->
+  <section class="view" id="view-encounters" role="tabpanel">
+    <div class="panel">
+      <h2>Encounters</h2>
+      <p class="sub">Boss fights are just data -- phases, counters, and timers driven by
+        conditions matched against the combat log. Create a new one from scratch, or
+        "Customize" a bundled fight to save your own tweaked copy (the bundled version stays
+        untouched; yours simply takes priority for that fight's id).</p>
+      <div class="filters">
+        <button id="enc-new">New Encounter</button>
+      </div>
+      <div class="tw"><table id="encounters-table">
+        <thead><tr><th>Name</th><th>ID</th><th>Phases</th><th>Timers</th><th>Source</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="encounters-empty" style="display:none">No encounters loaded.</p>
     </div>
   </section>
 
