@@ -252,7 +252,14 @@ class OverlayManager:
     def _refresh_bar_overlays(self):
         if not self.bar_overlays:
             return
-        rows, duration = self.tracker.snapshot()
+        # display_encounter() (not .current directly): keeps a just-finished
+        # pull's numbers on these bars through the between-pulls downtime
+        # instead of blanking the instant a stray non-combat event rolls
+        # `current` over to a fresh, empty Encounter(). One call reused for
+        # both rows and per-player extras below so they can't disagree about
+        # which encounter is being shown.
+        enc = self.tracker.display_encounter()
+        rows, duration = enc.snapshot(), enc.duration()
         # None (not "No boss encounter active") when idle -- that placeholder
         # string is long enough to visibly collide with the overlay's own
         # title text (reported live: "words are clipping each other"), and
@@ -268,7 +275,7 @@ class OverlayManager:
             elif kind == "dps":
                 # Attaches each player's crit_pct() as a 3rd tuple element --
                 # see BarOverlay.render's optional crit_pct display.
-                entities = self.tracker.current.players
+                entities = enc.players
                 data = sorted(
                     ((r[0], r[1], entities[r[0]].crit_pct()) for r in rows if r[0] in entities),
                     key=lambda r: -r[1],
@@ -276,7 +283,7 @@ class OverlayManager:
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data), subtitle=boss)
             elif kind == "hps":
-                entities = self.tracker.current.players
+                entities = enc.players
                 data = sorted(
                     ((r[0], r[2], entities[r[0]].heal_crit_pct()) for r in rows if r[0] in entities),
                     key=lambda r: -r[1],
@@ -286,7 +293,7 @@ class OverlayManager:
             elif kind == "effective_hps":
                 # Reads PlayerStats directly since the compact snapshot()
                 # tuple only carries raw healing_done, not overheal.
-                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                entities = [p for p in enc.players.values() if p.is_player]
                 data = sorted(
                     ((p.name, p.effective_hps(duration), p.heal_crit_pct()) for p in entities),
                     key=lambda r: -r[1],
@@ -296,7 +303,7 @@ class OverlayManager:
             elif kind == "boss_dps":
                 active = self.boss_state.active_boss if self.boss_state else None
                 boss_names = active.boss_names if active else []
-                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                entities = [p for p in enc.players.values() if p.is_player]
                 data = sorted(
                     ((p.name, p.boss_dps(boss_names, duration), p.crit_pct()) for p in entities),
                     key=lambda r: -r[1],
@@ -309,7 +316,7 @@ class OverlayManager:
                 # the live table already shows the percentage per person.
                 # Reads PlayerStats directly since the snapshot() tuple is
                 # kept compact and doesn't carry the raw number.
-                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                entities = [p for p in enc.players.values() if p.is_player]
                 data = sorted(((p.name, p.damage_absorbed) for p in entities),
                               key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
@@ -317,7 +324,7 @@ class OverlayManager:
             elif kind == "threat":
                 # Same reasoning as "absorbed": reads PlayerStats directly
                 # since the compact snapshot() tuple doesn't carry threat.
-                entities = [p for p in self.tracker.current.players.values() if p.is_player]
+                entities = [p for p in enc.players.values() if p.is_player]
                 data = sorted(((p.name, p.threat) for p in entities), key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))

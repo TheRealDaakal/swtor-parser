@@ -23,6 +23,31 @@ def _heal_tick(tracker, sim_clock, t, source="@Healer#1", target="@Ally#2", amou
     return tracker.feed(ev)
 
 
+def _damage_tick(tracker, sim_clock, t, source="@Dps#1", target="Training Dummy", amount="1000"):
+    sim_clock(t)
+    ev = parse_line(
+        log_line(f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}",
+                  source, target=target, ability="Some Attack {1}",
+                  effect_name="Damage {2}", amount=amount),
+        line_number=1,
+    )
+    return tracker.feed(ev)
+
+
+def _stray_ability_activate(tracker, sim_clock, t, source="@Dps#1"):
+    """A non-combat event -- e.g. popping a stim between pulls. No damage,
+    no heal, but still names a player (source_is_player), so it's enough to
+    make StatsTracker.feed() roll `current` over to a fresh Encounter once
+    the trailing window has passed, without itself being a real new pull."""
+    sim_clock(t)
+    ev = parse_line(
+        log_line(f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}",
+                  source, effect_name="AbilityActivate {1}"),
+        line_number=1,
+    )
+    return tracker.feed(ev)
+
+
 class TestFlushCurrent:
     def test_realistic_fight_flushes_and_resets(self, sim_clock):
         tracker = StatsTracker()
@@ -135,6 +160,49 @@ class TestRawEffectiveHealing:
         p.healing_overheal = 400.0
         assert p.effective_hps(10.0) == 60.0  # (1000-400)/10
         assert p.hps(10.0) == 100.0
+
+
+class TestDisplayEncounter:
+    """The DPS/HPS overlay reads display_encounter() (via snapshot()), not
+    .current directly -- reported live: meters were resetting to blank in
+    the downtime between pulls, well before the next real fight started,
+    because ANY event (not just a real new pull) rolls `current` over to a
+    fresh Encounter() once the trailing/gap window has passed. A stray
+    non-combat event between pulls (rebuffing, a stim pop) was enough to
+    trigger that and blank the bars."""
+
+    def test_last_meaningful_fight_stays_visible_through_a_stray_post_fight_event(self, sim_clock):
+        tracker = StatsTracker()
+        for i in range(6):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0)  # 100..110: a real fight
+
+        # Well past the inactivity gap -- rolls `current` over to a fresh,
+        # empty Encounter, but this event itself carries no damage/healing.
+        _stray_ability_activate(tracker, sim_clock, 130.0)
+
+        assert len(tracker.current.players) == 1, "the stray event itself still registers on current"
+        assert not tracker._has_meter_data(tracker.current), "but it carries no damage/healing"
+
+        enc = tracker.display_encounter()
+        assert enc is not tracker.current, "must show the last REAL fight, not the empty new one"
+        assert enc.players["Dps"].damage_done > 0
+
+        rows, duration = tracker.snapshot()
+        assert rows, "snapshot() (what the overlay/live tab actually reads) must not go blank either"
+
+    def test_display_encounter_switches_over_once_the_new_fight_lands_real_damage(self, sim_clock):
+        tracker = StatsTracker()
+        for i in range(6):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0)
+
+        _stray_ability_activate(tracker, sim_clock, 130.0)
+        assert tracker.display_encounter() is not tracker.current, "still showing the old fight"
+
+        _damage_tick(tracker, sim_clock, 131.0, amount="500")  # next pull's first real hit
+
+        enc = tracker.display_encounter()
+        assert enc is tracker.current, "must switch to the live encounter once it has its own real data"
+        assert enc.players["Dps"].damage_done == 500.0
 
 
 class TestBossDps:

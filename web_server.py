@@ -39,12 +39,20 @@ def _timer_rows(rows):
 
 
 def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status) -> dict:
-    rows, duration = tracker.snapshot()
+    # display_encounter() (not .current directly): keeps a just-finished
+    # pull's numbers on the live tab through the between-pulls downtime
+    # instead of blanking the instant a stray non-combat event rolls
+    # `current` over to a fresh, empty Encounter() -- see
+    # StatsTracker.display_encounter(). One call reused for both the row
+    # data and the per-player extras below so they can't disagree about
+    # which encounter is being shown.
+    encounter = tracker.display_encounter()
+    rows, duration = encounter.snapshot(), encounter.duration()
     active_boss = boss_state.active_boss if boss_state else None
     boss_names = active_boss.boss_names if active_boss else []
     players = []
     for name, dps, hps, taken, mitigated, deaths in rows:
-        p = tracker.current.players.get(name)
+        p = encounter.players.get(name)
         players.append({
             "name": name, "dps": dps, "hps": hps, "taken": taken,
             "mitigated": mitigated, "deaths": deaths,

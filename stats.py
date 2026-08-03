@@ -527,6 +527,13 @@ class StatsTracker:
         self.history: List[Encounter] = list(preloaded_history or [])
         self.current_log_path: Optional[str] = None
         self.last_area_entered_line: Optional[int] = None
+        # The last encounter that had real damage/healing in it -- see
+        # display_encounter(). Rolling `current` over to a fresh Encounter()
+        # happens on ANY event once the trailing window has passed, not just
+        # a real new pull (e.g. someone popping a stim between pulls counts),
+        # so without this the meter would blank out the instant that stray
+        # event arrives, well before the next actual fight starts.
+        self._last_meaningful: Optional[Encounter] = None
         # Wall-clock time of the last EnterCombat, for the same new-pull
         # detection the offline replay uses -- see NEW_PULL_MIN_GAP_SECONDS.
         self._last_enter_combat: Optional[float] = None
@@ -581,6 +588,8 @@ class StatsTracker:
                 if self.current.duration() >= MIN_ENCOUNTER_SECONDS:
                     completed = self.current
                     self.history.append(completed)
+                if self._has_meter_data(self.current):
+                    self._last_meaningful = self.current
                 self.current = Encounter()
                 self.current.log_path = self.current_log_path
                 self.current.area_entered_line = self.last_area_entered_line
@@ -615,9 +624,34 @@ class StatsTracker:
             self.current.area_entered_line = self.last_area_entered_line
             return completed
 
+    @staticmethod
+    def _has_meter_data(encounter: "Encounter") -> bool:
+        return any(
+            p.damage_done > 0 or p.healing_done > 0 for p in encounter.players.values()
+        )
+
+    def _display_encounter_unlocked(self) -> Encounter:
+        if self._has_meter_data(self.current):
+            return self.current
+        if self._last_meaningful is not None:
+            return self._last_meaningful
+        return self.current
+
+    def display_encounter(self) -> Encounter:
+        """Which encounter the meter/overlays should show right now: the
+        live one if it already has real damage/healing in it, otherwise the
+        last one that did -- so a just-finished pull's numbers stay on
+        screen through the between-pulls downtime instead of blanking the
+        moment `current` rolls over to a fresh, empty Encounter(). Switches
+        back to the live encounter the instant it lands its own first real
+        hit."""
+        with self._lock:
+            return self._display_encounter_unlocked()
+
     def snapshot(self):
         with self._lock:
-            return self.current.snapshot(), self.current.duration()
+            enc = self._display_encounter_unlocked()
+            return enc.snapshot(), enc.duration()
 
     def history_snapshot(self):
         """Returns list of (index, duration, rows) for completed encounters,
