@@ -239,9 +239,35 @@ async function openPull(pullNum) {
   if (d.error) return;
   renderPullModal(d);
   if (d.can_upload) {
+    loadPullSummary(d.pull);
     loadPullTimeline(d.pull, d.duration);
     loadPullDeaths(d.pull, d);
   }
+}
+
+async function loadPullSummary(pullNum) {
+  const box = $('#m-summary-box');
+  if (!box) return;
+  const s = await api(`/api/history/${pullNum}/summary`);
+  if (s.error) return;
+  renderFightSummaryInto(box, s);
+}
+
+function renderFightSummaryInto(box, s) {
+  if (!s.boss_name) return;  // no recognized boss -- nothing factual to say, don't clutter with "Unknown"
+  // .pill's own `color` wins over .good/.critical/.dim at equal CSS
+  // specificity (it's declared later in app.css) -- set the color inline
+  // instead of relying on class-combination cascade order.
+  const outcomeColor = s.outcome === 'kill' ? 'var(--good)' : (s.outcome === 'wipe' ? 'var(--critical)' : 'var(--ink-muted)');
+  const outcomeText = s.outcome === 'kill' ? 'KILL' : (s.outcome === 'wipe' ? 'WIPE' : 'unclear');
+  box.innerHTML = `
+    <div class="panel" style="margin-top:14px">
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+        <span class="pill" style="font-weight:700;letter-spacing:.03em;color:${outcomeColor}">${outcomeText}</span>
+        <b>${esc(s.boss_name)}</b>
+        ${s.phases_seen.length ? `<span class="dim">reached: ${s.phases_seen.map(esc).join(' → ')}</span>` : ''}
+      </div>
+    </div>`;
 }
 
 function renderPullModal(d) {
@@ -263,6 +289,7 @@ function renderPullModal(d) {
         <div class="sub">${d.duration.toFixed(1)}s · double-click a player for ability breakdown</div>
       </div>
     </div>
+    ${d.can_upload ? '<div id="m-summary-box"></div>' : ''}
     <div class="tw"><table><thead><tr>
       <th>Player</th><th>DPS</th><th>HPS</th><th>Damage Taken</th><th>Mitigated</th><th>Deaths</th>
     </tr></thead><tbody>${rows}</tbody></table></div>

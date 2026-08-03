@@ -323,7 +323,7 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             # forensics/timeline views already use, just pointed at a pull
             # from live/imported History instead of the corpus index.
             if (len(parts) == 4 and parts[:2] == ["api", "history"] and parts[2].isdigit()
-                    and parts[3] in ("deaths", "timeline")):
+                    and parts[3] in ("deaths", "timeline", "summary")):
                 idx = int(parts[2]) - 1
                 if not (0 <= idx < len(tracker.history)):
                     return self._json({"error": "no such pull"}, 404)
@@ -337,10 +337,16 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                         reports = forensics.analyze_deaths(encounter.log_path, encounter.start_line,
                                                              encounter.end_line)
                         return self._json({"reports": reports, "summary": forensics.summarize_deaths(reports)})
-                    else:
+                    elif parts[3] == "timeline":
                         from analysis import timeline
                         return self._json(timeline.build_timeline(encounter.log_path, encounter.start_line,
                                                                     encounter.end_line))
+                    else:
+                        from analysis import fight_summary
+                        defs = boss_state.definitions if boss_state else None
+                        return self._json(fight_summary.build_fight_summary(
+                            encounter.log_path, encounter.start_line, encounter.end_line, defs,
+                        ))
                 except OSError as exc:
                     return self._json({"error": str(exc)}, 500)
 
