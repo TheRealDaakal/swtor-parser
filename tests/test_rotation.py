@@ -85,3 +85,89 @@ def test_heals_are_tallied_separately_as_ehps_and_flagged():
     assert segments[0]["ehps"] == 200.0  # 2000 / 10s
     assert segments[0]["dps"] == 0.0
     assert segments[0]["casts"][0]["is_heal"] is True
+
+
+def _activate(t, source, ability):
+    return log_line(_ts(t), source, ability=ability, effect_name="AbilityActivate {1}")
+
+
+def test_casts_are_tagged_with_kind_cast():
+    lines = [
+        log_line(_ts(0.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+        log_line(_ts(5.0), "@Voidkeeper#1", target="Watchdog", ability="Saber Strike {1}",
+                 effect_name="Damage {2}", amount="1000"),
+        log_line(_ts(10.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+    ]
+    segments = rotation_segments(lines, "Voidkeeper", "Creeping Terror")
+    assert segments[0]["casts"][0]["kind"] == "cast"
+
+
+def test_a_long_idle_window_is_flagged_as_a_gap():
+    lines = [
+        log_line(_ts(0.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+        _activate(1.0, "@Voidkeeper#1", "Saber Strike {1}"),
+        # A real rotation gap: nothing activated for 5s (base GCD is 1.5s,
+        # threshold is 1.5x that = 2.25s -- 5s comfortably clears it).
+        _activate(6.0, "@Voidkeeper#1", "Slash {1}"),
+        log_line(_ts(10.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+    ]
+    segments = rotation_segments(lines, "Voidkeeper", "Creeping Terror")
+    assert len(segments) == 1
+    gaps = [c for c in segments[0]["casts"] if c["kind"] == "gap"]
+    assert len(gaps) == 1
+    assert abs(gaps[0]["seconds"] - 5.0) < 0.01
+    assert abs(segments[0]["idle_seconds"] - 5.0) < 0.01
+
+
+def test_normal_gcd_paced_activations_are_not_flagged():
+    """Back-to-back casts at roughly the GCD's own pace (1.5s apart, base
+    GCD) must NOT be flagged -- that's just normal play, not idle time."""
+    lines = [
+        log_line(_ts(0.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+        _activate(1.0, "@Voidkeeper#1", "Ability A {1}"),
+        _activate(2.5, "@Voidkeeper#1", "Ability B {1}"),
+        _activate(4.0, "@Voidkeeper#1", "Ability C {1}"),
+        log_line(_ts(10.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+    ]
+    segments = rotation_segments(lines, "Voidkeeper", "Creeping Terror")
+    gaps = [c for c in segments[0]["casts"] if c["kind"] == "gap"]
+    assert gaps == []
+    assert segments[0]["idle_seconds"] == 0.0
+
+
+def test_alacrity_shrinks_the_gap_detection_threshold():
+    """A 2.0s gap sits BELOW the base-GCD threshold (1.5 * 1.5 = 2.25s) but
+    ABOVE the 20%-alacrity threshold (1.5/1.2 * 1.5 = 1.875s) -- so it must
+    only be flagged once alacrity_pct is actually passed through."""
+    lines = [
+        log_line(_ts(0.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+        _activate(1.0, "@Voidkeeper#1", "Ability A {1}"),
+        _activate(3.0, "@Voidkeeper#1", "Ability B {1}"),  # exactly a 2.0s gap
+        log_line(_ts(10.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+    ]
+    unscaled = rotation_segments(lines, "Voidkeeper", "Creeping Terror", alacrity_pct=0.0)
+    assert [c for c in unscaled[0]["casts"] if c["kind"] == "gap"] == []
+
+    scaled = rotation_segments(lines, "Voidkeeper", "Creeping Terror", alacrity_pct=20.0)
+    gaps = [c for c in scaled[0]["casts"] if c["kind"] == "gap"]
+    assert len(gaps) == 1
+    assert abs(gaps[0]["seconds"] - 2.0) < 0.01
+
+
+def test_gap_entries_are_ordered_correctly_relative_to_casts():
+    """A gap detected between two activations must be interleaved at the
+    right point in the timeline, not just appended at the end."""
+    lines = [
+        log_line(_ts(0.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+        _activate(1.0, "@Voidkeeper#1", "Ability A {1}"),
+        log_line(_ts(1.2), "@Voidkeeper#1", target="Watchdog", ability="Ability A {1}",
+                 effect_name="Damage {2}", amount="500"),
+        # 6s idle gap
+        _activate(7.0, "@Voidkeeper#1", "Ability B {1}"),
+        log_line(_ts(7.2), "@Voidkeeper#1", target="Watchdog", ability="Ability B {1}",
+                 effect_name="Damage {2}", amount="500"),
+        log_line(_ts(10.0), "Watchdog", ability="Creeping Terror {1}", effect_name="AbilityActivate {1}"),
+    ]
+    segments = rotation_segments(lines, "Voidkeeper", "Creeping Terror")
+    kinds = [c["kind"] for c in segments[0]["casts"]]
+    assert kinds == ["cast", "gap", "cast"], f"expected cast, then the gap, then the next cast -- got {kinds}"

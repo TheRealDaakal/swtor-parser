@@ -487,7 +487,9 @@ async function openBreakdown(pullNum, name) {
     <h2 style="font-size:13px;margin-top:14px">Rotation Viewer</h2>
     <div class="sub" style="margin-bottom:8px">Splits this pull into segments bounded by every
       occurrence of an ability/effect name -- e.g. a recurring boss mechanic -- and shows this
-      player's own cast sequence within each.</div>
+      player's own cast sequence within each, with idle gaps (a GCD or more with no ability
+      activated) flagged in red. Not a rotation optimizer -- it can't tell you what to cast
+      instead, only where nothing was cast at all.</div>
     <div class="rotation-controls">
       <input type="text" id="rot-keyword" placeholder="e.g. Creeping Terror">
       <button id="rot-create">Create</button>
@@ -513,7 +515,12 @@ async function createRotation(pullNum, name) {
     const statLine = [`DPS ${fmt(seg.dps)}`];
     if (seg.ehps) statLine.push(`EHPS ${fmt(seg.ehps)}`);
     if (seg.crit_pct) statLine.push(`Crit ${seg.crit_pct}%`);
-    const chips = seg.casts.length ? seg.casts.map(c => `
+    if (seg.idle_seconds) statLine.push(`Idle ${seg.idle_seconds}s`);
+    const chips = seg.casts.length ? seg.casts.map(c => c.kind === 'gap' ? `
+      <div class="rot-chip gap" title="No ability activated for this long">
+        <div class="rot-chip-name">idle</div>
+        <div class="rot-chip-amount">${c.seconds}s</div>
+      </div>` : `
       <div class="rot-chip${c.is_heal ? ' heal' : ''}${c.is_critical ? ' crit' : ''}">
         <div class="rot-chip-name">${esc(c.ability)}</div>
         <div class="rot-chip-amount">${fmt(c.amount)}</div>

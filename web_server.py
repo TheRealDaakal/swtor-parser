@@ -343,7 +343,17 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                         lines = [line for i, line in enumerate(f, 1) if lo <= i <= hi]
                 except OSError as exc:
                     return self._json({"error": str(exc)}, 500)
-                segments = rotation_segments(lines, unquote(parts[4]), keyword)
+                player_name = unquote(parts[4])
+                # Only apply the known Alacrity% when it's actually THIS
+                # player's own rotation being analyzed -- for a teammate's,
+                # we don't know their alacrity, so rotation_segments() falls
+                # back to the unscaled base GCD rather than guess.
+                alacrity_pct = (
+                    character_settings.alacrity_pct
+                    if character_settings is not None and character_settings.character == player_name
+                    else 0.0
+                )
+                segments = rotation_segments(lines, player_name, keyword, alacrity_pct=alacrity_pct)
                 if not segments:
                     return self._json({"error": f'"{keyword}" doesn\'t occur at least twice in this pull '
                                                  "(need two occurrences to bound a segment)."}, 404)
