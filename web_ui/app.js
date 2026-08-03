@@ -60,6 +60,7 @@ function refreshActiveTab() {
   else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
   else if (activeView === 'import') loadCleanupSettings();
   else if (activeView === 'parsely') loadParselySettings();
+  else if (activeView === 'settings') loadAudioSettings();
 }
 
 // -------------------------------------------------------------- live tab
@@ -793,6 +794,33 @@ $('#cleanup-now').addEventListener('click', async () => {
   $('#cleanup-result').textContent = result.ok
     ? `Compressed ${result.archived_count} old log file(s).`
     : (result.error || 'Failed');
+});
+
+// -------------------------------------------------------------- settings tab
+async function loadAudioSettings() {
+  const s = await api('/api/audio_settings');
+  $('#snd-muted').checked = !!s.muted;
+  const cats = s.category_muted || {};
+  $('#snd-cat-boss').checked = !!cats.boss;
+  $('#snd-cat-phase').checked = !!cats.phase;
+  $('#snd-cat-custom').checked = !!cats.custom;
+  $('#snd-categories').classList.toggle('disabled', !!s.muted);
+}
+
+async function saveAudioSettings() {
+  await post('/api/audio_settings', {
+    muted: $('#snd-muted').checked,
+    category_muted: {
+      boss: $('#snd-cat-boss').checked,
+      phase: $('#snd-cat-phase').checked,
+      custom: $('#snd-cat-custom').checked,
+    },
+  });
+  $('#snd-categories').classList.toggle('disabled', $('#snd-muted').checked);
+}
+
+['#snd-muted', '#snd-cat-boss', '#snd-cat-phase', '#snd-cat-custom'].forEach(id => {
+  $(id).addEventListener('change', saveAudioSettings);
 });
 
 $('#anon-btn').addEventListener('click', async () => {

@@ -41,15 +41,17 @@ from log_parser import CombatEvent
 import audio
 
 
-def _announce(label: str, audio_path: Optional[str], voice_alert: bool) -> None:
+def _announce(label: str, audio_path: Optional[str], voice_alert: bool, category: str = "custom") -> None:
     """Plays a custom .wav if one's attached, otherwise falls back to the
     existing speak()-or-nothing behaviour gated by voice_alert. Attaching a
     custom sound IS the alert choice -- it replaces the spoken label rather
-    than playing alongside it."""
+    than playing alongside it. category is forwarded to audio.py so the
+    Settings tab's per-category mute (e.g. "phase" alerts specifically)
+    applies regardless of which of the two sound paths fires."""
     if audio_path:
-        audio.play_wav(audio_path)
+        audio.play_wav(audio_path, category=category)
     elif voice_alert:
-        audio.speak(label)
+        audio.speak(label, category=category)
 
 
 def apply_alacrity(duration_seconds: float, alacrity_pct: float) -> float:
@@ -216,7 +218,7 @@ class TimerEngine:
                         t.warned = False
                         t.voice_alert = voice_alert
                         t.audio_path = audio_path
-                        _announce(label, audio_path, voice_alert)
+                        _announce(label, audio_path, voice_alert, category=category)
                         return
             self.active.append(
                 ActiveTimer(
@@ -236,7 +238,7 @@ class TimerEngine:
             )
             if definition_id:
                 self._recently_started_ids.append(definition_id)
-        _announce(label, audio_path, voice_alert)
+        _announce(label, audio_path, voice_alert, category=category)
 
     def cancel_by_definition_id(self, definition_id: str) -> None:
         """Silently removes any active timer(s) tied to this boss timer
@@ -379,7 +381,7 @@ class TimerEngine:
                     t.duration_seconds = t.repeat_interval_seconds
                     t.repeats_remaining -= 1
                     t.warned = False
-                    _announce(t.label, t.audio_path, t.voice_alert)
+                    _announce(t.label, t.audio_path, t.voice_alert, category=t.category)
                     still_active.append(t)
                 else:
                     if t.definition_id:
@@ -390,7 +392,7 @@ class TimerEngine:
                 and not t.warned
                 and t.remaining(now) <= t.warn_seconds_before
             ):
-                _announce(f"{t.label} ending", t.audio_path, True)
+                _announce(f"{t.label} ending", t.audio_path, True, category=t.category)
                 t.warned = True
             still_active.append(t)
         self.active = still_active

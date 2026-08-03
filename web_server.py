@@ -411,6 +411,9 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             if u.path == "/api/cleanup_settings":
                 return self._json(storage.load_cleanup_settings())
 
+            if u.path == "/api/audio_settings":
+                return self._json(storage.load_audio_settings())
+
             if u.path == "/api/character_settings":
                 # None until the local player's been identified from the
                 # log (see boss_intelligence.BossEncounterState) -- the
@@ -550,6 +553,22 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 settings["retention_days"] = retention_days
                 storage.save_cleanup_settings(settings)
                 return self._json({"ok": True})
+
+            if u.path == "/api/audio_settings":
+                import audio
+                current = storage.load_audio_settings()
+                if "muted" in body:
+                    current["muted"] = bool(body["muted"])
+                if "category_muted" in body and isinstance(body["category_muted"], dict):
+                    for cat in current["category_muted"]:
+                        if cat in body["category_muted"]:
+                            current["category_muted"][cat] = bool(body["category_muted"][cat])
+                storage.save_audio_settings(current)
+                # Takes effect on the very next alert -- no restart needed,
+                # same live-apply pattern the tester's feedback specifically
+                # asked for ("no sound option to enable or disable").
+                audio.apply_settings(current)
+                return self._json(current)
 
             if u.path == "/api/cleanup_now":
                 import log_archive

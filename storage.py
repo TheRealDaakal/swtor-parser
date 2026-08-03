@@ -132,6 +132,42 @@ def save_cleanup_settings(settings: dict) -> None:
     _cleanup_settings_path().write_text(json.dumps(settings, indent=2), encoding="utf-8")
 
 
+def _audio_settings_path() -> Path:
+    return data_dir() / "audio_settings.json"
+
+
+def load_audio_settings() -> dict:
+    """Returns dict with keys: muted (bool, global kill switch) and
+    category_muted (dict of TimerRule.category -> bool). Only "boss",
+    "custom", and "phase" are included -- the other categories ("dot",
+    "hot", "cooldown") are always registered with voice_alert=False (see
+    dots_hots.py/cooldowns.py) and never produce sound, so a toggle for
+    them would do nothing. Reported by a tester: mechanic alerts fired
+    every few seconds with no in-app way to turn them down, only Windows'
+    own volume mixer -- this is the settings audio.py's speak()/play_wav()
+    are gated on (see audio.set_mute_settings)."""
+    path = _audio_settings_path()
+    defaults = {
+        "muted": False,
+        "category_muted": {"boss": False, "custom": False, "phase": False},
+    }
+    if not path.exists():
+        return defaults
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return defaults
+    merged_categories = dict(defaults["category_muted"])
+    merged_categories.update(data.get("category_muted", {}))
+    defaults.update(data)
+    defaults["category_muted"] = merged_categories
+    return defaults
+
+
+def save_audio_settings(settings: dict) -> None:
+    _audio_settings_path().write_text(json.dumps(settings, indent=2), encoding="utf-8")
+
+
 def load_timer_rules() -> List[TimerRule]:
     path = _rules_path()
     if not path.exists():

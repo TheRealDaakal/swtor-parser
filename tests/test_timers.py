@@ -360,8 +360,8 @@ class TestCustomAudioTrigger:
     def test_start_timer_with_audio_path_plays_wav_not_speech(self, monkeypatch, sim_clock):
         spoken, played = [], []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: spoken.append(text))
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -374,8 +374,8 @@ class TestCustomAudioTrigger:
     def test_start_timer_without_audio_path_still_speaks(self, monkeypatch, sim_clock):
         spoken, played = [], []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: spoken.append(text))
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -387,8 +387,8 @@ class TestCustomAudioTrigger:
     def test_feed_threads_the_rules_audio_path_through(self, monkeypatch, sim_clock):
         played = []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: None)
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -410,8 +410,8 @@ class TestCustomAudioTrigger:
         whatever the first one had."""
         played = []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: None)
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)

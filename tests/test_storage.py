@@ -40,3 +40,32 @@ def test_cleanup_settings_round_trip(monkeypatch, tmp_path):
     reloaded = storage.load_cleanup_settings()
     assert reloaded["retention_days"] == 30
     assert reloaded["last_run"] == "2026-08-03T00:00:00+00:00"
+
+
+def test_audio_settings_default_to_unmuted(monkeypatch, tmp_path):
+    _isolate_appdata(monkeypatch, tmp_path)
+    settings = storage.load_audio_settings()
+    assert settings["muted"] is False
+    assert settings["category_muted"] == {"boss": False, "custom": False, "phase": False}
+
+
+def test_audio_settings_round_trip(monkeypatch, tmp_path):
+    _isolate_appdata(monkeypatch, tmp_path)
+    storage.save_audio_settings({
+        "muted": True,
+        "category_muted": {"boss": True, "custom": False, "phase": True},
+    })
+    reloaded = storage.load_audio_settings()
+    assert reloaded["muted"] is True
+    assert reloaded["category_muted"] == {"boss": True, "custom": False, "phase": True}
+
+
+def test_audio_settings_merges_partial_saved_categories_with_defaults(monkeypatch, tmp_path):
+    """An older save (or a hand-edited file) missing a category key
+    shouldn't crash or silently drop the other two -- merge onto the
+    current default shape instead."""
+    _isolate_appdata(monkeypatch, tmp_path)
+    storage._audio_settings_path().write_text('{"muted": false, "category_muted": {"boss": true}}',
+                                                encoding="utf-8")
+    settings = storage.load_audio_settings()
+    assert settings["category_muted"] == {"boss": True, "custom": False, "phase": False}

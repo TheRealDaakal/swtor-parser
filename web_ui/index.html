@@ -104,6 +104,7 @@
     <div class="tab" data-view="overlays" role="tab" tabindex="0">Overlays</div>
     <div class="tab" data-view="import" role="tab" tabindex="0">Import Logs</div>
     <div class="tab" data-view="parsely" role="tab" tabindex="0">Parsely</div>
+    <div class="tab" data-view="settings" role="tab" tabindex="0">Settings</div>
   </nav>
   <div class="spacer"></div>
   <div class="status" id="watch-status" style="display:none;white-space:pre-line">—</div>
@@ -348,6 +349,23 @@
       <p id="p-status" class="sub"></p>
       <p class="sub">To upload just one pull instead of a whole file, use History -> double-click
         a pull -> Upload This Pull.</p>
+    </div>
+  </section>
+
+  <!-- ============================== settings ============================== -->
+  <section class="view" id="view-settings" role="tabpanel">
+    <div class="panel">
+      <h2>Sound</h2>
+      <p class="sub">Mutes everything at once, or just one category -- takes effect immediately,
+        no restart needed.</p>
+      <div class="filters">
+        <label class="fld row"><input type="checkbox" id="snd-muted"><span>Mute all sound</span></label>
+      </div>
+      <div class="filters" id="snd-categories">
+        <label class="fld row"><input type="checkbox" id="snd-cat-boss"><span>Boss mechanic alerts</span></label>
+        <label class="fld row"><input type="checkbox" id="snd-cat-phase"><span>Phase-change alerts</span></label>
+        <label class="fld row"><input type="checkbox" id="snd-cat-custom"><span>Custom timers</span></label>
+      </div>
     </div>
   </section>
 

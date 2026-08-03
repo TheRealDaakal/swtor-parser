@@ -129,3 +129,52 @@ def test_play_wav_falls_back_to_beep_on_playback_failure(monkeypatch):
 
     if audio._HAS_WINSOUND:
         assert beeped == [True]
+
+
+def test_global_mute_silences_speak_and_play_wav(monkeypatch):
+    """Reported by a tester: mechanic alerts fired every few seconds with
+    no in-app way to turn them off, only Windows' own volume mixer."""
+    audio = _reload_audio()
+    spoken = []
+    played = []
+    monkeypatch.setattr(audio, "_speak_one", lambda text: spoken.append(text))
+    monkeypatch.setattr(audio, "_play_wav_one", lambda path: played.append(path))
+
+    audio.apply_settings({"muted": True, "category_muted": {}})
+    audio.speak("hello")
+    audio.play_wav("alert.wav")
+
+    time.sleep(0.1)
+    assert spoken == []
+    assert played == []
+
+
+def test_category_mute_only_silences_that_category(monkeypatch):
+    audio = _reload_audio()
+    spoken = []
+    monkeypatch.setattr(audio, "_speak_one", lambda text: spoken.append(text))
+
+    audio.apply_settings({"muted": False, "category_muted": {"boss": True}})
+    audio.speak("muted one", category="boss")
+    audio.speak("audible one", category="phase")
+
+    deadline = time.time() + 2.0
+    while len(spoken) < 1 and time.time() < deadline:
+        time.sleep(0.02)
+
+    assert spoken == ["audible one"]
+
+
+def test_unmuted_settings_allow_sound_through(monkeypatch):
+    audio = _reload_audio()
+    spoken = []
+    monkeypatch.setattr(audio, "_speak_one", lambda text: spoken.append(text))
+
+    audio.apply_settings({"muted": False, "category_muted": {"boss": False}})
+    audio.speak("hello", category="boss")
+
+    deadline = time.time() + 2.0
+    while len(spoken) < 1 and time.time() < deadline:
+        time.sleep(0.02)
+
+    assert spoken == ["hello"]
