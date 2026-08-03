@@ -36,6 +36,10 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={localappdata}\Programs\DPS-Dynamic-Parse-System
 DefaultGroupName={#MyAppName}
 UninstallDisplayIcon={app}\{#MyAppExeName}
+; The Start Menu/Desktop shortcuts already inherit this from the exe's own
+; embedded icon (see swtor_parser.spec) -- this is just for the Setup.exe
+; installer file itself, before anything's been installed yet.
+SetupIconFile=assets\icon.ico
 OutputDir=dist
 OutputBaseFilename=swtor-parser-v{#MyAppVersion}-setup
 Compression=lzma
