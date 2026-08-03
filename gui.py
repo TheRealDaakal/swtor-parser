@@ -359,6 +359,7 @@ class OverlayManager:
                     hp_max=self.boss_state.boss_hp_max if self.boss_state else None,
                     boss_target=self.boss_state.boss_target if self.boss_state else None,
                     subtitle=phase_name,
+                    hp_markers=active.hp_phase_markers() if active else [],
                 )
             elif kind == "cooldowns":
                 o.render(self.timer_engine.snapshot("cooldown"))

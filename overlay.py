@@ -810,10 +810,11 @@ class BossHealthOverlay(BarOverlay):
                          on_close=on_close, on_move=on_move, height=height)
 
     def render(self, boss_name=None, hp_percent=None, hp_current=None,
-               hp_max=None, boss_target=None, subtitle=None):
+               hp_max=None, boss_target=None, subtitle=None, hp_markers=None):
         self._last_render = ((), {
             "boss_name": boss_name, "hp_percent": hp_percent, "hp_current": hp_current,
             "hp_max": hp_max, "boss_target": boss_target, "subtitle": subtitle,
+            "hp_markers": hp_markers,
         })
         c = self.canvas
         c.delete("all")
@@ -857,6 +858,16 @@ class BossHealthOverlay(BarOverlay):
             if frac > 0:
                 c.create_rectangle(cx, bar_y, cx + (bar_right - cx) * frac, bar_y + self.BAR_H,
                                    fill=colour, outline="")
+            # Phase-transition tick marks -- see
+            # BossDefinition.hp_phase_markers(). Dark outline behind a thin
+            # white line so it stays visible against every fill colour
+            # (red/amber/green) without needing a colour-specific case.
+            for marker_pct in (hp_markers or []):
+                if not (0 < marker_pct < 100):
+                    continue
+                mx = cx + (bar_right - cx) * (marker_pct / 100.0)
+                c.create_line(mx, bar_y - 2, mx, bar_y + self.BAR_H + 2, fill="#000000", width=3)
+                c.create_line(mx, bar_y - 2, mx, bar_y + self.BAR_H + 2, fill="#ffffff", width=1)
             label = f"{hp_percent:.0f}%"
             if hp_current is not None and hp_max is not None:
                 label += f"  ({compact(hp_current)}/{compact(hp_max)})"

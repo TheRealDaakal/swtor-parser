@@ -480,6 +480,20 @@ class BossDefinition:
                 return t
         return None
 
+    def hp_phase_markers(self) -> List[float]:
+        """HP% thresholds where a phase transition fires -- for drawing tick
+        marks on the boss HP bar (see overlay.py's BossHealthOverlay).
+        Deliberately narrow: only a phase's own DIRECT `hp_below`
+        start_trigger counts, not one buried inside an any_of/all_of --
+        a marker implies "the transition happens exactly here", which
+        isn't true once other conditions gate it too."""
+        marks = []
+        for phase in self.phases:
+            t = phase.start_trigger
+            if t is not None and t.type == "hp_below" and t.percent is not None:
+                marks.append(t.percent)
+        return marks
+
 
 def _definition_from_dict(data: dict) -> BossDefinition:
     """Constructs a BossDefinition straight from an already-parsed JSON

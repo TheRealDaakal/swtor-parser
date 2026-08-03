@@ -222,3 +222,52 @@ def test_definition_from_dict_defaults_are_sane_for_a_minimal_definition():
     assert definition.counters == []
     assert definition.boss_npc_ids == []
     assert definition.encounter_trigger is None
+
+
+# ---------------------------------------------------------------------
+# hp_phase_markers() -- HP% tick marks for the boss HP bar overlay
+# (see overlay.py's BossHealthOverlay). Deliberately narrow: only a
+# phase's DIRECT hp_below start_trigger counts, not one buried inside an
+# any_of/all_of gate.
+
+def test_hp_phase_markers_collects_plain_hp_below_triggers():
+    definition = _definition_from_dict({
+        "id": "x", "name": "X", "boss_names": ["X"],
+        "phases": [
+            {"id": "p1", "name": "Main"},
+            {"id": "p2", "name": "Adds", "start_trigger": {"type": "hp_below", "percent": 75}},
+            {"id": "p3", "name": "Burn", "start_trigger": {"type": "hp_below", "percent": 20}},
+        ],
+    })
+    assert definition.hp_phase_markers() == [75, 20]
+
+
+def test_hp_phase_markers_ignores_non_hp_triggers():
+    definition = _definition_from_dict({
+        "id": "x", "name": "X", "boss_names": ["X"],
+        "phases": [
+            {"id": "p1", "name": "Main"},
+            {"id": "p2", "name": "P2", "start_trigger": {"type": "ability_cast", "keyword": "Intro"}},
+        ],
+    })
+    assert definition.hp_phase_markers() == []
+
+
+def test_hp_phase_markers_ignores_hp_below_nested_inside_all_of():
+    """A marker implies "the transition happens exactly here" -- not true
+    once other conditions gate it too, so a nested hp_below must not
+    produce a (misleadingly precise) tick mark."""
+    definition = _definition_from_dict({
+        "id": "x", "name": "X", "boss_names": ["X"],
+        "phases": [
+            {"id": "p1", "name": "Main"},
+            {"id": "p2", "name": "P2", "start_trigger": {
+                "type": "all_of",
+                "conditions": [
+                    {"type": "hp_below", "percent": 50},
+                    {"type": "counter_reaches", "counter_id": "adds", "value": 3},
+                ],
+            }},
+        ],
+    })
+    assert definition.hp_phase_markers() == []
