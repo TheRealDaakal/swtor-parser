@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DPS — Dynamic Parse System</title>
+<meta name="description" content="A live combat log parser for Star Wars: The Old Republic — DPS/HPS meters, boss mechanic alerts, floating overlays, and corpus-wide analytics across your whole raid history.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0d0d'/%3E%3Cpath d='M4 18h5l3-9 5 16 3-11 2 4h6' fill='none' stroke='%233987e5' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark;
+    --plane:      #0d0d0d;
+    --surface:    #1a1a19;
+    --surface-2:  #232321;
+    --surface-3:  #2c2c2a;
+    --ink:        #ffffff;
+    --ink-2:      #c3c2b7;
+    --ink-muted:  #898781;
+    --hairline:   rgba(255,255,255,.10);
+    --s1: #3987e5;   /* primary accent -- matches the app's own DPS column */
+    --s2: #d95926;   /* secondary accent -- matches the app's own series 2 */
+    --s3: #199e70;
+    --good:     #0ca30c;
+    --warning:  #fab219;
+    --critical: #d03b3b;
+    --radius: 12px;
+    --display: "Chakra Petch", var(--body);
+    --body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink-2);
+    font: 400 16px/1.6 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  h1, h2, h3 { font-family: var(--display); color: var(--ink); font-weight: 600; margin: 0; text-wrap: balance; }
+  code { font-family: var(--mono); background: var(--surface-2); padding: .1em .4em; border-radius: 4px; font-size: .9em; }
+
+  /* -------------------------------------------------------------- nav */
+  header.site {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(13,13,13,.86); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  header.site .bar { display: flex; align-items: center; gap: 14px; height: 64px; }
+  .brand { display: flex; align-items: baseline; gap: 8px; font-family: var(--display); font-weight: 700;
+    font-size: 20px; color: var(--ink); letter-spacing: .01em; }
+  .brand em { font-style: normal; font-weight: 500; color: var(--ink-muted); font-size: 13px; }
+  header.site nav { display: flex; gap: 26px; margin-left: auto; font-size: 14px; }
+  header.site nav a { color: var(--ink-2); text-decoration: none; }
+  header.site nav a:hover { color: var(--ink); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; font-family: var(--display); font-weight: 600;
+    font-size: 14.5px; padding: 11px 20px; border-radius: 8px; text-decoration: none;
+    border: 1px solid transparent; cursor: pointer; letter-spacing: .01em;
+  }
+  .btn.primary { background: var(--s1); color: #06131f; }
+  .btn.primary:hover { background: #5a9fee; }
+  .btn.ghost { background: var(--surface-2); color: var(--ink); border-color: var(--hairline); }
+  .btn.ghost:hover { background: var(--surface-3); }
+  .btn.small { padding: 8px 14px; font-size: 13px; }
+
+  /* ------------------------------------------------------------- hero */
+  .hero { padding: 88px 0 70px; position: relative; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto -10%; height: 560px;
+    background: radial-gradient(60% 100% at 50% 0%, rgba(57,135,229,.16), transparent 70%);
+    pointer-events: none;
+  }
+  .hero .inner { position: relative; display: grid; gap: 20px; max-width: 760px; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; width: fit-content;
+    font-size: 12.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--s1); background: rgba(57,135,229,.12); border: 1px solid rgba(57,135,229,.3);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 3px rgba(12,163,12,.25); }
+  .hero h1 { font-size: clamp(38px, 5.4vw, 60px); line-height: 1.04; }
+  .hero h1 .accent { color: var(--s1); }
+  .hero p.lede { font-size: 18px; color: var(--ink-2); max-width: 58ch; }
+  .hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .hero .fineprint { font-size: 13px; color: var(--ink-muted); }
+
+  .shot-frame {
+    margin-top: 56px; border-radius: 14px; border: 1px solid var(--hairline);
+    background: var(--surface); box-shadow: 0 40px 100px -40px rgba(57,135,229,.35), 0 20px 60px -30px rgba(0,0,0,.6);
+    overflow: hidden;
+  }
+  .shot-frame .chrome { display: flex; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--hairline); }
+  .shot-frame .chrome span { width: 10px; height: 10px; border-radius: 50%; background: var(--surface-3); }
+  .shot-frame img { width: 100%; }
+
+  /* --------------------------------------------------------- stat strip */
+  .stats { border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); background: var(--surface); }
+  .stats .row { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .stat { padding: 30px 24px; text-align: center; border-left: 1px solid var(--hairline); }
+  .stat:first-child { border-left: none; }
+  .stat .n { font-family: var(--display); font-size: 34px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 12.5px; color: var(--ink-muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 4px; }
+  @media (max-width: 720px) { .stats .row { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(3) { border-left: none; } }
+
+  /* ------------------------------------------------------------ section */
+  section { padding: 88px 0; }
+  .section-head { max-width: 620px; margin-bottom: 44px; }
+  .section-head .kicker { font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--s2); margin-bottom: 10px; }
+  .section-head h2 { font-size: clamp(26px, 3.4vw, 34px); }
+  .section-head p { margin-top: 12px; color: var(--ink-muted); font-size: 15.5px; }
+
+  /* -------------------------------------------------------------- grid */
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius);
+    padding: 24px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .card .ico { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 8px;
+    background: rgba(57,135,229,.14); color: var(--s1); }
+  .card h3 { font-size: 16.5px; }
+  .card p { font-size: 14px; color: var(--ink-muted); margin: 0; line-height: 1.55; }
+
+  /* --------------------------------------------------------- showcase */
+  .showcase { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .showcase { grid-template-columns: 1fr; } }
+  .showcase ul { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 14px; }
+  .showcase li { display: flex; gap: 12px; font-size: 14.5px; color: var(--ink-2); }
+  .showcase li .m { color: var(--good); font-family: var(--mono); flex: 0 0 auto; }
+
+  .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 760px) { .gallery { grid-template-columns: 1fr; } }
+  .gallery figure { margin: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--hairline); background: var(--surface); }
+  .gallery figcaption { padding: 14px 16px; font-size: 13.5px; color: var(--ink-muted); border-top: 1px solid var(--hairline); }
+
+  /* ----------------------------------------------------------- safety */
+  .safety { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 32px; display: flex; gap: 20px; }
+  .safety .ico { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center;
+    background: rgba(12,163,12,.14); color: var(--good); }
+  .safety h3 { font-size: 17px; margin-bottom: 8px; }
+  .safety p { font-size: 14.5px; color: var(--ink-2); margin: 0; }
+
+  /* --------------------------------------------------------- downloads */
+  .dl-panel { background: linear-gradient(160deg, var(--surface), var(--surface-2)); border: 1px solid var(--hairline);
+    border-radius: 16px; padding: 44px; text-align: center; }
+  .dl-panel .ver { font-family: var(--mono); font-size: 13px; color: var(--ink-muted); margin-bottom: 6px; min-height: 1.2em; }
+  .dl-panel h2 { font-size: clamp(24px, 3vw, 32px); margin-bottom: 8px; }
+  .dl-panel p.sub { color: var(--ink-muted); max-width: 46ch; margin: 0 auto 26px; font-size: 14.5px; }
+  .dl-options { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .dl-card {
+    width: 240px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px;
+    padding: 20px; text-align: left; text-decoration: none; color: var(--ink);
+    transition: border-color .15s, transform .15s;
+  }
+  .dl-card:hover { border-color: var(--s1); transform: translateY(-2px); }
+  .dl-card .tag { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--s1); font-weight: 600; }
+  .dl-card .name { font-family: var(--display); font-size: 17px; margin: 6px 0 4px; }
+  .dl-card .meta { font-size: 12.5px; color: var(--ink-muted); font-family: var(--mono); }
+  .dl-note { margin-top: 22px; font-size: 13px; color: var(--ink-muted); }
+  .dl-note a { color: var(--s1); text-decoration: underline; }
+  .dl-fallback { font-size: 13.5px; color: var(--ink-muted); }
+
+  /* ----------------------------------------------------------- credits */
+  .credits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 760px) { .credits-grid { grid-template-columns: 1fr; } }
+  .credit-card { border: 1px solid var(--hairline); border-radius: var(--radius); padding: 22px; }
+  .credit-card h3 { font-size: 15px; margin-bottom: 8px; }
+  .credit-card p { font-size: 13.5px; color: var(--ink-muted); margin: 0; }
+  .credit-card a { color: var(--s1); text-decoration: none; font-size: 13px; }
+
+  footer { border-top: 1px solid var(--hairline); padding: 40px 0 60px; }
+  footer .row { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  footer p { font-size: 13px; color: var(--ink-muted); margin: 0; max-width: 60ch; line-height: 1.6; }
+  footer nav { display: flex; gap: 20px; font-size: 13.5px; }
+  footer nav a { text-decoration: none; color: var(--ink-2); }
+  footer nav a:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap bar">
+    <div class="brand">DPS <em>Dynamic Parse System</em></div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="#screenshots">Screenshots</a>
+      <a href="#download">Download</a>
+      <a href="https://github.com/TheRealDaakal/swtor-parser">GitHub</a>
+    </nav>
+    <a class="btn primary small" href="#download">Download</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap inner">
+    <span class="eyebrow"><span class="dot"></span> Free &amp; open source · Windows</span>
+    <h1>Know your numbers<br>the <span class="accent">instant</span> the fight ends.</h1>
+    <p class="lede">A live combat log parser for Star Wars: The Old Republic. DPS/HPS meters,
+      boss mechanic call-outs, and floating in-game overlays — plus something BARAS and StarParse
+      don't do: analytics across your <em>entire</em> raid history, not just the current pull.</p>
+    <div class="ctas">
+      <a class="btn primary" href="#download">Download for Windows</a>
+      <a class="btn ghost" href="https://github.com/TheRealDaakal/swtor-parser">View source on GitHub</a>
+    </div>
+    <p class="fineprint">Not affiliated with BioWare, EA, or Lucasfilm. Reads combat log text files only — never touches game memory or files.</p>
+  </div>
+  <div class="wrap">
+    <div class="shot-frame">
+      <div class="chrome"><span></span><span></span><span></span></div>
+      <img src="assets/shot-live.png" alt="Live DPS/HPS meter, active timers, cooldowns, and taunt log, shown mid-fight against a boss encounter.">
+    </div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="wrap row">
+    <div class="stat"><div class="n">163</div><div class="l">Boss encounters translated</div></div>
+    <div class="stat"><div class="n">31</div><div class="l">Defensive cooldowns tracked</div></div>
+    <div class="stat"><div class="n">57</div><div class="l">Automated regression tests</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Game files ever touched</div></div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">What it does</div>
+      <h2>Everything a raid meter needs, none of what it doesn't.</h2>
+      <p>Built directly against real BARAS and ORBS timer data, then verified line-by-line
+        against real combat logs — not guessed at.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <div class="ico">◈</div>
+        <h3>Live DPS / HPS meter</h3>
+        <p>Per-player damage, healing (raw and effective), damage taken, mitigation, and deaths — updating in real time as the fight happens.</p>
+      </div>
+      <div class="card">
+        <div class="ico">▲</div>
+        <h3>Boss mechanic alerts</h3>
+        <p>Phase-aware timers and spoken call-outs for 163 translated encounters, driven by a data file per boss — not hardcoded per fight.</p>
+      </div>
+      <div class="card">
+        <div class="ico">◐</div>
+        <h3>DoT / HoT tracking</h3>
+        <p>See exactly which target each dot or hot is actually on — including AoE effects landing on several targets at once.</p>
+      </div>
+      <div class="card">
+        <div class="ico">◍</div>
+        <h3>Cooldown &amp; taunt tracking</h3>
+        <p>All 31 real defensive cooldowns on a countdown, plus a log of every taunt cast and whether it actually landed.</p>
+      </div>
+      <div class="card">
+        <div class="ico">▦</div>
+        <h3>Floating overlays</h3>
+        <p>Draggable, click-through, always-on-top HUD bars for whatever you personally need on screen — a healer wants HoTs, a DPS wants damage.</p>
+      </div>
+      <div class="card">
+        <div class="ico">◎</div>
+        <h3>Corpus-wide analytics</h3>
+        <p>A separate dashboard reads your <em>whole</em> CombatLogs folder as one dataset — longitudinal trends and death forensics across months, not one session.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap showcase">
+    <div>
+      <div class="shot-frame">
+        <div class="chrome"><span></span><span></span><span></span></div>
+        <img src="assets/shot-overlays.png" alt="The overlay picker, showing every available floating HUD frame grouped by Metrics, Encounter, and Effects.">
+      </div>
+    </div>
+    <div>
+      <div class="section-head" style="margin-bottom:0">
+        <div class="kicker">Built for during the fight</div>
+        <h2>Pick your HUD. Lock it. Forget it.</h2>
+      </div>
+      <ul>
+        <li><span class="m">→</span> Damage, boss-only DPS, raw and effective healing, damage taken, shield absorbed, threat</li>
+        <li><span class="m">→</span> Boss health + current target, active timers, stack/move/spread mechanic alerts</li>
+        <li><span class="m">→</span> Cooldowns, expiring HoTs (list or grid), the DoT tracker, and a persistent notes overlay</li>
+        <li><span class="m">→</span> Lock positions once you're happy — locked frames go click-through so they never eat a mouse click mid-fight</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="screenshots">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">See it in action</div>
+      <h2>Every pull, kept.</h2>
+      <p>History persists across restarts — double-click any pull for a full per-player breakdown.</p>
+    </div>
+    <div class="gallery">
+      <figure>
+        <img src="assets/shot-live.png" alt="Live tab: DPS/HPS meter, active timers, cooldowns, DoTs/HoTs, and taunts for the current pull.">
+        <figcaption>Live — meter, timers, cooldowns, and taunts for the current pull.</figcaption>
+      </figure>
+      <figure>
+        <img src="assets/shot-history.png" alt="History tab: a list of completed pulls with duration and top DPS.">
+        <figcaption>History — every completed pull, persisted across restarts.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="safety">
+      <div class="ico">✓</div>
+      <div>
+        <h3>Is this safe to use?</h3>
+        <p>Yes. It only reads the combat log text files SWTOR already writes to disk
+          (<code>Documents\Star Wars - The Old Republic\CombatLogs</code>) — it never reads game
+          memory, injects into the game process, or modifies any game file. Same category of tool
+          as BARAS, StarParse, and ACT: a plain text-file reader that happens to run alongside the
+          game, not something that touches it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="dl-panel">
+      <div class="ver" id="dl-version">Checking latest release…</div>
+      <h2>Get DPS — Dynamic Parse System</h2>
+      <p class="sub">Free, open source, and unsigned — Windows will flag it as an unrecognized
+        publisher on first run. Click <strong>More info → Run anyway</strong>.</p>
+      <div class="dl-options" id="dl-options">
+        <a class="dl-card" href="https://github.com/TheRealDaakal/swtor-parser/releases/latest">
+          <div class="tag">Installer</div>
+          <div class="name">Windows Setup</div>
+          <div class="meta">Loading…</div>
+        </a>
+        <a class="dl-card" href="https://github.com/TheRealDaakal/swtor-parser/releases/latest">
+          <div class="tag">Portable</div>
+          <div class="name">ZIP archive</div>
+          <div class="meta">Loading…</div>
+        </a>
+      </div>
+      <p class="dl-note">Prefer to build it yourself? <a href="https://github.com/TheRealDaakal/swtor-parser#run-it">Run from source</a> instead — needs Python 3.8+.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Built on the shoulders of</div>
+      <h2>Credits</h2>
+    </div>
+    <div class="credits-grid">
+      <div class="credit-card">
+        <h3>BARAS</h3>
+        <p>Boss/phase engine design and encounter timer data translated directly from BARAS's own open-source definitions.</p>
+        <a href="https://github.com/baras-app/baras">github.com/baras-app/baras →</a>
+      </div>
+      <div class="credit-card">
+        <h3>ORBS</h3>
+        <p>51 additional operation and flashpoint timer definitions machine-translated from ORBS's timer data.</p>
+        <a href="https://github.com/L34T/ORBS">github.com/L34T/ORBS →</a>
+      </div>
+      <div class="credit-card">
+        <h3>StarParse</h3>
+        <p>Trailing-capture window design (DoT/HoT ticks after ExitCombat still count toward the fight that just ended) follows StarParse's own approach.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap row">
+    <p>DPS — Dynamic Parse System is an independent fan-made tool. Not affiliated with or
+      endorsed by BioWare, Electronic Arts, Lucasfilm, or Disney. Star Wars: The Old Republic
+      is a trademark of its respective owners. MIT licensed.</p>
+    <nav>
+      <a href="https://github.com/TheRealDaakal/swtor-parser">GitHub</a>
+      <a href="https://github.com/TheRealDaakal/swtor-parser/releases">Releases</a>
+      <a href="https://github.com/TheRealDaakal/swtor-parser/blob/master/LICENSE">License</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(async function () {
+  const versionEl = document.getElementById('dl-version');
+  const optionsEl = document.getElementById('dl-options');
+  const fmtBytes = (n) => (n / (1024 * 1024)).toFixed(1) + ' MB';
+
+  try {
+    const res = await fetch('https://api.github.com/repos/TheRealDaakal/swtor-parser/releases/latest');
+    if (!res.ok) throw new Error('release fetch failed: ' + res.status);
+    const rel = await res.json();
+    versionEl.textContent = 'Latest release: ' + rel.tag_name;
+
+    const setup = (rel.assets || []).find(a => a.name.endsWith('-setup.exe'));
+    const zip = (rel.assets || []).find(a => a.name.endsWith('-win64.zip'));
+    const cards = optionsEl.querySelectorAll('.dl-card');
+
+    if (setup) {
+      cards[0].href = setup.browser_download_url;
+      cards[0].querySelector('.meta').textContent = setup.name + ' · ' + fmtBytes(setup.size);
+    } else {
+      cards[0].querySelector('.meta').textContent = 'Not attached to this release';
+    }
+    if (zip) {
+      cards[1].href = zip.browser_download_url;
+      cards[1].querySelector('.meta').textContent = zip.name + ' · ' + fmtBytes(zip.size);
+    } else {
+      cards[1].querySelector('.meta').textContent = 'Not attached to this release';
+    }
+  } catch (err) {
+    versionEl.textContent = 'Could not check the latest release automatically.';
+    optionsEl.querySelectorAll('.dl-card .meta').forEach(el => { el.textContent = 'See GitHub Releases →'; });
+  }
+})();
+</script>
+
+</body>
+</html>
