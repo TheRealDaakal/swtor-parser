@@ -18,10 +18,12 @@ receives the paths that bridge already resolved.
 import json
 import threading
 import time
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
+import log_watcher
 import storage
 from stats import rotation_segments
 
@@ -387,6 +389,9 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 settings.pop("password", None)  # never echo the stored password back
                 return self._json(settings)
 
+            if u.path == "/api/cleanup_settings":
+                return self._json(storage.load_cleanup_settings())
+
             if u.path == "/api/character_settings":
                 # None until the local player's been identified from the
                 # log (see boss_intelligence.BossEncounterState) -- the
@@ -514,6 +519,33 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                     settings["password"] = storage.load_parsely_settings().get("password", "")
                 storage.save_parsely_settings(settings)
                 return self._json({"ok": True})
+
+            if u.path == "/api/cleanup_settings":
+                try:
+                    retention_days = float(body.get("retention_days", 0))
+                except (TypeError, ValueError):
+                    return self._json({"error": "invalid retention_days"}, 400)
+                if retention_days < 0:
+                    return self._json({"error": "retention_days can't be negative"}, 400)
+                settings = storage.load_cleanup_settings()
+                settings["retention_days"] = retention_days
+                storage.save_cleanup_settings(settings)
+                return self._json({"ok": True})
+
+            if u.path == "/api/cleanup_now":
+                import log_archive
+                log_dir = log_watcher.find_log_dir()
+                if not log_dir:
+                    return self._json({"error": "couldn't find your CombatLogs folder"}, 404)
+                settings = storage.load_cleanup_settings()
+                retention_days = settings.get("retention_days") or 0
+                if retention_days <= 0:
+                    return self._json({"error": "set a retention period above 0 first"}, 400)
+                archived = log_archive.archive_old_logs(log_dir, retention_days)
+                settings["last_run"] = datetime.now(timezone.utc).isoformat()
+                settings["last_archived_count"] = len(archived)
+                storage.save_cleanup_settings(settings)
+                return self._json({"ok": True, "archived_count": len(archived)})
 
             if u.path == "/api/parsely/upload_path":
                 from parsely_upload import upload_file

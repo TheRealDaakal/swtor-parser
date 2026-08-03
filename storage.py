@@ -107,6 +107,31 @@ def save_parsely_settings(settings: dict) -> None:
     _parsely_settings_path().write_text(json.dumps(settings, indent=2), encoding="utf-8")
 
 
+def _cleanup_settings_path() -> Path:
+    return data_dir() / "cleanup_settings.json"
+
+
+def load_cleanup_settings() -> dict:
+    """Returns dict with keys: retention_days (float), last_run (ISO
+    timestamp string or None). 0 disables archiving entirely -- a fresh
+    install shouldn't start silently gzipping files the user never asked
+    to have touched, so this is the explicit default."""
+    path = _cleanup_settings_path()
+    defaults = {"retention_days": 0, "last_run": None}
+    if not path.exists():
+        return defaults
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return defaults
+    defaults.update(data)
+    return defaults
+
+
+def save_cleanup_settings(settings: dict) -> None:
+    _cleanup_settings_path().write_text(json.dumps(settings, indent=2), encoding="utf-8")
+
+
 def load_timer_rules() -> List[TimerRule]:
     path = _rules_path()
     if not path.exists():

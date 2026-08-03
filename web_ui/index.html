@@ -288,6 +288,22 @@
       <button id="anon-btn">Choose Log File...</button>
       <p id="anon-result" class="sub"></p>
     </div>
+    <div class="panel">
+      <h2>Log cleanup</h2>
+      <p class="sub">SWTOR never deletes its own combat logs -- they just pile up in your
+        CombatLogs folder forever. This compresses (not deletes) files older than the retention
+        period into a same-named .gz sibling, freeing most of the disk space while keeping the
+        data recoverable. Whichever file is currently newest is never touched, no matter how old
+        it looks, since that could be the one actively being tailed. Runs automatically once per
+        launch; 0 disables it.</p>
+      <div class="filters">
+        <label class="fld"><span>Retention (days, 0 = off)</span>
+          <input type="number" id="cleanup-retention" min="0" step="1" style="width:80px"></label>
+        <button id="cleanup-save">Save</button>
+        <button id="cleanup-now">Clean Up Now</button>
+      </div>
+      <p id="cleanup-result" class="sub"></p>
+    </div>
   </section>
 
   <!-- ============================== parsely ============================== -->

@@ -14,6 +14,7 @@ Optional:  python main.py "C:\\path\\to\\CombatLogs"
 import queue
 import sys
 import threading
+from datetime import datetime, timezone
 from typing import Optional
 from pathlib import Path
 
@@ -118,6 +119,26 @@ class CharacterSettingsHolder:
 
 def _check_for_update_once(holder: "UpdateHolder"):
     holder.result = update_check.check_for_update(__version__)
+
+
+def _archive_old_logs_once(log_dir: Optional[str]):
+    """Runs once at startup, off the main thread -- a folder with years of
+    logs could take a moment to scan/compress, and this must never delay
+    the reader actually starting to tail the live log. Disabled by default
+    (retention_days=0, see storage.load_cleanup_settings) -- a fresh
+    install shouldn't start silently rewriting the user's files."""
+    if not log_dir:
+        return
+    settings = storage.load_cleanup_settings()
+    retention_days = settings.get("retention_days") or 0
+    if retention_days <= 0:
+        return
+    import log_archive
+    archived = log_archive.archive_old_logs(log_dir, retention_days)
+    if archived:
+        settings["last_run"] = datetime.now(timezone.utc).isoformat()
+        settings["last_archived_count"] = len(archived)
+        storage.save_cleanup_settings(settings)
 
 
 class HistoryWriter:
@@ -302,6 +323,7 @@ def main():
     update_holder = UpdateHolder()
     character_settings = CharacterSettingsHolder()
     threading.Thread(target=_check_for_update_once, args=(update_holder,), daemon=True).start()
+    threading.Thread(target=_archive_old_logs_once, args=(log_dir,), daemon=True).start()
 
     # Custom (Timers-tab) rules and completed pulls both need to survive a
     # restart. This used to happen in gui.py's MeterWindow.__init__; now

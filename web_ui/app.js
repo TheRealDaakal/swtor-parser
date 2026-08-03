@@ -58,6 +58,7 @@ function refreshActiveTab() {
   else if (activeView === 'timers') loadTimerRules();
   else if (activeView === 'encounters') loadEncounters();
   else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
+  else if (activeView === 'import') loadCleanupSettings();
   else if (activeView === 'parsely') loadParselySettings();
 }
 
@@ -685,6 +686,25 @@ $('#import-session-btn').addEventListener('click', async () => {
   $('#import-session-result').textContent = 'Importing...';
   const result = await post('/api/import/session', { paths });
   $('#import-session-result').textContent = result.message || result.error || '';
+});
+
+async function loadCleanupSettings() {
+  const s = await api('/api/cleanup_settings');
+  $('#cleanup-retention').value = s.retention_days || 0;
+}
+
+$('#cleanup-save').addEventListener('click', async () => {
+  const retention_days = parseFloat($('#cleanup-retention').value) || 0;
+  const result = await post('/api/cleanup_settings', { retention_days });
+  $('#cleanup-result').textContent = result.ok ? 'Saved.' : (result.error || 'Failed');
+});
+
+$('#cleanup-now').addEventListener('click', async () => {
+  $('#cleanup-result').textContent = 'Cleaning up...';
+  const result = await post('/api/cleanup_now', {});
+  $('#cleanup-result').textContent = result.ok
+    ? `Compressed ${result.archived_count} old log file(s).`
+    : (result.error || 'Failed');
 });
 
 $('#anon-btn').addEventListener('click', async () => {
