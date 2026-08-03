@@ -178,18 +178,23 @@
       <h2>Custom Timers</h2>
       <p class="sub">Fires a spoken alert (falls back to a beep if no TTS engine is installed) the
         moment an ability/effect matching the keyword appears, then counts down. Set "Warn" to also
-        get a second alert that many seconds before the countdown ends. Rules are saved and reloaded
-        automatically.</p>
+        get a second alert that many seconds before the countdown ends. Attach a .wav file to play
+        that instead of speaking the label. Rules are saved and reloaded automatically.</p>
       <div class="filters">
         <label class="fld"><span>Keyword</span><input id="t-keyword" size="14"></label>
         <label class="fld"><span>Label</span><input id="t-label" size="16"></label>
         <label class="fld"><span>Seconds</span><input id="t-duration" type="number" step="0.1" size="6"></label>
         <label class="fld"><span>Warn before</span><input id="t-warn" type="number" step="0.1" size="6"></label>
         <label class="fld"><input type="checkbox" id="t-voice" checked><span>Voice alert</span></label>
+        <label class="fld"><span>Sound</span>
+          <span id="t-audio-name" class="sub" style="display:inline-block;min-width:110px">None (TTS)</span>
+          <button type="button" id="t-audio-pick">Choose .wav...</button>
+          <button type="button" id="t-audio-clear" style="display:none">Clear</button>
+        </label>
         <button id="t-add">Add Timer Rule</button>
       </div>
       <div class="tw"><table id="rules-table">
-        <thead><tr><th>Keyword</th><th>Label</th><th>Seconds</th><th>Warn at</th><th>Voice</th><th></th></tr></thead>
+        <thead><tr><th>Keyword</th><th>Label</th><th>Seconds</th><th>Warn at</th><th>Voice</th><th>Sound</th><th></th></tr></thead>
         <tbody></tbody>
       </table></div>
       <p class="empty" id="rules-empty" style="display:none">No custom rules yet.</p>

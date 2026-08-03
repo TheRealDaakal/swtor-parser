@@ -275,3 +275,74 @@ class TestAlacrityScaling:
         )
         engine.feed(event, local_player_name="Sorc")  # no alacrity_pct passed
         assert engine.active[0].duration_seconds == 18.0
+
+
+class TestCustomAudioTrigger:
+    """A TimerRule/start_timer() with audio_path set plays that .wav via
+    audio.play_wav() instead of speaking the label -- see timers.py's
+    _announce(). Custom Timers tab lets a user attach a .wav per rule."""
+
+    def test_start_timer_with_audio_path_plays_wav_not_speech(self, monkeypatch, sim_clock):
+        spoken, played = [], []
+        import timers as timers_mod
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Interrupt Now", 5.0, audio_path=r"C:\sounds\interrupt.wav")
+
+        assert played == [r"C:\sounds\interrupt.wav"]
+        assert spoken == [], "a custom sound replaces the spoken label, doesn't play alongside it"
+        assert engine.active[0].audio_path == r"C:\sounds\interrupt.wav"
+
+    def test_start_timer_without_audio_path_still_speaks(self, monkeypatch, sim_clock):
+        spoken, played = [], []
+        import timers as timers_mod
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Taunt Swap", 5.0)
+
+        assert spoken == ["Taunt Swap"], "no audio_path -- falls back to the existing TTS behavior"
+        assert played == []
+
+    def test_feed_threads_the_rules_audio_path_through(self, monkeypatch, sim_clock):
+        played = []
+        import timers as timers_mod
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.add_rule(TimerRule(
+            keyword="Massive Slam", label="Massive Slam", duration_seconds=10.0,
+            audio_path=r"C:\sounds\slam.wav",
+        ))
+        event = parse_line(
+            log_line("00:00:00.000", "Boss", ability="Massive Slam {1}",
+                      effect_name="AbilityActivate {1}"),
+            line_number=1,
+        )
+        engine.feed(event)
+        assert played == [r"C:\sounds\slam.wav"]
+
+    def test_dedupe_refresh_updates_the_audio_path_too(self, monkeypatch, sim_clock):
+        """A refreshed (same dedupe_key) timer must pick up whatever
+        audio_path the LATEST start_timer() call passed, not keep
+        whatever the first one had."""
+        played = []
+        import timers as timers_mod
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path: played.append(path))
+
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Pods", 5.0, dedupe_key="Boss", audio_path="a.wav")
+        engine.start_timer("Pods", 5.0, dedupe_key="Boss", audio_path="b.wav")
+
+        assert len(engine.active) == 1
+        assert engine.active[0].audio_path == "b.wav"
+        assert played == ["a.wav", "b.wav"]

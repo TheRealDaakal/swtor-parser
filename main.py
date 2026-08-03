@@ -244,6 +244,17 @@ class Api:
         )
         return result[0] if result else None
 
+    def pick_audio_file(self):
+        # Custom Timers' optional "play this sound instead of speaking"
+        # attachment -- winsound.PlaySound (see audio.py) only plays .wav,
+        # not mp3/etc, so the filter matches what will actually work.
+        import webview
+        result = self._window_ref["window"].create_file_dialog(
+            webview.OPEN_DIALOG, allow_multiple=False,
+            file_types=("Sound files (*.wav)", "All files (*.*)"),
+        )
+        return result[0] if result else None
+
 
 def main():
     if len(sys.argv) > 1:

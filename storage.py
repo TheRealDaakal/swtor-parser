@@ -126,6 +126,7 @@ def load_timer_rules() -> List[TimerRule]:
                 only_source=d.get("only_source"),
                 voice_alert=d.get("voice_alert", True),
                 warn_seconds_before=d.get("warn_seconds_before", 0.0),
+                audio_path=d.get("audio_path"),
             )
         )
     return rules
@@ -141,6 +142,7 @@ def save_timer_rules(rules: List[TimerRule]) -> None:
             "only_source": r.only_source,
             "voice_alert": r.voice_alert,
             "warn_seconds_before": r.warn_seconds_before,
+            "audio_path": r.audio_path,
         }
         for r in rules
     ]

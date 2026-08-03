@@ -65,7 +65,7 @@ try:
 except ImportError:
     _HAS_SAPI = False
 
-_tts_queue: "queue.Queue[str]" = queue.Queue()
+_alert_queue: "queue.Queue[tuple[str, str]]" = queue.Queue()  # (kind, payload) -- kind in ("speak", "wav")
 _worker_started = False
 _worker_start_lock = threading.Lock()
 
@@ -97,17 +97,35 @@ def _speak_one(text: str) -> None:
     beep()
 
 
-def _tts_worker() -> None:
+def _play_wav_one(path: str) -> None:
+    if _HAS_WINSOUND:
+        try:
+            # No SND_ASYNC: this already runs on the dedicated worker
+            # thread below, so blocking here doesn't stall any caller --
+            # and blocking is what keeps a wav and a queued speech line
+            # from overlapping/garbling each other, same reasoning as
+            # _speak_one's synchronous Speak() call.
+            winsound.PlaySound(path, winsound.SND_FILENAME)
+            return
+        except RuntimeError:
+            pass  # bad/missing file -- fall through to a beep instead of silently doing nothing
+    beep()
+
+
+def _alert_worker() -> None:
     while True:
-        text = _tts_queue.get()
-        _speak_one(text)
+        kind, payload = _alert_queue.get()
+        if kind == "wav":
+            _play_wav_one(payload)
+        else:
+            _speak_one(payload)
 
 
 def _ensure_worker_started() -> None:
     global _worker_started
     with _worker_start_lock:
         if not _worker_started:
-            threading.Thread(target=_tts_worker, daemon=True).start()
+            threading.Thread(target=_alert_worker, daemon=True).start()
             _worker_started = True
 
 
@@ -117,4 +135,13 @@ def speak(text: str) -> None:
     queue in strict FIFO order, so alerts are always heard in the order
     they actually fired."""
     _ensure_worker_started()
-    _tts_queue.put(text)
+    _alert_queue.put(("speak", text))
+
+
+def play_wav(path: str) -> None:
+    """Queues a .wav file to be played -- same ordering/non-blocking
+    guarantees as speak(), and shares its queue/worker so a wav-triggered
+    alert and a spoken one landing close together still play strictly in
+    the order they actually fired instead of racing each other."""
+    _ensure_worker_started()
+    _alert_queue.put(("wav", path))

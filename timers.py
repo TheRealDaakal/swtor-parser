@@ -41,6 +41,17 @@ from log_parser import CombatEvent
 import audio
 
 
+def _announce(label: str, audio_path: Optional[str], voice_alert: bool) -> None:
+    """Plays a custom .wav if one's attached, otherwise falls back to the
+    existing speak()-or-nothing behaviour gated by voice_alert. Attaching a
+    custom sound IS the alert choice -- it replaces the spoken label rather
+    than playing alongside it."""
+    if audio_path:
+        audio.play_wav(audio_path)
+    elif voice_alert:
+        audio.speak(label)
+
+
 def apply_alacrity(duration_seconds: float, alacrity_pct: float) -> float:
     """SWTOR's own formula: Alacrity is a positive percentage that REDUCES
     time-based values (activation time, GCD, and -- for effects flagged
@@ -66,6 +77,10 @@ class TimerRule:
     only_source: Optional[str] = None  # if set, only trigger when this is the source
     voice_alert: bool = True           # speak/beep the moment the trigger fires
     warn_seconds_before: float = 0.0   # extra alert this many seconds before expiry (0 = off)
+    # A specific .wav file to play instead of speaking the label -- see
+    # audio.play_wav(). None (the default) keeps the existing TTS/beep
+    # behaviour gated by voice_alert.
+    audio_path: Optional[str] = None
     # Boss-intelligence gating: if set, this rule only arms while that boss
     # (and, if phases given, one of those phases) is the active encounter.
     # Manually-added rules from the Timers tab leave these unset, so they
@@ -119,6 +134,7 @@ class ActiveTimer:
     warn_seconds_before: float = 0.0
     warned: bool = False
     voice_alert: bool = True
+    audio_path: Optional[str] = None
     # Self-repeating timer support (e.g. "spawns every 90s, up to 10 times"):
     # when this timer expires, if repeats_remaining > 0, it re-arms itself
     # with repeat_interval_seconds as the new duration instead of vanishing.
@@ -176,7 +192,7 @@ class TimerEngine:
         self, label: str, duration_seconds: float, warn_seconds_before: float = 0.0,
         voice_alert: bool = True, repeat_interval_seconds: Optional[float] = None,
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
-        is_alert: bool = False, dedupe_key: Optional[str] = None,
+        is_alert: bool = False, dedupe_key: Optional[str] = None, audio_path: Optional[str] = None,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
@@ -199,8 +215,8 @@ class TimerEngine:
                         t.warn_seconds_before = warn_seconds_before
                         t.warned = False
                         t.voice_alert = voice_alert
-                        if voice_alert:
-                            audio.speak(label)
+                        t.audio_path = audio_path
+                        _announce(label, audio_path, voice_alert)
                         return
             self.active.append(
                 ActiveTimer(
@@ -209,6 +225,7 @@ class TimerEngine:
                     duration_seconds=duration_seconds,
                     warn_seconds_before=warn_seconds_before,
                     voice_alert=voice_alert,
+                    audio_path=audio_path,
                     repeat_interval_seconds=repeat_interval_seconds,
                     repeats_remaining=repeat_count,
                     definition_id=definition_id,
@@ -219,8 +236,7 @@ class TimerEngine:
             )
             if definition_id:
                 self._recently_started_ids.append(definition_id)
-        if voice_alert:
-            audio.speak(label)
+        _announce(label, audio_path, voice_alert)
 
     def cancel_by_definition_id(self, definition_id: str) -> None:
         """Silently removes any active timer(s) tied to this boss timer
@@ -318,7 +334,7 @@ class TimerEngine:
                 )
                 self.start_timer(
                     rule.label, duration, rule.warn_seconds_before, rule.voice_alert,
-                    category=rule.category, is_alert=rule.is_alert,
+                    category=rule.category, is_alert=rule.is_alert, audio_path=rule.audio_path,
                     # "cooldown" belongs here alongside dot/hot for the same
                     # reason Kolto Pods needed it: some personal defensives
                     # (e.g. Adrenaline Rush) are themselves a periodic
@@ -347,8 +363,7 @@ class TimerEngine:
                     t.duration_seconds = t.repeat_interval_seconds
                     t.repeats_remaining -= 1
                     t.warned = False
-                    if t.voice_alert:
-                        audio.speak(t.label)
+                    _announce(t.label, t.audio_path, t.voice_alert)
                     still_active.append(t)
                 else:
                     if t.definition_id:
@@ -359,7 +374,7 @@ class TimerEngine:
                 and not t.warned
                 and t.remaining(now) <= t.warn_seconds_before
             ):
-                audio.speak(f"{t.label} ending")
+                _announce(f"{t.label} ending", t.audio_path, True)
                 t.warned = True
             still_active.append(t)
         self.active = still_active

@@ -545,6 +545,8 @@ $('#modal').onclick = e => { if (e.target.id === 'modal') closeModal(); };
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ------------------------------------------------------------ timers tab
+const basename = p => p ? p.replace(/^.*[\\/]/, '') : '';
+
 async function loadTimerRules() {
   const rules = await api('/api/timer_rules');
   const tbody = $('#rules-table tbody');
@@ -555,6 +557,7 @@ async function loadTimerRules() {
     <tr>
       <td>${esc(r.keyword)}</td><td>${esc(r.label)}</td><td>${r.duration}</td>
       <td>${r.warn || '-'}</td><td>${r.voice ? 'on' : 'off'}</td>
+      <td>${r.audio_path ? esc(basename(r.audio_path)) : '-'}</td>
       <td><button class="rule-del" onclick="deleteRule(${r.index})">remove</button></td>
     </tr>`).join('');
 }
@@ -565,6 +568,23 @@ async function deleteRule(index) {
 }
 window.deleteRule = deleteRule;
 
+let pendingAudioPath = null;
+
+$('#t-audio-pick').addEventListener('click', async () => {
+  if (!window.pywebview) return;  // browser-only dev preview, no native dialog available
+  const path = await pywebview.api.pick_audio_file();
+  if (!path) return;
+  pendingAudioPath = path;
+  $('#t-audio-name').textContent = basename(path);
+  $('#t-audio-clear').style.display = '';
+});
+
+$('#t-audio-clear').addEventListener('click', () => {
+  pendingAudioPath = null;
+  $('#t-audio-name').textContent = 'None (TTS)';
+  $('#t-audio-clear').style.display = 'none';
+});
+
 $('#t-add').addEventListener('click', async () => {
   const keyword = $('#t-keyword').value.trim();
   const duration = parseFloat($('#t-duration').value);
@@ -572,9 +592,13 @@ $('#t-add').addEventListener('click', async () => {
   await post('/api/timer_rules', {
     keyword, label: $('#t-label').value.trim(), duration,
     warn: parseFloat($('#t-warn').value) || 0, voice: $('#t-voice').checked,
+    audio_path: pendingAudioPath,
   });
   $('#t-keyword').value = ''; $('#t-label').value = '';
   $('#t-duration').value = ''; $('#t-warn').value = '';
+  pendingAudioPath = null;
+  $('#t-audio-name').textContent = 'None (TTS)';
+  $('#t-audio-clear').style.display = 'none';
   loadTimerRules();
 });
 
