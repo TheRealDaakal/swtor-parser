@@ -141,6 +141,7 @@ class OverlayManager:
     def _persist_overlay_layout(self):
         frames = {}
         notes_text = None
+        hot_grid_slots = None
         for o in self.bar_overlays:
             key = getattr(o, "kind", None)
             if key:
@@ -148,14 +149,19 @@ class OverlayManager:
                                "width": o.width, "height": o.height}
             if key == "notes":
                 notes_text = o.current_text()
+            if key == "hots_grid":
+                hot_grid_slots = o.slots
         if notes_text is None:
             # No Notes frame open right now -- keep whatever was last saved
             # instead of wiping it out just because the frame is closed.
             notes_text = storage.load_overlay_layout(self._current_character()).get("notes", "")
+        if hot_grid_slots is None:
+            hot_grid_slots = storage.load_overlay_layout(self._current_character()).get("hot_grid_slots", [])
         storage.save_overlay_layout({
             "locked": self._locked,
             "frames": frames,
             "notes": notes_text,
+            "hot_grid_slots": hot_grid_slots,
         }, character=self._current_character())
 
     def _on_notes_changed(self, _text: str) -> None:
@@ -202,7 +208,9 @@ class OverlayManager:
         elif key == "hots":
             o = ov.HotOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key == "hots_grid":
-            o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
+            saved_slots = storage.load_overlay_layout(self._current_character()).get("hot_grid_slots", [])
+            o = ov.HotGridOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved,
+                                  initial_slots=saved_slots, **size_kwargs)
         elif key == "boss_hp":
             o = ov.BossHealthOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key in ("cooldowns", "dots"):

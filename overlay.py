@@ -533,29 +533,76 @@ class HotGridOverlay(HotOverlay):
     needs healing" question the list already does, just scannable as a
     block instead of read top-to-bottom -- a real layout upgrade, not a
     reimplementation of the bigger BARAS feature.
+
+    Cell positions are user-assigned (click a cell, then click another to
+    swap), not urgency-sorted -- see self.slots. Deliberately NOT a full
+    raid-roster overlay: a player only gets a slot the first time one of
+    your HoTs is tracked on them, and their cell disappears again (leaving
+    its position reserved, not backfilled by anyone else) whenever they
+    have nothing active, exactly like the old auto-sorted version did --
+    the only change is WHERE a given player's cell lives.
     """
 
     GRID_COLS = 3
     CELL_H = 40
     CELL_GAP = 6
+    CLICK_SLOP = 4  # px -- release within this of the press = a click, not a drag
+    SELECTED_EDGE = LOCK_EDGE  # reuse the existing "interactive state" blue, not a new colour
 
     def __init__(self, root, x=40, y=760, width=280, rows=12, on_close=None,
-                 on_move=None, within_seconds=None, height=None):
+                 on_move=None, within_seconds=None, height=None, initial_slots=None):
         super().__init__(root, x=x, y=y, width=width, rows=rows,
                          on_close=on_close, on_move=on_move,
                          within_seconds=within_seconds, height=height)
         self.kind = "hots_grid"
+        # index = grid position, value = assigned player name (or None for
+        # an unassigned/reserved-but-empty slot). Restored from the saved
+        # per-character layout so positions survive a restart.
+        self.slots: list = [s if s else None for s in (initial_slots or [])]
+        self._selected_slot = None
+        self._cell_rects = []  # [(slot_index, x0, y0, x1, y1), ...] from the last render(), for hit-testing
+        self._click_origin = None
+
+    def _slot_for(self, name: str) -> int:
+        """Returns name's existing slot, or lazily assigns it the first
+        free (None) slot, or appends a new one -- capped at whatever the
+        panel currently has room for, matching the same silent-overflow-
+        drop precedent as the old rows[:self.max_rows] truncation (resize
+        the panel bigger to fit more)."""
+        if name in self.slots:
+            return self.slots.index(name)
+        capacity = self.GRID_COLS * max(1, self._rows_for_height(self.height))
+        if None in self.slots:
+            idx = self.slots.index(None)
+            self.slots[idx] = name
+            return idx
+        if len(self.slots) < capacity:
+            self.slots.append(name)
+            return len(self.slots) - 1
+        return -1  # grid's full -- this player's cell just won't render this tick
 
     def render(self, rows, total=None, subtitle=None):
         """rows: dicts from HotTracker.expiring() -- identical input shape
-        to HotOverlay.render(), just drawn differently."""
+        to HotOverlay.render(), just drawn at each player's assigned
+        position instead of urgency-sort order."""
         self._last_render = ((rows,), {"total": total, "subtitle": subtitle})
         c = self.canvas
         c.delete("all")
-        rows = rows[: self.max_rows]
+        self._cell_rects = []
         cx = self.content_x()
         cols = self.GRID_COLS
-        grid_rows = max(1, -(-len(rows) // cols)) if rows else 1
+
+        by_slot = {}
+        for r in rows:
+            idx = self._slot_for(r["target"])
+            if idx >= 0:
+                by_slot[idx] = r
+        # Grid footprint covers every RESERVED slot (even ones with nothing
+        # active right now), not just the ones with data this tick -- a
+        # player's position must stay put while they have no HoT, not
+        # collapse and reappear somewhere else next time they do.
+        slot_count = len(self.slots)
+        grid_rows = max(1, -(-slot_count // cols)) if slot_count else 1
         content_h = grid_rows * self.CELL_H + (grid_rows - 1) * self.CELL_GAP
         h = PAD_TOP + HEADER_H + content_h + PAD_BOTTOM
 
@@ -572,26 +619,70 @@ class HotGridOverlay(HotOverlay):
         self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
 
         y0 = PAD_TOP + HEADER_H
-        if not rows:
+        if not slot_count:
             self._text(cx, y0 + 12, "all covered", fill=TEXT_DIM, font=FONT_SMALL)
             return
 
         cell_w = (self.width - PAD_X - cx - (cols - 1) * self.CELL_GAP) / cols
-        for i, r in enumerate(rows):
-            remaining, duration = r["remaining"], max(r["duration"], 0.001)
-            if remaining <= self.URGENT:
-                colour = "#e2564a"
-            elif remaining <= self.SOON:
-                colour = "#d9a53a"
-            else:
-                colour = "#3aa876"
-            col, row_i = i % cols, i // cols
+        for idx in range(slot_count):
+            col, row_i = idx % cols, idx // cols
             x0 = cx + col * (cell_w + self.CELL_GAP)
             y = y0 + row_i * (self.CELL_H + self.CELL_GAP)
-            self._rounded_rect(x0, y, x0 + cell_w, y + self.CELL_H, 8,
-                               fill=colour, outline="", stipple="gray25")
-            self._text(x0 + 8, y + 12, r["target"][:12], font=FONT_SMALL)
-            self._text(x0 + 8, y + 28, f"{remaining:.1f}s", fill=colour, font=FONT_VALUE)
+            self._cell_rects.append((idx, x0, y, x0 + cell_w, y + self.CELL_H))
+
+            r = by_slot.get(idx)
+            if r is not None:
+                remaining, duration = r["remaining"], max(r["duration"], 0.001)
+                if remaining <= self.URGENT:
+                    colour = "#e2564a"
+                elif remaining <= self.SOON:
+                    colour = "#d9a53a"
+                else:
+                    colour = "#3aa876"
+                self._rounded_rect(x0, y, x0 + cell_w, y + self.CELL_H, 8,
+                                   fill=colour, outline="", stipple="gray25")
+                self._text(x0 + 8, y + 12, r["target"][:12], font=FONT_SMALL)
+                self._text(x0 + 8, y + 28, f"{remaining:.1f}s", fill=colour, font=FONT_VALUE)
+            if idx == self._selected_slot:
+                # Selection highlight draws regardless of whether the slot
+                # currently has data -- you can select an empty reserved
+                # slot as the swap target too.
+                self._rounded_rect(x0, y, x0 + cell_w, y + self.CELL_H, 8,
+                                   fill="", outline=self.SELECTED_EDGE, width=2)
+
+    # ------------------------------------------------------- click-to-swap
+
+    def _slot_at(self, x, y):
+        for idx, x0, y0, x1, y1 in self._cell_rects:
+            if x0 <= x <= x1 and y0 <= y <= y1:
+                return idx
+        return None
+
+    def _drag_start(self, e):
+        super()._drag_start(e)
+        self._click_origin = (e.x, e.y)
+
+    def _drag_end(self, e=None):
+        super()._drag_end(e)
+        if self.locked or self._click_origin is None or e is None:
+            self._click_origin = None
+            return
+        ox, oy = self._click_origin
+        self._click_origin = None
+        if abs(e.x - ox) > self.CLICK_SLOP or abs(e.y - oy) > self.CLICK_SLOP:
+            return  # a real drag -- already handled by the base class's move
+        slot = self._slot_at(e.x, e.y)
+        if slot is None:
+            return
+        if self._selected_slot is None:
+            self._selected_slot = slot
+        elif self._selected_slot == slot:
+            self._selected_slot = None  # clicked the same cell again -- deselect
+        else:
+            a, b = self._selected_slot, slot
+            self.slots[a], self.slots[b] = self.slots[b], self.slots[a]
+            self._selected_slot = None
+        self._redraw()
 
 
 class TimerOverlay(BarOverlay):
