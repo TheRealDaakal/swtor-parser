@@ -134,6 +134,7 @@ def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp
     from boss_intelligence import BossEncounterState
     from dots_hots import HotTracker
     from taunt_tracker import TauntTracker
+    from aggro_tracker import AggroTracker
     from main import StatusHolder, CharacterSettingsHolder
 
     monkeypatch.setenv("APPDATA", str(tmp_path))
@@ -151,6 +152,7 @@ def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp
     boss_state = BossEncounterState({"test_boss": definition})
     hot_tracker = HotTracker()
     taunt_tracker = TauntTracker()
+    aggro_tracker = AggroTracker()
     status = StatusHolder()
     character_settings = CharacterSettingsHolder()
 
@@ -173,7 +175,7 @@ def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp
 
     main.background_reader(
         str(tmp_path), tracker, timer_engine, boss_state, hot_tracker, taunt_tracker,
-        status, _NullHistoryWriter(), character_settings,
+        aggro_tracker, status, _NullHistoryWriter(), character_settings,
     )
 
     assert status.text == f"Watching: {tmp_path}", f"reader loop hit an unexpected error: {status.text}"

@@ -36,7 +36,8 @@ REFRESH_MS = 500
 
 
 class OverlayManager:
-    def __init__(self, tracker, timer_engine, boss_state=None, hot_tracker=None, taunt_tracker=None):
+    def __init__(self, tracker, timer_engine, boss_state=None, hot_tracker=None, taunt_tracker=None,
+                 aggro_tracker=None):
         self.tracker = tracker
         self.timer_engine = timer_engine
         self.boss_state = boss_state
@@ -50,6 +51,10 @@ class OverlayManager:
             from taunt_tracker import TauntTracker
             taunt_tracker = TauntTracker()
         self.taunt_tracker = taunt_tracker
+        if aggro_tracker is None:
+            from aggro_tracker import AggroTracker
+            aggro_tracker = AggroTracker()
+        self.aggro_tracker = aggro_tracker
         # Which character's overlay layout is currently loaded -- None until
         # boss_state identifies the local player from the log. A tank alt
         # and a healer alt want different frames up, so the layout swaps in
@@ -394,5 +399,17 @@ class OverlayManager:
         self.taunt_tracker.tick()
         self._maybe_reload_layout_for_character()
         self._refresh_bar_overlays()
+        self._check_aggro()
 
         self.root.after(REFRESH_MS, self._refresh)
+
+    def _check_aggro(self):
+        # Unconditional (not gated on self.bar_overlays like
+        # _refresh_bar_overlays) -- this is a safety alert, not tied to
+        # whether the user has a specific overlay panel open.
+        if not self.boss_state or self.boss_state.active_boss is None:
+            return
+        enc = self.tracker.display_encounter()
+        self.aggro_tracker.check(
+            enc.players, self.boss_state.boss_target, enc.duration(), self.timer_engine,
+        )

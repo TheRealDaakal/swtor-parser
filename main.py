@@ -31,6 +31,7 @@ from cooldowns import register_defensive_cooldowns
 from dots_hots import register_dots_hots, HotTracker
 from alacrity import register_alacrity_buffs
 from taunt_tracker import TauntTracker
+from aggro_tracker import AggroTracker
 from gui import OverlayManager
 
 BUNDLED_BOSS_DIR = Path(__file__).parent / "boss_definitions_bundled"
@@ -189,6 +190,7 @@ def background_reader(
     boss_state: BossEncounterState,
     hot_tracker: HotTracker,
     taunt_tracker: TauntTracker,
+    aggro_tracker: AggroTracker,
     status: StatusHolder,
     history_writer: "HistoryWriter",
     character_settings: "CharacterSettingsHolder",
@@ -235,6 +237,7 @@ def background_reader(
                     history_writer.submit(completed)
                     boss_state.reset()
                     hot_tracker.reset()
+                    aggro_tracker.reset()
     except Exception as exc:  # keep the app alive even if the reader dies
         status.text = f"Reader error: {exc}"
 
@@ -318,6 +321,10 @@ def main():
     # Did-my-taunt-land tracking -- see taunt_tracker.py. Not boss-scoped
     # either: a trash-pull taunt swap matters just as much as a boss one.
     taunt_tracker = TauntTracker()
+    # "You're about to pull" warning -- see aggro_tracker.py. Checked from
+    # OverlayManager's periodic refresh tick (gui.py), not per-event here,
+    # so the live log-tailing hot path never pays for it.
+    aggro_tracker = AggroTracker()
     status = StatusHolder()
     history_writer = HistoryWriter(status)
     update_holder = UpdateHolder()
@@ -344,8 +351,8 @@ def main():
     else:
         thread = threading.Thread(
             target=background_reader,
-            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker, status,
-                  history_writer, character_settings),
+            args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker,
+                  aggro_tracker, status, history_writer, character_settings),
             daemon=True,
         )
         thread.start()
@@ -368,7 +375,8 @@ def main():
 
     def _run_tk():
         manager = OverlayManager(tracker, timer_engine, boss_state=boss_state,
-                                  hot_tracker=hot_tracker, taunt_tracker=taunt_tracker)
+                                  hot_tracker=hot_tracker, taunt_tracker=taunt_tracker,
+                                  aggro_tracker=aggro_tracker)
         overlay_manager_ref["manager"] = manager
         overlay_manager_ready.set()
         manager.run()
