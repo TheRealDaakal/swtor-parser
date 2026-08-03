@@ -159,18 +159,79 @@ async function pollLive() {
 }
 
 // ----------------------------------------------------------- history tab
+const selectedPulls = new Set();
+
 async function loadHistory() {
   const rows = await api('/api/history');
   const tbody = $('#history-table tbody');
   const empty = $('#history-empty');
   if (!rows.length) { tbody.innerHTML = ''; empty.style.display = ''; return; }
   empty.style.display = 'none';
+  // A pull no longer present (e.g. cleared) shouldn't linger selected.
+  const stillThere = new Set(rows.map(r => r.pull));
+  for (const p of Array.from(selectedPulls)) if (!stillThere.has(p)) selectedPulls.delete(p);
   tbody.innerHTML = rows.map(r => `
-    <tr class="clickable" onclick="openPull(${r.pull})">
-      <td>${r.pull}</td>
-      <td>${r.duration.toFixed(1)}s</td>
-      <td class="dim">${r.top.map(p => `${esc(p.name)} ${fmt(p.dps)}`).join(', ')}</td>
+    <tr>
+      <td><input type="checkbox" onclick="event.stopPropagation(); togglePullSelected(${r.pull}, this.checked)"
+        ${selectedPulls.has(r.pull) ? 'checked' : ''}></td>
+      <td class="clickable" onclick="openPull(${r.pull})">${r.pull}</td>
+      <td class="clickable" onclick="openPull(${r.pull})">${r.duration.toFixed(1)}s</td>
+      <td class="clickable dim" onclick="openPull(${r.pull})">${r.top.map(p => `${esc(p.name)} ${fmt(p.dps)}`).join(', ')}</td>
     </tr>`).join('');
+  updateCompareButton();
+}
+
+function togglePullSelected(pullNum, checked) {
+  if (checked) selectedPulls.add(pullNum); else selectedPulls.delete(pullNum);
+  updateCompareButton();
+}
+
+function updateCompareButton() {
+  $('#history-compare-btn').disabled = selectedPulls.size !== 2;
+}
+window.togglePullSelected = togglePullSelected;
+
+$('#history-compare-btn').addEventListener('click', async () => {
+  const [a, b] = Array.from(selectedPulls).sort((x, y) => x - y);
+  const data = await api(`/api/history/compare?a=${a}&b=${b}`);
+  if (data.error) return;
+  renderCompareModal(data);
+});
+
+function renderCompareModal(data) {
+  const { a, b } = data;
+  const names = Array.from(new Set([...a.players.map(p => p.name), ...b.players.map(p => p.name)])).sort();
+  const byName = enc => Object.fromEntries(enc.players.map(p => [p.name, p]));
+  const pa = byName(a), pb = byName(b);
+  const deltaClass = d => d > 0 ? 'good' : (d < 0 ? 'critical' : 'dim');
+  const deltaText = d => (d > 0 ? '+' : '') + fmt(d);
+
+  const rows = names.map(name => {
+    const dpsA = pa[name]?.dps || 0, dpsB = pb[name]?.dps || 0;
+    const hpsA = pa[name]?.hps || 0, hpsB = pb[name]?.hps || 0;
+    return `<tr>
+      <td class="name">${esc(name)}</td>
+      <td class="accent">${fmt(dpsA)}</td>
+      <td class="accent">${fmt(dpsB)}</td>
+      <td class="${deltaClass(dpsB - dpsA)}">${deltaText(dpsB - dpsA)}</td>
+      <td class="good">${fmt(hpsA)}</td>
+      <td class="good">${fmt(hpsB)}</td>
+      <td class="${deltaClass(hpsB - hpsA)}">${deltaText(hpsB - hpsA)}</td>
+    </tr>`;
+  }).join('');
+
+  $('#modal-body').innerHTML = `
+    <h2>Comparing Pull ${a.pull} vs Pull ${b.pull}</h2>
+    <p class="sub">${esc(a.label || '—')} (${a.duration.toFixed(1)}s) vs
+      ${esc(b.label || '—')} (${b.duration.toFixed(1)}s)</p>
+    <div class="tw"><table>
+      <thead><tr>
+        <th>Player</th><th>DPS (${a.pull})</th><th>DPS (${b.pull})</th><th>Δ DPS</th>
+        <th>HPS (${a.pull})</th><th>HPS (${b.pull})</th><th>Δ HPS</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  $('#modal').classList.add('open');
 }
 
 async function openPull(pullNum) {

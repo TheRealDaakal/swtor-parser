@@ -286,6 +286,19 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             if u.path == "/api/history":
                 return self._json(build_history_list(tracker))
 
+            if u.path == "/api/history/compare":
+                qs = parse_qs(u.query)
+                try:
+                    idx_a = int(qs.get("a", [""])[0]) - 1
+                    idx_b = int(qs.get("b", [""])[0]) - 1
+                except (TypeError, ValueError, IndexError):
+                    return self._json({"error": "invalid pull numbers"}, 400)
+                detail_a = build_history_detail(tracker, idx_a)
+                detail_b = build_history_detail(tracker, idx_b)
+                if detail_a is None or detail_b is None:
+                    return self._json({"error": "no such pull"}, 404)
+                return self._json({"a": detail_a, "b": detail_b})
+
             # /api/history/<idx>
             if len(parts) == 3 and parts[:2] == ["api", "history"] and parts[2].isdigit():
                 idx = int(parts[2]) - 1
