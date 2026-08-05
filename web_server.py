@@ -118,11 +118,13 @@ def _player_row(name, dps, hps, taken, mitigated, deaths):
 
 
 def build_history_list(tracker) -> list:
-    rows = tracker.history_snapshot()  # most-recent-first: (pull_num, duration, player_rows)
+    # most-recent-first: (pull_num, duration, player_rows, real_start_time)
+    rows = tracker.history_snapshot()
     out = []
-    for pull_num, duration, player_rows in rows:
+    for pull_num, duration, player_rows, real_start_time in rows:
         top = [{"name": n, "dps": round(d)} for n, d, _h, _t, _m, _dth in player_rows[:3]]
-        out.append({"pull": pull_num, "duration": round(duration, 1), "top": top})
+        out.append({"pull": pull_num, "duration": round(duration, 1), "top": top,
+                    "real_start_time": real_start_time})
     out.reverse()  # oldest-first, matching the old Tk tree's insert order
     return out
 

@@ -31,6 +31,16 @@ const dur = s => {
   const m = Math.floor(s / 60), r = Math.round(s % 60);
   return m ? `${m}m ${String(r).padStart(2, '0')}s` : `${r}s`;
 };
+// real_start_time is a Unix epoch (seconds) reconstructed from the log
+// file's own filename date -- None for pulls where that wasn't available
+// (e.g. a multi-file merge import), which just render as "—" rather than
+// a made-up date. See stats.py's Encounter.real_start_time.
+const historyDate = epochSeconds => {
+  if (epochSeconds == null) return '—';
+  const d = new Date(epochSeconds * 1000);
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    + ' ' + d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+};
 const api = (p, opts) => fetch(p, opts).then(r => r.json());
 const post = (p, body) => api(p, {
   method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -176,6 +186,7 @@ async function loadHistory() {
       <td><input type="checkbox" onclick="event.stopPropagation(); togglePullSelected(${r.pull}, this.checked)"
         ${selectedPulls.has(r.pull) ? 'checked' : ''}></td>
       <td class="clickable" onclick="openPull(${r.pull})">${r.pull}</td>
+      <td class="clickable dim" onclick="openPull(${r.pull})">${historyDate(r.real_start_time)}</td>
       <td class="clickable" onclick="openPull(${r.pull})">${r.duration.toFixed(1)}s</td>
       <td class="clickable dim" onclick="openPull(${r.pull})">${r.top.map(p => `${esc(p.name)} ${fmt(p.dps)}`).join(', ')}</td>
     </tr>`).join('');

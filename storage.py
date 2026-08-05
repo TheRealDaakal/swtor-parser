@@ -26,7 +26,7 @@ lose everything already flushed to disk.
 import json
 import os
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 from stats import Encounter, HISTORY_LIMIT
 from timers import TimerRule
@@ -56,7 +56,60 @@ def load_history() -> List[Encounter]:
         raw = json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return []
-    return [Encounter.from_dict(d) for d in raw]
+    encounters = [Encounter.from_dict(d) for d in raw]
+    _backfill_real_start_times(encounters)
+    return encounters
+
+
+def _backfill_real_start_times(encounters: List[Encounter]) -> None:
+    """One-time best-effort backfill for history.json entries saved before
+    Encounter.real_start_time existed (see stats.py) -- powers the History
+    tab's Date column. Re-derives it by replaying each unique still-on-disk
+    log file once (analysis.corpus.replay_pulls already reconstructs the
+    real calendar date from SWTOR's own filename) and matching pulls back
+    to entries by OVERLAPPING line range, not an exact match: a real corpus
+    showed old entries' start_line/end_line can drift by thousands of lines
+    from what today's replay_pulls produces for the very same file (an
+    older pull-splitting version recorded them, before a later fix changed
+    where boundaries land -- see "Unify live vs offline pull splitting").
+    Overlap is still a geometric fact, not a guess -- two ranges overlapping
+    in the same file cover the same underlying log lines, hence the same
+    real moment -- so this stays honest while tolerating that drift.
+    Entries whose file is gone, or whose range overlaps nothing replayed,
+    keep showing no date rather than a guessed one.
+
+    Mutates `encounters` in place and re-saves once if anything changed, so
+    this only ever does real work the FIRST load after upgrading -- every
+    load after that finds every entry already has real_start_time (or
+    already tried and failed) and returns immediately."""
+    needs = [e for e in encounters if e.real_start_time is None and e.log_path
+             and e.start_line is not None and e.end_line is not None]
+    if not needs:
+        return
+    from analysis.corpus import replay_pulls  # local import: corpus.py imports storage, so this avoids a module cycle
+    by_path: Dict[str, List[Encounter]] = {}
+    for e in needs:
+        by_path.setdefault(e.log_path, []).append(e)
+    changed = False
+    for log_path, group in by_path.items():
+        if not os.path.exists(log_path):
+            continue
+        try:
+            pulls = replay_pulls(log_path, {})
+        except OSError:
+            continue
+        ranges = [(p["encounter"].start_line, p["encounter"].end_line, p["encounter"].real_start_time)
+                  for p in pulls]
+        for e in group:
+            for p_start, p_end, real_start_time in ranges:
+                if real_start_time is None:
+                    continue
+                if e.start_line <= p_end and e.end_line >= p_start:  # overlap
+                    e.real_start_time = real_start_time
+                    changed = True
+                    break
+    if changed:
+        save_history(encounters)
 
 
 def save_history(encounters: List[Encounter]) -> None:

@@ -327,6 +327,14 @@ class Encounter:
     def __init__(self, label: Optional[str] = None):
         self.label = label
         self.start_time: Optional[float] = None
+        # Real (calendar) Unix epoch of this encounter's first event, for
+        # DISPLAY only (e.g. History tab dates) -- never used for duration
+        # math, which stays on start_time/last_activity/exit_combat_time.
+        # Those use whatever clock the caller is replaying with (live
+        # wall-clock, or replay_pulls()'s LogClock, which is relative and
+        # NOT a real calendar time -- see apply()). None if no real anchor
+        # was available (e.g. a multi-file merge_logs() import).
+        self.real_start_time: Optional[float] = None
         self.last_activity: Optional[float] = None
         self.exit_combat_time: Optional[float] = None  # when ExitCombat was seen
         self.players: Dict[str, PlayerStats] = {}
@@ -362,10 +370,22 @@ class Encounter:
             return (now - self.last_activity) > ENCOUNTER_GAP_SECONDS
         return False
 
-    def apply(self, event: CombatEvent, at_time: Optional[float] = None) -> None:
+    def apply(self, event: CombatEvent, at_time: Optional[float] = None,
+              real_time: Optional[float] = None) -> None:
         now = at_time if at_time is not None else time.time()
         if self.start_time is None:
             self.start_time = now
+            if real_time is not None:
+                self.real_start_time = real_time
+            elif at_time is None:
+                # True live call (no synthetic at_time given) -- `now` IS
+                # time.time(), safe to reuse as the real calendar anchor.
+                self.real_start_time = now
+            # else: at_time was given (a replay) but no real_time -- the
+            # caller has no real calendar anchor for this file (e.g.
+            # merge_logs(), or a filename that didn't match SWTOR's date
+            # pattern). Leave real_start_time None rather than stamping a
+            # bogus one from the replay clock's relative seconds value.
         self.last_activity = now
 
         if event.line_number is not None:
@@ -512,6 +532,7 @@ class Encounter:
             "start_line": self.start_line,
             "end_line": self.end_line,
             "area_entered_line": self.area_entered_line,
+            "real_start_time": self.real_start_time,
         }
 
     @classmethod
@@ -525,6 +546,7 @@ class Encounter:
         enc.start_line = d.get("start_line")
         enc.end_line = d.get("end_line")
         enc.area_entered_line = d.get("area_entered_line")
+        enc.real_start_time = d.get("real_start_time")
         return enc
 
 
@@ -820,10 +842,10 @@ class StatsTracker:
             return enc.snapshot(), enc.duration()
 
     def history_snapshot(self):
-        """Returns list of (index, duration, rows) for completed encounters,
-        most recent first."""
+        """Returns list of (index, duration, rows, real_start_time) for
+        completed encounters, most recent first."""
         with self._lock:
             out = []
             for i, enc in enumerate(reversed(self.history)):
-                out.append((len(self.history) - i, enc.duration(), enc.snapshot()))
+                out.append((len(self.history) - i, enc.duration(), enc.snapshot(), enc.real_start_time))
             return out

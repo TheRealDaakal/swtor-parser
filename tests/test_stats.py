@@ -10,7 +10,7 @@ Plus the raw/effective healing and boss-only DPS additions.
 from log_parser import parse_line
 from stats import (
     StatsTracker, PlayerStats, Encounter, NEW_PULL_MIN_GAP_SECONDS, HISTORY_LIMIT,
-    TRAILING_CAPTURE_SECONDS,
+    TRAILING_CAPTURE_SECONDS, MIN_ENCOUNTER_SECONDS, ENCOUNTER_GAP_SECONDS,
 )
 from conftest import log_line
 
@@ -307,3 +307,68 @@ class TestHistoryMemoryCap:
         tracker.add_imported_encounter(newest)
         assert len(tracker.history) == HISTORY_LIMIT
         assert tracker.history[-1] is newest, "trimming must drop the OLDEST entries, not the new one"
+
+
+class TestRealStartTime:
+    """real_start_time is the real (calendar) Unix epoch an Encounter
+    started at, kept separate from start_time/duration math (which may run
+    on a replay's relative LogClock, not real time) -- see stats.py's
+    Encounter.apply(). Powers the History tab's Date column."""
+
+    def _event(self, t="12:00:00"):
+        return parse_line(log_line(t, "@Dps#1", target="Training Dummy",
+                                    ability="Some Attack {1}", effect_name="Damage {2}",
+                                    amount="1000"), line_number=1)
+
+    def test_live_call_uses_wall_clock_as_the_real_anchor(self, sim_clock, monkeypatch):
+        sim_clock(12345.0)
+        enc = Encounter()
+        enc.apply(self._event())
+        assert enc.real_start_time == 12345.0 == enc.start_time
+
+    def test_replay_with_no_real_time_leaves_it_unset(self):
+        """A replay caller (e.g. log_merger.merge_logs) that passes a
+        synthetic at_time but no real_time has no real calendar anchor --
+        must NOT fall back to the relative replay clock value, which would
+        render as a bogus date (e.g. near Jan 1 1970)."""
+        enc = Encounter()
+        enc.apply(self._event(), at_time=500.0)
+        assert enc.start_time == 500.0
+        assert enc.real_start_time is None
+
+    def test_replay_with_real_time_uses_it_not_the_relative_clock(self):
+        enc = Encounter()
+        enc.apply(self._event(), at_time=500.0, real_time=1_700_000_000.0)
+        assert enc.start_time == 500.0
+        assert enc.real_start_time == 1_700_000_000.0
+
+    def test_real_start_time_is_only_set_on_the_first_event(self):
+        enc = Encounter()
+        enc.apply(self._event("12:00:00"), at_time=500.0, real_time=1_700_000_000.0)
+        enc.apply(self._event("12:00:05"), at_time=505.0, real_time=1_700_000_005.0)
+        assert enc.real_start_time == 1_700_000_000.0
+
+    def test_round_trips_through_to_dict_and_from_dict(self):
+        enc = Encounter()
+        enc.apply(self._event(), at_time=500.0, real_time=1_700_000_000.0)
+        reloaded = Encounter.from_dict(enc.to_dict())
+        assert reloaded.real_start_time == 1_700_000_000.0
+
+    def test_none_round_trips_as_none_not_a_bogus_epoch(self):
+        enc = Encounter()
+        enc.apply(self._event(), at_time=500.0)  # no real_time -- stays None
+        reloaded = Encounter.from_dict(enc.to_dict())
+        assert reloaded.real_start_time is None
+
+    def test_history_snapshot_exposes_real_start_time(self, sim_clock):
+        tracker = StatsTracker()
+        start = 1_700_000_000.0
+        _damage_tick(tracker, sim_clock, start)
+        _damage_tick(tracker, sim_clock, start + MIN_ENCOUNTER_SECONDS + 1.0)  # real duration, not a sliver
+        # A big gap rolls the pull over into history (no EnterCombat here,
+        # so ENCOUNTER_GAP_SECONDS' inactivity fallback is what fires).
+        _damage_tick(tracker, sim_clock, start + MIN_ENCOUNTER_SECONDS + 1.0 + ENCOUNTER_GAP_SECONDS + 1.0)
+        rows = tracker.history_snapshot()
+        assert len(rows) == 1
+        _pull_num, _duration, _player_rows, real_start_time = rows[0]
+        assert real_start_time == start

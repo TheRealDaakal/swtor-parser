@@ -28,6 +28,7 @@ import json
 import os
 import re
 import time
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -94,6 +95,19 @@ def replay_pulls(path: str, definitions) -> List[dict]:
     first_ts = None
     out: List[dict] = []
 
+    # Real calendar anchor for every pull in this file, parsed from SWTOR's
+    # own log filename (e.g. "combat_2026-08-03_20_15_30_....txt") -- None
+    # if the filename doesn't match (an old/renamed file), in which case
+    # pulls from it just get no real_start_time (see Encounter.apply).
+    # LogClock's `now` below is seconds-since-midnight-of-this-file's-date
+    # (extended across rollovers), so midnight_epoch + now reconstructs an
+    # absolute local Unix epoch for every event, not just the first.
+    date_str, _time_str = session_datetime(os.path.basename(path))
+    midnight_epoch = (
+        time.mktime(datetime.strptime(date_str, "%Y-%m-%d").timetuple())
+        if date_str else None
+    )
+
     def flush():
         if not current.players or current.duration() < MIN_ENCOUNTER_SECONDS:
             return
@@ -137,7 +151,8 @@ def replay_pulls(path: str, definitions) -> List[dict]:
                 boss_state.reset()
             if first_ts is None:
                 first_ts = event.timestamp
-            current.apply(event, at_time=now)
+            real_time = midnight_epoch + now if midnight_epoch is not None else None
+            current.apply(event, at_time=now, real_time=real_time)
             change = boss_state.feed(event)
             if boss_state.active_boss is not None and boss_name is None:
                 boss_name = boss_state.active_boss.name
