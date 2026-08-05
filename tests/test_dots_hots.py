@@ -89,6 +89,68 @@ def test_running_out_of_charges_before_the_clock_expires_it_anyway(sim_clock):
     assert rows == [] or rows[0]["remaining"] < 25.0
 
 
+def test_heavy_charge_loss_never_prunes_the_entry_early(sim_clock):
+    """Reported live: "hots fall off and don't come back on." Traced to a
+    real log: Trauma Probe (180s duration, 7 max_charges, same mechanic as
+    Kolto Shell) had all 7 charges consumed within its first 20s of a real
+    fight -- the OLD formula subtracted the FULL (duration/max_charges)*7
+    == duration penalty from the SAME value used to decide pruning, which
+    is always >= the current time_remaining once every charge is gone, so
+    it went negative and deleted the entry tens of seconds before the
+    shield actually broke (confirmed against the real log: ModifyCharges
+    lines kept arriving for over a minute after the computed "remaining"
+    had already gone negative). Once deleted, every further ModifyCharges
+    line for it silently no-op'd (feed()'s charge branch returns early with
+    nothing to update), so it stayed invisible -- still genuinely up in
+    game -- until the real RemoveEffect/recast eventually landed. Pruning
+    must be keyed to the real wall-clock timer only; the charge penalty may
+    floor the DISPLAYED remaining near zero, but must never make the entry
+    disappear on its own."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+          "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+
+    # All 7 charges gone in the first 20s of a 180s shield -- comfortably
+    # within its real duration, the exact real-log scenario.
+    for remaining_charges in (6, 5, 4, 3, 2, 1, 0):
+        _feed(tracker, sim_clock, 20.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ModifyCharges", "Trauma Probe {1}",
+              amount=f"{remaining_charges} charges {{2}}")
+
+    rows = tracker.expiring(now=20.0)
+    assert len(rows) == 1, "must still be tracked -- charge loss alone must never prune it"
+    assert rows[0]["remaining"] > 0, "displayed remaining must floor above zero, never go negative"
+
+    # A LOT more real time passes with no RemoveEffect and no recast --
+    # the entry must keep surviving on the real wall-clock timer alone
+    # (180s nominal duration), not have been silently deleted earlier.
+    rows = tracker.expiring(now=170.0)
+    assert len(rows) == 1
+    assert rows[0]["remaining"] > 0
+
+    # The real timer eventually does run out -- THAT must still prune it.
+    rows = tracker.expiring(now=181.0)
+    assert rows == []
+
+
+def test_charge_loss_updates_keep_applying_after_heavy_early_loss(sim_clock):
+    """A charge-loss line arriving after the entry would have been
+    wrongly pruned under the old formula must still update charges_lost --
+    proving the entry was never silently orphaned."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+          "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+    _feed(tracker, sim_clock, 20.0, "@Healer#1", "@Tank#1",
+          "Trauma Probe {1}", "ModifyCharges", "Trauma Probe {1}", amount="1 charges {2}")
+
+    # A late hit, long after the old buggy formula would have deleted this.
+    _feed(tracker, sim_clock, 150.0, "@Healer#1", "@Tank#1",
+          "Trauma Probe {1}", "ModifyCharges", "Trauma Probe {1}", amount="0 charges {2}")
+
+    rows = tracker.expiring(now=150.0)
+    assert len(rows) == 1, "the late ModifyCharges line must still find a live entry to update"
+
+
 def test_remove_effect_still_clears_it_regardless_of_charges_tracked(sim_clock):
     tracker = HotTracker()
     _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",

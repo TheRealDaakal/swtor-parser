@@ -261,7 +261,30 @@ class HotTracker:
 
     def expiring(self, within_seconds: Optional[float] = None,
                  now: Optional[float] = None) -> List[dict]:
-        """Soonest-to-drop first. Expired entries are pruned as we go."""
+        """Soonest-to-drop first. Expired entries are pruned as we go.
+
+        Pruning is keyed ONLY to the real wall-clock timer (active.expires_at
+        -- the shield's actual nominal duration), never to the charge-based
+        display adjustment below. Reported live: "hots fall off and don't
+        come back on" -- traced to a real log: Trauma Probe (180s duration,
+        7 max_charges, same mechanic as Kolto Shell) had all its charges
+        consumed within the first 20s of a fight. Losing every charge costs
+        a FULL duration's worth of penalty ((duration/max_charges)*max_charges
+        == duration), which is always >= whatever time_remaining actually
+        is -- so once THIS SAME VALUE also decided pruning, the entry got
+        deleted the moment the last charge dropped, tens of seconds (or, per
+        the real log, well over a minute) before the shield actually broke
+        (confirmed: ModifyCharges lines kept arriving long after the computed
+        "remaining" had already gone negative). Once pruned, the entry was
+        gone from _active entirely, so every further ModifyCharges line for
+        it silently no-op'd (feed()'s charge branch returns early when
+        there's no active entry to update) -- it just sat invisible, still
+        genuinely up in-game, until the real RemoveEffect/recast eventually
+        arrived, reading as "fell off and never came back." SWTOR itself
+        already tells us exactly when a shield breaks from charges hitting
+        zero (an immediate RemoveEffect, handled in feed()) -- there's no
+        need to approximate that here at all, let alone let the approximation
+        delete the entry early."""
         now = now if now is not None else time.time()
         rows = []
         for (target, label), active in list(self._active.items()):
@@ -272,17 +295,19 @@ class HotTracker:
             # bar's denominator wouldn't match what its own countdown is
             # actually counting down from.
             duration = active.duration_seconds
-            remaining = active.expires_at - now
-            if total and total.max_charges and active.charges_lost:
-                # Each consumed charge costs an equal share of the shield's
-                # nominal duration, so a shield taking frequent hits visibly
-                # drains faster than the wall-clock countdown alone would
-                # show -- otherwise the bar looks nearly full right up until
-                # it vanishes the instant the last charge is spent.
-                remaining -= (duration / total.max_charges) * active.charges_lost
-            if remaining <= 0:
+            time_remaining = active.expires_at - now
+            if time_remaining <= 0:
                 del self._active[(target, label)]
                 continue
+            remaining = time_remaining
+            if total and total.max_charges and active.charges_lost:
+                # Visual-only from here down: a shield down to its last
+                # charge should LOOK urgent even while its nominal duration
+                # has plenty left, without that estimate ever being allowed
+                # to prune the entry above -- floored just above zero
+                # instead of going negative.
+                charge_penalty = (duration / total.max_charges) * active.charges_lost
+                remaining = max(0.001, remaining - charge_penalty)
             if within_seconds is not None and remaining > within_seconds:
                 continue
             rows.append({
