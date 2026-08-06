@@ -453,7 +453,7 @@
     {
       "id": "Styrak_k_kd_hbt",
       "label": "Headbutt",
-      "duration_seconds": 40.0,
+      "duration_seconds": 62.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Headbutt"

@@ -48,7 +48,7 @@
     {
       "id": "dash_groundshatter",
       "label": "Groundshatter",
-      "duration_seconds": 20.0,
+      "duration_seconds": 28.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Groundshatter"
@@ -128,7 +128,7 @@
     {
       "id": "dashroode_orbs_groundshatter",
       "label": "Groundshatter",
-      "duration_seconds": 20.0,
+      "duration_seconds": 28.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Groundshatter"

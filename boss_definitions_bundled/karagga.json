@@ -30,18 +30,6 @@
       }
     },
     {
-      "id": "unstable_energy",
-      "label": "Unstable Energy",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Unstable Energy"
-      },
-      "cancel_trigger": {
-        "type": "combat_end"
-      }
-    },
-    {
       "id": "burning_oil",
       "label": "Burning Oil",
       "duration_seconds": 15.0,
@@ -102,15 +90,6 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "cluster_bombs"
-      }
-    },
-    {
-      "id": "karagga_orbs_cluster_bombs",
-      "label": "Cluster Bombs",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Cluster Bombs"
       }
     },
     {

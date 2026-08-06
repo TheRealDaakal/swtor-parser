@@ -30,7 +30,7 @@
     {
       "id": "operations_chief_terminate",
       "label": "Terminate",
-      "duration_seconds": 24.0,
+      "duration_seconds": 44.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Terminate"
@@ -84,7 +84,7 @@
     {
       "id": "operations_chief_orbs_terminate",
       "label": "Terminate",
-      "duration_seconds": 24.0,
+      "duration_seconds": 44.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Terminate"
