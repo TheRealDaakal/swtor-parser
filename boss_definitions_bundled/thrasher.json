@@ -37,7 +37,7 @@
     },
     {
       "id": "thrasher_adds_1st",
-      "label": "Adds",
+      "label": "Adds 1st",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"

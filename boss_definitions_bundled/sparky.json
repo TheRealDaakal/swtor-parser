@@ -94,7 +94,7 @@
     },
     {
       "id": "sparky_rampage_p2",
-      "label": "Rampage",
+      "label": "Rampage P2",
       "duration_seconds": 36.0,
       "trigger": {
         "type": "any_of",

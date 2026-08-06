@@ -20,7 +20,7 @@
   "timers": [
     {
       "id": "torque_laser_turret_1st",
-      "label": "Laser Turret",
+      "label": "Laser Turret 1st",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
@@ -31,7 +31,7 @@
     },
     {
       "id": "torque_vents_knockback_1st",
-      "label": "Vents + Knockback",
+      "label": "Vents + Knockback 1st",
       "duration_seconds": 25.0,
       "trigger": {
         "type": "combat_start"
@@ -42,7 +42,7 @@
     },
     {
       "id": "torque_jump_to_console_1st",
-      "label": "Jump to Console",
+      "label": "Jump to Console 1st",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "combat_start"
@@ -53,7 +53,7 @@
     },
     {
       "id": "torque_side_turrets_1st",
-      "label": "Side Turrets",
+      "label": "Side Turrets 1st",
       "duration_seconds": 50.0,
       "trigger": {
         "type": "combat_start"
@@ -198,7 +198,7 @@
     },
     {
       "id": "torque_magnetic_hp",
-      "label": "Magnetic",
+      "label": "Magnetic HP",
       "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",

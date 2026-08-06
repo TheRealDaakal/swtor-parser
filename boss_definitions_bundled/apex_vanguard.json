@@ -274,7 +274,7 @@
     },
     {
       "id": "apex_vanguard_venom_or_target",
-      "label": "Venom OR Target",
+      "label": "Venom OR Target Split",
       "duration_seconds": 60.0,
       "trigger": {
         "type": "timer_expires",
@@ -342,7 +342,7 @@
     },
     {
       "id": "apex_vanguard_target_or_volt_split",
-      "label": "Target OR Volt",
+      "label": "Target OR Volt Split",
       "duration_seconds": 60.0,
       "trigger": {
         "type": "timer_expires",
@@ -356,7 +356,7 @@
     },
     {
       "id": "apex_vanguard_target_or_volt_part_2",
-      "label": "Target OR Volt",
+      "label": "Target OR Volt Part 2",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "timer_expires",
@@ -460,7 +460,7 @@
     },
     {
       "id": "apex_vanguard_voltinator_p3",
-      "label": "Voltinator",
+      "label": "Voltinator P3",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "timer_expires",
@@ -474,7 +474,7 @@
     },
     {
       "id": "apex_vanguard_red_venom_p4",
-      "label": "Red Venom",
+      "label": "Red Venom P4",
       "duration_seconds": 60.0,
       "trigger": {
         "type": "timer_expires",

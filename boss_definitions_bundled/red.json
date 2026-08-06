@@ -53,7 +53,7 @@
   "timers": [
     {
       "id": "red_bull_cs",
-      "label": "Bull",
+      "label": "Bull Start",
       "duration_seconds": 60.0,
       "trigger": {
         "type": "combat_start"
@@ -103,7 +103,7 @@
     },
     {
       "id": "red_hydrochloric_pool_cs",
-      "label": "Hydrochloric Pool",
+      "label": "Hydrochloric Pool Start",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
@@ -123,7 +123,7 @@
     },
     {
       "id": "red_acidic_jet_1st",
-      "label": "Acidic Jet",
+      "label": "Acidic Jet Start",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"

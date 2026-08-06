@@ -76,7 +76,7 @@
   "timers": [
     {
       "id": "watchdog_bombs_1st",
-      "label": "Color Bombs",
+      "label": "Color Bombs 1st",
       "duration_seconds": 14.0,
       "trigger": {
         "type": "combat_start"
@@ -125,7 +125,7 @@
     },
     {
       "id": "watchdog_degauss_1st",
-      "label": "Degauss",
+      "label": "Degauss 1st",
       "duration_seconds": 63.0,
       "trigger": {
         "type": "combat_start"
@@ -201,7 +201,7 @@
     },
     {
       "id": "watchdog_bombs_2nd",
-      "label": "Color Bombs",
+      "label": "Color Bombs 2nd",
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
@@ -216,7 +216,7 @@
     },
     {
       "id": "watchdog_bombs_3rd",
-      "label": "Color Bombs",
+      "label": "Color Bombs 3rd",
       "duration_seconds": 9.5,
       "trigger": {
         "type": "ability_cast",

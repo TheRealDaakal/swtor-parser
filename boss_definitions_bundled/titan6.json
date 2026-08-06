@@ -144,7 +144,7 @@
     },
     {
       "id": "titan_6_huge_grenade_b",
-      "label": "Huge Grenade",
+      "label": "Huge Grenade (Burn)",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",

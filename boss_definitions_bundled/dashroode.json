@@ -47,7 +47,7 @@
     },
     {
       "id": "dash_roode_updraft_1st",
-      "label": "Updraft",
+      "label": "Updraft CS",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"

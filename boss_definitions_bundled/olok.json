@@ -106,7 +106,7 @@
     },
     {
       "id": "olok_the_shadow_flashbang_2",
-      "label": "Flashbang",
+      "label": "Flashbang_",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
@@ -177,7 +177,7 @@
     {
       "id": "olok_olok_enters",
       "label": "Olok Enters",
-      "duration_seconds": 63.0,
+      "duration_seconds": 61.0,
       "trigger": {
         "type": "timer_expires",
         "timer_id": "olok_wave"

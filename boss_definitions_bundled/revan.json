@@ -297,7 +297,7 @@
     },
     {
       "id": "rev_push_p3",
-      "label": "Push",
+      "label": "Push (Floor 2 1st)",
       "duration_seconds": 9.5,
       "trigger": {
         "type": "ability_cast",
@@ -340,7 +340,7 @@
     },
     {
       "id": "rev_push_p4",
-      "label": "Push",
+      "label": "Push (Floor 3 1st)",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "effect_removed",
