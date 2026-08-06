@@ -67,14 +67,18 @@ class TestFlushCurrent:
         tracker = StatsTracker()
         t = 100.0
         for _ in range(10):
+            # Healing AND damage: a stream of pure healing between the same
+            # two players is what a raid does BETWEEN pulls, and no longer
+            # counts as an encounter on its own -- see Encounter.is_real_fight().
             _heal_tick(tracker, sim_clock, t)
+            _damage_tick(tracker, sim_clock, t + 0.5, source="@Ally#2")
             t += 2.0  # 18s of continuous activity, well under the 8s gap
 
-        assert len(tracker.current.players) == 2
+        assert tracker.current.players.keys() == {"Healer", "Ally", "Training Dummy"}
         flushed = tracker.flush_current()
 
         assert flushed is not None
-        assert len(flushed.players) == 2
+        assert len(flushed.players) == 3
         assert len(tracker.current.players) == 0, "current must reset after flush"
         assert len(tracker.history) == 1, "flushed encounter must land in history"
 
@@ -102,11 +106,12 @@ class TestPullSplitting:
         tracker = StatsTracker()
         for i in range(6):
             _heal_tick(tracker, sim_clock, 100.0 + i * 2.0)  # 100..110, 10s span
+            _damage_tick(tracker, sim_clock, 100.5 + i * 2.0, source="@Ally#2")
 
         sim_clock(110.0 + 20.0)  # well past ENCOUNTER_GAP_SECONDS (8.0)
         completed = _heal_tick(tracker, sim_clock, 110.0 + 20.0, target="@Other#3")
         assert completed is not None
-        assert completed.players.keys() == {"Healer", "Ally"}
+        assert completed.players.keys() == {"Healer", "Ally", "Training Dummy"}
 
     def test_fresh_entercombat_splits_a_pull_even_without_a_gap(self, sim_clock):
         """The actual bug: adds never stop swinging, so the inactivity gap
@@ -128,6 +133,7 @@ class TestPullSplitting:
         enter_combat("00:00:00.000")
         for i in range(6):
             _heal_tick(tracker, sim_clock, 1.0 + i * 2.0)  # 1..11, 10s of activity, no gap
+            _damage_tick(tracker, sim_clock, 1.5 + i * 2.0, source="@Ally#2")
 
         gap = NEW_PULL_MIN_GAP_SECONDS + 5.0
         sim_clock(11.0 + gap)
@@ -372,3 +378,57 @@ class TestRealStartTime:
         assert len(rows) == 1
         _pull_num, _duration, _player_rows, real_start_time = rows[0]
         assert real_start_time == start
+
+
+class TestRealFightGate:
+    """Duration alone never distinguished a pull from the raid standing
+    around between pulls. Between attempts everyone heals each other up and
+    re-applies buffs: `players` fills, the 8s inactivity gap never elapses,
+    and the segment sails past MIN_ENCOUNTER_SECONDS.
+
+    Measured on the real 230-file corpus: 1,789 of 3,433 indexed encounters
+    (52%) contained zero damage, 986 of those had healing in them, and 233
+    were boss-tagged -- which is what made kill/wipe statistics nonsense.
+    """
+
+    def test_healing_only_is_not_a_pull(self, sim_clock):
+        tracker = StatsTracker()
+        for i in range(8):
+            _heal_tick(tracker, sim_clock, 100.0 + i * 2.0)  # 14s of pure healing
+
+        assert tracker.current.is_real_fight() is False
+        assert tracker.flush_current() is None, (
+            "between-pulls topping-off must not be persisted as an encounter"
+        )
+        assert tracker.history == []
+
+    def test_damage_dealt_makes_it_a_pull(self, sim_clock):
+        tracker = StatsTracker()
+        for i in range(8):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0)
+
+        assert tracker.current.is_real_fight() is True
+        assert tracker.flush_current() is not None
+
+    def test_damage_taken_alone_still_counts(self, sim_clock):
+        """A raid that gets flattened without landing a hit is still a pull
+        -- the gate is damage in either direction, not damage dealt."""
+        tracker = StatsTracker()
+        for i in range(8):
+            _damage_tick(tracker, sim_clock, 100.0 + i * 2.0,
+                         source="Boss", target="@Tank#1")
+
+        assert tracker.current.is_real_fight() is True
+        assert tracker.flush_current() is not None
+
+    def test_rollover_also_drops_a_healing_only_segment(self, sim_clock):
+        """flush_current() is the explicit shutdown path; feed()'s own
+        rollover must apply the same rule or the two disagree."""
+        tracker = StatsTracker()
+        for i in range(6):
+            _heal_tick(tracker, sim_clock, 100.0 + i * 2.0)
+
+        sim_clock(110.0 + 20.0)  # past ENCOUNTER_GAP_SECONDS
+        completed = _heal_tick(tracker, sim_clock, 110.0 + 20.0, target="@Other#3")
+        assert completed is None
+        assert tracker.history == []

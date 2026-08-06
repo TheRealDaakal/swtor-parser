@@ -60,6 +60,20 @@ NEW_PULL_MIN_GAP_SECONDS = 30.0
 # see StatsTracker.flush_current().
 MIN_ENCOUNTER_SECONDS = 5.0
 
+# Duration alone was never enough to call something a pull. Between attempts
+# a raid stands around healing each other up and re-applying buffs, which is
+# a continuous stream of player-to-player events: `players` fills up, the 8s
+# inactivity gap never elapses, and the segment sails past 5s. Measured on
+# the real 230-file archive, 1,789 of 3,433 indexed encounters (52%) had
+# ZERO damage in them -- 986 of those had healing, i.e. they were exactly
+# this between-pulls topping-off. 233 were even boss-tagged, which is what
+# made kill/wipe stats nonsense: Styrak showed 21 "wipes" of which 15 had no
+# deaths at all, because they weren't fights.
+#
+# The test is damage in EITHER direction, not healing: a raid that gets
+# flattened without landing a hit still took damage, while a raid buffing up
+# between pulls does neither. See Encounter.is_real_fight().
+
 # Caps StatsTracker.history in memory, not just on disk. storage.py's
 # save_history()/append_history_entry() already trim the FILE to this many
 # pulls, but the in-memory list itself was never capped -- a long-running
@@ -360,6 +374,19 @@ class Encounter:
             return 0.0
         end = self.exit_combat_time or self.last_activity
         return max(end - self.start_time, 0.001)
+
+    def is_real_fight(self) -> bool:
+        """True if any damage was dealt or taken during this encounter.
+
+        The one signal that separates a pull from the raid standing around
+        between pulls -- see the note above MIN_ENCOUNTER_SECONDS for the
+        measurements. Both the live tracker and the offline replay gate on
+        this, for the same reason they share NEW_PULL_MIN_GAP_SECONDS: if
+        they disagree about what counts as a pull, the same log produces
+        different History rows depending on how it was captured.
+        """
+        return any(p.damage_done > 0 or p.damage_taken > 0
+                   for p in self.players.values())
 
     def past_trailing_window(self, now: float) -> bool:
         """True once the trailing grace window after ExitCombat has elapsed
@@ -773,7 +800,8 @@ class StatsTracker:
                 # produced 116 "completed" pulls where only 93 were real
                 # fights -- confirmed by filtering to >=5s, which lands on
                 # exactly 93, matching the offline count precisely.
-                if self.current.duration() >= MIN_ENCOUNTER_SECONDS:
+                if (self.current.duration() >= MIN_ENCOUNTER_SECONDS
+                        and self.current.is_real_fight()):
                     completed = self.current
                     self._append_history_unlocked(completed)
                 if self._has_meter_data(self.current):
@@ -804,6 +832,8 @@ class StatsTracker:
             if not self.current.players:
                 return None
             if self.current.duration() < MIN_ENCOUNTER_SECONDS:
+                return None
+            if not self.current.is_real_fight():
                 return None
             completed = self.current
             self._append_history_unlocked(completed)

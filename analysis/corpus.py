@@ -39,7 +39,7 @@ from log_merger import LogClock
 from log_parser import parse_line
 from stats import Encounter, MIN_ENCOUNTER_SECONDS, NEW_PULL_MIN_GAP_SECONDS
 
-CACHE_VERSION = 6  # bump to invalidate every cached entry after a parser change
+CACHE_VERSION = 7  # bump to invalidate every cached entry after a parser change
 MIN_FILE_BYTES = 50_000         # skip near-empty logs (login blips)
 
 # NEW_PULL_MIN_GAP_SECONDS / MIN_ENCOUNTER_SECONDS now live in stats.py --
@@ -110,6 +110,9 @@ def replay_pulls(path: str, definitions) -> List[dict]:
 
     def flush():
         if not current.players or current.duration() < MIN_ENCOUNTER_SECONDS:
+            return
+        # Same gate the live tracker applies -- see Encounter.is_real_fight().
+        if not current.is_real_fight():
             return
         out.append({
             "encounter": current,
