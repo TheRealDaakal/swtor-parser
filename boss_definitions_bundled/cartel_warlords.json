@@ -218,7 +218,7 @@
     },
     {
       "id": "cartel_warlords_sunder_the_end_vm",
-      "label": "Sunder The End VM",
+      "label": "Sunder The End",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
@@ -233,7 +233,7 @@
     },
     {
       "id": "cartel_warlords_sunder_the_end_8m",
-      "label": "Sunder The End 8m",
+      "label": "Sunder The End",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "ability_cast",
@@ -251,7 +251,7 @@
     },
     {
       "id": "cartel_warlords_sunder_the_end_16m",
-      "label": "Sunder The End 16m",
+      "label": "Sunder The End",
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",

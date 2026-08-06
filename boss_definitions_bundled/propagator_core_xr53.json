@@ -54,7 +54,7 @@
     },
     {
       "id": "propagator_core_xr53_lethal_strike_rc",
-      "label": "Lethal Strike After Recovery",
+      "label": "Lethal Strike",
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",

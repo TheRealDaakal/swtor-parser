@@ -46,7 +46,7 @@
     },
     {
       "id": "trandos_inspiration_cs",
-      "label": "Inspiration Start",
+      "label": "Inspiration",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"

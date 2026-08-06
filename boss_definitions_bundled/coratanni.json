@@ -66,7 +66,7 @@
   "timers": [
     {
       "id": "coratanni_ricochet_1st",
-      "label": "Ricochet 1st",
+      "label": "Ricochet",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
@@ -105,7 +105,7 @@
     },
     {
       "id": "coratanni_multi_charge_1st",
-      "label": "Multi Charge 1st",
+      "label": "Multi Charge",
       "duration_seconds": 25.0,
       "trigger": {
         "type": "combat_start"
@@ -116,7 +116,7 @@
     },
     {
       "id": "coratanni_cannon_shot_1st",
-      "label": "Cannon Shot 1st",
+      "label": "Cannon Shot",
       "duration_seconds": 35.0,
       "trigger": {
         "type": "combat_start"
@@ -182,7 +182,7 @@
     },
     {
       "id": "coratanni_phase_2_hp",
-      "label": "Phase 2 HP",
+      "label": "Phase 2",
       "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
@@ -198,7 +198,7 @@
     },
     {
       "id": "coratanni_phase_3_hp",
-      "label": "Phase 3 HP",
+      "label": "Phase 3",
       "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
@@ -214,7 +214,7 @@
     },
     {
       "id": "coratanni_jet_boost_1st",
-      "label": "Jet Boost 1st",
+      "label": "Jet Boost",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "phase_entered",
@@ -226,7 +226,7 @@
     },
     {
       "id": "coratanni_grapple_1st",
-      "label": "Grapple 1st",
+      "label": "Grapple",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "phase_entered",
@@ -238,7 +238,7 @@
     },
     {
       "id": "coratanni_death_mouse_1st",
-      "label": "Death Mouse 1st",
+      "label": "Death Mouse",
       "duration_seconds": 22.0,
       "trigger": {
         "type": "phase_entered",
@@ -250,7 +250,7 @@
     },
     {
       "id": "coratanni_cull_1st",
-      "label": "Cull 1st",
+      "label": "Cull",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "phase_entered",
@@ -262,7 +262,7 @@
     },
     {
       "id": "coratanni_focus_hostage_1st",
-      "label": "Focus + Hostage 1st",
+      "label": "Focus + Hostage",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "phase_entered",

@@ -20,7 +20,7 @@
   "timers": [
     {
       "id": "grobthok_pipe_smash_cs",
-      "label": "Pipe Smash Combat Start",
+      "label": "Pipe Smash",
       "duration_seconds": 61.0,
       "trigger": {
         "type": "combat_start"

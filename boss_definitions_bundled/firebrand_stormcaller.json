@@ -95,7 +95,7 @@
     },
     {
       "id": "firebrand_stormcaller_enrage_16",
-      "label": "Enrage 16m",
+      "label": "Enrage",
       "duration_seconds": 460.0,
       "trigger": {
         "type": "combat_start"
@@ -199,7 +199,7 @@
     },
     {
       "id": "fs_double_destruction_ps",
-      "label": "Double Destruction Phase Start",
+      "label": "Double Destruction",
       "duration_seconds": 15,
       "trigger": {
         "type": "phase_ended",
@@ -289,7 +289,7 @@
     },
     {
       "id": "fs_incinerate_armor_ps",
-      "label": "Incinerate Armor Phase Start",
+      "label": "Incinerate Armor",
       "duration_seconds": 26,
       "trigger": {
         "type": "phase_ended",

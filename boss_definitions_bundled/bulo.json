@@ -20,7 +20,7 @@
   "timers": [
     {
       "id": "bulo_shotgun_blast_1st",
-      "label": "Shotgun Blast 1st",
+      "label": "Shotgun Blast",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "combat_start"
@@ -31,7 +31,7 @@
     },
     {
       "id": "bulo_volley_1st",
-      "label": "Volley 1st",
+      "label": "Volley",
       "duration_seconds": 14.0,
       "trigger": {
         "type": "combat_start"
@@ -42,7 +42,7 @@
     },
     {
       "id": "bulo_pirates_1st",
-      "label": "Pirates 1st",
+      "label": "Pirates",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
@@ -53,7 +53,7 @@
     },
     {
       "id": "bulo_carts_scatter_1st",
-      "label": "Carts + Scatter 1st",
+      "label": "Carts + Scatter",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
@@ -64,7 +64,7 @@
     },
     {
       "id": "bulo_relocate_barrage_1st",
-      "label": "Relocate + Barrage 1st",
+      "label": "Relocate + Barrage",
       "duration_seconds": 50.0,
       "trigger": {
         "type": "combat_start"

@@ -92,7 +92,7 @@
     },
     {
       "id": "soa_mind_trap_p4",
-      "label": "Mind Trap (Mid)",
+      "label": "Mind Trap",
       "duration_seconds": 38.0,
       "trigger": {
         "type": "ability_cast",

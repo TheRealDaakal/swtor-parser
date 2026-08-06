@@ -254,7 +254,7 @@
     },
     {
       "id": "warlord_kephess_walker_enrage_16",
-      "label": "Walker Enrage 16m",
+      "label": "Walker Enrage",
       "duration_seconds": 510.0,
       "trigger": {
         "type": "combat_start"

@@ -20,7 +20,7 @@
   "timers": [
     {
       "id": "unstable_energy_cs",
-      "label": "Unstable Energy CS",
+      "label": "Unstable Energy",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"

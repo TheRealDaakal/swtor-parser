@@ -32,7 +32,7 @@
   "timers": [
     {
       "id": "ss_shield_cs",
-      "label": "Shield 1st",
+      "label": "Shield",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
@@ -68,7 +68,7 @@
     },
     {
       "id": "ss_gravity_cs",
-      "label": "Gravity 1st",
+      "label": "Gravity",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "combat_start"
@@ -113,7 +113,7 @@
     },
     {
       "id": "sword_squadron_rapid_fire_1st",
-      "label": "Rapid Fire 1st",
+      "label": "Rapid Fire",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "combat_start"

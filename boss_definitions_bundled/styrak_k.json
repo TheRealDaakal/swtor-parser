@@ -270,7 +270,7 @@
     },
     {
       "id": "Styrak_k_kd_hds_1st",
-      "label": "Head Swipe 1st",
+      "label": "Head Swipe",
       "duration_seconds": 6.0,
       "trigger": {
         "type": "phase_entered",
@@ -288,7 +288,7 @@
     },
     {
       "id": "Styrak_k_kd_lsl_1st",
-      "label": "Leap Slam 1st",
+      "label": "Leap Slam",
       "duration_seconds": 10.0,
       "trigger": {
         "type": "phase_entered",
@@ -306,7 +306,7 @@
     },
     {
       "id": "Styrak_k_kd_vpl_1st",
-      "label": "Spit",
+      "label": "Vomit Pool",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "phase_entered",
@@ -325,7 +325,7 @@
     },
     {
       "id": "Styrak_k_kd_sps_1st",
-      "label": "Spines 1st",
+      "label": "Spines",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "phase_entered",
@@ -343,7 +343,7 @@
     },
     {
       "id": "Styrak_k_kd_ccl_1st",
-      "label": "Charge Clone 1st",
+      "label": "Charge Clone",
       "duration_seconds": 40.0,
       "trigger": {
         "type": "phase_entered",
@@ -356,7 +356,7 @@
     },
     {
       "id": "Styrak_k_kd_hbt_1st",
-      "label": "Headbutt 1st",
+      "label": "Headbutt",
       "duration_seconds": 20.0,
       "trigger": {
         "type": "phase_entered",
@@ -928,7 +928,7 @@
     },
     {
       "id": "Styrak_k_st_thb_t_1st_mm",
-      "label": "Thundering Blast 1st NiM",
+      "label": "Thundering Blast",
       "duration_seconds": 30.0,
       "trigger": {
         "type": "any_of",
@@ -950,7 +950,7 @@
     },
     {
       "id": "Styrak_k_st_thb_t_1st_vm",
-      "label": "Thundering Blast 1st HM",
+      "label": "Thundering Blast",
       "duration_seconds": 5.0,
       "trigger": {
         "type": "phase_entered",

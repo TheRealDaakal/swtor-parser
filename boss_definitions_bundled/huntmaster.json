@@ -80,7 +80,7 @@
   "timers": [
     {
       "id": "huntmaster_shotroll_cs_vm",
-      "label": "Shotroll CS",
+      "label": "Shotroll",
       "duration_seconds": 48.0,
       "trigger": {
         "type": "combat_start"
@@ -91,7 +91,7 @@
     },
     {
       "id": "huntmaster_primal_fear_cs",
-      "label": "Primal Fear CS",
+      "label": "Primal Fear",
       "duration_seconds": 42.0,
       "trigger": {
         "type": "combat_start"
@@ -113,7 +113,7 @@
     },
     {
       "id": "huntmaster_shotroll_cs",
-      "label": "Shotroll CS",
+      "label": "Shotroll",
       "duration_seconds": 54.0,
       "trigger": {
         "type": "combat_start"
@@ -152,7 +152,7 @@
     },
     {
       "id": "huntmaster_firestorm_grenade_p3_vm",
-      "label": "Firestorm Grenade P3 VM",
+      "label": "Firestorm Grenade",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "timer_expires",
@@ -164,7 +164,7 @@
     },
     {
       "id": "huntmaster_firestorm_grenade_p3",
-      "label": "Firestorm Grenade P3",
+      "label": "Firestorm Grenade",
       "duration_seconds": 12.0,
       "trigger": {
         "type": "timer_expires",
@@ -176,7 +176,7 @@
     },
     {
       "id": "huntmaster_firestorm_grenade_1st",
-      "label": "Firestorm Grenade 1st",
+      "label": "Firestorm Grenade",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "combat_start"

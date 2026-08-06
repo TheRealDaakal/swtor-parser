@@ -20,7 +20,7 @@
   "timers": [
     {
       "id": "eyeless_crush_1st",
-      "label": "Crush 1st",
+      "label": "Crush",
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
