@@ -22,11 +22,9 @@ Grab the latest installer from
 rather not install anything — unzip it anywhere and run
 `DPS-Dynamic-Parse-System.exe` from inside the extracted folder.)
 
-**About the security warnings:** this build isn't code-signed yet (a real
-certificate costs money or requires an open-source-project application we've
-just started — see below), so Windows will flag it as coming from an
-"Unknown Publisher." This is expected, not a sign anything is actually
-wrong — nothing here touches game files or memory (see
+**About the security warnings:** this build isn't code-signed, so Windows
+flags it as coming from an "Unknown Publisher." This is expected, not a sign
+anything is actually wrong — nothing here touches game files or memory (see
 ["Is this safe to use?"](#is-this-safe-to-use) above).
 
 - **SmartScreen ("Windows protected your PC")** — click **More info**, then
@@ -38,9 +36,17 @@ wrong — nothing here touches game files or memory (see
   `DPS-Dynamic-Parse-System.exe` or `setup.exe`; restore it from quarantine,
   or add a one-time exclusion for the extracted folder before re-downloading.
 
-We've applied to [SignPath Foundation](https://signpath.io)'s free
-code-signing program for open-source projects, which should eliminate both
-warnings once approved — this section will be updated when that lands.
+We applied to [SignPath Foundation](https://signpath.io)'s free code-signing
+program for open-source projects and were turned down in August 2026 — not on
+the code, but because the Foundation programme requires a level of public
+visibility (stars, forks, contributors, outside write-ups) this project
+doesn't have yet. Signing is still the goal; until then the warnings above
+are the expected experience.
+
+If you'd rather not trust a binary at all, the app is pure Python — clone the
+repo and run `python main.py` (see [Requirements](#requirements)). Every
+release is built by [GitHub Actions](.github/workflows) from the tagged
+commit, so you can check the workflow log against the code you're reading.
 
 ## Requirements
 
