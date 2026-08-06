@@ -92,7 +92,7 @@
     {
       "id": "coratanni_ricochet_on_local",
       "label": "Move out",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Double Down",
@@ -142,7 +142,7 @@
     {
       "id": "coratanni_split",
       "label": "Stay in group!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Split City",
@@ -156,7 +156,7 @@
     {
       "id": "coratanni_split_removed",
       "label": "Move out now",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_removed",
         "keyword": "Split City",
@@ -170,7 +170,7 @@
     {
       "id": "coratanni_dcd_pearl_is_loose",
       "label": "DCD, Pearl is loose",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Taunt Immunity"
@@ -183,7 +183,7 @@
     {
       "id": "coratanni_phase_2_hp",
       "label": "Phase 2",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 70.0,
@@ -199,7 +199,7 @@
     {
       "id": "coratanni_phase_3_hp",
       "label": "Phase 3",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 20.0,
@@ -275,7 +275,7 @@
     {
       "id": "coratanni_stop_dps_for_5s",
       "label": "STOP DPS for 5s",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Hostage"

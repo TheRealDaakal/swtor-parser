@@ -436,7 +436,7 @@
     {
       "id": "huntmaster_grenade",
       "label": "Grenade on You!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Firestorm Grenade",

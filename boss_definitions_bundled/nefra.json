@@ -109,7 +109,7 @@
     {
       "id": "nefra_local_taunt",
       "label": "3 Stacks - Taunt!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "counter_reaches",
         "counter_id": "nefra_curse_stacks_local",
@@ -256,7 +256,7 @@
     {
       "id": "nefra_raid_cleave",
       "label": "Raid Cleave",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Twin Attack",

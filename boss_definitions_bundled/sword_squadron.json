@@ -104,7 +104,7 @@
     {
       "id": "ss_shield_down",
       "label": "Unit 1 Shield Down",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_removed",
         "keyword": "Emergency Shielding"

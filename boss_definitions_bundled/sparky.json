@@ -43,7 +43,7 @@
     {
       "id": "sparky_brutalize",
       "label": "Brutalize",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "any_of",
         "conditions": [

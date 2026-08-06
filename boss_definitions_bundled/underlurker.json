@@ -91,7 +91,7 @@
     {
       "id": "ul_adds_hp",
       "label": "Adds Spawn",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 90.0,

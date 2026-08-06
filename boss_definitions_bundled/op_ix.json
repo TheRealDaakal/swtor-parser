@@ -161,7 +161,7 @@
     {
       "id": "op_ix_core_under_10",
       "label": "Core Sub-10%",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 10.0,
@@ -177,7 +177,7 @@
     {
       "id": "op_ix_adds",
       "label": "Adds Incoming!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "any_of",
         "conditions": [
@@ -220,7 +220,7 @@
     {
       "id": "op_ix_blue_deletion",
       "label": "Blue Deletion",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Blue Deletion Protocol",
@@ -237,7 +237,7 @@
     {
       "id": "op_ix_orange_deletion",
       "label": "Orange Deletion",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Orange Deletion Protocol",
@@ -254,7 +254,7 @@
     {
       "id": "op_ix_purple_deletion",
       "label": "Purple Deletion",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Purple Deletion Protocol",
@@ -271,7 +271,7 @@
     {
       "id": "op_ix_yellow_deletion",
       "label": "Yellow Deletion",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Yellow Deletion Protocol",

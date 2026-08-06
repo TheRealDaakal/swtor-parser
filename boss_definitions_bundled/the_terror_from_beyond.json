@@ -516,7 +516,7 @@
     {
       "id": "tfb_faded_reality",
       "label": "Faded Reality",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "phase_entered",
         "phase_id": "tfb_burn"
@@ -597,7 +597,7 @@
     {
       "id": "the_terror_from_beyond_inconsistency",
       "label": "Run to inconsistency",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Inconsistency",
@@ -611,7 +611,7 @@
     {
       "id": "the_terror_from_beyond_tentacle_under_10",
       "label": "Tentacle Sub-10%",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 10.0,

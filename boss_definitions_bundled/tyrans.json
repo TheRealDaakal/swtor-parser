@@ -242,7 +242,7 @@
     {
       "id": "tyrans_simp_alert",
       "label": "Move Out",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Simplification",

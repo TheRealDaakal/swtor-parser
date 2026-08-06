@@ -173,7 +173,7 @@
     {
       "id": "dg_vitality_ext",
       "label": "Dropping circle",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Vitality Extraction",
@@ -200,7 +200,7 @@
     {
       "id": "dg_at_12_circles",
       "label": "At 12 circles",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "timer_expires",
         "timer_id": "dg_circle_tracker_not_displayed"

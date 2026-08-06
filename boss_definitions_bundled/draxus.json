@@ -113,7 +113,7 @@
     {
       "id": "draxus_escape",
       "label": "Draxus Escape",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "any_of",
         "conditions": [
@@ -310,7 +310,7 @@
     {
       "id": "draxus_shield_on",
       "label": "Draxus Immune",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Emergency Shielding"
@@ -324,7 +324,7 @@
     {
       "id": "draxus_shield_off",
       "label": "Shield Down!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_removed",
         "keyword": "Emergency Shielding"

@@ -99,7 +99,7 @@
     {
       "id": "kephess_cascade_jump",
       "label": "Cascade Jump!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kephess_cascade"
@@ -113,7 +113,7 @@
     {
       "id": "kephess_targeted",
       "label": "Targeted by boss!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Overcharge",
@@ -124,7 +124,7 @@
     {
       "id": "kephess_sphere_target",
       "label": "Targeted by sphere!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Pulsating Energy",
@@ -135,7 +135,7 @@
     {
       "id": "kephess_nanites_alert",
       "label": "Nanites dropped!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_removed",
         "keyword": "Corrupted Nanites",
@@ -150,7 +150,7 @@
     {
       "id": "kephess_the_undying_cleanse_feet",
       "label": "Cleanse Feet",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Ignored",
@@ -283,7 +283,7 @@
     {
       "id": "kephess_jump_1",
       "label": "Jump!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Corrupted Nanites",
@@ -308,7 +308,7 @@
     {
       "id": "kephess_jump_3",
       "label": "Jump!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Corrupted Nanites",

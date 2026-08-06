@@ -49,7 +49,7 @@
     {
       "id": "grobthok_adds_hp",
       "label": "Adds Spawning",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 97.0,
@@ -82,7 +82,7 @@
     {
       "id": "grobthok_lava_start",
       "label": "Lava ",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 95.0,
@@ -114,7 +114,7 @@
     {
       "id": "grobthok_dot_debuff",
       "label": "MINING DROID ON YOU",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Mining Droid",

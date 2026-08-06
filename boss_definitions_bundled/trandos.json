@@ -301,7 +301,7 @@
     {
       "id": "trandos_caustic_reset",
       "label": "Caustic reset",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "timer_expires",
         "timer_id": "trandos_caustic_plume"
@@ -315,7 +315,7 @@
     {
       "id": "trandos_cleanse_hissy_tank",
       "label": "Cleanse hissy tank",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Venom of Hissyphis (Any)"

@@ -73,7 +73,7 @@
     {
       "id": "brontes_clone_1st",
       "label": "Kephess Clone",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 96.0,
@@ -110,7 +110,7 @@
     {
       "id": "brontes_cant_clone",
       "label": "Brontes Below 52% - No More Clones",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 52.0,

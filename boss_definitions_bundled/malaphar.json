@@ -104,7 +104,7 @@
     {
       "id": "mal_savagery",
       "label": "Drop stacks!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "counter_reaches",
         "counter_id": "malaphar_savagery",

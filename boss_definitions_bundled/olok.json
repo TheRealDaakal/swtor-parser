@@ -90,7 +90,7 @@
     {
       "id": "olok_the_shadow_flashbang",
       "label": "Flashbang",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "[flash_gate]",

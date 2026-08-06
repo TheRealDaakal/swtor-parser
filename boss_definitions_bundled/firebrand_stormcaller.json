@@ -168,7 +168,7 @@
     {
       "id": "firebrand_stormcaller_targeted_by_missile",
       "label": "Cleanse and move",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Targeted (Any)",

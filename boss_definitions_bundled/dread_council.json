@@ -379,7 +379,7 @@
     {
       "id": "dread_council_p1_failed",
       "label": "Phase 2 transition failed",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "counter_reaches",
         "counter_id": "dread_council_p2_fail",

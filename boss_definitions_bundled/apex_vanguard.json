@@ -110,7 +110,7 @@
     {
       "id": "apex_photo_hp",
       "label": "Photogensis HP threshold",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 94.0,
@@ -799,7 +799,7 @@
     {
       "id": "apex_vanguard_last_ditch",
       "label": "Last ditch",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "phase_entered",
         "phase_id": "apex_burn"

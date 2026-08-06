@@ -80,7 +80,7 @@
     {
       "id": "torque_cleanse",
       "label": "Cleanse",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Magnetic Clamp",
@@ -125,7 +125,7 @@
     {
       "id": "torque_tank_swap",
       "label": "Tank Swap",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Sick of You!",
@@ -199,7 +199,7 @@
     {
       "id": "torque_magnetic_hp",
       "label": "Magnetic",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 95.0,

@@ -200,7 +200,7 @@
     {
       "id": "rev_corruption_alert",
       "label": "Move out and wait for cleanse!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "effect_applied",
         "keyword": "Essence Corruption",
@@ -247,7 +247,7 @@
     {
       "id": "rev_grenades",
       "label": "Spread!",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
         "keyword": "Handful of Grenades",
@@ -264,7 +264,7 @@
     {
       "id": "rev_reactive_hp",
       "label": "Reactive Shield",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "hp_below",
         "percent": 80.0,

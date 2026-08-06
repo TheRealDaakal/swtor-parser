@@ -212,7 +212,7 @@
     {
       "id": "dominique_tank_swap",
       "label": "Tank swap",
-      "duration_seconds": 10.0,
+      "duration_seconds": 5.0,
       "trigger": {
         "type": "counter_reaches",
         "counter_id": "dominique_p2_stacks",
