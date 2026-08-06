@@ -178,3 +178,68 @@ def test_unmuted_settings_allow_sound_through(monkeypatch):
         time.sleep(0.02)
 
     assert spoken == ["hello"]
+
+
+class TestLayerAndEncounterMute:
+    """The tester's request was three-part: "Sound buttons in every boss
+    encounter or in individual layers would be a must. In the settings
+    too." Only the settings part shipped first time round. These cover the
+    two that were missing, plus that all four levels compose."""
+
+    def _audio(self, monkeypatch, **settings):
+        audio = _reload_audio()
+        spoken = []
+        monkeypatch.setattr(audio, "_speak_one", lambda t: spoken.append(t))
+        base = {"muted": False, "category_muted": {}, "layer_muted": {}, "encounter_muted": {}}
+        base.update(settings)
+        audio.apply_settings(base)
+        return audio, spoken
+
+    def _drain(self, spoken, expect):
+        deadline = time.time() + 2.0
+        while len(spoken) < expect and time.time() < deadline:
+            time.sleep(0.02)
+
+    def test_muting_a_layer_silences_only_that_layer(self, monkeypatch):
+        audio, spoken = self._audio(monkeypatch, layer_muted={"cooldowns": True})
+        audio.speak("cd", layer="cooldowns")
+        audio.speak("mech", layer="timers")
+        self._drain(spoken, 1)
+        assert spoken == ["mech"]
+
+    def test_muting_an_encounter_silences_only_that_boss(self, monkeypatch):
+        audio, spoken = self._audio(monkeypatch, encounter_muted={"styrak_k": True})
+        audio.speak("styrak thing", boss_id="styrak_k")
+        audio.speak("brontes thing", boss_id="brontes")
+        self._drain(spoken, 1)
+        assert spoken == ["brontes thing"]
+
+    def test_an_untagged_callout_is_never_silenced_by_a_finer_toggle(self, monkeypatch):
+        """A custom timer has no boss and a legacy caller may pass no layer.
+        Neither should be collateral damage of a per-boss/per-layer mute."""
+        audio, spoken = self._audio(
+            monkeypatch, layer_muted={"timers": True}, encounter_muted={"styrak_k": True})
+        audio.speak("plain call")           # no layer, no boss_id
+        self._drain(spoken, 1)
+        assert spoken == ["plain call"]
+
+    def test_global_mute_still_beats_everything(self, monkeypatch):
+        audio, spoken = self._audio(monkeypatch, muted=True)
+        audio.speak("x", category="boss", layer="timers", boss_id="styrak_k")
+        time.sleep(0.1)
+        assert spoken == []
+
+    def test_levels_are_anded_not_ranked(self, monkeypatch):
+        """Any one mute is enough; no level "unmutes" another."""
+        audio, spoken = self._audio(monkeypatch, category_muted={"boss": True})
+        # layer and encounter both permit it, category does not
+        audio.speak("nope", category="boss", layer="timers", boss_id="brontes")
+        time.sleep(0.1)
+        assert spoken == []
+
+    def test_current_settings_reports_what_is_in_force(self, monkeypatch):
+        audio, _ = self._audio(monkeypatch, layer_muted={"dots": True},
+                                encounter_muted={"soa": True})
+        cur = audio.current_settings()
+        assert cur["layer_muted"]["dots"] is True
+        assert cur["encounter_muted"]["soa"] is True

@@ -239,6 +239,9 @@ def background_reader(
                     timer_engine.start_timer(
                         change.phase_name, PHASE_ALERT_SECONDS,
                         voice_alert=True, category="phase", is_alert=True,
+                        # so muting an encounter silences its phase
+                        # callouts too, not just its mechanic timers
+                        boss_id=change.boss_id,
                     )
                 timer_engine.feed(
                     event, boss_id=boss_state.active_boss and boss_state.active_boss.id,

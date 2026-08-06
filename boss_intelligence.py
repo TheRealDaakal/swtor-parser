@@ -313,6 +313,7 @@ class BossEncounterState:
                     repeat_interval_seconds=t.repeat_interval_seconds,
                     repeat_count=t.repeat_count, definition_id=t.id, category="boss",
                     is_alert=t.is_alert, announce_on_start=t.announce_on_start,
+                    boss_id=self.active_boss.id,
                 )
 
     def _fire_combat_start_timers(self, timer_engine) -> None:
@@ -361,6 +362,7 @@ class BossEncounterState:
                 repeat_interval_seconds=t.repeat_interval_seconds,
                 repeat_count=t.repeat_count, definition_id=t.id, category="boss",
                 is_alert=t.is_alert, announce_on_start=False, elapsed_seconds=elapsed,
+                boss_id=self.active_boss.id,
             )
 
     def status_text(self) -> str:

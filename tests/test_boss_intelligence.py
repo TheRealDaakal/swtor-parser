@@ -181,7 +181,7 @@ class TestCombatStartTimers:
         import timers as timers_mod
         spoken = []
         monkeypatch.setattr(timers_mod.audio, "speak",
-                            lambda text, category=None: spoken.append(text))
+                            lambda text, category=None, **kw: spoken.append(text))
 
         engine = TimerEngine()
         state = BossEncounterState({"test_boss": self._boss_with_cs_timer()})
@@ -200,7 +200,7 @@ class TestCombatStartTimers:
         import timers as timers_mod
         spoken = []
         monkeypatch.setattr(timers_mod.audio, "speak",
-                            lambda text, category=None: spoken.append(text))
+                            lambda text, category=None, **kw: spoken.append(text))
 
         engine = TimerEngine()
         state = BossEncounterState({"test_boss": self._boss_with_cs_timer(

@@ -808,6 +808,12 @@ $('#cleanup-now').addEventListener('click', async () => {
 });
 
 // -------------------------------------------------------------- settings tab
+// Checkbox semantics throughout the Settings tab are "checked = MUTED",
+// matching the "Mute all sound" master switch it sits under. The Encounters
+// tab inverts this on purpose -- there the column reads "Sound", so checked
+// means audible, which is what you'd expect of a column with that heading.
+const SND_LAYERS = ['timers', 'alerts', 'cooldowns', 'dots'];
+
 async function loadAudioSettings() {
   const s = await api('/api/audio_settings');
   $('#snd-muted').checked = !!s.muted;
@@ -815,10 +821,22 @@ async function loadAudioSettings() {
   $('#snd-cat-boss').checked = !!cats.boss;
   $('#snd-cat-phase').checked = !!cats.phase;
   $('#snd-cat-custom').checked = !!cats.custom;
+  const layers = s.layer_muted || {};
+  SND_LAYERS.forEach(k => { $(`#snd-layer-${k}`).checked = !!layers[k]; });
+  // A global mute makes every finer control moot -- grey them out rather
+  // than leave them looking live but inert.
   $('#snd-categories').classList.toggle('disabled', !!s.muted);
+  $('#snd-layers').classList.toggle('disabled', !!s.muted);
 }
 
+async function setEncounterSound(bossId, audible) {
+  await post('/api/audio_settings', { encounter_muted: { [bossId]: !audible } });
+}
+window.setEncounterSound = setEncounterSound;
+
 async function saveAudioSettings() {
+  const layer_muted = {};
+  SND_LAYERS.forEach(k => { layer_muted[k] = $(`#snd-layer-${k}`).checked; });
   await post('/api/audio_settings', {
     muted: $('#snd-muted').checked,
     category_muted: {
@@ -826,11 +844,15 @@ async function saveAudioSettings() {
       phase: $('#snd-cat-phase').checked,
       custom: $('#snd-cat-custom').checked,
     },
+    layer_muted,
   });
-  $('#snd-categories').classList.toggle('disabled', $('#snd-muted').checked);
+  const allMuted = $('#snd-muted').checked;
+  $('#snd-categories').classList.toggle('disabled', allMuted);
+  $('#snd-layers').classList.toggle('disabled', allMuted);
 }
 
-['#snd-muted', '#snd-cat-boss', '#snd-cat-phase', '#snd-cat-custom'].forEach(id => {
+['#snd-muted', '#snd-cat-boss', '#snd-cat-phase', '#snd-cat-custom',
+ ...SND_LAYERS.map(k => `#snd-layer-${k}`)].forEach(id => {
   $(id).addEventListener('change', saveAudioSettings);
 });
 
@@ -1187,6 +1209,9 @@ async function loadEncounters() {
       <td>${esc(r.name)}</td><td>${esc(r.id)}</td>
       <td>${r.phase_count}</td><td>${r.timer_count}</td>
       <td>${r.source === 'user' ? 'Custom' : 'Bundled'}</td>
+      <td><label class="fld row" title="Uncheck to silence every callout for this fight">
+        <input type="checkbox" ${r.muted ? '' : 'checked'}
+               onchange="setEncounterSound('${esc(r.id)}', this.checked)"></label></td>
       <td>
         <button class="btn-link" onclick="editEncounter('${esc(r.id)}')">${r.source === 'user' ? 'Edit' : 'Customize'}</button>
         ${r.source === 'user' ? `<button class="rule-del" onclick="deleteEncounter('${esc(r.id)}')">delete</button>` : ''}

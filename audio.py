@@ -76,24 +76,53 @@ _worker_start_lock = threading.Lock()
 # in-app way to turn them down, only Windows' own volume mixer.
 _muted = False
 _category_muted: dict = {}
+_layer_muted: dict = {}
+_encounter_muted: dict = {}
 
 
 def apply_settings(settings: dict) -> None:
-    """settings: the dict shape storage.load_audio_settings() returns
-    ({"muted": bool, "category_muted": {category: bool}}). Called once at
-    startup and again whenever the web UI's Settings tab saves a change."""
-    global _muted, _category_muted
+    """settings: the dict shape storage.load_audio_settings() returns.
+    Called once at startup and again whenever the web UI saves a change,
+    so a toggle takes effect on the very next alert without a restart.
+
+    Four independent levels, requested live as "sound buttons in every
+    boss encounter or in individual layers ... in the settings too":
+      muted           -- everything, one switch
+      category_muted  -- boss mechanics / phase changes / custom timers
+      layer_muted     -- per overlay frame (timers, alerts, cooldowns, dots)
+      encounter_muted -- per boss encounter, keyed by definition id
+    Any one of them silencing a callout is enough; they're ANDed, not
+    ranked, so there's no surprising precedence to reason about."""
+    global _muted, _category_muted, _layer_muted, _encounter_muted
     _muted = bool(settings.get("muted", False))
     _category_muted = dict(settings.get("category_muted", {}))
+    _layer_muted = dict(settings.get("layer_muted", {}))
+    _encounter_muted = dict(settings.get("encounter_muted", {}))
 
 
-def should_announce(category: Optional[str] = None) -> bool:
-    """False if the global mute is on, or this specific category is
-    muted. category=None (unknown/legacy callers) is never muted by a
-    category toggle, only by the global one."""
+def current_settings() -> dict:
+    """What's actually in force right now -- so the UI reflects the live
+    state rather than re-reading the file and hoping they agree."""
+    return {
+        "muted": _muted,
+        "category_muted": dict(_category_muted),
+        "layer_muted": dict(_layer_muted),
+        "encounter_muted": dict(_encounter_muted),
+    }
+
+
+def should_announce(category: Optional[str] = None, layer: Optional[str] = None,
+                    boss_id: Optional[str] = None) -> bool:
+    """False if ANY applicable mute is on. A None argument simply isn't
+    checked -- callers that don't know a dimension (legacy call sites, or
+    a timer with no boss) are never silenced by that dimension alone."""
     if _muted:
         return False
     if category is not None and _category_muted.get(category, False):
+        return False
+    if layer is not None and _layer_muted.get(layer, False):
+        return False
+    if boss_id is not None and _encounter_muted.get(boss_id, False):
         return False
     return True
 
@@ -157,25 +186,27 @@ def _ensure_worker_started() -> None:
             _worker_started = True
 
 
-def speak(text: str, category: Optional[str] = None) -> None:
+def speak(text: str, category: Optional[str] = None, layer: Optional[str] = None,
+          boss_id: Optional[str] = None) -> None:
     """Queues text to be spoken; returns instantly so a slow (or backlogged)
     TTS engine never stalls the caller. A single worker thread drains the
     queue in strict FIFO order, so alerts are always heard in the order
     they actually fired. No-ops if muted globally or for this category
     (see apply_settings/should_announce)."""
-    if not should_announce(category):
+    if not should_announce(category, layer, boss_id):
         return
     _ensure_worker_started()
     _alert_queue.put(("speak", text))
 
 
-def play_wav(path: str, category: Optional[str] = None) -> None:
+def play_wav(path: str, category: Optional[str] = None, layer: Optional[str] = None,
+             boss_id: Optional[str] = None) -> None:
     """Queues a .wav file to be played -- same ordering/non-blocking
     guarantees as speak(), and shares its queue/worker so a wav-triggered
     alert and a spoken one landing close together still play strictly in
     the order they actually fired instead of racing each other. No-ops if
     muted globally or for this category."""
-    if not should_announce(category):
+    if not should_announce(category, layer, boss_id):
         return
     _ensure_worker_started()
     _alert_queue.put(("wav", path))

@@ -432,11 +432,15 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 if user_boss_dir is None or bundled_boss_dir is None:
                     return self._json({"error": "encounter editor not configured"}, 501)
                 definitions = boss_state.definitions if boss_state else {}
+                muted = storage.load_audio_settings().get("encounter_muted", {})
                 return self._json([
                     {
                         "id": d.id, "name": d.name, "boss_names": d.boss_names,
                         "phase_count": len(d.phases), "timer_count": len(d.timers),
                         "source": "user" if (user_boss_dir / f"{d.id}.json").exists() else "bundled",
+                        # per-encounter sound toggle lives on this row so it's
+                        # where you're already looking at the fight
+                        "muted": bool(muted.get(d.id, False)),
                     }
                     for d in definitions.values()
                 ])
@@ -561,10 +565,25 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 current = storage.load_audio_settings()
                 if "muted" in body:
                     current["muted"] = bool(body["muted"])
-                if "category_muted" in body and isinstance(body["category_muted"], dict):
-                    for cat in current["category_muted"]:
-                        if cat in body["category_muted"]:
-                            current["category_muted"][cat] = bool(body["category_muted"][cat])
+                for field in ("category_muted", "layer_muted"):
+                    incoming = body.get(field)
+                    if isinstance(incoming, dict):
+                        # Only keys we already know -- an unrecognised
+                        # category/layer would be silently dead weight.
+                        for key in current[field]:
+                            if key in incoming:
+                                current[field][key] = bool(incoming[key])
+                incoming = body.get("encounter_muted")
+                if isinstance(incoming, dict):
+                    # Free-form keys (boss definition ids), so accept any --
+                    # but drop the falses so the file stays sparse.
+                    merged = dict(current.get("encounter_muted", {}))
+                    for boss_id, val in incoming.items():
+                        if val:
+                            merged[str(boss_id)] = True
+                        else:
+                            merged.pop(str(boss_id), None)
+                    current["encounter_muted"] = merged
                 storage.save_audio_settings(current)
                 # Takes effect on the very next alert -- no restart needed,
                 # same live-apply pattern the tester's feedback specifically

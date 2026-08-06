@@ -360,8 +360,8 @@ class TestCustomAudioTrigger:
     def test_start_timer_with_audio_path_plays_wav_not_speech(self, monkeypatch, sim_clock):
         spoken, played = [], []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: spoken.append(text))
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None, **kw: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None, **kw: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -374,8 +374,8 @@ class TestCustomAudioTrigger:
     def test_start_timer_without_audio_path_still_speaks(self, monkeypatch, sim_clock):
         spoken, played = [], []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: spoken.append(text))
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None, **kw: spoken.append(text))
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None, **kw: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -387,8 +387,8 @@ class TestCustomAudioTrigger:
     def test_feed_threads_the_rules_audio_path_through(self, monkeypatch, sim_clock):
         played = []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: None)
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None, **kw: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None, **kw: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -410,8 +410,8 @@ class TestCustomAudioTrigger:
         whatever the first one had."""
         played = []
         import timers as timers_mod
-        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None: None)
-        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None: played.append(path))
+        monkeypatch.setattr(timers_mod.audio, "speak", lambda text, category=None, **kw: None)
+        monkeypatch.setattr(timers_mod.audio, "play_wav", lambda path, category=None, **kw: played.append(path))
 
         engine = TimerEngine()
         sim_clock(0.0)
@@ -421,3 +421,55 @@ class TestCustomAudioTrigger:
         assert len(engine.active) == 1
         assert engine.active[0].audio_path == "b.wav"
         assert played == ["a.wav", "b.wav"]
+
+
+class TestSoundLayerRouting:
+    """timers.sound_layer() must mirror gui.py's _refresh_bar_overlays
+    routing exactly, or a "mute this frame" toggle silences the wrong
+    thing."""
+
+    def test_alerts_win_regardless_of_category(self):
+        from timers import sound_layer
+        assert sound_layer("boss", True) == "alerts"
+        assert sound_layer("cooldown", True) == "alerts"
+
+    def test_cooldowns_and_dots_route_to_their_own_frames(self):
+        from timers import sound_layer
+        assert sound_layer("cooldown", False) == "cooldowns"
+        assert sound_layer("dot", False) == "dots"
+        assert sound_layer("hot", False) == "dots"
+
+    def test_everything_else_is_the_timers_frame(self):
+        from timers import sound_layer
+        assert sound_layer("boss", False) == "timers"
+        assert sound_layer("custom", False) == "timers"
+        assert sound_layer("phase", False) == "timers"
+
+
+def test_boss_id_reaches_the_audio_layer(monkeypatch, sim_clock):
+    """A per-encounter mute can only work if the announce path knows which
+    boss started the timer."""
+    import timers as timers_mod
+    seen = []
+    monkeypatch.setattr(timers_mod.audio, "speak",
+                        lambda text, category=None, layer=None, boss_id=None:
+                            seen.append((text, category, layer, boss_id)))
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.start_timer("Slam", 10.0, category="boss", boss_id="styrak_k")
+    assert seen == [("Slam", "boss", "timers", "styrak_k")]
+
+
+def test_boss_id_survives_a_repeat_rearm(monkeypatch, sim_clock):
+    import timers as timers_mod
+    seen = []
+    monkeypatch.setattr(timers_mod.audio, "speak",
+                        lambda text, category=None, layer=None, boss_id=None:
+                            seen.append(boss_id))
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.start_timer("Adds", 5.0, category="boss", boss_id="soa",
+                       repeat_interval_seconds=5.0, repeat_count=2)
+    sim_clock(6.0)
+    engine.tick()
+    assert seen == ["soa", "soa"], "the re-armed announce must still carry the boss"

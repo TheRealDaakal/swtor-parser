@@ -203,6 +203,14 @@ def load_audio_settings() -> dict:
     defaults = {
         "muted": False,
         "category_muted": {"boss": False, "custom": False, "phase": False},
+        # Per overlay frame -- see timers.sound_layer(). Mutes exactly what
+        # that frame displays.
+        "layer_muted": {"timers": False, "alerts": False,
+                        "cooldowns": False, "dots": False},
+        # Per boss encounter, keyed by definition id. Sparse on purpose:
+        # only bosses the user has actually toggled are stored, so this
+        # doesn't balloon to 163 entries on a fresh install.
+        "encounter_muted": {},
     }
     if not path.exists():
         return defaults
@@ -212,8 +220,12 @@ def load_audio_settings() -> dict:
         return defaults
     merged_categories = dict(defaults["category_muted"])
     merged_categories.update(data.get("category_muted", {}))
+    merged_layers = dict(defaults["layer_muted"])
+    merged_layers.update(data.get("layer_muted", {}))
     defaults.update(data)
     defaults["category_muted"] = merged_categories
+    defaults["layer_muted"] = merged_layers
+    defaults["encounter_muted"] = dict(data.get("encounter_muted", {}))
     return defaults
 
 

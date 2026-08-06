@@ -218,7 +218,7 @@
         <button id="enc-new">New Encounter</button>
       </div>
       <div class="tw"><table id="encounters-table">
-        <thead><tr><th>Name</th><th>ID</th><th>Phases</th><th>Timers</th><th>Source</th><th></th></tr></thead>
+        <thead><tr><th>Name</th><th>ID</th><th>Phases</th><th>Timers</th><th>Source</th><th>Sound</th><th></th></tr></thead>
         <tbody></tbody>
       </table></div>
       <p class="empty" id="encounters-empty" style="display:none">No encounters loaded.</p>
@@ -361,11 +361,21 @@
       <div class="filters">
         <label class="fld row"><input type="checkbox" id="snd-muted"><span>Mute all sound</span></label>
       </div>
+      <p class="sub">Mute by type of alert:</p>
       <div class="filters" id="snd-categories">
         <label class="fld row"><input type="checkbox" id="snd-cat-boss"><span>Boss mechanic alerts</span></label>
         <label class="fld row"><input type="checkbox" id="snd-cat-phase"><span>Phase-change alerts</span></label>
         <label class="fld row"><input type="checkbox" id="snd-cat-custom"><span>Custom timers</span></label>
       </div>
+      <p class="sub">Mute by overlay frame &mdash; silences exactly what that frame displays:</p>
+      <div class="filters" id="snd-layers">
+        <label class="fld row"><input type="checkbox" id="snd-layer-timers"><span>Timers</span></label>
+        <label class="fld row"><input type="checkbox" id="snd-layer-alerts"><span>Mechanic Alerts</span></label>
+        <label class="fld row"><input type="checkbox" id="snd-layer-cooldowns"><span>Cooldowns</span></label>
+        <label class="fld row"><input type="checkbox" id="snd-layer-dots"><span>DoTs / HoTs</span></label>
+      </div>
+      <p class="sub">Per-boss sound is on the <strong>Encounters</strong> tab &mdash; each fight has its
+        own Sound checkbox, so you can silence one noisy encounter without touching the rest.</p>
     </div>
   </section>
 

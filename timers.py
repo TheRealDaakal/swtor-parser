@@ -41,17 +41,33 @@ from log_parser import CombatEvent
 import audio
 
 
-def _announce(label: str, audio_path: Optional[str], voice_alert: bool, category: str = "custom") -> None:
+def sound_layer(category: str, is_alert: bool) -> str:
+    """Which overlay frame a timer is displayed in -- mirrors gui.py's
+    _refresh_bar_overlays routing exactly, so a "mute this layer" toggle
+    silences precisely what that frame shows. Kept here rather than in
+    gui.py because the audio path needs it and must not import Tk."""
+    if is_alert:
+        return "alerts"
+    if category == "cooldown":
+        return "cooldowns"
+    if category in ("dot", "hot"):
+        return "dots"
+    return "timers"
+
+
+def _announce(label: str, audio_path: Optional[str], voice_alert: bool, category: str = "custom",
+              is_alert: bool = False, boss_id: Optional[str] = None) -> None:
     """Plays a custom .wav if one's attached, otherwise falls back to the
     existing speak()-or-nothing behaviour gated by voice_alert. Attaching a
     custom sound IS the alert choice -- it replaces the spoken label rather
-    than playing alongside it. category is forwarded to audio.py so the
-    Settings tab's per-category mute (e.g. "phase" alerts specifically)
+    than playing alongside it. category/layer/boss_id are all forwarded to
+    audio.py so every mute level (Settings, per-overlay-layer, per-boss)
     applies regardless of which of the two sound paths fires."""
+    layer = sound_layer(category, is_alert)
     if audio_path:
-        audio.play_wav(audio_path, category=category)
+        audio.play_wav(audio_path, category=category, layer=layer, boss_id=boss_id)
     elif voice_alert:
-        audio.speak(label, category=category)
+        audio.speak(label, category=category, layer=layer, boss_id=boss_id)
 
 
 def apply_alacrity(duration_seconds: float, alacrity_pct: float) -> float:
@@ -164,6 +180,10 @@ class ActiveTimer:
     # triggered by that effect landing on you, which must be called out the
     # moment it happens, not seconds later.
     announce_on_start: bool = True
+    # Which boss definition started this, for the per-encounter mute
+    # (see audio.should_announce). None for custom/personal timers, which
+    # no encounter toggle should ever be able to silence.
+    boss_id: Optional[str] = None
 
     def remaining(self, now: Optional[float] = None) -> float:
         now = now if now is not None else time.time()
@@ -206,6 +226,7 @@ class TimerEngine:
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
         is_alert: bool = False, dedupe_key: Optional[str] = None, audio_path: Optional[str] = None,
         announce_on_start: bool = True, elapsed_seconds: float = 0.0,
+        boss_id: Optional[str] = None,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
@@ -240,8 +261,10 @@ class TimerEngine:
                         t.voice_alert = voice_alert
                         t.audio_path = audio_path
                         t.announce_on_start = announce_on_start
+                        t.boss_id = boss_id
                         if announce_on_start:
-                            _announce(label, audio_path, voice_alert, category=category)
+                            _announce(label, audio_path, voice_alert, category=category,
+                                      is_alert=is_alert, boss_id=boss_id)
                         return
             self.active.append(
                 ActiveTimer(
@@ -258,12 +281,14 @@ class TimerEngine:
                     is_alert=is_alert,
                     dedupe_key=dedupe_key,
                     announce_on_start=announce_on_start,
+                    boss_id=boss_id,
                 )
             )
             if definition_id:
                 self._recently_started_ids.append(definition_id)
         if announce_on_start:
-            _announce(label, audio_path, voice_alert, category=category)
+            _announce(label, audio_path, voice_alert, category=category,
+                      is_alert=is_alert, boss_id=boss_id)
 
     def cancel_by_definition_id(self, definition_id: str) -> None:
         """Silently removes any active timer(s) tied to this boss timer
@@ -386,6 +411,7 @@ class TimerEngine:
                     # every tick appended a fresh "Adrenaline Rush" row
                     # instead of refreshing the one already counting down.
                     dedupe_key=event.target if rule.category in ("dot", "hot", "cooldown") else None,
+                    boss_id=rule.required_boss,
                 )
 
             self._prune_and_warn()
@@ -406,7 +432,8 @@ class TimerEngine:
                     t.duration_seconds = t.repeat_interval_seconds
                     t.repeats_remaining -= 1
                     t.warned = False
-                    _announce(t.label, t.audio_path, t.voice_alert, category=t.category)
+                    _announce(t.label, t.audio_path, t.voice_alert, category=t.category,
+                              is_alert=t.is_alert, boss_id=t.boss_id)
                     still_active.append(t)
                 else:
                     # A countdown whose label names a FUTURE event has been
@@ -415,7 +442,8 @@ class TimerEngine:
                     # that already announced when they started stay silent
                     # here, exactly as before.
                     if not t.announce_on_start:
-                        _announce(t.label, t.audio_path, t.voice_alert, category=t.category)
+                        _announce(t.label, t.audio_path, t.voice_alert, category=t.category,
+                                  is_alert=t.is_alert, boss_id=t.boss_id)
                     if t.definition_id:
                         self._recently_expired_ids.append(t.definition_id)
                 continue
@@ -427,7 +455,8 @@ class TimerEngine:
                 # "X ending" is right for something currently running out;
                 # for a countdown TO a mechanic, the heads-up is "X soon".
                 warn_text = f"{t.label} ending" if t.announce_on_start else f"{t.label} soon"
-                _announce(warn_text, t.audio_path, True, category=t.category)
+                _announce(warn_text, t.audio_path, True, category=t.category,
+                          is_alert=t.is_alert, boss_id=t.boss_id)
                 t.warned = True
             still_active.append(t)
         self.active = still_active
