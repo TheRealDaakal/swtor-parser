@@ -71,6 +71,15 @@ print(dropped_conditions)   # anything not translatable, with the reason
 3. **Read the two reports before trusting the output.** `unresolved_ids`
    become `REPLACE_WITH_REAL_ABILITY_NAME_<id>` placeholders — inert, so they
    never false-match, but the trigger won't fire until filled in.
+
+   For `ability_cast` triggers you no longer need a name at all: emit
+   `"ability_ids": ["<id>"]` instead of a keyword and the engine matches the
+   ability's numeric id directly (see `boss_definitions.Condition`). That's
+   the only thing that can work for abilities SWTOR logs with **no name** —
+   e.g. `[ {3016484380999680}]`, The Writhing Horror's Burrow. All 132
+   existing `ability_cast` placeholders were converted this way; prefer ids
+   over name resolution for new translations.
+
    `dropped_conditions` explains every construct that couldn't be
    represented. Watch for two severities in particular:
    `WILL NEVER FIRE` (a phase lost its trigger) and `DROPPED ENTIRELY`
