@@ -1,3 +1,17 @@
-# Test/dev-only dependencies -- runtime deps are in README.md's Requirements
-# section (pywebview, requests, pywin32).
+# Test/dev dependencies. Runtime deps live in requirements.txt.
+#
+# Deliberately NOT `-r requirements.txt`: the suite only needs what the
+# modules under test import AT IMPORT TIME, and that's just requests
+# (update_check.py, updater.py and parsely_upload.py import it at module
+# level). pywebview and pywin32 are imported lazily inside functions
+# (main.py's webview calls, audio.py's win32com), so installing them here
+# would add install time and failure surface to CI without covering
+# anything more.
+#
+# requests being absent is what left CI red on every run: three test
+# modules -- test_main, test_update_check and test_updater -- failed at
+# COLLECTION, so the whole workflow reported failure while the other 232
+# tests were still passing. Silent red CI is worse than no CI, because it
+# stops being read.
 pytest
+requests

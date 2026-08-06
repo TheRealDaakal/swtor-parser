@@ -1,0 +1,24 @@
+# Runtime dependencies -- what you need to run the app from source:
+#
+#   pip install -r requirements.txt
+#   python main.py
+#
+# (The README points people here as the alternative to trusting an
+# unsigned binary, so this file has to actually be enough to run on.)
+#
+# Everything else the app uses is Python's standard library on purpose:
+# the HTTP server, the log parsing, the overlays (Tkinter) and the JSON
+# storage are all stdlib, which is what keeps the packaged build small and
+# the dependency surface something one person can audit.
+
+# The pywebview UI shell. Uses the system's own Edge WebView2 on Windows,
+# so there's no bundled browser engine.
+pywebview
+
+# HTTP for the GitHub release check, the self-updater's download, and
+# Parsely uploads (update_check.py, updater.py, parsely_upload.py).
+requests
+
+# Windows COM, for SAPI text-to-speech in audio.py -- the voice callouts.
+# Windows-only, which the app already is in practice.
+pywin32; sys_platform == "win32"

@@ -11,6 +11,7 @@ venv/
 # large or personal (settings/credentials live outside this folder entirely,
 # in %APPDATA%\swtor-parser\, so there's nothing sensitive to catch here)
 *.txt
+!requirements.txt
 !requirements-dev.txt
 corpus_index.json
 
