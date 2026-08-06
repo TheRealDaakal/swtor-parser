@@ -46,7 +46,10 @@
       "duration_seconds": 10.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Collapse"
+        "keyword": "Collapse",
+        "ability_ids": [
+          "3411423803736064"
+        ]
       }
     },
     {
@@ -55,7 +58,10 @@
       "duration_seconds": 9,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Rage Storm"
+        "keyword": "Rage Storm",
+        "ability_ids": [
+          "3411569832624128"
+        ]
       }
     },
     {
@@ -64,7 +70,10 @@
       "duration_seconds": 8,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Devastation"
+        "keyword": "Devastation",
+        "ability_ids": [
+          "3413575582351360"
+        ]
       }
     },
     {

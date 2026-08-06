@@ -134,7 +134,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Acid Blast"
+        "keyword": "Acid Blast",
+        "ability_ids": [
+          "4305094828883968"
+        ]
       }
     },
     {
@@ -143,7 +146,10 @@
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Contagion"
+        "keyword": "Contagion",
+        "ability_ids": [
+          "4306117031100416"
+        ]
       }
     },
     {
@@ -160,7 +166,10 @@
       "duration_seconds": 122.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Acid Deluge"
+        "keyword": "Acid Deluge",
+        "ability_ids": [
+          "4330254747303936"
+        ]
       }
     },
     {
@@ -169,7 +178,10 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Darkness Overdrive"
+        "keyword": "Darkness Overdrive",
+        "ability_ids": [
+          "4297819154284544"
+        ]
       }
     },
     {
@@ -178,7 +190,10 @@
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Blood Lust"
+        "keyword": "Blood Lust",
+        "ability_ids": [
+          "4385835919081472"
+        ]
       }
     },
     {
@@ -187,7 +202,10 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Darkness Overdrive"
+        "keyword": "Darkness Overdrive",
+        "ability_ids": [
+          "4297819154284544"
+        ]
       }
     },
     {
@@ -280,7 +298,10 @@
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ultra Violence"
+        "keyword": "Ultra Violence",
+        "ability_ids": [
+          "4409239195877376"
+        ]
       }
     },
     {
@@ -298,7 +319,10 @@
       "duration_seconds": 325.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Zone Defense"
+        "keyword": "Zone Defense",
+        "ability_ids": [
+          "4333050771013632"
+        ]
       }
     },
     {
@@ -328,7 +352,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Acid Deluge"
+        "keyword": "Acid Deluge",
+        "ability_ids": [
+          "4330254747303936"
+        ]
       }
     },
     {
@@ -393,7 +420,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Rocket Salvo"
+        "keyword": "Rocket Salvo",
+        "ability_ids": [
+          "4308741256118272"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -415,7 +445,10 @@
       "duration_seconds": 12.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Darkness Overdrive"
+        "keyword": "Darkness Overdrive",
+        "ability_ids": [
+          "4297819154284544"
+        ]
       }
     },
     {
@@ -437,7 +470,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Rocket Salvo"
+        "keyword": "Rocket Salvo",
+        "ability_ids": [
+          "4308741256118272"
+        ]
       }
     },
     {
@@ -446,7 +482,10 @@
       "duration_seconds": 23.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Zone Defense"
+        "keyword": "Zone Defense",
+        "ability_ids": [
+          "4333050771013632"
+        ]
       },
       "cancel_trigger": {
         "type": "effect_applied",
@@ -548,7 +587,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ignite Neutralizer Flare"
+        "keyword": "Ignite Neutralizer Flare",
+        "ability_ids": [
+          "4296410405011456"
+        ]
       }
     },
     {
@@ -557,7 +599,10 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Using"
+        "keyword": "Using",
+        "ability_ids": [
+          "4326784413728768"
+        ]
       }
     },
     {

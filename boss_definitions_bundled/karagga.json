@@ -35,7 +35,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Unstable Energy"
+        "keyword": "Unstable Energy",
+        "ability_ids": [
+          "2778332739403776",
+          "2778341329338368"
+        ]
       },
       "cancel_trigger": {
         "type": "combat_end"
@@ -47,7 +51,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Burning Oil"
+        "keyword": "Burning Oil",
+        "ability_ids": [
+          "2778384279011328",
+          "2778392868945920"
+        ]
       },
       "cancel_trigger": {
         "type": "combat_end"
@@ -73,7 +81,11 @@
       "duration_seconds": 24.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Tunneling Drill"
+        "keyword": "Tunneling Drill",
+        "ability_ids": [
+          "2778294084698112",
+          "2778302674632704"
+        ]
       },
       "cancel_trigger": {
         "type": "combat_end"
@@ -85,7 +97,11 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Cluster Bombs"
+        "keyword": "Cluster Bombs",
+        "ability_ids": [
+          "2778276904828928",
+          "2778285494763520"
+        ]
       },
       "cancel_trigger": {
         "type": "combat_end"

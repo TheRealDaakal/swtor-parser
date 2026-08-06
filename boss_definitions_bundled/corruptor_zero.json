@@ -46,7 +46,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Missile Barrage"
+        "keyword": "Missile Barrage",
+        "ability_ids": [
+          "3286483205095424"
+        ]
       }
     },
     {
@@ -55,7 +58,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Heavy Slash"
+        "keyword": "Heavy Slash",
+        "ability_ids": [
+          "3286530449735680"
+        ]
       }
     },
     {
@@ -64,7 +70,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Chest Laser"
+        "keyword": "Chest Laser",
+        "ability_ids": [
+          "3285409463271424"
+        ]
       }
     },
     {
@@ -117,7 +126,10 @@
       "duration_seconds": 11.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Concussion Mine"
+        "keyword": "Concussion Mine",
+        "ability_ids": [
+          "3344271990063104"
+        ]
       },
       "conditions": [
         {
@@ -148,7 +160,10 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Anti-Gravity Field"
+        "keyword": "Anti-Gravity Field",
+        "ability_ids": [
+          "3285972103987200"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

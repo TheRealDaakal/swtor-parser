@@ -600,7 +600,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Whirlwind"
+        "keyword": "Whirlwind",
+        "ability_ids": [
+          "3303594354802688"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -622,7 +625,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Deadly Slash"
+        "keyword": "Deadly Slash",
+        "ability_ids": [
+          "3302275799842816"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

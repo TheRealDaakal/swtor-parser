@@ -150,7 +150,10 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ravager Ultra Scatterblast"
+        "keyword": "Ravager Ultra Scatterblast",
+        "ability_ids": [
+          "3393552444817408"
+        ]
       },
       "conditions": [
         {
@@ -184,7 +187,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ravager Ultra Scatterblast"
+        "keyword": "Ravager Ultra Scatterblast",
+        "ability_ids": [
+          "3393552444817408"
+        ]
       },
       "conditions": [
         {
@@ -241,7 +247,10 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Thermite Rocket Mortar"
+        "keyword": "Thermite Rocket Mortar",
+        "ability_ids": [
+          "3421916408840192"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -254,7 +263,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Resonant Explosive Probes"
+        "keyword": "Resonant Explosive Probes",
+        "ability_ids": [
+          "3400776579809280"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -276,7 +288,10 @@
       "duration_seconds": 26.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Thermite Rocket Mortar"
+        "keyword": "Thermite Rocket Mortar",
+        "ability_ids": [
+          "3421916408840192"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -297,7 +312,10 @@
       "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ravager Ultra Scatterblast"
+        "keyword": "Ravager Ultra Scatterblast",
+        "ability_ids": [
+          "3393552444817408"
+        ]
       },
       "conditions": [
         {
@@ -327,7 +345,10 @@
       "duration_seconds": 2.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Resonant Explosive Probes"
+        "keyword": "Resonant Explosive Probes",
+        "ability_ids": [
+          "3400776579809280"
+        ]
       },
       "conditions": [
         {
@@ -368,7 +389,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Fire Wheel of Death"
+        "keyword": "Fire Wheel of Death",
+        "ability_ids": [
+          "3397933311459328"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -390,7 +414,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Fire Wheel of Death"
+        "keyword": "Fire Wheel of Death",
+        "ability_ids": [
+          "3397933311459328"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -421,7 +448,10 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ravager Electro-Pulse Nova"
+        "keyword": "Ravager Electro-Pulse Nova",
+        "ability_ids": [
+          "3420615033749504"
+        ]
       }
     },
     {
@@ -447,7 +477,10 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Resonant Explosive Probes"
+        "keyword": "Resonant Explosive Probes",
+        "ability_ids": [
+          "3415078820904960"
+        ]
       },
       "conditions": [
         {
@@ -499,7 +532,10 @@
       "duration_seconds": 22.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Thermite Rocket Mortar"
+        "keyword": "Thermite Rocket Mortar",
+        "ability_ids": [
+          "3411097386221568"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -512,7 +548,10 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ravager Ultra Scatterblast"
+        "keyword": "Ravager Ultra Scatterblast",
+        "ability_ids": [
+          "3393552444817408"
+        ]
       },
       "conditions": [
         {
@@ -560,7 +599,10 @@
       "duration_seconds": 23.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Resonant Explosive Probes"
+        "keyword": "Resonant Explosive Probes",
+        "ability_ids": [
+          "3415078820904960"
+        ]
       },
       "conditions": [
         {
@@ -596,7 +638,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Resonant Explosive Probes"
+        "keyword": "Resonant Explosive Probes",
+        "ability_ids": [
+          "3415078820904960"
+        ]
       },
       "conditions": [
         {

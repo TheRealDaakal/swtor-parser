@@ -96,7 +96,10 @@
       "duration_seconds": 38.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mind Trap"
+        "keyword": "Mind Trap",
+        "ability_ids": [
+          "2025528051630080"
+        ]
       },
       "phases": [
         "p4"
@@ -128,7 +131,10 @@
       "duration_seconds": 38.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Cyclone"
+        "keyword": "Force Cyclone",
+        "ability_ids": [
+          "1790412951912448"
+        ]
       },
       "phases": [
         "p4"

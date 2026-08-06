@@ -56,7 +56,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Magnetic Clamp"
+        "keyword": "Magnetic Clamp",
+        "ability_ids": [
+          "3430678142124032"
+        ]
       }
     },
     {
@@ -65,7 +68,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Magnetic Clamp"
+        "keyword": "Magnetic Clamp",
+        "ability_ids": [
+          "3430678142124032"
+        ]
       },
       "is_alert": true
     },
@@ -86,7 +92,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Summon Flame Turret"
+        "keyword": "Summon Flame Turret",
+        "ability_ids": [
+          "3406527541018624"
+        ]
       }
     },
     {
@@ -95,7 +104,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Sick of You!"
+        "keyword": "Sick of You!",
+        "ability_ids": [
+          "3409211895578624"
+        ]
       },
       "is_alert": true
     },
@@ -105,7 +117,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Sick of You!"
+        "keyword": "Sick of You!",
+        "ability_ids": [
+          "3409211895578624"
+        ]
       }
     },
     {
@@ -114,7 +129,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Floor Vents"
+        "keyword": "Floor Vents",
+        "ability_ids": [
+          "3406488886312960"
+        ]
       }
     },
     {

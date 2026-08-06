@@ -64,7 +64,10 @@
       "duration_seconds": 8.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Shotgun Blast"
+        "keyword": "Shotgun Blast",
+        "ability_ids": [
+          "3391714198814720"
+        ]
       }
     },
     {
@@ -73,7 +76,10 @@
       "duration_seconds": 4.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Barrel Throw"
+        "keyword": "Barrel Throw",
+        "ability_ids": [
+          "3396090770489344"
+        ]
       }
     },
     {
@@ -82,7 +88,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Volley"
+        "keyword": "Volley",
+        "ability_ids": [
+          "3391752853520384"
+        ]
       }
     },
     {
@@ -157,7 +166,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mass Barrage"
+        "keyword": "Mass Barrage",
+        "ability_ids": [
+          "3417496887492608"
+        ]
       }
     },
     {

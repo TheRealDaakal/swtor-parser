@@ -77,7 +77,10 @@
       "duration_seconds": 5.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Escape"
+        "keyword": "Escape",
+        "ability_ids": [
+          "3132057655967744"
+        ]
       }
     },
     {
@@ -86,7 +89,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[flash_gate]"
+        "keyword": "[flash_gate]",
+        "ability_ids": [
+          "3131215842377728"
+        ]
       },
       "is_alert": true
     },
@@ -96,7 +102,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[flash_gate]"
+        "keyword": "[flash_gate]",
+        "ability_ids": [
+          "3131215842377728"
+        ]
       }
     },
     {
@@ -105,7 +114,10 @@
       "duration_seconds": 4.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[flash_gate]"
+        "keyword": "[flash_gate]",
+        "ability_ids": [
+          "3131215842377728"
+        ]
       }
     },
     {

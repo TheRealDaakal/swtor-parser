@@ -177,7 +177,10 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Growth Seed"
+        "keyword": "Growth Seed",
+        "ability_ids": [
+          "4481819848212480"
+        ]
       },
       "conditions": [
         {
@@ -198,7 +201,10 @@
       "duration_seconds": 7.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Fortify Ground"
+        "keyword": "Fortify Ground",
+        "ability_ids": [
+          "4483005259186176"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -211,7 +217,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Seed of Echoes"
+        "keyword": "Seed of Echoes",
+        "ability_ids": [
+          "4484697476300800"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -224,7 +233,10 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Vertical Growth"
+        "keyword": "Vertical Growth",
+        "ability_ids": [
+          "4483121223303168"
+        ]
       },
       "conditions": [
         {
@@ -245,7 +257,10 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Lateral Growth"
+        "keyword": "Lateral Growth",
+        "ability_ids": [
+          "4483095453499392"
+        ]
       },
       "conditions": [
         {
@@ -266,7 +281,10 @@
       "duration_seconds": 46.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Directional Growth"
+        "keyword": "Directional Growth",
+        "ability_ids": [
+          "4485088318324736"
+        ]
       },
       "conditions": [
         {
@@ -287,7 +305,10 @@
       "duration_seconds": 27.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Repel"
+        "keyword": "Repel",
+        "ability_ids": [
+          "4483082568597504"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -300,7 +321,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Abduct"
+        "keyword": "Abduct",
+        "ability_ids": [
+          "4483065388728320"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -344,7 +368,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Choking Growth"
+        "keyword": "Choking Growth",
+        "ability_ids": [
+          "4602435414786048"
+        ]
       }
     },
     {
@@ -414,7 +441,10 @@
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Beckon"
+        "keyword": "Beckon",
+        "ability_ids": [
+          "4601305838387200"
+        ]
       },
       "conditions": [
         {
@@ -435,7 +465,11 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Vertical Growth"
+        "keyword": "Vertical Growth",
+        "ability_ids": [
+          "4483121223303168",
+          "4483095453499392"
+        ]
       },
       "conditions": [
         {
@@ -456,7 +490,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Directional Growth"
+        "keyword": "Directional Growth",
+        "ability_ids": [
+          "4485088318324736"
+        ]
       },
       "conditions": [
         {
@@ -477,7 +514,10 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Shock Apparition Wave"
+        "keyword": "Shock Apparition Wave",
+        "ability_ids": [
+          "4498608875372544"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -516,7 +556,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Growth Seed"
+        "keyword": "Growth Seed",
+        "ability_ids": [
+          "4481819848212480"
+        ]
       },
       "conditions": [
         {
@@ -620,7 +663,10 @@
       "duration_seconds": 28.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Creeping Growth"
+        "keyword": "Creeping Growth",
+        "ability_ids": [
+          "4485827052699648"
+        ]
       },
       "conditions": [
         {

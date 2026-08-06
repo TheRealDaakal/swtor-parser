@@ -440,7 +440,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Energy Wave"
+        "keyword": "Energy Wave",
+        "ability_ids": [
+          "4081339917664256"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -453,7 +456,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Sweep"
+        "keyword": "Sweep",
+        "ability_ids": [
+          "4080279060742144"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -496,7 +502,10 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Inversion"
+        "keyword": "Inversion",
+        "ability_ids": [
+          "4071117895499776"
+        ]
       },
       "conditions": [
         {
@@ -516,7 +525,10 @@
       "duration_seconds": 9.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Inversion"
+        "keyword": "Inversion",
+        "ability_ids": [
+          "4071117895499776"
+        ]
       },
       "conditions": [
         {

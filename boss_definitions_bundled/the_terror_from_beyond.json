@@ -272,7 +272,11 @@
       "duration_seconds": 10.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Slam"
+        "keyword": "Slam",
+        "ability_ids": [
+          "3025877474476032",
+          "3025886064410624"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -434,7 +438,11 @@
       "duration_seconds": 19.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Slam"
+        "keyword": "Slam",
+        "ability_ids": [
+          "3041137493278720",
+          "3041146083213312"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

@@ -95,7 +95,11 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Simplification"
+        "keyword": "Simplification",
+        "ability_ids": [
+          "3277841730895872",
+          "3349606339444736"
+        ]
       }
     },
     {
@@ -128,7 +132,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Affliction"
+        "keyword": "Affliction",
+        "ability_ids": [
+          "3299170538487808"
+        ]
       }
     },
     {
@@ -137,7 +144,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Smash"
+        "keyword": "Smash",
+        "ability_ids": [
+          "3299200603258880"
+        ]
       }
     },
     {
@@ -146,7 +156,10 @@
       "duration_seconds": 7.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Thundering Blast"
+        "keyword": "Thundering Blast",
+        "ability_ids": [
+          "3279619847356416"
+        ]
       }
     },
     {

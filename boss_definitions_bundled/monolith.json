@@ -162,7 +162,10 @@
       "duration_seconds": 19.55,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Bite Wounds"
+        "keyword": "Bite Wounds",
+        "ability_ids": [
+          "3546045258661888"
+        ]
       }
     },
     {
@@ -171,7 +174,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Great Slam"
+        "keyword": "Great Slam",
+        "ability_ids": [
+          "3543287889657856"
+        ]
       }
     },
     {
@@ -191,7 +197,10 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Curse of the Monolith"
+        "keyword": "Curse of the Monolith",
+        "ability_ids": [
+          "3545963654283264"
+        ]
       }
     },
     {
@@ -200,7 +209,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Syphon Energy"
+        "keyword": "Syphon Energy",
+        "ability_ids": [
+          "3545242099777536"
+        ]
       }
     },
     {
@@ -209,7 +221,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Lingering Destruction"
+        "keyword": "Lingering Destruction",
+        "ability_ids": [
+          "3546341611405312"
+        ]
       }
     },
     {
@@ -218,7 +233,10 @@
       "duration_seconds": 71.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Exposed Power"
+        "keyword": "Exposed Power",
+        "ability_ids": [
+          "3545272164548608"
+        ]
       }
     },
     {
@@ -227,7 +245,10 @@
       "duration_seconds": 71.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[rift_channel_setup]"
+        "keyword": "[rift_channel_setup]",
+        "ability_ids": [
+          "3553398242672640"
+        ]
       }
     },
     {
@@ -236,7 +257,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Breaking the Rift"
+        "keyword": "Breaking the Rift",
+        "ability_ids": [
+          "3546333021470720"
+        ]
       },
       "cancel_trigger": {
         "type": "effect_removed",
@@ -249,7 +273,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Exposed Power"
+        "keyword": "Exposed Power",
+        "ability_ids": [
+          "3545272164548608"
+        ]
       },
       "is_alert": true,
       "conditions": [
@@ -267,7 +294,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Exposed Power"
+        "keyword": "Exposed Power",
+        "ability_ids": [
+          "3545272164548608"
+        ]
       },
       "is_alert": true,
       "conditions": [
@@ -285,7 +315,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Exposed Power"
+        "keyword": "Exposed Power",
+        "ability_ids": [
+          "3545272164548608"
+        ]
       },
       "is_alert": true,
       "conditions": [
@@ -303,7 +336,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Exposed Power"
+        "keyword": "Exposed Power",
+        "ability_ids": [
+          "3545272164548608"
+        ]
       },
       "is_alert": true,
       "conditions": [

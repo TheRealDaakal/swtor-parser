@@ -32,7 +32,10 @@
       "duration_seconds": 63.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Pipe Smash"
+        "keyword": "Pipe Smash",
+        "ability_ids": [
+          "3307601559289856"
+        ]
       }
     },
     {
@@ -54,7 +57,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Reinforcements"
+        "keyword": "Reinforcements",
+        "ability_ids": [
+          "3315585903493120"
+        ]
       }
     },
     {
@@ -98,7 +104,10 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Overhead Smash"
+        "keyword": "Overhead Smash",
+        "ability_ids": [
+          "3285993578823680"
+        ]
       }
     },
     {
@@ -107,7 +116,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Roar"
+        "keyword": "Roar",
+        "ability_ids": [
+          "3285997873790976"
+        ]
       }
     },
     {

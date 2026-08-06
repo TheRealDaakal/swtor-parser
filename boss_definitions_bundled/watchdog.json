@@ -96,7 +96,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Watchdog Protocol"
+        "keyword": "Watchdog Protocol",
+        "ability_ids": [
+          "4472272135913472"
+        ]
       }
     },
     {
@@ -143,7 +146,10 @@
       "duration_seconds": 19.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Stalker Protocol"
+        "keyword": "Stalker Protocol",
+        "ability_ids": [
+          "4472963625648128"
+        ]
       }
     },
     {
@@ -170,7 +176,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Invert"
+        "keyword": "Invert",
+        "ability_ids": [
+          "4473247093489664"
+        ]
       }
     },
     {
@@ -179,7 +188,10 @@
       "duration_seconds": 9.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Degauss"
+        "keyword": "Degauss",
+        "ability_ids": [
+          "4472216301338624"
+        ]
       },
       "conditions": [
         {
@@ -207,7 +219,10 @@
       "duration_seconds": 11.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "PMX4 Polarized Proximity Bombs"
+        "keyword": "PMX4 Polarized Proximity Bombs",
+        "ability_ids": [
+          "4468595643908096"
+        ]
       },
       "conditions": [
         {
@@ -228,7 +243,10 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Polarized Beam"
+        "keyword": "Polarized Beam",
+        "ability_ids": [
+          "4471709495197696"
+        ]
       },
       "conditions": [
         {

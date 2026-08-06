@@ -32,7 +32,10 @@
       "duration_seconds": 35.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Crush"
+        "keyword": "Crush",
+        "ability_ids": [
+          "3328277531852800"
+        ]
       }
     }
   ]

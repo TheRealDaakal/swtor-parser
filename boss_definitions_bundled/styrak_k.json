@@ -240,7 +240,8 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_aa",
@@ -253,7 +254,8 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_hds_1st",
@@ -266,7 +268,8 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Head Swipe"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_lsl_1st",
@@ -279,7 +282,8 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Leap Slam"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_vpl_1st",
@@ -293,7 +297,8 @@
         "type": "ability_cast",
         "keyword": "Vomit Pool"
       },
-      "is_alert": true
+      "is_alert": true,
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_sps_1st",
@@ -306,7 +311,8 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Spines"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_ccl_1st",
@@ -328,7 +334,8 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Headbutt"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_skb_1st",
@@ -343,7 +350,8 @@
         "ability_ids": [
           "3294763902042112"
         ]
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_gcd_1_5",
@@ -351,8 +359,16 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Ferocity"
-      }
+        "keyword": "Ferocity",
+        "ability_ids": [
+          "3148992712015872",
+          "3127595184947200",
+          "3127599479914496",
+          "3144508766158848",
+          "3144513061126144"
+        ]
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_hds",
@@ -360,12 +376,16 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Head Swipe"
+        "keyword": "Head Swipe",
+        "ability_ids": [
+          "3141635433037824"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_lsl",
@@ -373,12 +393,16 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Leap Slam"
+        "keyword": "Leap Slam",
+        "ability_ids": [
+          "3141601073299456"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_vpl",
@@ -386,13 +410,17 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Vomit Pool"
+        "keyword": "Vomit Pool",
+        "ability_ids": [
+          "3142150829113344"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "is_alert": true
+      "is_alert": true,
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_vpl_vm",
@@ -400,13 +428,17 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Vomit Pool"
+        "keyword": "Vomit Pool",
+        "ability_ids": [
+          "3142150829113344"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "is_alert": true
+      "is_alert": true,
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_vpl_16m",
@@ -414,13 +446,17 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Vomit Pool"
+        "keyword": "Vomit Pool",
+        "ability_ids": [
+          "3142150829113344"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "is_alert": true
+      "is_alert": true,
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_sps",
@@ -428,12 +464,16 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Spines"
+        "keyword": "Spines",
+        "ability_ids": [
+          "3148979827113984"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_ccl",
@@ -456,7 +496,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Headbutt"
+        "keyword": "Headbutt",
+        "ability_ids": [
+          "3133187232366592"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -470,7 +513,8 @@
             "phase_id": "Styrak_k_p2_int"
           }
         ]
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_smn",
@@ -478,7 +522,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Summon"
+        "keyword": "Summon",
+        "ability_ids": [
+          "3140965418139648"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -492,7 +539,8 @@
             "phase_id": "Styrak_k_p2_int"
           }
         ]
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_skb",
@@ -507,7 +555,8 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_smn_hb",
@@ -515,7 +564,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Headbutt"
+        "keyword": "Headbutt",
+        "ability_ids": [
+          "3133187232366592"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -529,7 +581,8 @@
             "phase_id": "Styrak_k_p2_int"
           }
         ]
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_kd_hbt_sm",
@@ -537,7 +590,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Summon"
+        "keyword": "Summon",
+        "ability_ids": [
+          "3140965418139648"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -551,7 +607,8 @@
             "phase_id": "Styrak_k_p2_int"
           }
         ]
-      }
+      },
+      "voice_alert": false
     },
     {
       "id": "Styrak_k_st_cmf_1st",
@@ -579,7 +636,10 @@
       "duration_seconds": 1.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Chained Manifestation"
+        "keyword": "Chained Manifestation",
+        "ability_ids": [
+          "3144508766158848"
+        ]
       }
     },
     {
@@ -603,7 +663,10 @@
       "duration_seconds": 1.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Lightning Manifestation"
+        "keyword": "Lightning Manifestation",
+        "ability_ids": [
+          "3144513061126144"
+        ]
       }
     },
     {
@@ -672,7 +735,10 @@
       "duration_seconds": 4.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Saber Throw"
+        "keyword": "Saber Throw",
+        "ability_ids": [
+          "3232766049124352"
+        ]
       }
     },
     {
@@ -690,7 +756,10 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Spines"
+        "keyword": "Spines",
+        "ability_ids": [
+          "3148979827113984"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -703,7 +772,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Headbutt"
+        "keyword": "Headbutt",
+        "ability_ids": [
+          "3133187232366592"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -763,7 +835,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Lightning"
+        "keyword": "Force Lightning",
+        "ability_ids": [
+          "3145814436216832"
+        ]
       },
       "conditions": [
         {
@@ -780,7 +855,10 @@
       "duration_seconds": 3.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Pull"
+        "keyword": "Force Pull",
+        "ability_ids": [
+          "3145930400333824"
+        ]
       },
       "conditions": [
         {
@@ -797,7 +875,10 @@
       "duration_seconds": 3.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Nightmare Manifestation"
+        "keyword": "Nightmare Manifestation",
+        "ability_ids": [
+          "3135077017976832"
+        ]
       },
       "conditions": [
         {
@@ -814,7 +895,10 @@
       "duration_seconds": 3.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Nightmare Manifestation"
+        "keyword": "Nightmare Manifestation",
+        "ability_ids": [
+          "3135077017976832"
+        ]
       },
       "conditions": [
         {
@@ -837,7 +921,10 @@
       "duration_seconds": 3.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Pull"
+        "keyword": "Force Pull",
+        "ability_ids": [
+          "3145930400333824"
+        ]
       },
       "conditions": [
         {
@@ -869,7 +956,10 @@
       "duration_seconds": 3.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Pull"
+        "keyword": "Force Pull",
+        "ability_ids": [
+          "3145930400333824"
+        ]
       },
       "conditions": [
         {
@@ -892,7 +982,10 @@
       "duration_seconds": 3.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Nightmare Manifestation"
+        "keyword": "Nightmare Manifestation",
+        "ability_ids": [
+          "3135077017976832"
+        ]
       },
       "conditions": [
         {
@@ -915,7 +1008,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Force Lightning"
+        "keyword": "Force Lightning",
+        "ability_ids": [
+          "3145814436216832"
+        ]
       },
       "conditions": [
         {

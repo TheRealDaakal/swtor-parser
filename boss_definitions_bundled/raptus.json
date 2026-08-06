@@ -482,7 +482,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Driving Thrust"
+        "keyword": "Driving Thrust",
+        "ability_ids": [
+          "3298406034309120"
+        ]
       },
       "cancel_trigger": {
         "type": "ability_cast",
@@ -508,7 +511,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Deadly Slash"
+        "keyword": "Deadly Slash",
+        "ability_ids": [
+          "3299265027768320"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",

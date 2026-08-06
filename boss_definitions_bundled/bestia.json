@@ -120,7 +120,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Dread Strike"
+        "keyword": "Dread Strike",
+        "ability_ids": [
+          "3294841211453440"
+        ]
       }
     },
     {
@@ -146,7 +149,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[ranged_aoe_targeter]"
+        "keyword": "[ranged_aoe_targeter]",
+        "ability_ids": [
+          "3294102477078528"
+        ]
       }
     },
     {
@@ -155,7 +161,10 @@
       "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[ranged_aoe_targeter]"
+        "keyword": "[ranged_aoe_targeter]",
+        "ability_ids": [
+          "3294102477078528"
+        ]
       }
     },
     {
@@ -175,7 +184,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Swelling Despair"
+        "keyword": "Swelling Despair",
+        "ability_ids": [
+          "3294098182111232"
+        ]
       }
     },
     {

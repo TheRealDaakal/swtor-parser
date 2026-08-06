@@ -65,7 +65,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Body Slam"
+        "keyword": "Body Slam",
+        "ability_ids": [
+          "3377850044383232"
+        ]
       }
     },
     {
@@ -74,7 +77,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Rampage!"
+        "keyword": "Rampage!",
+        "ability_ids": [
+          "3380452794564608"
+        ]
       }
     },
     {
@@ -122,7 +128,10 @@
       "duration_seconds": 40.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Forceful Roar"
+        "keyword": "Forceful Roar",
+        "ability_ids": [
+          "3380792096980992"
+        ]
       }
     },
     {
@@ -131,7 +140,10 @@
       "duration_seconds": 17.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Roar"
+        "keyword": "Roar",
+        "ability_ids": [
+          "3378502879412224"
+        ]
       }
     },
     {

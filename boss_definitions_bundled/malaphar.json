@@ -58,7 +58,10 @@
       "duration_seconds": 5.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Hammer Smash"
+        "keyword": "Hammer Smash",
+        "ability_ids": [
+          "3437760543195136"
+        ]
       }
     },
     {
@@ -67,7 +70,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Spear Toss"
+        "keyword": "Spear Toss",
+        "ability_ids": [
+          "3437799197900800"
+        ]
       }
     },
     {

@@ -92,7 +92,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Voice of the Masters"
+        "keyword": "Voice of the Masters",
+        "ability_ids": [
+          "3270007710547968"
+        ]
       }
     },
     {
@@ -188,7 +191,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Twin Attack"
+        "keyword": "Twin Attack",
+        "ability_ids": [
+          "3342034312101888"
+        ]
       },
       "conditions": [
         {
@@ -216,7 +222,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Twin Attack"
+        "keyword": "Twin Attack",
+        "ability_ids": [
+          "3342034312101888"
+        ]
       },
       "is_alert": true,
       "conditions": [

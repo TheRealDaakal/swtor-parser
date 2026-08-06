@@ -110,7 +110,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Rapid Fire"
+        "keyword": "Rapid Fire",
+        "ability_ids": [
+          "3448046989869056"
+        ]
       }
     },
     {

@@ -125,7 +125,10 @@
       "duration_seconds": 43.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Holdout Cover"
+        "keyword": "Holdout Cover",
+        "ability_ids": [
+          "4277787426816000"
+        ]
       }
     },
     {
@@ -160,7 +163,10 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Firestorm Grenade"
+        "keyword": "Firestorm Grenade",
+        "ability_ids": [
+          "4271559724236800"
+        ]
       }
     },
     {
@@ -186,7 +192,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Flying Fortress"
+        "keyword": "Flying Fortress",
+        "ability_ids": [
+          "4387871733579776"
+        ]
       }
     },
     {
@@ -203,7 +212,10 @@
       "duration_seconds": 53.1,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Powershot Volley"
+        "keyword": "Powershot Volley",
+        "ability_ids": [
+          "4269773017841664"
+        ]
       }
     },
     {
@@ -264,7 +276,10 @@
       "duration_seconds": 53.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Scatterblast"
+        "keyword": "Scatterblast",
+        "ability_ids": [
+          "4335125240217600"
+        ]
       }
     },
     {
@@ -281,7 +296,10 @@
       "duration_seconds": 37.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Penetrating Shot"
+        "keyword": "Penetrating Shot",
+        "ability_ids": [
+          "4269777312808960"
+        ]
       }
     },
     {
@@ -290,7 +308,10 @@
       "duration_seconds": 31.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Primal Fear"
+        "keyword": "Primal Fear",
+        "ability_ids": [
+          "4335425887928320"
+        ]
       }
     },
     {
@@ -299,7 +320,10 @@
       "duration_seconds": 34.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Primal Fear"
+        "keyword": "Primal Fear",
+        "ability_ids": [
+          "4335425887928320"
+        ]
       }
     },
     {
@@ -308,7 +332,10 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[shot_roll]"
+        "keyword": "[shot_roll]",
+        "ability_ids": [
+          "4336065838055424"
+        ]
       }
     },
     {

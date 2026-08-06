@@ -28,7 +28,10 @@
       "duration_seconds": 31.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Lethal Strike"
+        "keyword": "Lethal Strike",
+        "ability_ids": [
+          "4826160261234688"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -50,7 +53,10 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Recovery Protocol"
+        "keyword": "Recovery Protocol",
+        "ability_ids": [
+          "4832241934925824"
+        ]
       }
     },
     {
@@ -106,7 +112,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Prepare for Harvest"
+        "keyword": "Prepare for Harvest",
+        "ability_ids": [
+          "4824914720718848"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -152,7 +161,10 @@
       "duration_seconds": 21.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Acidic Rocketry"
+        "keyword": "Acidic Rocketry",
+        "ability_ids": [
+          "4827160988614656"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -174,7 +186,10 @@
       "duration_seconds": 26.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Extraneous Expulsion"
+        "keyword": "Extraneous Expulsion",
+        "ability_ids": [
+          "4825717879603200"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -196,7 +211,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Hunting Grounds"
+        "keyword": "Hunting Grounds",
+        "ability_ids": [
+          "4828045751877632"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -218,7 +236,10 @@
       "duration_seconds": 46.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Prey Seeker"
+        "keyword": "Prey Seeker",
+        "ability_ids": [
+          "4829463091085312"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

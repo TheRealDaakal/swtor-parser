@@ -392,7 +392,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Atomic Scattering"
+        "keyword": "Atomic Scattering",
+        "ability_ids": [
+          "4127287477796864"
+        ]
       },
       "is_alert": true,
       "conditions": [
@@ -452,7 +455,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Atomic Scattering"
+        "keyword": "Atomic Scattering",
+        "ability_ids": [
+          "4127304657666048"
+        ]
       },
       "conditions": [
         {
@@ -659,7 +665,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Upheaval"
+        "keyword": "Upheaval",
+        "ability_ids": [
+          "4127296067731456"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -672,7 +681,10 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Radiance"
+        "keyword": "Radiance",
+        "ability_ids": [
+          "4144050735153152"
+        ]
       }
     },
     {
@@ -730,7 +742,11 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Atomic Scattering"
+        "keyword": "Atomic Scattering",
+        "ability_ids": [
+          "4127287477796864",
+          "4127304657666048"
+        ]
       },
       "conditions": [
         {
@@ -749,7 +765,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Atomic Scattering"
+        "keyword": "Atomic Scattering",
+        "ability_ids": [
+          "4127287477796864"
+        ]
       },
       "conditions": [
         {

@@ -21,7 +21,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Hateful Void"
+        "keyword": "Hateful Void",
+        "ability_ids": [
+          "3265820117434368"
+        ]
       }
     },
     {
@@ -30,7 +33,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Hate Pulse"
+        "keyword": "Hate Pulse",
+        "ability_ids": [
+          "3265811527499776"
+        ]
       }
     },
     {
@@ -39,7 +45,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Grapple"
+        "keyword": "Grapple",
+        "ability_ids": [
+          "3264750670577664"
+        ]
       }
     },
     {
@@ -48,7 +57,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Dread Touch"
+        "keyword": "Dread Touch",
+        "ability_ids": [
+          "3265798642597888"
+        ]
       }
     },
     {
@@ -57,7 +69,10 @@
       "duration_seconds": 62.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Death Mark"
+        "keyword": "Death Mark",
+        "ability_ids": [
+          "3265764282859520"
+        ]
       }
     },
     {
@@ -66,7 +81,10 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Hateful Awakening"
+        "keyword": "Hateful Awakening",
+        "ability_ids": [
+          "3265794347630592"
+        ]
       }
     },
     {

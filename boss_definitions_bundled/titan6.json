@@ -32,7 +32,10 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Launch"
+        "keyword": "Launch",
+        "ability_ids": [
+          "3152269772062720"
+        ]
       }
     },
     {
@@ -125,7 +128,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Huge Grenade"
+        "keyword": "Huge Grenade",
+        "ability_ids": [
+          "3255761304027136"
+        ]
       }
     },
     {

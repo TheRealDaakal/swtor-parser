@@ -457,7 +457,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[p4_initial_reposition]"
+        "keyword": "[p4_initial_reposition]",
+        "ability_ids": [
+          "4164142592163840"
+        ]
       }
     },
     {
@@ -600,7 +603,10 @@
       "duration_seconds": 34.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Induction Cascade"
+        "keyword": "Induction Cascade",
+        "ability_ids": [
+          "4168128321814528"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -676,7 +682,10 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Induction Cascade"
+        "keyword": "Induction Cascade",
+        "ability_ids": [
+          "4168128321814528"
+        ]
       },
       "conditions": [
         {
@@ -724,7 +733,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Induction Cascade"
+        "keyword": "Induction Cascade",
+        "ability_ids": [
+          "4168128321814528"
+        ]
       },
       "conditions": [
         {
@@ -764,7 +776,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Saturation Volley"
+        "keyword": "Saturation Volley",
+        "ability_ids": [
+          "4168794041745408"
+        ]
       }
     },
     {
@@ -908,7 +923,10 @@
       "duration_seconds": 22.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Drone Launch"
+        "keyword": "Drone Launch",
+        "ability_ids": [
+          "4168897120960512"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -1031,7 +1049,10 @@
       "duration_seconds": 13.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[p5_event_manager]"
+        "keyword": "[p5_event_manager]",
+        "ability_ids": [
+          "4163854829355008"
+        ]
       }
     },
     {

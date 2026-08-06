@@ -150,7 +150,10 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Incite"
+        "keyword": "Incite",
+        "ability_ids": [
+          "4590654319493120"
+        ]
       }
     },
     {
@@ -168,7 +171,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "[spawn_p2_detonator]"
+        "keyword": "[spawn_p2_detonator]",
+        "ability_ids": [
+          "4595108200579072"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_ended",
@@ -224,7 +230,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Unify"
+        "keyword": "Unify",
+        "ability_ids": [
+          "4598754627813376"
+        ]
       }
     },
     {
@@ -264,7 +273,10 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Unify"
+        "keyword": "Unify",
+        "ability_ids": [
+          "4606249345744896"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -277,7 +289,10 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Unify"
+        "keyword": "Unify",
+        "ability_ids": [
+          "4606253640712192"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",
@@ -300,7 +315,10 @@
       "duration_seconds": 48.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Deploy Attractor"
+        "keyword": "Deploy Attractor",
+        "ability_ids": [
+          "4605540676141056"
+        ]
       }
     },
     {

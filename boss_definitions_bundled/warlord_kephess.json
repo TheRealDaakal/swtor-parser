@@ -152,7 +152,10 @@
       "duration_seconds": 40,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mighty Leap"
+        "keyword": "Mighty Leap",
+        "ability_ids": [
+          "2877069742571520"
+        ]
       }
     },
     {
@@ -171,7 +174,10 @@
       "duration_seconds": 18,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Savage Arcing Slash"
+        "keyword": "Savage Arcing Slash",
+        "ability_ids": [
+          "2877048267735040"
+        ]
       }
     },
     {

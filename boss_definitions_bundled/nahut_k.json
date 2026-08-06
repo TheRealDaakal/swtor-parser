@@ -179,7 +179,10 @@
       "duration_seconds": 12.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mass Distortion"
+        "keyword": "Mass Distortion",
+        "ability_ids": [
+          "4124212281212928"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",
@@ -214,7 +217,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Energized Slice"
+        "keyword": "Energized Slice",
+        "ability_ids": [
+          "4137075708264448"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

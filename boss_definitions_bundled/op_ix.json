@@ -200,7 +200,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Blue Deletion Protocol"
+        "keyword": "Blue Deletion Protocol",
+        "ability_ids": [
+          "2959348431060992"
+        ]
       },
       "is_alert": true
     },
@@ -210,7 +213,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Orange Deletion Protocol"
+        "keyword": "Orange Deletion Protocol",
+        "ability_ids": [
+          "2959357020995584"
+        ]
       },
       "is_alert": true
     },
@@ -220,7 +226,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Purple Deletion Protocol"
+        "keyword": "Purple Deletion Protocol",
+        "ability_ids": [
+          "2959361315962880"
+        ]
       },
       "is_alert": true
     },
@@ -230,7 +239,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Yellow Deletion Protocol"
+        "keyword": "Yellow Deletion Protocol",
+        "ability_ids": [
+          "2959369905897472"
+        ]
       },
       "is_alert": true
     },

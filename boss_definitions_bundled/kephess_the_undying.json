@@ -148,7 +148,10 @@
       "duration_seconds": 4.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Overcharge"
+        "keyword": "Overcharge",
+        "ability_ids": [
+          "3012687629910016"
+        ]
       },
       "conditions": [
         {
@@ -165,7 +168,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "conditions": [
         {
@@ -182,7 +188,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "conditions": [
         {
@@ -199,7 +208,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "conditions": [
         {
@@ -216,7 +228,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "conditions": [
         {
@@ -233,7 +248,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "is_alert": true,
       "conditions": [
@@ -251,7 +269,10 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrupted Nanites"
+        "keyword": "Corrupted Nanites",
+        "ability_ids": [
+          "2977765250826240"
+        ]
       },
       "is_alert": true,
       "conditions": [

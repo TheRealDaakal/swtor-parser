@@ -53,7 +53,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Threat Drop"
+        "keyword": "Threat Drop",
+        "ability_ids": [
+          "2919121767366656"
+        ]
       }
     },
     {
@@ -62,7 +65,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Knockback"
+        "keyword": "Knockback",
+        "ability_ids": [
+          "2853275623751680"
+        ]
       }
     },
     {
@@ -71,7 +77,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Grenade"
+        "keyword": "Grenade",
+        "ability_ids": [
+          "2853344343228416"
+        ]
       }
     },
     {

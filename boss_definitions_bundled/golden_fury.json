@@ -53,7 +53,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Satellite Strike"
+        "keyword": "Satellite Strike",
+        "ability_ids": [
+          "3261155782950912"
+        ]
       }
     },
     {
@@ -62,7 +65,10 @@
       "duration_seconds": 33.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Isotope Release"
+        "keyword": "Isotope Release",
+        "ability_ids": [
+          "3258853680480256"
+        ]
       }
     },
     {

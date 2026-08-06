@@ -24,7 +24,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Flash Bang"
+        "keyword": "Flash Bang",
+        "ability_ids": [
+          "3146325537325056"
+        ]
       }
     },
     {
@@ -33,7 +36,10 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Terminate"
+        "keyword": "Terminate",
+        "ability_ids": [
+          "3146334127259648"
+        ]
       }
     },
     {
@@ -42,7 +48,10 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mass Explosive Probe"
+        "keyword": "Mass Explosive Probe",
+        "ability_ids": [
+          "3146329832292352"
+        ]
       }
     },
     {
@@ -51,7 +60,10 @@
       "duration_seconds": 32.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Summon Rail Turrets"
+        "keyword": "Summon Rail Turrets",
+        "ability_ids": [
+          "3158012143337472"
+        ]
       }
     },
     {
@@ -60,7 +72,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Impulse"
+        "keyword": "Impulse",
+        "ability_ids": [
+          "2166591957499904"
+        ]
       }
     },
     {
@@ -69,7 +84,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Thermal Grenade"
+        "keyword": "Thermal Grenade",
+        "ability_ids": [
+          "3145707062034432"
+        ]
       }
     },
     {

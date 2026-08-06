@@ -76,7 +76,10 @@
       "duration_seconds": 12.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Corrosive Grenade"
+        "keyword": "Corrosive Grenade",
+        "ability_ids": [
+          "3289043005603840"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_expires",
@@ -89,7 +92,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Suppresive Fire"
+        "keyword": "Suppresive Fire",
+        "ability_ids": [
+          "3289034415669248"
+        ]
       },
       "cancel_trigger": {
         "type": "timer_started",

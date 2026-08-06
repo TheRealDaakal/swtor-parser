@@ -154,7 +154,10 @@
       "duration_seconds": 25,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Mortar Volley"
+        "keyword": "Mortar Volley",
+        "ability_ids": [
+          "2815793444159488"
+        ]
       }
     },
     {
@@ -176,7 +179,10 @@
       "duration_seconds": 10,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Missile Barrage"
+        "keyword": "Missile Barrage",
+        "ability_ids": [
+          "2876653130743808"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -198,7 +204,10 @@
       "duration_seconds": 10,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Electric Discharge"
+        "keyword": "Electric Discharge",
+        "ability_ids": [
+          "2876687490482176"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -211,7 +220,10 @@
       "duration_seconds": 16,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Targeted"
+        "keyword": "Targeted",
+        "ability_ids": [
+          "2876648835776512"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -237,7 +249,10 @@
       "duration_seconds": 46,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Incinerate Armor"
+        "keyword": "Incinerate Armor",
+        "ability_ids": [
+          "2876661720678400"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -250,7 +265,10 @@
       "duration_seconds": 49,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Incinerate Armor"
+        "keyword": "Incinerate Armor",
+        "ability_ids": [
+          "2876661720678400"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -263,7 +281,10 @@
       "duration_seconds": 20,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Double Destruction"
+        "keyword": "Double Destruction",
+        "ability_ids": [
+          "2876691785449472"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -276,7 +297,10 @@
       "duration_seconds": 30,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Double Destruction"
+        "keyword": "Double Destruction",
+        "ability_ids": [
+          "2876691785449472"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",

@@ -45,7 +45,10 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Spawn Adds"
+        "keyword": "Spawn Adds",
+        "ability_ids": [
+          "3060692479377408"
+        ]
       }
     },
     {
@@ -72,7 +75,10 @@
       "duration_seconds": 10.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Head Butt"
+        "keyword": "Head Butt",
+        "ability_ids": [
+          "3045857662337024"
+        ]
       }
     },
     {
@@ -81,7 +87,10 @@
       "duration_seconds": 8.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "Spawn Adds"
+        "keyword": "Spawn Adds",
+        "ability_ids": [
+          "3262208049938432"
+        ]
       }
     },
     {
