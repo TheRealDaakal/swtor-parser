@@ -51,7 +51,22 @@ TIME_RE = re.compile(r"\d{1,2}:\d{2}:\d{2}(?:\.\d+)?")
 
 # Keywords that identify event *types* inside the effect bracket, e.g.
 # "[ApplyEffect {id}: Death {id}]" or "[Event {id}: AbilityActivate {id}]"
-DEATH_KEYWORDS = ("death", "expire")
+# A death is the exact event `[Event {id}: Death {id}]` -- NOT any effect
+# whose name happens to contain "death". This was a substring match against
+# effect_type + effect_name, and SWTOR is full of ability names that trip it:
+# measured over 25 real log files, 4,309 genuine deaths were accompanied by
+# 26,141 false ones -- "Deathmark" (a Marauder debuff, re-logged on every
+# ModifyCharges tick) alone accounted for 23,631, plus "Penetrating Death",
+# "Death Brand (Slow)", "Feign Death", "Death's Embrace" and others.
+#
+# Everything downstream inherited that: History death counts, the death
+# forensics reports, and kill/wipe classification. The old "expire" keyword
+# is dropped with it -- it matched nothing at all in those 25 files, and
+# SWTOR's only Event names are AbilityActivate, TargetSet, TargetCleared,
+# ModifyThreat, AbilityCancel, Death, AbilityDeactivate, Crouch, LeaveCover,
+# AbilityInterrupt, Taunt, Revived, FailedEffect, EnterCombat, ExitCombat.
+DEATH_EVENT_TYPE = "event"
+DEATH_EFFECT_NAME = "death"
 HEAL_KEYWORDS = ("heal",)
 DAMAGE_KEYWORDS = ("damage",)
 COMBAT_START_KEYWORDS = ("entercombat",)
@@ -369,7 +384,8 @@ def _extract_overheal(tail: str) -> float:
 
 
 def _parse_entity(
-    field: str, self_name: Optional[str] = None
+    field: str, self_name: Optional[str] = None,
+    self_is_player: bool = False, self_npc_id: Optional[str] = None,
 ) -> Tuple[Optional[str], Optional[float], Optional[float], bool, Optional[str]]:
     """Parses one raw Source/Target bracket capture. Returns
     (name, hp_current, hp_max, is_player, npc_type_id).
@@ -394,7 +410,13 @@ def _parse_entity(
     if not field:
         return None, None, None, False, None
     if field == "=":
-        return self_name, None, None, False, None
+        # '=' means "the target IS the source" (self-cast: a DCD, a self-heal,
+        # a self-applied buff). It therefore inherits the source's identity --
+        # including whether that entity is a player. Returning False here
+        # instead marked every self-targeted event on a player as an NPC
+        # event, which silently excluded self-heals and self-buffs from
+        # anything gated on target_is_player.
+        return self_name, None, None, self_is_player, self_npc_id
 
     parts = field.split("|")
     name_token = parts[0]
@@ -449,7 +471,8 @@ def parse_line(line: str, line_number: Optional[int] = None) -> Optional[CombatE
         brackets[1] if len(brackets) > 1 else ""
     )
     target, hp_current, hp_max, target_is_player, target_npc_id = _parse_entity(
-        brackets[2] if len(brackets) > 2 else "", self_name=source
+        brackets[2] if len(brackets) > 2 else "", self_name=source,
+        self_is_player=source_is_player, self_npc_id=source_npc_id,
     )
     ability = _clean_name(brackets[3]) if len(brackets) > 3 else None
     ability_id = _extract_id(brackets[3]) if len(brackets) > 3 else None
@@ -512,7 +535,10 @@ def _classify(event: CombatEvent, tail: str) -> None:
 
     event.is_damage = any(k in haystack for k in DAMAGE_KEYWORDS)
     event.is_heal = any(k in haystack for k in HEAL_KEYWORDS)
-    event.is_death = any(k in haystack for k in DEATH_KEYWORDS)
+    event.is_death = (
+        (event.effect_type or "").strip().lower() == DEATH_EVENT_TYPE
+        and (event.effect_name or "").strip().lower() == DEATH_EFFECT_NAME
+    )
     event.is_combat_start = any(k in tight for k in COMBAT_START_KEYWORDS)
     event.is_combat_end = any(k in tight for k in COMBAT_END_KEYWORDS)
     event.is_area_entered = any(k in tight for k in AREA_ENTERED_KEYWORDS)

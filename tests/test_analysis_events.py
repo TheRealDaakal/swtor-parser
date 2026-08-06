@@ -132,7 +132,7 @@ def test_forensics_still_works_after_the_log_is_archived(tmp_path):
         log_line("00:00:02.000", "Test Boss", target="@Player#1", ability="Crush",
                  effect_name="Damage {2}", amount="99000", target_hp="1000/100000"),
         log_line("00:00:03.000", "Test Boss", target="@Player#1", ability="Crush",
-                 effect_name="Death {836045448945472}", target_hp="0/100000"),
+                 effect_type="Event", effect_name="Death {836045448945472}", target_hp="0/100000"),
     ]
     path = _write_log(tmp_path, lines)
     # A second, newer log so the one under test isn't the "currently live"

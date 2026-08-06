@@ -35,7 +35,7 @@ def test_a_targets_death_clears_a_dot_still_ticking_on_it(sim_clock):
     assert len(engine.active) == 1, "sanity check: the dot is tracked before the death"
 
     death = parse_line(
-        log_line("00:00:02.000", "Add", target="Add", effect_type="ApplyEffect", effect_name="Death {1}"),
+        log_line("00:00:02.000", "Add", target="Add", effect_type="Event", effect_name="Death {836045448945472}"),
         line_number=2,
     )
     engine.feed(death, local_player_name="Sorc")
@@ -62,7 +62,7 @@ def test_a_different_targets_death_does_not_clear_unrelated_dots(sim_clock):
     assert len(engine.active) == 2
 
     death = parse_line(
-        log_line("00:00:02.000", "Add1", target="Add1", effect_type="ApplyEffect", effect_name="Death {1}"),
+        log_line("00:00:02.000", "Add1", target="Add1", effect_type="Event", effect_name="Death {836045448945472}"),
         line_number=3,
     )
     engine.feed(death, local_player_name="Sorc")
@@ -80,7 +80,7 @@ def test_death_of_an_unrelated_entity_does_not_touch_cooldown_category_timers(si
     engine.start_timer("Deflection", 120.0, category="cooldown", dedupe_key="Sorc")
 
     death = parse_line(
-        log_line("00:00:02.000", "Add", target="Add", effect_type="ApplyEffect", effect_name="Death {1}"),
+        log_line("00:00:02.000", "Add", target="Add", effect_type="Event", effect_name="Death {836045448945472}"),
         line_number=1,
     )
     engine.feed(death, local_player_name="Sorc")
