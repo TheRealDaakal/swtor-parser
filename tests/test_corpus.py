@@ -65,3 +65,63 @@ class TestReplayPullsRealStartTime:
         pulls = replay_pulls(path, {})
         assert len(pulls) == 1
         assert pulls[0]["encounter"].real_start_time is None
+
+
+class TestOutcomeRecordedAtScanTime:
+    """The index now carries kill/wipe per pull, recorded during the replay
+    it already does rather than re-derived by re-reading the log later --
+    which is what makes corpus-wide kill counts affordable at all.
+
+    Verified against the real corpus: across every multi-boss encounter in
+    it, the number of bosses seen dying per pull is cleanly bimodal -- 0 to
+    n-1 (wipes) or all n (kills), never a stuck middle. So SWTOR does log
+    every boss's death on a real kill, and requiring all of them is right.
+    """
+
+    def _defs(self, boss_names, name="Test Boss"):
+        from boss_definitions import _definition_from_dict
+        return {"tb": _definition_from_dict({
+            "id": "tb", "name": name, "boss_names": boss_names,
+            "phases": [{"id": "p1", "name": "Phase 1"}],
+        })}
+
+    def _log(self, tmp_path, deaths=(), boss="Test Boss"):
+        lines = [
+            log_line("00:00:00.000", "@Dps#1", effect_type="Event",
+                     effect_name="EnterCombat {1}"),
+            log_line("00:00:01.000", boss, ability="Intro",
+                     effect_name="AbilityActivate {1}"),
+            log_line("00:00:07.000", "@Dps#1", target=boss, ability="Smash",
+                     effect_name="Damage {2}", amount="1000"),
+        ]
+        for i, victim in enumerate(deaths):
+            lines.append(log_line(f"00:00:{8 + i:02d}.000", "@Dps#1", target=victim,
+                                  ability="Smash", effect_type="Event", effect_name="Death"))
+        return _write_log(tmp_path, "combat_2026-08-06_20_00_00_1.txt", lines)
+
+    def test_boss_death_records_a_kill(self, tmp_path):
+        path = self._log(tmp_path, deaths=["Test Boss"])
+        pulls = replay_pulls(path, self._defs(["Test Boss"]))
+        assert [p["outcome"] for p in pulls] == ["kill"]
+
+    def test_no_boss_death_records_a_wipe(self, tmp_path):
+        path = self._log(tmp_path)
+        pulls = replay_pulls(path, self._defs(["Test Boss"]))
+        assert [p["outcome"] for p in pulls] == ["wipe"]
+
+    def test_an_add_dying_is_not_a_kill(self, tmp_path):
+        """Styrak's boss_names contains 'Kell Dragon' and a pull kills dozens
+        -- see BossDefinition.kill_names()."""
+        defs = self._defs(["Kell Dragon", "Dread Master Styrak"],
+                          name="Dread Master Styrak")
+        path = self._log(tmp_path, deaths=["Kell Dragon", "Kell Dragon"],
+                         boss="Dread Master Styrak")
+        pulls = replay_pulls(path, defs)
+        assert [p["outcome"] for p in pulls] == ["wipe"]
+
+    def test_unrecognized_content_is_unknown_not_a_wipe(self, tmp_path):
+        """Trash and leveling content isn't a wipe just because nothing
+        named died."""
+        path = self._log(tmp_path)
+        pulls = replay_pulls(path, {})
+        assert [p["outcome"] for p in pulls] == ["unknown"]

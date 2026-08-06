@@ -39,7 +39,7 @@ from log_merger import LogClock
 from log_parser import parse_line
 from stats import Encounter, MIN_ENCOUNTER_SECONDS, NEW_PULL_MIN_GAP_SECONDS
 
-CACHE_VERSION = 7  # bump to invalidate every cached entry after a parser change
+CACHE_VERSION = 8  # bump to invalidate every cached entry after a parser change
 MIN_FILE_BYTES = 50_000         # skip near-empty logs (login blips)
 
 # NEW_PULL_MIN_GAP_SECONDS / MIN_ENCOUNTER_SECONDS now live in stats.py --
@@ -91,6 +91,7 @@ def replay_pulls(path: str, definitions) -> List[dict]:
     current = Encounter()
     boss_name = None
     boss_id = None
+    still_alive = None   # kill_names not yet seen dying; None until recognized
     phases: List[str] = []
     first_ts = None
     out: List[dict] = []
@@ -114,10 +115,17 @@ def replay_pulls(path: str, definitions) -> List[dict]:
         # Same gate the live tracker applies -- see Encounter.is_real_fight().
         if not current.is_real_fight():
             return
+        # "unknown" (not "wipe") when no boss was recognized: trash and
+        # leveling content isn't a wipe just because nothing named died.
+        if boss_id is None:
+            outcome = "unknown"
+        else:
+            outcome = "kill" if still_alive is not None and not still_alive else "wipe"
         out.append({
             "encounter": current,
             "boss_name": boss_name,
             "boss_id": boss_id,
+            "outcome": outcome,
             "phases": phases[:],
             "first_ts": first_ts,
         })
@@ -149,6 +157,7 @@ def replay_pulls(path: str, definitions) -> List[dict]:
                 current = Encounter()
                 current.log_path = path
                 boss_name = boss_id = None
+                still_alive = None
                 phases = []
                 first_ts = None
                 boss_state.reset()
@@ -160,6 +169,13 @@ def replay_pulls(path: str, definitions) -> List[dict]:
             if boss_state.active_boss is not None and boss_name is None:
                 boss_name = boss_state.active_boss.name
                 boss_id = boss_state.active_boss.id
+                # Names still owed a death before this pull counts as a kill.
+                # Recorded here rather than re-derived later because this
+                # replay already walks every event -- see
+                # BossDefinition.kill_names() for why it isn't boss_names.
+                still_alive = set(boss_state.active_boss.kill_names())
+            if still_alive and event.is_death and event.target:
+                still_alive.discard(event.target)
             if change is not None and change.phase_name not in phases:
                 phases.append(change.phase_name)
     flush()
@@ -191,6 +207,7 @@ def scan_file(path: str, definitions) -> List[dict]:
         out.append({
             "boss": pull["boss_name"],
             "boss_id": pull["boss_id"],
+            "outcome": pull["outcome"],
             "phases": pull["phases"],
             "duration": round(current.duration(), 1),
             "start_ts": pull["first_ts"],
@@ -292,25 +309,44 @@ def boss_encounters(index: dict, boss_id: Optional[str] = None):
 
 
 def boss_summary(index: dict) -> List[dict]:
-    """One row per boss: how many pulls, total time, best/median clear."""
+    """One row per boss: attempts, kills, time spent, and clear times.
+
+    `fastest_kill` / `slowest_kill` deliberately only consider pulls that
+    actually ended in a kill -- the fastest PULL on a progression boss is a
+    30-second faceplant, which is the opposite of an achievement. `median`
+    and `longest` still span every attempt, since "how long do we spend on
+    this boss" is a question about all of them.
+    """
     by_boss: Dict[str, dict] = {}
     for s, e in boss_encounters(index):
         row = by_boss.setdefault(e["boss_id"], {
             "boss_id": e["boss_id"], "boss": e["boss"], "pulls": 0,
+            "kills": 0, "wipes": 0,
             "total_seconds": 0.0, "deaths": 0, "durations": [],
+            "kill_durations": [],
             "first_seen": s.get("date"), "last_seen": s.get("date"),
         })
         row["pulls"] += 1
         row["total_seconds"] += e["duration"]
         row["deaths"] += e.get("deaths", 0)
         row["durations"].append(e["duration"])
+        outcome = e.get("outcome")
+        if outcome == "kill":
+            row["kills"] += 1
+            row["kill_durations"].append(e["duration"])
+        elif outcome == "wipe":
+            row["wipes"] += 1
         if s.get("date"):
             row["last_seen"] = s["date"]
     out = []
     for row in by_boss.values():
         d = sorted(row.pop("durations"))
+        k = sorted(row.pop("kill_durations"))
         row["longest"] = d[-1] if d else 0
         row["median"] = d[len(d) // 2] if d else 0
+        row["fastest_kill"] = k[0] if k else None
+        row["slowest_kill"] = k[-1] if k else None
+        row["kill_pct"] = round(100.0 * row["kills"] / row["pulls"], 1) if row["pulls"] else 0.0
         row["total_seconds"] = round(row["total_seconds"])
         out.append(row)
     out.sort(key=lambda r: -r["pulls"])

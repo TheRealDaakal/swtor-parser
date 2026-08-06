@@ -29,30 +29,13 @@ BUNDLED_BOSS_DIR = Path(__file__).resolve().parent.parent / "boss_definitions_bu
 
 
 def kill_names(definition) -> List[str]:
-    """Which entities must die for this encounter to count as killed.
+    """Which entities must all die for this encounter to count as killed.
 
-    NOT the same list as `boss_names`, which exists for RECOGNITION -- "if
-    you see any of these, you're in this fight" -- and so includes adds that
-    identify an encounter without being its boss. Styrak's is
-    ['Kell Dragon', 'Dread Master Styrak'], and a Styrak pull kills dozens
-    of Kell Dragons: using boss_names as the kill test marked 74 of 92
-    Styrak pulls a kill, including ones nobody survived.
-
-    The rule: entities whose name is part of the encounter's own display
-    name are the bosses. That resolves 149 of the 162 bundled definitions
-    with boss_names. The 13 it doesn't are multi-boss encounters where
-    every listed name genuinely IS a boss and all of them must die --
-    Dread Council, Cartel Warlords, The Dread Guard, Trandoshans,
-    Firebrand & Stormcaller and friends -- plus a couple whose display name
-    is spelled slightly differently from the entity ("Colosssal Monolith").
-    Falling back to the full list is right for all of them.
+    Lives on BossDefinition (see its docstring for why it isn't boss_names);
+    kept here as the name this module and its tests already use, and because
+    corpus.py records the same outcome at scan time from the same rule.
     """
-    names = list(getattr(definition, "boss_names", None) or [])
-    if not names:
-        return []
-    display = (getattr(definition, "name", "") or "").lower()
-    scoped = [n for n in names if n.lower() in display or display in n.lower()]
-    return scoped or names
+    return definition.kill_names()
 
 
 def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional[int],

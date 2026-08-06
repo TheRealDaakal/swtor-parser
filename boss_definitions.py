@@ -516,6 +516,38 @@ class BossDefinition:
     # the wrong encounter. This is what BARAS matches on.
     boss_npc_ids: List[str] = field(default_factory=list)
 
+    def kill_names(self) -> List[str]:
+        """Which entities must ALL die for this encounter to count as killed.
+
+        Deliberately not the same list as boss_names. That one exists for
+        RECOGNITION -- "see any of these and you're in this fight" -- so it
+        legitimately contains adds: Styrak's is
+        ['Kell Dragon', 'Dread Master Styrak'], and a Styrak pull kills
+        dozens of Kell Dragons. Treating boss_names as the kill test scored
+        74 of 92 Styrak pulls as kills, including ones nobody survived.
+
+        The rule: entities whose name is part of the encounter's own display
+        name are its bosses. That resolves 149 of the 162 bundled
+        definitions carrying boss_names. The 13 it doesn't are genuine
+        multi-boss encounters where every listed name IS a boss and all must
+        die (Dread Council, Cartel Warlords, The Dread Guard, Trandoshans,
+        Firebrand & Stormcaller, Republic Squad...), plus two whose display
+        name is spelled differently from the entity ("Colosssal Monolith"
+        vs "Colossal Monolith"). Falling back to the full list is correct
+        for every one of them.
+
+        Matched by name, never by boss_npc_ids: that list is flat, with no
+        mapping back to which name owns each id, and Styrak's contains the
+        Kell Dragon's -- it reintroduces the same bug through another door.
+        Death lines always carry the entity name.
+        """
+        if not self.boss_names:
+            return []
+        display = (self.name or "").lower()
+        scoped = [n for n in self.boss_names
+                  if n.lower() in display or display in n.lower()]
+        return scoped or list(self.boss_names)
+
     def matches_event(self, event: CombatEvent, ctx: Optional[EvalContext] = None) -> bool:
         if self.boss_npc_ids:
             # Definition knows its real ids -- trust ONLY those. Falling back
