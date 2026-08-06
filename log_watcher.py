@@ -138,11 +138,34 @@ def watch_folder(log_dir: str, poll_interval: float = 0.25) -> Iterator[Tuple[st
                 first_file = False
             else:
                 line_number = 0
+            # Holds a line the game hasn't finished writing yet. readline()
+            # on a file being appended to returns whatever bytes exist,
+            # newline or not, so a line caught mid-write comes back as a
+            # fragment and the REST of it arrives on a later poll. Counting
+            # each fragment as its own line inflates line_number, and the
+            # error is permanent for the rest of the session: every
+            # subsequent pull's recorded (start_line, end_line) is shifted
+            # further past where it really is.
+            #
+            # Measured on a real history: the last pulls of each session
+            # referenced lines beyond the end of the file they name -- 1,082
+            # lines over on one night, 892 on another, 407 on a third,
+            # always growing through the session and always fine at its
+            # start. That silently breaks Deep Dive for exactly the pulls
+            # people care most about, the kills at the end of a raid night,
+            # because re-reading that range finds nothing there.
+            partial = ""
             while True:
                 line = f.readline()
                 if line:
+                    partial += line
+                    if not partial.endswith("\n"):
+                        # Still mid-write. Don't number it, don't emit it --
+                        # wait for the rest rather than parse half a line.
+                        continue
                     line_number += 1
-                    yield current_path, line_number, line
+                    yield current_path, line_number, partial
+                    partial = ""
                     continue
                 latest = find_latest_log(log_dir)
                 if latest and latest != current_path:
