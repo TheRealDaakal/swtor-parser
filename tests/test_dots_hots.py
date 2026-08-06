@@ -351,3 +351,73 @@ def test_register_dots_hots_wires_alacrity_affected_flag_through():
     by_label = {r.label: r for r in engine.rules}
     assert by_label["Affected Dot"].alacrity_affected is True
     assert by_label["Unaffected Hot"].alacrity_affected is False
+
+
+class TestHealTicksAreNotReapplications:
+    """Regression from the v0.2.16 ability-fallback fix. Every real HoT logs
+    BOTH a proper "ApplyEffect: <name>" when cast AND separate
+    "ApplyEffect: Heal" lines carrying only the ability name as it ticks
+    (measured on a real log -- Trauma Probe: 106 applies vs 1,133 ticks;
+    Slow-release Medpac: 187 vs 1,797). The fallback made every tick look
+    like a fresh cast, so a charge shield's 180s countdown re-armed
+    constantly and sat pinned near full, never draining -- and its
+    charges_lost reset each time too. Kolto Pods is the sole effect with NO
+    apply line at all (4,434 ticks, 0 applies), which is why the fallback
+    has to keep working for it."""
+
+    def test_a_heal_tick_does_not_refresh_an_existing_hot(self, sim_clock):
+        tracker = HotTracker()
+        _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+        # 60s later the shield absorbs a hit -- SWTOR logs the heal it did,
+        # as "ApplyEffect: Heal" with ability=Trauma Probe.
+        _feed(tracker, sim_clock, 60.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ApplyEffect", "Heal {2}", amount="11428")
+
+        rows = tracker.expiring(now=60.0)
+        assert len(rows) == 1
+        assert abs(rows[0]["remaining"] - 120.0) < 0.01, (
+            "a tick must not re-arm the duration -- 60s of 180 has elapsed"
+        )
+
+    def test_a_real_recast_does_still_refresh(self, sim_clock):
+        tracker = HotTracker()
+        _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+        _feed(tracker, sim_clock, 60.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+
+        rows = tracker.expiring(now=60.0)
+        assert abs(rows[0]["remaining"] - 180.0) < 0.01, "a genuine re-cast DOES reset it"
+
+    def test_a_tick_still_creates_an_entry_when_there_is_none(self, sim_clock):
+        """Kolto Pods only ever logs heal ticks -- if a tick couldn't create
+        an entry it would never be tracked at all, which is the bug the
+        fallback was added to fix."""
+        tracker = HotTracker()
+        _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Ally#1",
+              "Kolto Pods {1}", "ApplyEffect", "Heal {2}", amount="500")
+        rows = tracker.expiring(now=0.0)
+        assert len(rows) == 1
+        assert rows[0]["effect"] == "Kolto Pods"
+
+    def test_charge_loss_accumulates_across_ticks(self, sim_clock):
+        """charges_lost was being reset by every accompanying heal tick, so
+        the charge-drain display never actually drained."""
+        tracker = HotTracker()
+        _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Tank#1",
+              "Trauma Probe {1}", "ApplyEffect", "Trauma Probe {1}", amount="7 charges {2}")
+        for remaining_charges in (6, 5, 4):
+            _feed(tracker, sim_clock, 10.0, "@Healer#1", "@Tank#1",
+                  "Trauma Probe {1}", "ModifyCharges", "Trauma Probe {1}",
+                  amount=f"{remaining_charges} charges {{2}}")
+            # the heal each absorb produces, which used to wipe the count
+            _feed(tracker, sim_clock, 10.0, "@Healer#1", "@Tank#1",
+                  "Trauma Probe {1}", "ApplyEffect", "Heal {2}", amount="11428")
+
+        rows = tracker.expiring(now=10.0)
+        assert len(rows) == 1
+        expected = (180.0 - 10.0) - (180.0 / 7.0) * 3
+        assert abs(rows[0]["remaining"] - expected) < 0.01, (
+            "three consumed charges must still be reflected after their heals"
+        )

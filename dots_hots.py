@@ -203,7 +203,7 @@ class HotTracker:
         self._by_name = {h.label.lower(): h for h in hots}
         self._active: Dict[Tuple[str, str], _ActiveHot] = {}
 
-    def _match(self, effect_name: Optional[str], ability: Optional[str] = None) -> Optional[DotHotDefinition]:
+    def _match(self, effect_name: Optional[str], ability: Optional[str] = None):
         """Checks effect_name first, then falls back to ability. Reported
         live ("no hots showing now"): SWTOR logs plenty of real heal ticks
         with effect_name genericized to plain "Heal" -- the ability's real
@@ -211,15 +211,19 @@ class HotTracker:
         against a real log: EVERY one of this user's own Kolto Pods ticks,
         154 of them, had effect_name=="Heal", never effect_name=="Kolto
         Pods") -- so effect_name-only matching silently never tracked it at
-        all, despite it already being a defined HOTS entry."""
-        for text in (effect_name, ability):
+        all, despite it already being a defined HOTS entry.
+
+        Returns (definition, matched_by) where matched_by is "effect" for a
+        real application line and "ability" for a fallback match -- the
+        caller needs that distinction, see feed()."""
+        for source, text in (("effect", effect_name), ("ability", ability)):
             if not text:
                 continue
             low = text.lower()
             for key, d in self._by_name.items():
                 if key in low:
-                    return d
-        return None
+                    return d, source
+        return None, None
 
     def feed(self, event, local_player_name: Optional[str], now: Optional[float] = None,
               alacrity_pct: float = 0.0) -> None:
@@ -249,7 +253,7 @@ class HotTracker:
             # timers.py's TimerRule path already guards against). Letting
             # it through would create a bogus entry keyed to the caster.
             return
-        definition = self._match(event.effect_name, event.ability)
+        definition, matched_by = self._match(event.effect_name, event.ability)
         if definition is None or not event.target:
             return
         now = now if now is not None else time.time()
@@ -269,6 +273,20 @@ class HotTracker:
             remaining = _extract_remaining_charges(event.values)
             if remaining is not None:
                 active.charges_lost = max(0, definition.max_charges - remaining)
+            return
+        if matched_by == "ability" and key in self._active:
+            # A HEAL TICK from an effect already being tracked, not a fresh
+            # cast. Every real HoT logs BOTH: a proper "ApplyEffect: <name>"
+            # when cast, and separate "ApplyEffect: Heal" lines carrying only
+            # the ability name as it ticks (measured on a real log -- Trauma
+            # Probe: 106 applies vs 1,133 heal ticks; Slow-release Medpac:
+            # 187 vs 1,797). Treating a tick as a re-application re-armed the
+            # full duration on every tick, so a charge shield's countdown sat
+            # permanently at ~179s of 180 and never visibly drained -- and
+            # its charges_lost reset each time too. Kolto Pods is the one
+            # effect with NO apply line at all (4,434 ticks, 0 applies),
+            # which is exactly why the ability fallback exists; a tick still
+            # CREATES an entry below when there isn't one.
             return
         duration = (
             apply_alacrity(definition.duration_seconds, alacrity_pct)
