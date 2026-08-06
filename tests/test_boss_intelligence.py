@@ -4,8 +4,9 @@ Covers a new feature: a boss health + target overlay needs live HP and
 track before -- phase transitions only ever checked an event's HP fraction
 inline (boss_definitions.py's hp_below condition), nothing persisted it.
 """
-from boss_definitions import BossDefinition, BossPhase, Condition
+from boss_definitions import BossDefinition, BossPhase, BossTimerDef, Condition
 from boss_intelligence import BossEncounterState
+from timers import TimerEngine
 from conftest import log_line
 from log_parser import parse_line
 
@@ -111,3 +112,120 @@ def test_reset_clears_hp_and_target_between_pulls():
 def test_hp_percent_none_before_any_data():
     state = BossEncounterState({"test_boss": _boss()})
     assert state.boss_hp_percent() is None
+
+
+class TestCombatStartTimers:
+    """Boss recognition needs an event that actually NAMES the boss, which
+    in real logs lands AFTER the EnterCombat line it counts from (measured
+    +0.96s on a real Writhing Horror pull). feed() had already processed
+    and discarded that EnterCombat by then, so a combat_start trigger
+    evaluated against any later event never matched -- 91 timers across 33
+    bosses silently never fired at all. See
+    BossEncounterState._fire_combat_start_timers."""
+
+    def _boss_with_cs_timer(self, **timer_kwargs):
+        kwargs = dict(label="Adds", duration_seconds=45.0,
+                      trigger=Condition(type="combat_start"))
+        kwargs.update(timer_kwargs)
+        return BossDefinition(
+            id="test_boss", name="Test Boss", boss_names=["TestBoss"],
+            phases=[BossPhase(id="p1", name="Phase 1",
+                              start_trigger=Condition(type="combat_start"))],
+            timers=[BossTimerDef(**kwargs)],
+        )
+
+    def _enter_combat(self):
+        return parse_line(
+            log_line("00:00:00.000", "@Tank#1", effect_type="Event",
+                      effect_name="EnterCombat {1}"),
+            line_number=1,
+        )
+
+    def test_combat_start_timer_fires_even_though_recognition_is_later(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss_with_cs_timer()})
+
+        sim_clock(0.0)
+        state.feed(self._enter_combat(), timer_engine=engine)
+        assert engine.snapshot() == [], "boss isn't recognizable from EnterCombat alone"
+
+        # A LATER event finally names the boss -- the timer must start now.
+        sim_clock(1.0)
+        state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
+
+        rows = engine.snapshot()
+        assert len(rows) == 1
+        assert rows[0][0] == "Adds"
+
+    def test_countdown_is_backdated_to_the_real_combat_start(self, sim_clock):
+        """A 45s timer must expire 45s after EnterCombat, not 45s after
+        whenever the boss happened to get named -- otherwise every
+        combat_start timer drifts later by the recognition delay."""
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss_with_cs_timer()})
+
+        sim_clock(0.0)
+        state.feed(self._enter_combat(), timer_engine=engine)
+        sim_clock(5.0)  # deliberately slow recognition
+        state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
+
+        remaining = engine.snapshot()[0][1]
+        assert abs(remaining - 40.0) < 0.01, (
+            "5s of the 45s countdown had already elapsed before recognition"
+        )
+
+    def test_it_does_not_announce_at_start_only_at_zero(self, sim_clock, monkeypatch):
+        """The label names a FUTURE event -- "Adds" means adds arrive when
+        this hits zero. Speaking it the instant combat starts is 45s
+        premature (reported live: "said jealous male way to early")."""
+        import timers as timers_mod
+        spoken = []
+        monkeypatch.setattr(timers_mod.audio, "speak",
+                            lambda text, category=None: spoken.append(text))
+
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss_with_cs_timer()})
+        sim_clock(0.0)
+        state.feed(self._enter_combat(), timer_engine=engine)
+        sim_clock(1.0)
+        state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
+
+        assert spoken == [], "must stay silent while the countdown is running"
+
+        sim_clock(46.0)
+        engine.tick()
+        assert spoken == ["Adds"], "reaching zero IS the mechanic -- call it out there"
+
+    def test_repeating_combat_start_timer_announces_on_each_interval(self, sim_clock, monkeypatch):
+        import timers as timers_mod
+        spoken = []
+        monkeypatch.setattr(timers_mod.audio, "speak",
+                            lambda text, category=None: spoken.append(text))
+
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss_with_cs_timer(
+            repeat_interval_seconds=90.0, repeat_count=9)})
+        sim_clock(0.0)
+        state.feed(self._enter_combat(), timer_engine=engine)
+        sim_clock(1.0)
+        state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
+
+        for t in (46.0, 136.0, 226.0):
+            sim_clock(t)
+            engine.tick()
+        assert spoken == ["Adds", "Adds", "Adds"], (
+            "first at 45s, then every 90s -- matches real spawn data (46.1/136.3/229.4)"
+        )
+
+    def test_reset_clears_the_combat_start_marker(self, sim_clock):
+        """Otherwise a stale EnterCombat from the previous pull would start
+        the next boss's timers already partway (or fully) elapsed."""
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss_with_cs_timer()})
+        sim_clock(0.0)
+        state.feed(self._enter_combat(), timer_engine=engine)
+        state.reset()
+
+        sim_clock(1.0)
+        state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
+        assert engine.snapshot() == [], "no combat start recorded for THIS pull yet"

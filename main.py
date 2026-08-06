@@ -213,6 +213,21 @@ def background_reader(
             if event is not None:
                 character_settings.sync_for_character(boss_state.local_player_name)
                 completed = tracker.feed(event)
+                if completed is not None:
+                    # Reset BEFORE feeding, not after: the event that rolls a
+                    # pull over is the FIRST event of the NEXT one (usually
+                    # its EnterCombat). Resetting afterwards fed it into the
+                    # previous pull's state and then immediately wiped what it
+                    # had just recorded -- which threw away the new pull's
+                    # combat-start marker that combat_start-triggered timers
+                    # are counted from (see
+                    # BossEncounterState._fire_combat_start_timers). The
+                    # offline replay path (analysis/corpus.py's replay_pulls)
+                    # has always reset in this order.
+                    history_writer.submit(completed)
+                    boss_state.reset()
+                    hot_tracker.reset()
+                    aggro_tracker.reset()
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
                 change = boss_state.feed(event, timer_engine=timer_engine)
                 if change is not None:
@@ -234,11 +249,6 @@ def background_reader(
                 hot_tracker.feed(event, local_player_name=boss_state.local_player_name,
                                   alacrity_pct=character_settings.alacrity_pct)
                 taunt_tracker.feed(event, local_player_name=boss_state.local_player_name)
-                if completed is not None:
-                    history_writer.submit(completed)
-                    boss_state.reset()
-                    hot_tracker.reset()
-                    aggro_tracker.reset()
     except Exception as exc:  # keep the app alive even if the reader dies
         status.text = f"Reader error: {exc}"
 

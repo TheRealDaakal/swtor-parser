@@ -154,6 +154,16 @@ class ActiveTimer:
     # its countdown (what the game does), but Kolto Probe on a different
     # target is a genuinely separate instance and still gets its own row.
     dedupe_key: Optional[str] = None
+    # False for a countdown whose LABEL names a future event rather than the
+    # event that triggered it -- e.g. a combat_start-triggered "Jealous Male"
+    # 45s timer means "the add arrives 45s from now", so speaking it the
+    # instant combat starts is 45s premature (reported live: "said jealous
+    # male way to early"). Those announce when the countdown reaches ZERO
+    # instead. True (the default) keeps the original behaviour for every
+    # timer whose trigger IS the mechanic firing -- e.g. "Corrosive Slime"
+    # triggered by that effect landing on you, which must be called out the
+    # moment it happens, not seconds later.
+    announce_on_start: bool = True
 
     def remaining(self, now: Optional[float] = None) -> float:
         now = now if now is not None else time.time()
@@ -195,6 +205,7 @@ class TimerEngine:
         voice_alert: bool = True, repeat_interval_seconds: Optional[float] = None,
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
         is_alert: bool = False, dedupe_key: Optional[str] = None, audio_path: Optional[str] = None,
+        announce_on_start: bool = True, elapsed_seconds: float = 0.0,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
@@ -207,7 +218,17 @@ class TimerEngine:
         category, dedupe_key) already exists, that entry is refreshed in
         place instead of a new one being appended -- prevents a
         rapidly-retriggered effect (e.g. Kolto Pods ticking on the same
-        target every ~0.9s) from piling up near-duplicate rows."""
+        target every ~0.9s) from piling up near-duplicate rows.
+
+        elapsed_seconds backdates the countdown -- for a timer that should
+        have started N seconds ago but couldn't yet. Needed because boss
+        recognition can only happen once an event actually names the boss,
+        which lands after the EnterCombat line it's counting from (see
+        boss_intelligence._fire_combat_start_timers).
+
+        announce_on_start=False suppresses the immediate callout and speaks
+        the label when the countdown reaches ZERO instead -- see
+        ActiveTimer.announce_on_start."""
         with self._lock:
             if dedupe_key is not None:
                 for t in self.active:
@@ -218,12 +239,14 @@ class TimerEngine:
                         t.warned = False
                         t.voice_alert = voice_alert
                         t.audio_path = audio_path
-                        _announce(label, audio_path, voice_alert, category=category)
+                        t.announce_on_start = announce_on_start
+                        if announce_on_start:
+                            _announce(label, audio_path, voice_alert, category=category)
                         return
             self.active.append(
                 ActiveTimer(
                     label=label,
-                    started_at=time.time(),
+                    started_at=time.time() - elapsed_seconds,
                     duration_seconds=duration_seconds,
                     warn_seconds_before=warn_seconds_before,
                     voice_alert=voice_alert,
@@ -234,11 +257,13 @@ class TimerEngine:
                     category=category,
                     is_alert=is_alert,
                     dedupe_key=dedupe_key,
+                    announce_on_start=announce_on_start,
                 )
             )
             if definition_id:
                 self._recently_started_ids.append(definition_id)
-        _announce(label, audio_path, voice_alert, category=category)
+        if announce_on_start:
+            _announce(label, audio_path, voice_alert, category=category)
 
     def cancel_by_definition_id(self, definition_id: str) -> None:
         """Silently removes any active timer(s) tied to this boss timer
@@ -384,6 +409,13 @@ class TimerEngine:
                     _announce(t.label, t.audio_path, t.voice_alert, category=t.category)
                     still_active.append(t)
                 else:
+                    # A countdown whose label names a FUTURE event has been
+                    # silent until now on purpose -- reaching zero IS the
+                    # mechanic, so this is the moment to call it out. Timers
+                    # that already announced when they started stay silent
+                    # here, exactly as before.
+                    if not t.announce_on_start:
+                        _announce(t.label, t.audio_path, t.voice_alert, category=t.category)
                     if t.definition_id:
                         self._recently_expired_ids.append(t.definition_id)
                 continue
@@ -392,7 +424,10 @@ class TimerEngine:
                 and not t.warned
                 and t.remaining(now) <= t.warn_seconds_before
             ):
-                _announce(f"{t.label} ending", t.audio_path, True, category=t.category)
+                # "X ending" is right for something currently running out;
+                # for a countdown TO a mechanic, the heads-up is "X soon".
+                warn_text = f"{t.label} ending" if t.announce_on_start else f"{t.label} soon"
+                _announce(warn_text, t.audio_path, True, category=t.category)
                 t.warned = True
             still_active.append(t)
         self.active = still_active
