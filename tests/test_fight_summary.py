@@ -8,7 +8,7 @@ structured facts.
 """
 from conftest import log_line
 from boss_definitions import _definition_from_dict
-from analysis.fight_summary import build_fight_summary
+from analysis.fight_summary import build_fight_summary, kill_names
 
 
 def _write_log(tmp_path, lines):
@@ -109,3 +109,63 @@ def test_no_definitions_argument_falls_back_to_loading_the_real_bundled_ones(tmp
     path = _write_log(tmp_path, lines)
     result = build_fight_summary(path, 1, len(lines))
     assert result["outcome"] == "unknown"
+
+
+class TestKillNames:
+    """`boss_names` is a RECOGNITION list -- "see any of these and you're in
+    this fight" -- so it legitimately contains adds. Using it as the kill
+    test meant any add dying counted as killing the boss. Real case: Styrak's
+    boss_names is ['Kell Dragon', 'Dread Master Styrak'] and a Styrak pull
+    kills dozens of Kell Dragons, so 74 of 92 pulls were scored kills.
+    """
+
+    def test_adds_in_boss_names_are_excluded(self):
+        d = _definition_from_dict({
+            "id": "styrak", "name": "Dread Master Styrak",
+            "boss_names": ["Kell Dragon", "Dread Master Styrak"],
+        })
+        assert kill_names(d) == ["Dread Master Styrak"]
+
+    def test_multi_boss_encounters_keep_every_name(self):
+        """The 13 bundled definitions the display-name rule doesn't resolve
+        are all genuine multi-boss fights -- no adds among them."""
+        d = _definition_from_dict({
+            "id": "dread_council", "name": "Dread Council",
+            "boss_names": ["Dread Master Bestia", "Dread Master Tyrans",
+                           "Dread Master Calphayus"],
+        })
+        assert kill_names(d) == ["Dread Master Bestia", "Dread Master Tyrans",
+                                 "Dread Master Calphayus"]
+
+    def test_no_boss_names_yields_nothing(self):
+        d = _definition_from_dict({"id": "x", "name": "X"})
+        assert kill_names(d) == []
+
+
+class TestMultiBossKill:
+    def _defs(self):
+        return {"council": _definition_from_dict({
+            "id": "council", "name": "Test Council",
+            "boss_names": ["Boss A", "Boss B"],
+            "phases": [{"id": "p1", "name": "Phase 1"}],
+        })}
+
+    def _lines(self, *dead):
+        lines = [log_line("00:00:00.000", "Boss A", ability="Intro",
+                          effect_name="AbilityActivate {1}"),
+                 log_line("00:00:01.000", "@Player#1", target="Boss A", ability="Hit",
+                          effect_name="Damage {2}", amount="100")]
+        for i, name in enumerate(dead):
+            lines.append(log_line(f"00:00:{10 + i:02d}.000", "@Player#1", target=name,
+                                  ability="Hit", effect_type="Event", effect_name="Death"))
+        return lines
+
+    def test_killing_only_one_boss_is_not_a_kill(self, tmp_path):
+        lines = self._lines("Boss A")
+        path = _write_log(tmp_path, lines)
+        assert build_fight_summary(path, 1, len(lines), self._defs())["outcome"] == "wipe"
+
+    def test_killing_every_boss_is_a_kill(self, tmp_path):
+        lines = self._lines("Boss A", "Boss B")
+        path = _write_log(tmp_path, lines)
+        assert build_fight_summary(path, 1, len(lines), self._defs())["outcome"] == "kill"
