@@ -182,15 +182,6 @@
         "type": "timer_expires",
         "timer_id": "olok_wave"
       }
-    },
-    {
-      "id": "olok_orbs_flashbang_2",
-      "label": "Flashbang_",
-      "duration_seconds": 40.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "[flash_gate]"
-      }
     }
   ]
 }

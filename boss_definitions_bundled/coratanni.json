@@ -390,30 +390,6 @@
       ]
     },
     {
-      "id": "coratanni_orbs_phase_2_hp",
-      "label": "Phase 2 HP",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "hp_below",
-        "percent": 70.0,
-        "selector": [
-          "Coratanni"
-        ]
-      }
-    },
-    {
-      "id": "coratanni_orbs_phase_3_hp",
-      "label": "Phase 3 HP",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "hp_below",
-        "percent": 20.0,
-        "selector": [
-          "Coratanni"
-        ]
-      }
-    },
-    {
       "id": "coratanni_orbs_phase_3_bird",
       "label": "Phase 3 (Bird)",
       "duration_seconds": 10.0,

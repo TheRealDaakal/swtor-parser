@@ -213,18 +213,6 @@
       ]
     },
     {
-      "id": "torque_orbs_magnetic_hp",
-      "label": "Magnetic HP",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "hp_below",
-        "percent": 95.0,
-        "selector": [
-          "Torque"
-        ]
-      }
-    },
-    {
       "id": "torque_orbs_magnetic_1st",
       "label": "Magnetic 1st",
       "duration_seconds": 5.0,

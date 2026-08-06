@@ -275,18 +275,6 @@
         "type": "ability_cast",
         "keyword": "Surprise Shivving"
       }
-    },
-    {
-      "id": "cartel_warlords_orbs_sunder_the_end_vm",
-      "label": "Sunder The End VM",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "The End"
-      },
-      "difficulties": [
-        "veteran"
-      ]
     }
   ]
 }

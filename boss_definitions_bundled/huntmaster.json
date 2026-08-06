@@ -462,18 +462,6 @@
       ]
     },
     {
-      "id": "huntmaster_orbs_firestorm_grenade_p3_vm",
-      "label": "Firestorm Grenade P3 VM",
-      "duration_seconds": 16.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "huntmaster_orbs_p3_jump"
-      },
-      "difficulties": [
-        "veteran"
-      ]
-    },
-    {
       "id": "huntmaster_orbs_power_scater",
       "label": "Power/Scater",
       "duration_seconds": 16.0,

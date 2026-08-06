@@ -287,20 +287,6 @@
       }
     },
     {
-      "id": "nefra_orbs_dps_add_vm",
-      "label": "DPS Add VM",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3308460552749056"
-        ]
-      },
-      "difficulties": [
-        "veteran"
-      ]
-    },
-    {
       "id": "nefra_orbs_tank_add_vm",
       "label": "TANK Add VM",
       "duration_seconds": 30.0,
