@@ -203,13 +203,22 @@ class HotTracker:
         self._by_name = {h.label.lower(): h for h in hots}
         self._active: Dict[Tuple[str, str], _ActiveHot] = {}
 
-    def _match(self, effect_name: Optional[str]) -> Optional[DotHotDefinition]:
-        if not effect_name:
-            return None
-        low = effect_name.lower()
-        for key, d in self._by_name.items():
-            if key in low:
-                return d
+    def _match(self, effect_name: Optional[str], ability: Optional[str] = None) -> Optional[DotHotDefinition]:
+        """Checks effect_name first, then falls back to ability. Reported
+        live ("no hots showing now"): SWTOR logs plenty of real heal ticks
+        with effect_name genericized to plain "Heal" -- the ability's real
+        name only shows up in the `ability` field instead (confirmed
+        against a real log: EVERY one of this user's own Kolto Pods ticks,
+        154 of them, had effect_name=="Heal", never effect_name=="Kolto
+        Pods") -- so effect_name-only matching silently never tracked it at
+        all, despite it already being a defined HOTS entry."""
+        for text in (effect_name, ability):
+            if not text:
+                continue
+            low = text.lower()
+            for key, d in self._by_name.items():
+                if key in low:
+                    return d
         return None
 
     def feed(self, event, local_player_name: Optional[str], now: Optional[float] = None,
@@ -232,7 +241,15 @@ class HotTracker:
             return
         if local_player_name is None or event.source != local_player_name:
             return
-        definition = self._match(event.effect_name)
+        if event.is_ability_activate:
+            # The cast line itself, not the effect landing -- carries the
+            # same ability name _match() now also checks via the `ability`
+            # fallback above, but its target defaults to "=" (the CASTER),
+            # not whoever the effect actually lands on (same issue
+            # timers.py's TimerRule path already guards against). Letting
+            # it through would create a bogus entry keyed to the caster.
+            return
+        definition = self._match(event.effect_name, event.ability)
         if definition is None or not event.target:
             return
         now = now if now is not None else time.time()

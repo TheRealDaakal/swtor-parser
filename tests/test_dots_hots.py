@@ -267,6 +267,36 @@ def test_non_charge_hot_is_unaffected(sim_clock):
     assert abs(rows[0]["remaining"] - 16.0) < 0.01  # 21s duration - 5s elapsed
 
 
+def test_ability_field_matches_when_effect_name_is_a_generic_heal(sim_clock):
+    """Reported live: "no hots showing now." Traced to a real log: every
+    single one of this user's own Kolto Pods ticks (154 of them) logged
+    with effect_name=="Heal" -- SWTOR genericizes the effect_name for many
+    real heal ticks, the actual ability name only survives in the
+    `ability` field. Matching effect_name alone silently never tracked
+    Kolto Pods at all, despite it already being a defined HOTS entry."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "@Ally#1",
+          "Kolto Pods {1}", "ApplyEffect", "Heal {2}", amount="500")
+
+    rows = tracker.expiring(now=0.0)
+    assert len(rows) == 1
+    assert rows[0]["target"] == "Ally"
+    assert rows[0]["effect"] == "Kolto Pods"
+
+
+def test_ability_activate_line_is_never_tracked_via_the_ability_fallback(sim_clock):
+    """The cast line itself (effect_name literally "AbilityActivate", not a
+    generic "Heal") carries the same ability name the fallback above now
+    also checks, but its target defaults to "=" (the CASTER) -- must not
+    create a bogus self-keyed entry, same guard timers.py's TimerRule path
+    already has for the identical reason."""
+    tracker = HotTracker()
+    _feed(tracker, sim_clock, 0.0, "@Healer#1", "",
+          "Kolto Pods {1}", "ApplyEffect", "AbilityActivate {2}")
+
+    assert tracker.expiring(now=0.0) == []
+
+
 def test_alacrity_scales_duration_for_affected_definitions(sim_clock):
     """Kolto Probe is_affected_by_alacrity=True (verified against BARAS's
     current source, see the module docstring) -- 20% alacrity must scale
