@@ -21,7 +21,9 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4447455814877184"
+        "ability_ids": [
+          "4447455814877184"
+        ]
       }
     },
     {

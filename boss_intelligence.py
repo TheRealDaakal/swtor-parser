@@ -312,7 +312,7 @@ class BossEncounterState:
                     t.label, t.duration_seconds, t.warn_seconds_before, t.voice_alert,
                     repeat_interval_seconds=t.repeat_interval_seconds,
                     repeat_count=t.repeat_count, definition_id=t.id, category="boss",
-                    is_alert=t.is_alert,
+                    is_alert=t.is_alert, announce_on_start=t.announce_on_start,
                 )
 
     def _fire_combat_start_timers(self, timer_engine) -> None:

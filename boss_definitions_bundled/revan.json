@@ -228,7 +228,9 @@
       "duration_seconds": 23.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
+        "ability_ids": [
+          "3447523003858944"
+        ]
       },
       "cancel_trigger": {
         "type": "any_phase_change"
@@ -394,7 +396,9 @@
       "duration_seconds": 23.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
+        "ability_ids": [
+          "3447523003858944"
+        ]
       }
     },
     {
@@ -403,7 +407,9 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3447523003858944"
+        "ability_ids": [
+          "3447523003858944"
+        ]
       }
     },
     {

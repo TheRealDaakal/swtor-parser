@@ -73,7 +73,9 @@
         "conditions": [
           {
             "type": "ability_cast",
-            "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4133047028940800"
+            "ability_ids": [
+              "4133047028940800"
+            ]
           },
           {
             "type": "counter_reaches",
@@ -440,7 +442,9 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4134120770764800"
+        "ability_ids": [
+          "4134120770764800"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -698,7 +702,9 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4134120770764800"
+        "ability_ids": [
+          "4134120770764800"
+        ]
       }
     },
     {

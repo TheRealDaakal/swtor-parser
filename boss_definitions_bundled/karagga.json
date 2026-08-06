@@ -59,7 +59,9 @@
       "duration_seconds": 59.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2778268314894336"
+        "ability_ids": [
+          "2778268314894336"
+        ]
       },
       "cancel_trigger": {
         "type": "combat_end"
@@ -144,7 +146,9 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2778268314894336"
+        "ability_ids": [
+          "2778268314894336"
+        ]
       }
     }
   ]

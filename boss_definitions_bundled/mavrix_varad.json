@@ -70,7 +70,9 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_2455797875343360"
+        "ability_ids": [
+          "2455797875343360"
+        ]
       }
     },
     {

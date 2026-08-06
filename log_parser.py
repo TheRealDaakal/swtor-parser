@@ -114,6 +114,13 @@ class CombatEvent:
     effect_type: Optional[str]   # e.g. ApplyEffect, Event, RemoveEffect
     effect_name: Optional[str]   # e.g. "Force Scream", "Death", "AbilityActivate"
     values: List[str] = field(default_factory=list)  # raw parenthetical groups
+    # The ability field's own numeric {id}, kept as a string. `ability`
+    # above is the human-readable name with that id stripped -- but SWTOR
+    # logs some abilities with NO name at all, just the id (a real example
+    # from this user's logs: "[ {3016484380999680}]", The Writhing Horror's
+    # Burrow). Keyword matching can never reach those, so triggers that
+    # need them match on this instead. See boss_definitions' ability_ids.
+    ability_id: Optional[str] = None
 
     # Derived, filled in by classify()
     is_damage: bool = False
@@ -199,6 +206,20 @@ class CombatEvent:
     # RAID_BUFF_ABILITY_NAMES ability -- one per activation, so casting
     # Predation on 15 people counts as 1, not 15. See RAID_BUFF_ABILITY_NAMES.
     is_raid_buff_cast: bool = False
+
+
+ABILITY_ID_RE = re.compile(r"\{(\d+)\}")
+
+
+def _extract_id(text: str) -> Optional[str]:
+    """The numeric {id} out of a bracket field, e.g.
+    'Force Leap {812105301229568}' -> '812105301229568'. Kept as a string:
+    it's only ever compared for equality, and these are 16-digit values
+    that have no business being arithmetic."""
+    if not text:
+        return None
+    m = ABILITY_ID_RE.search(text)
+    return m.group(1) if m else None
 
 
 def _clean_name(text: str) -> Optional[str]:
@@ -418,6 +439,7 @@ def parse_line(line: str, line_number: Optional[int] = None) -> Optional[CombatE
         brackets[2] if len(brackets) > 2 else "", self_name=source
     )
     ability = _clean_name(brackets[3]) if len(brackets) > 3 else None
+    ability_id = _extract_id(brackets[3]) if len(brackets) > 3 else None
 
     effect_type = None
     effect_name = None
@@ -446,6 +468,7 @@ def parse_line(line: str, line_number: Optional[int] = None) -> Optional[CombatE
         source=source,
         target=target,
         ability=ability,
+        ability_id=ability_id,
         effect_type=effect_type,
         effect_name=effect_name,
         values=values,

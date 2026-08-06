@@ -340,7 +340,9 @@
       },
       "cancel_trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
+        "ability_ids": [
+          "3294763902042112"
+        ]
       }
     },
     {
@@ -439,7 +441,9 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3141656907874304"
+        "ability_ids": [
+          "3141656907874304"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -496,7 +500,9 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
+        "ability_ids": [
+          "3294763902042112"
+        ]
       },
       "cancel_trigger": {
         "type": "phase_entered",
@@ -1008,7 +1014,9 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3294763902042112"
+        "ability_ids": [
+          "3294763902042112"
+        ]
       }
     },
     {
@@ -1035,7 +1043,9 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3141656907874304"
+        "ability_ids": [
+          "3141656907874304"
+        ]
       }
     },
     {

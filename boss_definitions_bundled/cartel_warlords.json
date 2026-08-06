@@ -118,7 +118,9 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3128772005986304"
+        "ability_ids": [
+          "3128772005986304"
+        ]
       },
       "cancel_trigger": {
         "type": "entity_death",
@@ -223,7 +225,9 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3128772005986304"
+        "ability_ids": [
+          "3128772005986304"
+        ]
       }
     },
     {

@@ -28,6 +28,29 @@
       }
     },
     {
+      "id": "wh_burrow_cs",
+      "label": "Burrow",
+      "duration_seconds": 20.0,
+      "trigger": {
+        "type": "combat_start"
+      }
+    },
+    {
+      "id": "wh_burrow",
+      "label": "Burrow",
+      "duration_seconds": 45.0,
+      "announce_on_start": false,
+      "trigger": {
+        "type": "ability_cast",
+        "ability_ids": [
+          "3016484380999680"
+        ],
+        "selector": [
+          "The Writhing Horror"
+        ]
+      }
+    },
+    {
       "label": "Jealous Male",
       "duration_seconds": 45.0,
       "trigger": {
@@ -43,7 +66,8 @@
         "type": "effect_applied",
         "keyword": "Corrosive Slime",
         "target": "local_player"
-      }
+      },
+      "is_alert": true
     },
     {
       "label": "Adds Spawn",
@@ -52,7 +76,8 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Incubation"
-      }
+      },
+      "is_alert": true
     },
     {
       "id": "writhing_horror_orbs_burn",

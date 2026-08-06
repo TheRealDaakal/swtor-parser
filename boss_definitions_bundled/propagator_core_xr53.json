@@ -128,7 +128,9 @@
       "duration_seconds": 22.5,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4825975577640960"
+        "ability_ids": [
+          "4825975577640960"
+        ]
       },
       "cancel_trigger": {
         "type": "any_of",

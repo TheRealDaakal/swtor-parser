@@ -56,3 +56,33 @@ def test_environmental_damage_has_no_ability():
     ev = parse_line(line, line_number=1)
     assert ev.is_damage
     assert ev.ability is None
+
+
+class TestAbilityId:
+    """SWTOR logs some abilities with NO name at all, just the numeric id --
+    a real line from this user's corpus reads "[ {3016484380999680}]" (The
+    Writhing Horror's Burrow). Keyword matching can never reach those, so
+    the id has to survive parsing for id-based triggers to work at all."""
+
+    def test_ability_id_is_captured_alongside_the_name(self):
+        ev = parse_line(log_line("00:00:00.000", "@Dps#1", target="Boss",
+                                  ability="Force Leap {812105301229568}",
+                                  effect_name="Damage {2}", amount="100"),
+                         line_number=1)
+        assert ev.ability == "Force Leap"
+        assert ev.ability_id == "812105301229568"
+
+    def test_unnamed_ability_still_yields_its_id(self):
+        """The exact shape that made this necessary: no name, id only."""
+        raw = ("[00:00:00.000] [Boss {1}:2|(0,0,0,0)|(100/100)] [=] "
+               "[ {3016484380999680}] [Event {3}: AbilityActivate {4}]")
+        ev = parse_line(raw, line_number=1)
+        assert ev.ability is None, "there genuinely is no name to parse"
+        assert ev.ability_id == "3016484380999680"
+        assert ev.is_ability_activate
+
+    def test_no_ability_bracket_leaves_the_id_unset(self):
+        ev = parse_line(log_line("00:00:00.000", "@Dps#1", target="Boss",
+                                  effect_name="Damage {2}", amount="100"),
+                         line_number=1)
+        assert ev.ability_id is None

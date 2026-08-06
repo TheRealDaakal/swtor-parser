@@ -21,7 +21,7 @@ groups -- this was not a Soa-specific gap.
 import pytest
 
 from boss_definitions import Condition, EvalContext, _definition_from_dict
-from log_parser import CombatEvent
+from log_parser import CombatEvent, parse_line
 
 
 def _hp_event(target, hp_current, hp_max):
@@ -271,3 +271,72 @@ def test_hp_phase_markers_ignores_hp_below_nested_inside_all_of():
         ],
     })
     assert definition.hp_phase_markers() == []
+
+
+class TestAbilityIdTriggers:
+    """BARAS's own encounter data is ability-ID based throughout. This
+    project translates those IDs to keyword text, and any ID whose name was
+    never observed in a real log became an inert
+    REPLACE_WITH_REAL_ABILITY_NAME_<id> placeholder that could never fire --
+    133 of them across 56 bosses. Matching the ID directly fixes those
+    without needing a name, and is the ONLY thing that can work for
+    abilities SWTOR logs with no name at all."""
+
+    def _ctx(self, event):
+        return EvalContext(
+            event=event, boss_names=[], local_player_name=None, counters={},
+            seen_entities=set(), recently_expired_timer_ids=[],
+            recently_ended_phase_ids=[], fired_hp_thresholds=set(),
+            recently_entered_phase_ids=[], active_phase_id=None,
+            fired_counter_reaches=set(), recently_started_timer_ids=[],
+            changed_counter_ids=set(),
+        )
+
+    def _cast(self, ability_id, name=""):
+        name_part = f"{name} " if name else " "
+        raw = (f"[00:00:00.000] [Boss {{1}}:2|(0,0,0,0)|(100/100)] [=] "
+               f"[{name_part}{{{ability_id}}}] [Event {{3}}: AbilityActivate {{4}}]")
+        return parse_line(raw, line_number=1)
+
+    def test_matches_an_unnamed_ability_by_id(self):
+        cond = Condition(type="ability_cast", ability_ids=["3016484380999680"])
+        assert cond.matches(self._ctx(self._cast("3016484380999680"))) is True
+
+    def test_does_not_match_a_different_id(self):
+        cond = Condition(type="ability_cast", ability_ids=["3016484380999680"])
+        assert cond.matches(self._ctx(self._cast("999999999999999"))) is False
+
+    def test_id_match_is_exact_not_substring(self):
+        """Keyword matching is substring-based; IDs must not be, or a short
+        id would spuriously match inside a longer one."""
+        cond = Condition(type="ability_cast", ability_ids=["3016484380999680"])
+        assert cond.matches(self._ctx(self._cast("30164843809996801"))) is False
+
+    def test_keyword_matching_still_works_when_no_ids_are_given(self):
+        cond = Condition(type="ability_cast", keyword="Force Leap")
+        assert cond.matches(self._ctx(self._cast("812105301229568", "Force Leap"))) is True
+
+    def test_ability_ids_load_from_json_as_strings(self):
+        """A definition may write these as JSON numbers; they must still
+        compare equal to the parsed event's string id."""
+        definition = _definition_from_dict({
+            "id": "x", "name": "X", "boss_names": ["X"],
+            "phases": [{"id": "p1", "name": "Main"}],
+            "timers": [{
+                "label": "Burrow", "duration_seconds": 45.0,
+                "trigger": {"type": "ability_cast", "ability_ids": [3016484380999680]},
+            }],
+        })
+        assert definition.timers[0].trigger.ability_ids == ["3016484380999680"]
+
+    def test_announce_on_start_defaults_true_and_loads_from_json(self):
+        definition = _definition_from_dict({
+            "id": "x", "name": "X", "boss_names": ["X"],
+            "phases": [{"id": "p1", "name": "Main"}],
+            "timers": [
+                {"label": "A", "duration_seconds": 5.0},
+                {"label": "B", "duration_seconds": 5.0, "announce_on_start": False},
+            ],
+        })
+        assert definition.timers[0].announce_on_start is True
+        assert definition.timers[1].announce_on_start is False

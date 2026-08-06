@@ -150,6 +150,15 @@ class Condition:
     value: Optional[float] = None
     conditions: List["Condition"] = field(default_factory=list)  # for any_of / all_of
     condition: Optional["Condition"] = None  # for `not` (single nested condition)
+    # Match the ability's numeric {id} instead of its name. SWTOR logs some
+    # abilities with NO name at all -- a real line from this user's logs
+    # reads "[ {3016484380999680}]" (The Writhing Horror's Burrow) -- so
+    # keyword matching can never reach them. BARAS's own definitions are
+    # id-based throughout; this project translates them to keywords, and any
+    # id whose name was never observed became an inert
+    # REPLACE_WITH_REAL_ABILITY_NAME_<id> placeholder that could never fire.
+    # Matching the id directly makes those work without needing a name.
+    ability_ids: List[str] = field(default_factory=list)
 
     def matches(self, ctx: EvalContext, commit: bool = True) -> bool:
         """commit=False performs a read-only check: it evaluates whether
@@ -213,6 +222,11 @@ class Condition:
             sel = self.selector or ctx.boss_names
             if sel and event.source not in sel:
                 return False
+            if self.ability_ids:
+                # Exact id match -- unlike the keyword path below this needs
+                # no substring semantics, and an unnamed ability has nothing
+                # else to match on.
+                return event.ability_id in self.ability_ids
             return (self.keyword or "").lower() in (event.ability or "").lower()
 
         if self.type == "effect_applied":
@@ -362,6 +376,9 @@ def _load_condition(data: Optional[dict]) -> Optional[Condition]:
         value=data.get("value"),
         conditions=[_load_condition(c) for c in data.get("conditions", [])],
         condition=_load_condition(data.get("condition")),
+        # str() so a JSON file that writes these as numbers rather than
+        # strings still compares equal to the parsed event's string id.
+        ability_ids=[str(i) for i in data.get("ability_ids", [])],
     )
 
 
@@ -419,6 +436,15 @@ class BossTimerDef:
     # is identical either way, this only changes how the GUI/overlay shows
     # it. See timers.py's ActiveTimer.is_alert for where it actually lands.
     is_alert: bool = False
+    # False when this countdown PREDICTS the next occurrence rather than
+    # reporting the one that triggered it -- the callout then fires when the
+    # bar reaches zero instead of when it starts. combat_start-triggered
+    # timers always behave this way regardless (combat starting is never
+    # itself the mechanic); this flag is for the other case: a mechanic on a
+    # fixed cooldown, re-triggered by its own cast, where announcing at both
+    # the cast AND the prediction would just say the same thing twice.
+    # See timers.py's ActiveTimer.announce_on_start.
+    announce_on_start: bool = True
 
     def active_in(self, phase_id: Optional[str]) -> bool:
         return not self.phases or phase_id in self.phases
@@ -539,6 +565,7 @@ def _definition_from_dict(data: dict) -> BossDefinition:
             repeat_count=t.get("repeat_count", 0),
             cancel_trigger=_load_condition(t.get("cancel_trigger")),
             is_alert=t.get("is_alert", False),
+            announce_on_start=t.get("announce_on_start", True),
         )
         for t in data.get("timers", [])
     ]

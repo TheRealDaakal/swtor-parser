@@ -91,7 +91,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391757148487680"
+        "ability_ids": [
+          "3391757148487680"
+        ]
       }
     },
     {
@@ -100,7 +102,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3466880421462016"
+        "ability_ids": [
+          "3466880421462016"
+        ]
       }
     },
     {
@@ -109,7 +113,9 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3420554904207360"
+        "ability_ids": [
+          "3420554904207360"
+        ]
       }
     },
     {
@@ -118,7 +124,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3457169500405760"
+        "ability_ids": [
+          "3457169500405760"
+        ]
       }
     },
     {
@@ -127,7 +135,9 @@
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+        "ability_ids": [
+          "3391744263585792"
+        ]
       }
     },
     {
@@ -136,7 +146,9 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+        "ability_ids": [
+          "3391744263585792"
+        ]
       }
     },
     {
@@ -172,7 +184,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391757148487680"
+        "ability_ids": [
+          "3391757148487680"
+        ]
       }
     },
     {
@@ -190,7 +204,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3466880421462016"
+        "ability_ids": [
+          "3466880421462016"
+        ]
       }
     },
     {
@@ -199,7 +215,9 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3420554904207360"
+        "ability_ids": [
+          "3420554904207360"
+        ]
       }
     },
     {
@@ -217,7 +235,9 @@
       "duration_seconds": 11.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+        "ability_ids": [
+          "3391744263585792"
+        ]
       }
     },
     {
@@ -235,7 +255,9 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3391744263585792"
+        "ability_ids": [
+          "3391744263585792"
+        ]
       }
     },
     {
@@ -262,7 +284,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3457169500405760"
+        "ability_ids": [
+          "3457169500405760"
+        ]
       }
     }
   ]
