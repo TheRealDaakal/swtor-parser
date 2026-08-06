@@ -47,7 +47,9 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "repeat_interval_seconds": 90.0,
+      "repeat_count": 9
     },
     {
       "label": "Corrosive Slime",
