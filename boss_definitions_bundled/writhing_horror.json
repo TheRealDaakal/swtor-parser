@@ -28,21 +28,6 @@
       }
     },
     {
-      "label": "Burrow (opening)",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "combat_start"
-      }
-    },
-    {
-      "label": "Burrow",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Burrow"
-      }
-    },
-    {
       "label": "Jealous Male",
       "duration_seconds": 45.0,
       "trigger": {
@@ -79,15 +64,6 @@
         "selector": [
           "The Writhing Horror"
         ]
-      }
-    },
-    {
-      "id": "writhing_horror_orbs_teleport",
-      "label": "Teleport",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_3016484380999680"
       }
     }
   ]
