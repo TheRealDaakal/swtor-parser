@@ -480,7 +480,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Incinerate Armor"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "firebrand_stormcaller_orbs_targeted_missile",
@@ -498,7 +501,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Double Destruction"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "firebrand_stormcaller_orbs_storm_cleave",

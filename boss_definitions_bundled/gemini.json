@@ -77,7 +77,10 @@
         "ability_ids": [
           "4162446080081920"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "gemini_orbs_adds",

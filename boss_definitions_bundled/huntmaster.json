@@ -456,7 +456,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_orbs_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_orbs_p3_jump",
@@ -474,7 +477,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_orbs_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_orbs_firestorm_grenade",
@@ -519,7 +525,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_orbs_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_orbs_egg_snipe_p3",
@@ -564,7 +573,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Primal Fear"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_orbs_power_scater",

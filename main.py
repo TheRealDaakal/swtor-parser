@@ -229,8 +229,14 @@ def background_reader(
                     hot_tracker.reset()
                     aggro_tracker.reset()
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
+                had_phase = boss_state.active_phase_id is not None
                 change = boss_state.feed(event, timer_engine=timer_engine)
-                if change is not None:
+                if change is not None and had_phase:
+                    # `had_phase` above: the FIRST phase is assigned the moment
+                    # the boss is recognized, which is just "the fight started",
+                    # not a transition worth calling out -- and 133 of 163
+                    # bosses name it something generic ("Main", "Phase 1"), so
+                    # it was announcing "Main" on every single pull.
                     # Reuses the same is_alert/voice_alert pipeline authored
                     # boss timers already get (timers.py's start_timer ->
                     # audio.speak) -- a phase change just starts one of

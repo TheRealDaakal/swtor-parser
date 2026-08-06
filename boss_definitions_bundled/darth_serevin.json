@@ -26,7 +26,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Affliction"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "darth_serevin_orbs_stealth_75",

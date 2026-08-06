@@ -37,7 +37,10 @@
         "selector": [
           "Kell Dragon"
         ]
-      }
+      },
+      "difficulties": [
+        "story"
+      ]
     },
     {
       "id": "Styrak_k_p2_int",
@@ -1283,7 +1286,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Headbutt"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_orbs_knockback",
@@ -1303,7 +1309,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Vomit Pool"
-      }
+      },
+      "group_sizes": [
+        16
+      ]
     },
     {
       "id": "Styrak_k_orbs_leap_slam",

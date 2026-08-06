@@ -42,7 +42,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Quaking Blows"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     }
   ]
 }

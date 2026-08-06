@@ -275,6 +275,8 @@ class BossEncounterState:
         for phase in boss.phases:
             if phase.id == old_phase_id:
                 continue
+            if not phase.applies_to_difficulty(self.difficulty):
+                continue
             if phase.can_start(bare_ctx):
                 self.active_phase_id = phase.id
                 change = PhaseChange(boss.id, boss.name, phase.id, phase.name)
@@ -297,6 +299,8 @@ class BossEncounterState:
                 changed_counter_ids=ctx.changed_counter_ids,
                 timer_engine=ctx.timer_engine,
             )
+            if not phase.applies_to_difficulty(self.difficulty):
+                continue
             if phase.can_start(trial_ctx):
                 self.active_phase_id = phase.id
                 change = PhaseChange(boss.id, boss.name, phase.id, phase.name)
@@ -314,6 +318,8 @@ class BossEncounterState:
             if not t.active_in(self.active_phase_id):
                 continue
             if not t.applies_to_difficulty(self.difficulty):
+                continue
+            if not t.applies_to_group_size(self.group_size):
                 continue
             # combat_start timers are handled by _fire_combat_start_timers()
             # instead -- they can't fire here, since recognition happens on a
@@ -369,6 +375,8 @@ class BossEncounterState:
             if not t.active_in(self.active_phase_id):
                 continue
             if not t.applies_to_difficulty(self.difficulty):
+                continue
+            if not t.applies_to_group_size(self.group_size):
                 continue
             if not t.matches(ctx):
                 continue

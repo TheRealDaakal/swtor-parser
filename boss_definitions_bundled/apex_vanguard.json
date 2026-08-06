@@ -617,7 +617,8 @@
         "master",
         "story",
         "veteran"
-      ]
+      ],
+      "voice_alert": false
     },
     {
       "id": "apex_vanguard_rockets_after_zone",

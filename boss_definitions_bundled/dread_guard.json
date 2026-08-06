@@ -195,7 +195,8 @@
       },
       "difficulties": [
         "master"
-      ]
+      ],
+      "voice_alert": false
     },
     {
       "id": "dg_at_12_circles",
@@ -370,7 +371,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "[aw_lightning_chain]"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_guard_orbs_lightning_copy",

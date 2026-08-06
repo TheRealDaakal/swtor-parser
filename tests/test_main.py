@@ -121,11 +121,17 @@ class _NullHistoryWriter:
 
 
 def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp_path, sim_clock):
-    """Every genuine phase transition -- including the initial one, when
-    the boss is first recognized -- should start a voice_alert/is_alert
-    timer carrying the new phase's name (main.py's PHASE_ALERT_SECONDS
-    block), so "burn phase started" (or any other phase) gets called out
-    instead of only updating the passive header text."""
+    """A genuine phase transition should start a voice_alert/is_alert timer
+    carrying the new phase's name (main.py's PHASE_ALERT_SECONDS block), so
+    "burn phase started" gets called out rather than only updating the
+    passive header text.
+
+    The INITIAL phase deliberately does NOT announce. It's assigned the
+    moment the boss is recognized, which is just "the fight started", not a
+    transition -- and 133 of the 163 bundled bosses name it something
+    generic ("Main", "Phase 1"). Measured on a real 46-pull raid log, that
+    meant the app said "Main" 26 times in one session, purely because pulls
+    kept starting."""
     import main
     import log_watcher
     from stats import StatsTracker
@@ -182,8 +188,8 @@ def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp
 
     phase_alerts = [t for t in timer_engine.active if t.category == "phase"]
     labels = sorted(t.label for t in phase_alerts)
-    assert labels == ["Phase 1", "Phase 2 (Burn)"], (
-        f"expected both phase transitions to fire an alert timer, got {labels}"
+    assert labels == ["Phase 2 (Burn)"], (
+        f"only the real transition should announce, not the initial phase; got {labels}"
     )
     for t in phase_alerts:
         assert t.is_alert is True

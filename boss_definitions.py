@@ -393,6 +393,15 @@ class BossPhase:
     # this, phase_ended would be trivially true the instant this phase is
     # merely no longer the newest one, regardless of what actually happened.
     end_trigger: Optional[Condition] = None
+    # Same scoping as BossTimerDef.difficulties -- some fights have a phase
+    # that only exists in one mode (e.g. Styrak's "Styrak (SM)"), and
+    # entering it in the wrong mode drags every phase-scoped timer with it.
+    difficulties: List[str] = field(default_factory=list)
+
+    def applies_to_difficulty(self, difficulty: Optional[str]) -> bool:
+        if not self.difficulties or difficulty is None:
+            return True
+        return difficulty in self.difficulties
 
     def can_start(self, ctx: EvalContext) -> bool:
         if self.start_trigger is None:
@@ -452,6 +461,15 @@ class BossTimerDef:
     # Empty means "applies everywhere", which is also the safe fallback for
     # any timer whose source didn't say.
     difficulties: List[str] = field(default_factory=list)
+    # Group sizes this mechanic exists at (8 / 16). ORBS ships explicit
+    # 16-player variants alongside the 8-player ones; firing both means the
+    # wrong one is always shouting. Empty = applies at any size.
+    group_sizes: List[int] = field(default_factory=list)
+
+    def applies_to_group_size(self, size: Optional[int]) -> bool:
+        if not self.group_sizes or size is None:
+            return True
+        return size in self.group_sizes
 
     def active_in(self, phase_id: Optional[str]) -> bool:
         return not self.phases or phase_id in self.phases
@@ -552,6 +570,7 @@ def _definition_from_dict(data: dict) -> BossDefinition:
             start_trigger=_load_condition(p.get("start_trigger") or p.get("trigger")),
             conditions=[_load_condition(c) for c in p.get("conditions", [])],
             end_trigger=_load_condition(p.get("end_trigger")),
+            difficulties=p.get("difficulties", []),
         )
         for p in data.get("phases", [])
     ]
@@ -584,6 +603,7 @@ def _definition_from_dict(data: dict) -> BossDefinition:
             is_alert=t.get("is_alert", False),
             announce_on_start=t.get("announce_on_start", True),
             difficulties=t.get("difficulties", []),
+            group_sizes=[int(g) for g in t.get("group_sizes", [])],
         )
         for t in data.get("timers", [])
     ]

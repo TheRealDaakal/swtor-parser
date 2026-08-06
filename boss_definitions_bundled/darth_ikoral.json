@@ -70,7 +70,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Ancient Knowledge"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "darth_ikoral_orbs_knocback_80",

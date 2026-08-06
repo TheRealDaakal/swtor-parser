@@ -295,7 +295,10 @@
         "ability_ids": [
           "3308460552749056"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "nefra_orbs_tank_add_vm",
@@ -306,7 +309,10 @@
         "ability_ids": [
           "3308164200005632"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "nefra_orbs_nta_reset",

@@ -73,7 +73,10 @@
         "ability_ids": [
           "2455797875343360"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "mavrix_varad_orbs_jump_25",

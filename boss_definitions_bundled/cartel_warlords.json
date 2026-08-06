@@ -324,7 +324,10 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "The End"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     }
   ]
 }
