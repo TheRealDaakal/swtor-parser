@@ -28,7 +28,15 @@ const compact = n => {
 };
 const dur = s => {
   if (s == null) return '—';
-  const m = Math.floor(s / 60), r = Math.round(s % 60);
+  // Round to whole seconds BEFORE splitting. Rounding the remainder
+  // separately lets it reach 60: a 119.6s pull rendered as "1m 60s".
+  const total = Math.round(s);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const r = total % 60;
+  // Hours only show up on aggregates ("time spent on this boss"), never on
+  // a single pull -- but "368m 59s" is not a number anyone can read.
+  if (h) return `${h}h ${String(m).padStart(2, '0')}m`;
   return m ? `${m}m ${String(r).padStart(2, '0')}s` : `${r}s`;
 };
 // real_start_time is a Unix epoch (seconds) reconstructed from the log
@@ -65,6 +73,7 @@ $$('.tab').forEach(t => {
 
 function refreshActiveTab() {
   if (activeView === 'history') loadHistory();
+  else if (activeView === 'deepdive') loadDeepDive();
   else if (activeView === 'timers') loadTimerRules();
   else if (activeView === 'encounters') loadEncounters();
   else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
@@ -1281,3 +1290,173 @@ $('#modal-body').addEventListener('click', e => {
 setInterval(refreshActiveTab, TAB_POLL_MS);
 
 pollLive();
+
+/* ============================================================ deep dive
+   The corpus-wide view: every pull ever logged, not just this session.
+
+   Deliberately reuses timelineChart() and renderDeathsInto() rather than
+   porting a second copy -- those already render exactly this data for the
+   History tab, and the only thing that differs is how a pull is addressed
+   (file + line range from the index, vs a History row number). */
+
+let ddBossId = null;
+let ddPollTimer = null;
+
+async function loadDeepDive() {
+  await ddRefreshStatus();
+}
+
+async function ddRefreshStatus() {
+  let st;
+  try { st = await api('/api/corpus/status'); }
+  catch { $('#dd-status').textContent = 'Could not read the index.'; return; }
+
+  const bar = $('#dd-progress');
+  if (st.building) {
+    const p = st.progress || {};
+    const pct = p.total ? Math.round(100 * p.done / p.total) : 0;
+    bar.style.display = '';
+    $('#dd-bar-fill').style.width = `${pct}%`;
+    $('#dd-progress-text').textContent =
+      `Scanning ${p.done || 0} of ${p.total || 0} logs… ${p.file || ''}`;
+    $('#dd-rebuild').disabled = true;
+    $('#dd-status').textContent = '';
+    // Only poll while a build is actually running -- see refreshActiveTab,
+    // which otherwise leaves this tab entirely static.
+    clearTimeout(ddPollTimer);
+    ddPollTimer = setTimeout(ddRefreshStatus, 1000);
+    return;
+  }
+
+  bar.style.display = 'none';
+  $('#dd-rebuild').disabled = false;
+  clearTimeout(ddPollTimer);
+
+  if (st.error) { $('#dd-status').textContent = `Index error: ${st.error}`; }
+  else if (!st.built) {
+    $('#dd-status').textContent = 'No index yet.';
+    $('#dd-bosses-empty').style.display = '';
+  } else {
+    const when = st.built_at ? new Date(st.built_at * 1000).toLocaleString() : 'unknown';
+    $('#dd-status').textContent =
+      `${fmt(st.encounters)} pulls across ${fmt(st.sessions)} sessions · built ${when}`;
+    await ddLoadBosses();
+  }
+}
+
+async function ddLoadBosses() {
+  const res = await api('/api/corpus/bosses');
+  const tbody = $('#dd-bosses tbody');
+  const rows = res.bosses || [];
+  $('#dd-bosses-empty').style.display = rows.length ? 'none' : '';
+  tbody.innerHTML = rows.map(b => `
+    <tr data-boss="${esc(b.boss_id)}">
+      <td>${esc(b.boss || b.boss_id)}</td>
+      <td>${b.pulls}</td>
+      <td>${b.kills}</td>
+      <td>${b.kill_pct}%</td>
+      <td>${dur(b.fastest_kill)}</td>
+      <td>${dur(b.median)}</td>
+      <td>${dur(b.longest)}</td>
+      <td>${dur(b.total_seconds)}</td>
+      <td>${esc(b.last_seen || '—')}</td>
+    </tr>`).join('');
+  $$('#dd-bosses tbody tr').forEach(tr => {
+    tr.addEventListener('click', () => ddSelectBoss(tr.dataset.boss, tr));
+  });
+  if (ddBossId) {
+    const again = tbody.querySelector(`tr[data-boss="${CSS.escape(ddBossId)}"]`);
+    if (again) ddSelectBoss(ddBossId, again);
+  }
+}
+
+async function ddSelectBoss(bossId, tr) {
+  ddBossId = bossId;
+  $$('#dd-bosses tbody tr').forEach(r => r.classList.toggle('selected', r === tr));
+  $('#dd-detail-panel').style.display = 'none';
+
+  const res = await api(`/api/corpus/pulls?boss_id=${encodeURIComponent(bossId)}`);
+  const pulls = res.pulls || [];
+  $('#dd-pulls-title').textContent =
+    `${tr ? tr.firstElementChild.textContent : bossId} — ${pulls.length} attempts`;
+  $('#dd-pulls-panel').style.display = '';
+  $('#dd-pulls tbody').innerHTML = pulls.map((p, i) => {
+    const raidDps = p.duration
+      ? (p.players || []).reduce((a, x) => a + (x.damage || 0), 0) / p.duration
+      : 0;
+    const oc = p.outcome || 'unknown';
+    return `<tr data-i="${i}">
+      <td>${esc(p.date || '—')}</td>
+      <td>${esc((p.time || '').slice(0, 5) || '—')}</td>
+      <td><span class="dd-outcome ${esc(oc)}">${esc(oc)}</span></td>
+      <td>${dur(p.duration)}</td>
+      <td>${p.deaths ?? '—'}</td>
+      <td>${compact(raidDps)}</td>
+    </tr>`;
+  }).join('');
+  $$('#dd-pulls tbody tr').forEach(row => {
+    row.addEventListener('click', () => {
+      $$('#dd-pulls tbody tr').forEach(r => r.classList.toggle('selected', r === row));
+      ddShowPull(pulls[Number(row.dataset.i)]);
+    });
+  });
+}
+
+async function ddShowPull(pull) {
+  const panel = $('#dd-detail-panel');
+  panel.style.display = '';
+  $('#dd-detail-title').textContent =
+    `${pull.boss || 'Pull'} — ${pull.date || ''} ${(pull.time || '').slice(0, 5)}`;
+
+  const q = `file=${encodeURIComponent(pull.file)}&start=${pull.start_line}&end=${pull.end_line}`;
+  const players = (pull.players || []).slice().sort((a, b) => b.damage - a.damage);
+  const totalDmg = players.reduce((a, p) => a + (p.damage || 0), 0);
+  const totalHeal = players.reduce((a, p) => a + (p.healing || 0), 0);
+  const d = Math.max(pull.duration || 0, 0.001);
+
+  $('#dd-detail-summary').innerHTML = `
+    <div class="tiles">
+      <div class="tile"><div class="label">Outcome</div>
+        <div class="value" style="font-size:16px"><span class="dd-outcome ${esc(pull.outcome || 'unknown')}">${esc(pull.outcome || 'unknown')}</span></div></div>
+      <div class="tile"><div class="label">Duration</div><div class="value">${dur(pull.duration)}</div></div>
+      <div class="tile"><div class="label">Raid DPS</div><div class="value">${compact(totalDmg / d)}</div></div>
+      <div class="tile"><div class="label">Raid HPS</div><div class="value">${compact(totalHeal / d)}</div></div>
+      <div class="tile"><div class="label">Deaths</div><div class="value">${pull.deaths ?? '—'}</div></div>
+    </div>
+    <div class="tw" style="margin-top:12px"><table>
+      <thead><tr><th>Player</th><th>DPS</th><th>HPS</th><th>Taken</th><th>Deaths</th></tr></thead>
+      <tbody>${players.map(p => `<tr>
+        <td>${esc(p.name)}</td><td>${compact((p.damage || 0) / d)}</td>
+        <td>${compact((p.healing || 0) / d)}</td><td>${compact(p.taken || 0)}</td>
+        <td>${p.deaths ?? 0}</td></tr>`).join('')}</tbody>
+    </table></div>`;
+
+  const tlBox = $('#dd-timeline-box');
+  tlBox.innerHTML = '<div class="loading">Re-reading the log…</div>';
+  $('#dd-deaths-box').innerHTML = '';
+
+  try {
+    const tl = await api(`/api/corpus/timeline?${q}`);
+    if (tl.error || !Object.keys(tl.players || {}).length) {
+      tlBox.innerHTML = '<div class="empty">No timeline data for this pull.</div>';
+    } else {
+      timelineChart(tlBox, $('#dd-timeline-summary'), tl, pull.duration);
+    }
+  } catch {
+    tlBox.innerHTML = '<div class="empty">Could not re-read this pull&rsquo;s log.</div>';
+  }
+
+  try {
+    const deaths = await api(`/api/corpus/deaths?${q}`);
+    if (deaths.reports && deaths.reports.length) {
+      renderDeathsInto($('#dd-deaths-box'), deaths, null);
+    }
+  } catch { /* no deaths section is the correct empty state, not an error */ }
+}
+
+$('#dd-rebuild').addEventListener('click', async () => {
+  $('#dd-rebuild').disabled = true;
+  try { await api('/api/corpus/rebuild', { method: 'POST', body: JSON.stringify({ force: true }) }); }
+  catch { $('#dd-status').textContent = 'Could not start the rebuild.'; $('#dd-rebuild').disabled = false; return; }
+  ddRefreshStatus();
+});

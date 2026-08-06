@@ -129,6 +129,89 @@ def build_history_list(tracker) -> list:
     return out
 
 
+class CorpusState:
+    """Lazily holds the corpus index for the Deep Dive tab, and owns
+    rebuilding it on a background thread.
+
+    Rebuilding is not a request-scoped operation: a full scan of this
+    developer's own 230-file folder takes ~165 seconds, so doing it inline
+    would hang the HTTP handler (and with it the whole UI) well past any
+    browser timeout. The UI kicks off /api/corpus/rebuild, then polls
+    /api/corpus/status for progress -- the same shape analysis/webapp.py
+    used, kept because it's the only workable one.
+
+    load_index() only reads the cached file; it never triggers a scan. A
+    first-run user gets built=False and an explicit "Build index" button
+    rather than a silently frozen tab.
+    """
+
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._index = None
+        self._loaded = False       # distinguishes "never looked" from "no cache"
+        self._building = False
+        self._progress = {"done": 0, "total": 0, "file": ""}
+        self._error = None
+
+    def index(self):
+        with self._lock:
+            if not self._loaded:
+                from analysis import corpus
+                try:
+                    self._index = corpus.load_index()
+                except Exception as exc:      # a corrupt cache must not 500 the tab
+                    self._index = None
+                    self._error = str(exc)
+                self._loaded = True
+            return self._index
+
+    def status(self) -> dict:
+        idx = self.index()
+        from analysis import corpus
+        encounters = len(list(corpus.all_encounters(idx))) if idx else 0
+        with self._lock:
+            return {
+                "built": idx is not None,
+                "building": self._building,
+                "progress": dict(self._progress),
+                "error": self._error,
+                "sessions": len(idx.get("sessions", [])) if idx else 0,
+                "encounters": encounters,
+                "built_at": idx.get("built_at") if idx else None,
+                "log_dir": idx.get("log_dir") if idx else None,
+            }
+
+    def rebuild(self, force: bool = True) -> bool:
+        """Starts a background rebuild. Returns False if one is already
+        running -- two concurrent scans would race on the same cache file."""
+        with self._lock:
+            if self._building:
+                return False
+            self._building = True
+            self._error = None
+            self._progress = {"done": 0, "total": 0, "file": ""}
+
+        def run():
+            from analysis import corpus
+            try:
+                def progress(done, total, fname):
+                    with self._lock:
+                        self._progress = {"done": done, "total": total, "file": fname}
+                index = corpus.build_index(progress=progress, force=force)
+                with self._lock:
+                    self._index = index
+                    self._loaded = True
+            except Exception as exc:
+                with self._lock:
+                    self._error = str(exc)
+            finally:
+                with self._lock:
+                    self._building = False
+
+        threading.Thread(target=run, daemon=True, name="corpus-rebuild").start()
+        return True
+
+
 def build_history_detail(tracker, idx: int):
     if not (0 <= idx < len(tracker.history)):
         return None
@@ -203,6 +286,10 @@ def build_ability_breakdown(encounter, player_name, boss_state):
 def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manager, status,
                   update_holder=None, request_shutdown=None, character_settings=None,
                   bundled_boss_dir=None, user_boss_dir=None):
+    # One per server, so the index is loaded once and shared across
+    # requests rather than re-read from disk on every poll.
+    corpus_state = CorpusState()
+
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"
 
@@ -284,6 +371,112 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 if result is None:
                     return self._json({"available": False})
                 return self._json({"available": True, **result})
+
+            # ---------------------------------------------------------------
+            # Deep Dive: the corpus-wide views. Everything under here reads
+            # the cached index built from the WHOLE CombatLogs folder, not
+            # this session's History -- "how have we done on this boss over
+            # months", not "what happened in the pull I just did".
+            if u.path == "/api/corpus/status":
+                return self._json(corpus_state.status())
+
+            if u.path == "/api/corpus/bosses":
+                idx = corpus_state.index()
+                if idx is None:
+                    return self._json({"built": False, "bosses": []})
+                from analysis import corpus
+                return self._json({"built": True, "bosses": corpus.boss_summary(idx)})
+
+            if u.path == "/api/corpus/players":
+                idx = corpus_state.index()
+                if idx is None:
+                    return self._json({"built": False, "players": []})
+                from analysis import corpus
+                return self._json({"built": True, "players": corpus.players_seen(idx)})
+
+            if u.path == "/api/corpus/pulls":
+                idx = corpus_state.index()
+                if idx is None:
+                    return self._json({"built": False, "pulls": []})
+                from analysis import corpus
+                boss_id = (parse_qs(u.query).get("boss_id", [""])[0]).strip() or None
+                pulls = []
+                for session, enc in corpus.boss_encounters(idx, boss_id):
+                    pulls.append({
+                        "file": session.get("file"),
+                        "date": session.get("date"),
+                        "time": session.get("time"),
+                        "boss": enc.get("boss"),
+                        "boss_id": enc.get("boss_id"),
+                        "outcome": enc.get("outcome"),
+                        "duration": enc.get("duration"),
+                        "deaths": enc.get("deaths"),
+                        "start_line": enc.get("start_line"),
+                        "end_line": enc.get("end_line"),
+                        "players": enc.get("players", []),
+                    })
+                # Newest first: a raid wants last night before last year.
+                pulls.sort(key=lambda p: (p["date"] or "", p["time"] or ""), reverse=True)
+                return self._json({"built": True, "pulls": pulls})
+
+            if u.path == "/api/corpus/trend":
+                # Validate the request BEFORE looking at index state: a
+                # malformed call is malformed whether or not anything has
+                # been indexed, and answering it 200 with an empty series
+                # tells the caller their query was fine when it wasn't.
+                qs = parse_qs(u.query)
+                player = (qs.get("player", [""])[0]).strip()
+                if not player:
+                    return self._json({"error": "player is required"}, 400)
+                metric = (qs.get("metric", ["dps"])[0]).strip() or "dps"
+                if metric not in ("dps", "hps", "dtps", "deaths"):
+                    return self._json({"error": "unknown metric"}, 400)
+                boss_id = (qs.get("boss_id", [""])[0]).strip() or None
+                idx = corpus_state.index()
+                if idx is None:
+                    return self._json({"built": False, "series": []})
+                from analysis import corpus
+                return self._json({"built": True, "metric": metric,
+                                    "series": corpus.player_trend(idx, player, boss_id, metric)})
+
+            # Deep Dive on one corpus pull. Same forensics/timeline the
+            # History tab already shows, but addressed by (file, line range)
+            # from the index instead of a History row. The file is resolved
+            # THROUGH the index rather than trusted from the query string --
+            # this is a localhost server with no auth, and joining a
+            # caller-supplied name onto a directory is how you get path
+            # traversal.
+            if u.path in ("/api/corpus/deaths", "/api/corpus/timeline", "/api/corpus/summary"):
+                qs = parse_qs(u.query)
+                fname = (qs.get("file", [""])[0]).strip()
+                try:
+                    start_line = int(qs.get("start", [""])[0])
+                    end_line = int(qs.get("end", [""])[0])
+                except (TypeError, ValueError, IndexError):
+                    return self._json({"error": "start and end are required"}, 400)
+                idx = corpus_state.index()
+                if idx is None:
+                    return self._json({"error": "corpus index not built yet"}, 409)
+                session = next((s for s in idx.get("sessions", [])
+                                if s.get("file") == fname), None)
+                if session is None or not session.get("path"):
+                    return self._json({"error": "no such log in the index"}, 404)
+                path = session["path"]
+                try:
+                    if u.path == "/api/corpus/deaths":
+                        from analysis import forensics
+                        reports = forensics.analyze_deaths(path, start_line, end_line)
+                        return self._json({"reports": reports,
+                                            "summary": forensics.summarize_deaths(reports)})
+                    if u.path == "/api/corpus/timeline":
+                        from analysis import timeline
+                        return self._json(timeline.build_timeline(path, start_line, end_line))
+                    from analysis import fight_summary
+                    defs = boss_state.definitions if boss_state else None
+                    return self._json(fight_summary.build_fight_summary(
+                        path, start_line, end_line, defs))
+                except OSError as exc:
+                    return self._json({"error": str(exc)}, 500)
 
             if u.path == "/api/history":
                 return self._json(build_history_list(tracker))
@@ -469,6 +662,16 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             u = urlparse(self.path)
             parts = [p for p in u.path.split("/") if p]
             body = self._body_json()
+
+            if u.path == "/api/corpus/rebuild":
+                # force defaults True: the usual reason to press this is
+                # "the numbers look wrong", and an incremental pass would
+                # keep serving whatever cached rows are the problem. A
+                # plain refresh for newly-played sessions passes force=false.
+                force = bool(body.get("force", True))
+                if not corpus_state.rebuild(force=force):
+                    return self._json({"error": "a rebuild is already running"}, 409)
+                return self._json({"started": True})
 
             if u.path == "/api/timer_rules":
                 from timers import TimerRule

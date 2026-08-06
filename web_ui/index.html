@@ -99,6 +99,7 @@
   <nav class="tabs" role="tablist">
     <div class="tab active" data-view="live" role="tab" tabindex="0">Live</div>
     <div class="tab" data-view="history" role="tab" tabindex="0">History</div>
+    <div class="tab" data-view="deepdive" role="tab" tabindex="0">Deep Dive</div>
     <div class="tab" data-view="timers" role="tab" tabindex="0">Timers</div>
     <div class="tab" data-view="encounters" role="tab" tabindex="0">Encounters</div>
     <div class="tab" data-view="overlays" role="tab" tabindex="0">Overlays</div>
@@ -174,6 +175,57 @@
         <tbody></tbody>
       </table></div>
       <p class="empty" id="history-empty" style="display:none">No pulls recorded yet.</p>
+    </div>
+  </section>
+
+  <!-- ============================= deep dive ============================= -->
+  <section class="view" id="view-deepdive" role="tabpanel">
+    <div class="panel">
+      <h2>Deep Dive</h2>
+      <p class="sub">Every pull you have ever logged, not just this session. Pick a boss to see
+        its attempt history, then a pull to reconstruct what happened in it.</p>
+      <div class="filters">
+        <button id="dd-rebuild">Rebuild index</button>
+        <span id="dd-status" class="sub"></span>
+      </div>
+      <div id="dd-progress" style="display:none">
+        <div class="dd-bar"><div class="dd-bar-fill" id="dd-bar-fill"></div></div>
+        <p class="sub" id="dd-progress-text"></p>
+      </div>
+    </div>
+
+    <div class="panel" id="dd-bosses-panel">
+      <h2>Bosses</h2>
+      <p class="sub">Fastest and slowest clear count only pulls that ended in a kill &mdash; the
+        quickest attempt on a progression boss is a wipe.</p>
+      <div class="tw"><table id="dd-bosses">
+        <thead><tr>
+          <th>Boss</th><th>Attempts</th><th>Kills</th><th>Kill %</th>
+          <th>Fastest kill</th><th>Median pull</th><th>Longest</th><th>Time spent</th><th>Last seen</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="dd-bosses-empty" style="display:none">No index yet &mdash; press Rebuild index.</p>
+    </div>
+
+    <div class="panel" id="dd-pulls-panel" style="display:none">
+      <h2 id="dd-pulls-title">Pulls</h2>
+      <p class="sub">Newest first. Click a pull to reconstruct it.</p>
+      <div class="tw"><table id="dd-pulls">
+        <thead><tr><th>Date</th><th>Time</th><th>Outcome</th><th>Duration</th><th>Deaths</th><th>Raid DPS</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" id="dd-detail-panel" style="display:none">
+      <h2 id="dd-detail-title">Pull detail</h2>
+      <div id="dd-detail-summary"></div>
+      <div class="panel" style="margin-top:14px">
+        <h2>Damage &amp; healing over time</h2>
+        <div id="dd-timeline-box" class="chart-wrap" style="min-height:220px"></div>
+        <div id="dd-timeline-summary"></div>
+      </div>
+      <div id="dd-deaths-box" style="margin-top:14px"></div>
     </div>
   </section>
 

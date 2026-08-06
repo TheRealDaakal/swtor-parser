@@ -272,3 +272,29 @@ svg .axis { stroke: var(--baseline); stroke-width: 1; }
 .callout .ico { color: var(--warning); font-weight: 700; }
 .callout.crit { background: rgba(208,59,59,.09); border-color: rgba(208,59,59,.30); }
 .callout.crit .ico { color: var(--critical); }
+
+/* ------------------------------------------------------------- deep dive */
+/* Outcome is the one column scanned rather than read, so it carries colour
+   as well as a word -- kill/wipe at a glance down a 124-row attempt list. */
+.dd-outcome {
+  display: inline-block; padding: 1px 8px; border-radius: 10px;
+  font-size: 10.5px; letter-spacing: .02em; border: 1px solid transparent;
+}
+.dd-outcome.kill    { color: var(--s3); border-color: rgba(25,158,112,.45);
+                      background: rgba(25,158,112,.12); }
+.dd-outcome.wipe    { color: var(--s2); border-color: rgba(217,89,38,.45);
+                      background: rgba(217,89,38,.12); }
+.dd-outcome.unknown { color: var(--ink-muted); border-color: var(--hairline); }
+
+/* Indexing a full CombatLogs folder is a ~2-3 minute job, so it needs real
+   progress rather than a spinner -- see CorpusState.rebuild(). */
+.dd-bar { height: 6px; border-radius: 3px; background: var(--surface-2);
+          overflow: hidden; margin: 10px 0 6px; }
+.dd-bar-fill { display: block; height: 100%; width: 0; background: var(--s1);
+               transition: width .3s ease; }
+@media (prefers-reduced-motion: reduce) { .dd-bar-fill { transition: none; } }
+
+#dd-bosses tbody tr, #dd-pulls tbody tr { cursor: pointer; }
+#dd-bosses tbody tr.selected, #dd-pulls tbody tr.selected {
+  background: var(--surface-2); box-shadow: inset 2px 0 0 var(--s1);
+}
