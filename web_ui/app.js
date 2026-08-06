@@ -922,6 +922,14 @@ $('#update-banner-apply').addEventListener('click', async () => {
       btn.textContent = original;
       $('#update-banner-text').textContent = `Update failed: ${result.error}`;
     }
+    else if (result.log_path) {
+      // The swap runs in a helper AFTER this process exits, so nothing
+      // here can report on it. Name the log up front: if the window
+      // closes and nothing comes back, that file says why (it used to
+      // fail completely silently).
+      $('#update-banner-text').textContent =
+        `Restarting... if the app doesn't reopen, see ${result.log_path}`;
+    }
     // On success the app closes and relaunches on its own shortly after --
     // nothing further to do here; the page just goes away.
   } catch (e) {

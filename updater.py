@@ -45,6 +45,15 @@ def is_frozen() -> bool:
     return bool(getattr(sys, "frozen", False))
 
 
+def update_log_path() -> Path:
+    """Where the relaunch helper writes what it did. Lives in %TEMP% (not
+    the app's own directory) because that directory is being renamed out
+    from under it mid-update. Surfaced to the user when an update fails so
+    there's something concrete to look at -- every failure path used to be
+    entirely silent."""
+    return Path(tempfile.gettempdir()) / "dps-update.log"
+
+
 def install_dir() -> Path:
     """Where the running app's own files live -- only meaningful when
     frozen. sys.executable is the .exe itself; its parent is the install
@@ -138,6 +147,19 @@ $targetPid = __PID__
 $installDir = "__INSTALL_DIR__"
 $stagedDir = "__STAGED_DIR__"
 $exeName = "__EXE_NAME__"
+$logPath = "__LOG_PATH__"
+
+# Every failure path here used to be completely silent: output went to
+# DEVNULL and the catch block just `exit 1`d. Reported twice as "it closed
+# and never came back" with nothing to go on. Log every step so a failed
+# update can actually be diagnosed instead of guessed at.
+function Log($m) {
+    try { Add-Content -LiteralPath $logPath -Value "$(Get-Date -Format o)  $m" } catch { }
+}
+
+Log "helper started (pid to wait for: $targetPid)"
+Log "installDir=$installDir"
+Log "stagedDir=$stagedDir"
 
 # Wait for the old process to fully exit -- it's still holding its own
 # .exe/.dll files open until then. 60s cap so a stuck process can't hang
@@ -146,34 +168,85 @@ $deadline = (Get-Date).AddSeconds(60)
 while ((Get-Process -Id $targetPid -ErrorAction SilentlyContinue) -and (Get-Date) -lt $deadline) {
     Start-Sleep -Milliseconds 300
 }
-
-# If the process is STILL alive past the deadline, its own DLLs are still
-# open -- attempting the swap now would very likely fail partway through
-# (reported live as a silent "no restart happened, old version stays"
-# after an update). Bail out instead of risking a half-swapped install;
-# the old app just keeps running untouched, same as before self-update
-# existed.
 if (Get-Process -Id $targetPid -ErrorAction SilentlyContinue) {
+    Log "ABORT: pid $targetPid still alive after 60s; install left untouched"
     exit 1
 }
+Log "old process has exited"
 
 $backup = "$installDir.old"
-try {
-    if (Test-Path $backup) { Remove-Item $backup -Recurse -Force }
-    Rename-Item -LiteralPath $installDir -NewName (Split-Path $backup -Leaf)
-    Move-Item -LiteralPath $stagedDir -Destination $installDir
-    Remove-Item -LiteralPath $backup -Recurse -Force
-} catch {
-    # Swap failed partway through -- restore the old install rather than
-    # leave the app half-replaced or missing entirely. Nothing to launch
-    # differently in that case; the script just stops.
-    if ((Test-Path $backup) -and -not (Test-Path $installDir)) {
-        Rename-Item -LiteralPath $backup -NewName (Split-Path $installDir -Leaf)
+if (Test-Path $backup) {
+    try { Remove-Item -LiteralPath $backup -Recurse -Force; Log "cleared previous .old backup" }
+    catch { Log "could not clear previous .old backup: $_" }
+}
+
+# Windows keeps handles open for a moment AFTER a process exits -- the
+# antivirus scanning the just-closed .exe, the search indexer, Explorer.
+# A single attempt that lost that race used to fall straight into the
+# catch and exit silently, which is exactly what "closed and never came
+# back" looks like from the outside. Retry instead of giving up at the
+# first failure.
+$swapped = $false
+for ($i = 1; $i -le 10; $i++) {
+    try {
+        Rename-Item -LiteralPath $installDir -NewName (Split-Path $backup -Leaf) -ErrorAction Stop
+        $swapped = $true
+        Log "moved old install aside (attempt $i)"
+        break
+    } catch {
+        Log "rename attempt $i failed: $_"
+        Start-Sleep -Milliseconds 500
     }
+}
+if (-not $swapped) {
+    Log "ABORT: could not move the old install aside; nothing changed"
     exit 1
 }
 
-Start-Process -FilePath (Join-Path $installDir $exeName)
+try {
+    Move-Item -LiteralPath $stagedDir -Destination $installDir -ErrorAction Stop
+    Log "new version moved into place"
+} catch {
+    Log "FAILED to move the new version in: $_"
+    if (-not (Test-Path $installDir)) {
+        try {
+            Rename-Item -LiteralPath $backup -NewName (Split-Path $installDir -Leaf) -ErrorAction Stop
+            Log "restored the previous install"
+        } catch {
+            Log "CRITICAL: could not restore the previous install: $_"
+            exit 1
+        }
+    }
+    # Fall through: the previous version is back in place, so still
+    # relaunch it rather than leaving the user with no running app.
+}
+
+# Deleting the backup is BEST EFFORT and must never be fatal. This line
+# used to sit inside the same try as the swap, so a locked leftover (AV
+# still scanning the old .exe) threw AFTER the update had already
+# succeeded -- and the catch, seeing $installDir present, skipped the
+# restore and exited without ever reaching Start-Process. The update
+# applied; the app just never came back.
+if (Test-Path $backup) {
+    try { Remove-Item -LiteralPath $backup -Recurse -Force; Log "removed .old backup" }
+    catch { Log "left .old backup in place (still locked): $_" }
+}
+
+$exePath = Join-Path $installDir $exeName
+if (-not (Test-Path $exePath)) {
+    Log "RELAUNCH SKIPPED: $exePath does not exist"
+    exit 1
+}
+try {
+    # -WorkingDirectory matters: the app resolves its own bundled data
+    # relative to where it starts.
+    Start-Process -FilePath $exePath -WorkingDirectory $installDir
+    Log "relaunched $exePath"
+} catch {
+    Log "RELAUNCH FAILED: $_"
+    exit 1
+}
+Log "update complete"
 """
 
 
@@ -195,6 +268,7 @@ def stage_relaunch(staged_app_dir: Path) -> None:
         .replace("__INSTALL_DIR__", str(target))
         .replace("__STAGED_DIR__", str(staged_app_dir))
         .replace("__EXE_NAME__", exe_name)
+        .replace("__LOG_PATH__", str(update_log_path()))
     )
     script_path = Path(tempfile.gettempdir()) / "dps-update-relaunch.ps1"
     script_path.write_text(script, encoding="utf-8")

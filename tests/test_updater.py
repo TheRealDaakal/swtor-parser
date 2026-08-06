@@ -176,3 +176,70 @@ class TestStageRelaunch:
         # Must actually launch the helper, detached (not waited on inline).
         assert launched["cmd"][0] == "powershell.exe"
         assert str(script_path) in launched["cmd"]
+
+
+class TestRelaunchScriptRobustness:
+    """Both live reports of the self-updater ("the viewer closed, but it
+    didn't restart", then "the auto updater doesnt update and restart the
+    parser") had the same shape: something went wrong and there was
+    NOTHING to look at. Every failure path exited silently with output
+    routed to DEVNULL. These lock in the structure that fixed that."""
+
+    def test_log_path_is_substituted_into_the_script(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(updater.tempfile, "gettempdir", lambda: str(tmp_path))
+        monkeypatch.setattr(updater, "install_dir", lambda: tmp_path / "install")
+        monkeypatch.setattr(updater.sys, "executable", str(tmp_path / "install" / "MyApp.exe"))
+        monkeypatch.setattr(updater.subprocess, "Popen", lambda cmd, **kw: None)
+
+        staged = tmp_path / "staged_app"
+        staged.mkdir()
+        updater.stage_relaunch(staged)
+
+        content = (tmp_path / "dps-update-relaunch.ps1").read_text(encoding="utf-8")
+        assert "__LOG_PATH__" not in content
+        assert str(updater.update_log_path()) in content
+
+    def test_log_lives_outside_the_install_dir(self, tmp_path, monkeypatch):
+        """It has to survive the install directory being renamed out from
+        under it mid-update."""
+        monkeypatch.setattr(updater.tempfile, "gettempdir", lambda: str(tmp_path))
+        monkeypatch.setattr(updater, "install_dir", lambda: tmp_path / "install")
+        assert updater.install_dir() not in updater.update_log_path().parents
+
+    def test_the_swap_retries_instead_of_giving_up_on_first_failure(self):
+        """Windows keeps handles open briefly AFTER a process exits (AV
+        scanning the closed .exe, search indexer). A single attempt that
+        lost that race used to fall into the catch and exit silently."""
+        script = updater._RELAUNCH_SCRIPT_TEMPLATE
+        assert "for ($i = 1; $i -le 10; $i++)" in script
+        assert "rename attempt $i failed" in script
+
+    def test_backup_cleanup_cannot_abort_the_relaunch(self):
+        """THE bug: `Remove-Item $backup` used to sit inside the same try as
+        the swap. When it threw (locked leftover) AFTER the new version was
+        already in place, the catch saw $installDir present, skipped the
+        restore, and exit 1'd -- never reaching Start-Process. The update
+        applied and the app simply never came back. The cleanup must now be
+        its own best-effort block, positioned before the relaunch."""
+        script = updater._RELAUNCH_SCRIPT_TEMPLATE
+        cleanup_at = script.index("removed .old backup")
+        relaunch_at = script.index("Start-Process -FilePath $exePath")
+        assert cleanup_at < relaunch_at, "cleanup runs before the relaunch"
+
+        # Scoped to the cleanup block ITSELF -- ending where the separate
+        # (and legitimate) "the exe isn't there" guard begins, which does
+        # exit on purpose.
+        cleanup_block = script[cleanup_at:script.index("$exePath = Join-Path")]
+        assert "exit 1" not in cleanup_block, (
+            "a failed backup cleanup must only log, never abort the update"
+        )
+
+    def test_every_abort_path_logs_a_reason(self):
+        script = updater._RELAUNCH_SCRIPT_TEMPLATE
+        for marker in ("ABORT: pid", "ABORT: could not move the old install aside",
+                       "RELAUNCH SKIPPED", "RELAUNCH FAILED"):
+            assert marker in script, f"missing diagnostic for {marker!r}"
+
+    def test_relaunch_sets_the_working_directory(self):
+        """The app resolves its own bundled data relative to where it starts."""
+        assert "-WorkingDirectory $installDir" in updater._RELAUNCH_SCRIPT_TEMPLATE

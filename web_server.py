@@ -775,7 +775,11 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                     return self._json({"error": str(exc)}, 500)
                 if request_shutdown is not None:
                     threading.Timer(1.0, request_shutdown).start()
-                return self._json({"success": True})
+                # log_path lets the UI point at something concrete if the
+                # window closes and nothing comes back -- the swap itself
+                # happens after this process is gone, so this response is
+                # the last chance to tell the user where to look.
+                return self._json({"success": True, "log_path": str(updater.update_log_path())})
 
             return self._send(b"not found", "text/plain", 404)
 
