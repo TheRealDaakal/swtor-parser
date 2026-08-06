@@ -1,12 +1,13 @@
 """
-Covers aggro_tracker.py -- flagging a DPS/healer approaching the boss's
-current target's threat. No role detection: boss_target (whoever the
-boss is currently attacking, tracked in boss_intelligence.py from the
-log's own events) IS the reference point, so these tests build PlayerStats
-directly rather than a full BossEncounterState.
+The aggro warning is deliberately disabled -- see aggro_tracker.py's module
+docstring for the measurements. These tests replace the old behavioural
+ones (which asserted a threshold-crossing warning that could never be
+correct) and exist to stop it being quietly switched back on.
+
+Reported live: "kept getting alerts that everybody was pulling aggro -- not
+everybody can pull aggro at one time."
 """
 from aggro_tracker import AggroTracker
-from stats import PlayerStats
 
 
 class FakeTimerEngine:
@@ -14,121 +15,53 @@ class FakeTimerEngine:
         self.started = []
 
     def start_timer(self, label, duration, **kwargs):
-        self.started.append((label, duration, kwargs))
+        self.started.append(label)
 
 
-def _player(name, threat, is_player=True):
-    return PlayerStats(name=name, threat=threat, is_player=is_player)
+class FakePlayer:
+    def __init__(self, threat, is_player=True):
+        self.threat = threat
+        self.is_player = is_player
+
+    def tps(self, duration):
+        return self.threat / duration if duration > 0 else 0.0
 
 
-def test_a_dps_at_90_percent_of_the_tanks_threat_fires_a_warning():
+def test_it_never_fires_even_when_the_old_threshold_would_have():
+    """The exact shape that used to warn: a DPS at 95% of the holder's
+    threat. SWTOR's log can't actually establish either number (only 2.2%
+    of threat-relevant events are logged at all), so no warning is honest
+    here."""
     tracker = AggroTracker()
     engine = FakeTimerEngine()
-    players = {
-        "Tank": _player("Tank", threat=1000.0),
-        "Dps": _player("Dps", threat=920.0),  # 92% -- past the 90% threshold
-    }
+    players = {"Tank": FakePlayer(1000.0), "Dps": FakePlayer(950.0)}
     tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-
-    assert len(engine.started) == 1
-    label, duration, kwargs = engine.started[0]
-    assert "Dps" in label
-    assert kwargs["is_alert"] is True
-    assert kwargs["voice_alert"] is True
-
-
-def test_a_dps_well_under_the_threshold_does_not_fire():
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    players = {
-        "Tank": _player("Tank", threat=1000.0),
-        "Dps": _player("Dps", threat=500.0),  # 50% -- nowhere close
-    }
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-
     assert engine.started == []
 
 
-def test_the_aggro_holder_itself_is_never_warned_about_their_own_threat():
+def test_it_never_fires_for_a_whole_raid_at_once():
+    """The reported symptom. It happened because boss_target tracked
+    whoever the boss last HIT -- which on a cleaving boss is everyone (828
+    changes across 8 players in one real pull) -- so whenever it landed on
+    a low-threat player, every other player cleared the ratio at once."""
     tracker = AggroTracker()
     engine = FakeTimerEngine()
-    players = {"Tank": _player("Tank", threat=1000.0)}
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
+    players = {f"P{i}": FakePlayer(1000.0) for i in range(8)}
+    players["Unlucky"] = FakePlayer(1.0)          # boss cleaved a healer
+    tracker.check(players, boss_target="Unlucky", duration=10.0, timer_engine=engine)
+    assert engine.started == [], "must not warn about the entire raid"
 
+
+def test_negative_threat_totals_produce_no_warning():
+    """Real measured state: every player finished a real Styrak pull with
+    NEGATIVE threat on the boss, because only threat DROPS are logged."""
+    tracker = AggroTracker()
+    engine = FakeTimerEngine()
+    players = {"Tank": FakePlayer(-54_668.0), "Dps": FakePlayer(-6_317_238.0)}
+    tracker.check(players, boss_target="Tank", duration=100.0, timer_engine=engine)
     assert engine.started == []
 
 
-def test_it_only_fires_once_per_crossing_not_every_tick():
-    """A player parked at 95% for ten consecutive ticks must only hear
-    the warning once, not once per tick -- edge-triggered, same pattern
-    as boss_definitions.Condition's hp_below."""
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    players = {
-        "Tank": _player("Tank", threat=1000.0),
-        "Dps": _player("Dps", threat=950.0),
-    }
-    for _ in range(10):
-        tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-
-    assert len(engine.started) == 1
-
-
-def test_it_re_fires_after_dropping_below_reset_and_climbing_back_up():
-    """A real threat-dump-then-build-back-up sequence must warn again --
-    the dead zone between APPROACH_THRESHOLD and RESET_THRESHOLD exists so
-    hovering right at the edge doesn't spam, not so a genuine second
-    approach gets silently swallowed."""
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    tank = _player("Tank", threat=1000.0)
-    dps = _player("Dps", threat=950.0)
-    players = {"Tank": tank, "Dps": dps}
-
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert len(engine.started) == 1
-
-    dps.threat = 600.0  # threat dump -- drops well below RESET_THRESHOLD
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert len(engine.started) == 1  # dropping doesn't itself fire anything
-
-    dps.threat = 960.0  # climbs back up past APPROACH_THRESHOLD again
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert len(engine.started) == 2
-
-
-def test_reset_clears_state_between_pulls():
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    players = {
-        "Tank": _player("Tank", threat=1000.0),
-        "Dps": _player("Dps", threat=950.0),
-    }
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert len(engine.started) == 1
-
-    tracker.reset()
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert len(engine.started) == 2, "a new pull must not inherit the last pull's fired state"
-
-
-def test_no_boss_target_yet_is_a_safe_no_op():
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    players = {"Dps": _player("Dps", threat=500.0)}
-    tracker.check(players, boss_target=None, duration=10.0, timer_engine=engine)
-    assert engine.started == []
-
-
-def test_non_player_entities_are_never_warned():
-    """players dict can contain NPCs too (Encounter.players tracks every
-    entity seen, not just real players) -- an add generating threat must
-    never trigger a "pulling aggro" callout about itself."""
-    tracker = AggroTracker()
-    engine = FakeTimerEngine()
-    players = {
-        "Tank": _player("Tank", threat=1000.0),
-        "Add": _player("Add", threat=950.0, is_player=False),
-    }
-    tracker.check(players, boss_target="Tank", duration=10.0, timer_engine=engine)
-    assert engine.started == []
+def test_reset_is_safe_to_call():
+    """main.py still calls this on every pull rollover."""
+    AggroTracker().reset()

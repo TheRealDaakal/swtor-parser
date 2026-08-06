@@ -347,16 +347,6 @@ class OverlayManager:
                               key=lambda r: -r[1])
                 data = [r for r in data if r[1] > 0]
                 o.render(data, total=sum(r[1] for r in data))
-            elif kind == "threat":
-                # TPS (rate), not the raw cumulative total -- a running total
-                # only ever grows and says nothing comparable moment-to-
-                # moment; TPS is what actually answers "am I about to pull."
-                # Reads PlayerStats directly since the compact snapshot()
-                # tuple doesn't carry threat.
-                entities = [p for p in enc.players.values() if p.is_player]
-                data = sorted(((p.name, p.tps(duration)) for p in entities), key=lambda r: -r[1])
-                data = [r for r in data if r[1] > 0]
-                o.render(data, total=sum(r[1] for r in data))
             elif kind in ("hots", "hots_grid"):
                 o.render(self.hot_tracker.expiring(within_seconds=o.within_seconds))
             elif kind == "boss_hp":
@@ -421,9 +411,6 @@ class OverlayManager:
         # Unconditional (not gated on self.bar_overlays like
         # _refresh_bar_overlays) -- this is a safety alert, not tied to
         # whether the user has a specific overlay panel open.
-        if not self.boss_state or self.boss_state.active_boss is None:
-            return
-        enc = self.tracker.display_encounter()
-        self.aggro_tracker.check(
-            enc.players, self.boss_state.boss_target, enc.duration(), self.timer_engine,
-        )
+        # Aggro prediction removed -- SWTOR's log cannot support it. See
+        # aggro_tracker.py's module docstring for the measurements.
+        return
