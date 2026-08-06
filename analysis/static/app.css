@@ -284,6 +284,12 @@ svg .axis { stroke: var(--baseline); stroke-width: 1; }
                       background: rgba(25,158,112,.12); }
 .dd-outcome.wipe    { color: var(--s2); border-color: rgba(217,89,38,.45);
                       background: rgba(217,89,38,.12); }
+/* reset = the group disengaged and re-pulled, NOT a defeat. Deliberately
+   neutral rather than another failure colour: it isn't a worse outcome
+   than a wipe, it's a different one, and colouring it like a wipe is what
+   made a boss's attempt history read as worse than it was. */
+.dd-outcome.reset   { color: var(--ink-2); border-color: var(--hairline);
+                      background: var(--surface-2); }
 .dd-outcome.unknown { color: var(--ink-muted); border-color: var(--hairline); }
 
 /* Indexing a full CombatLogs folder is a ~2-3 minute job, so it needs real

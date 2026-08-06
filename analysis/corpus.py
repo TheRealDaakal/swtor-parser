@@ -39,7 +39,7 @@ from log_merger import LogClock
 from log_parser import parse_line
 from stats import Encounter, MIN_ENCOUNTER_SECONDS, NEW_PULL_MIN_GAP_SECONDS
 
-CACHE_VERSION = 8  # bump to invalidate every cached entry after a parser change
+CACHE_VERSION = 9  # bump to invalidate every cached entry after a parser change
 MIN_FILE_BYTES = 50_000         # skip near-empty logs (login blips)
 
 # NEW_PULL_MIN_GAP_SECONDS / MIN_ENCOUNTER_SECONDS now live in stats.py --
@@ -117,10 +117,20 @@ def replay_pulls(path: str, definitions) -> List[dict]:
             return
         # "unknown" (not "wipe") when no boss was recognized: trash and
         # leveling content isn't a wipe just because nothing named died.
+        #
+        # A failed pull splits further into "wipe" (the raid was defeated)
+        # and "reset" (the group disengaged and re-pulled) -- see
+        # Encounter.raid_was_defeated(). Without that split the wipe
+        # population is half no-death resets, which is what made "wipes
+        # have fewer deaths than kills" look like a bug in the data.
         if boss_id is None:
             outcome = "unknown"
+        elif still_alive is not None and not still_alive:
+            outcome = "kill"
+        elif current.raid_was_defeated():
+            outcome = "wipe"
         else:
-            outcome = "kill" if still_alive is not None and not still_alive else "wipe"
+            outcome = "reset"
         out.append({
             "encounter": current,
             "boss_name": boss_name,
@@ -321,7 +331,7 @@ def boss_summary(index: dict) -> List[dict]:
     for s, e in boss_encounters(index):
         row = by_boss.setdefault(e["boss_id"], {
             "boss_id": e["boss_id"], "boss": e["boss"], "pulls": 0,
-            "kills": 0, "wipes": 0,
+            "kills": 0, "wipes": 0, "resets": 0,
             "total_seconds": 0.0, "deaths": 0, "durations": [],
             "kill_durations": [],
             "first_seen": s.get("date"), "last_seen": s.get("date"),
@@ -336,6 +346,8 @@ def boss_summary(index: dict) -> List[dict]:
             row["kill_durations"].append(e["duration"])
         elif outcome == "wipe":
             row["wipes"] += 1
+        elif outcome == "reset":
+            row["resets"] += 1
         if s.get("date"):
             row["last_seen"] = s["date"]
     out = []

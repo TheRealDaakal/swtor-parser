@@ -24,6 +24,7 @@ from analysis.events import load_encounter_events
 from analysis.forensics import analyze_deaths
 from boss_definitions import load_definitions
 from boss_intelligence import BossEncounterState
+from stats import RAID_DEFEATED_FRACTION
 
 BUNDLED_BOSS_DIR = Path(__file__).resolve().parent.parent / "boss_definitions_bundled"
 
@@ -40,16 +41,19 @@ def kill_names(definition) -> List[str]:
 
 def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional[int],
                          definitions: Optional[dict] = None) -> dict:
-    """Returns {"boss_name": str|None, "outcome": "kill"|"wipe"|"unknown",
+    """Returns {"boss_name": str|None,
+    "outcome": "kill"|"wipe"|"reset"|"unknown",
     "phases_seen": [str, ...], "deaths": [...]}.
 
-    outcome is "unknown" (not "wipe") when no boss was recognized at all --
-    trash/leveling/PvP content isn't a wipe just because nobody died to a
-    named boss. "wipe" only means "a boss WAS recognized and its death was
-    never seen in this pull's own line range" -- a pull that trails off
-    mid-fight (e.g. the group regrouped and the log rolled to a new pull)
-    reads the same as a real wipe, since from the log's perspective they
-    genuinely look identical.
+    outcome is "unknown" (not a failure) when no boss was recognized at all
+    -- trash/leveling/PvP content isn't a wipe just because nobody died to
+    a named boss.
+
+    A failed pull splits into "wipe" (the raid was defeated) and "reset"
+    (the group disengaged and re-pulled), on the same measured threshold
+    the corpus uses -- see stats.Encounter.raid_was_defeated(). Calling
+    both of them "wipe" is what made the wipe population half no-death
+    resets, and any comparison of kills against wipes read as noise.
     """
     if definitions is None:
         definitions = load_definitions(BUNDLED_BOSS_DIR)
@@ -67,8 +71,20 @@ def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional
     # the-boss bug. Death lines always carry the entity's name, so the name
     # test is sufficient.
     still_alive = None
+    # Who was in the group, and who died -- for the wipe/reset split. Built
+    # from the same per-event player flags stats.py uses, rather than from
+    # the death reports alone, so a pull where nobody died still knows how
+    # many people were there to not die.
+    players_seen = set()
+    players_died = set()
 
     for event in load_encounter_events(path, start_line, end_line):
+        if event.source_is_player and event.source:
+            players_seen.add(event.source)
+        if event.target_is_player and event.target:
+            players_seen.add(event.target)
+        if event.is_death and event.target and event.target_is_player:
+            players_died.add(event.target)
         change = boss_state.feed(event, timer_engine=None)
         if change is not None and change.phase_name not in phases_seen:
             phases_seen.append(change.phase_name)
@@ -83,10 +99,14 @@ def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional
     boss_name = boss_state.active_boss.name if boss_state.active_boss else None
     if boss_name is None:
         outcome = "unknown"
-    else:
+    elif still_alive is not None and not still_alive:
         # still_alive is an empty set only once every boss has been seen
         # dying; None means the boss was recognized but no event followed.
-        outcome = "kill" if still_alive is not None and not still_alive else "wipe"
+        outcome = "kill"
+    elif players_seen and len(players_died) / len(players_seen) >= RAID_DEFEATED_FRACTION:
+        outcome = "wipe"
+    else:
+        outcome = "reset"
 
     deaths = analyze_deaths(path, start_line, end_line)
 

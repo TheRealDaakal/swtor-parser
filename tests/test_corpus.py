@@ -104,8 +104,30 @@ class TestOutcomeRecordedAtScanTime:
         pulls = replay_pulls(path, self._defs(["Test Boss"]))
         assert [p["outcome"] for p in pulls] == ["kill"]
 
-    def test_no_boss_death_records_a_wipe(self, tmp_path):
+    def test_no_boss_death_and_no_player_deaths_is_a_reset(self, tmp_path):
+        """The group disengaged rather than died. 160 of the corpus's 385
+        failed pulls look like this, and calling them wipes is what made
+        the wipe population incoherent."""
         path = self._log(tmp_path)
+        pulls = replay_pulls(path, self._defs(["Test Boss"]))
+        assert [p["outcome"] for p in pulls] == ["reset"]
+
+    def test_no_boss_death_with_the_group_dead_is_a_wipe(self, tmp_path):
+        lines = [
+            log_line("00:00:00.000", "@Dps#1", effect_type="Event",
+                     effect_name="EnterCombat {1}"),
+            log_line("00:00:01.000", "Test Boss", ability="Intro",
+                     effect_name="AbilityActivate {1}"),
+        ]
+        # Four players, all of whom take damage and then die -- the boss
+        # never does.
+        for i in range(1, 5):
+            lines.append(log_line(f"00:00:0{1 + i}.000", "Test Boss", target=f"@P{i}#{i}",
+                                  ability="Crush", effect_name="Damage {2}", amount="9999"))
+        for i in range(1, 5):
+            lines.append(log_line(f"00:00:1{i}.000", "Test Boss", target=f"@P{i}#{i}",
+                                  ability="Crush", effect_type="Event", effect_name="Death"))
+        path = _write_log(tmp_path, "combat_2026-08-06_20_00_00_1.txt", lines)
         pulls = replay_pulls(path, self._defs(["Test Boss"]))
         assert [p["outcome"] for p in pulls] == ["wipe"]
 
@@ -117,7 +139,9 @@ class TestOutcomeRecordedAtScanTime:
         path = self._log(tmp_path, deaths=["Kell Dragon", "Kell Dragon"],
                          boss="Dread Master Styrak")
         pulls = replay_pulls(path, defs)
-        assert [p["outcome"] for p in pulls] == ["wipe"]
+        # "reset" rather than "wipe" because no PLAYER died here either --
+        # the point is only that killing adds is not killing the boss.
+        assert [p["outcome"] for p in pulls] == ["reset"]
 
     def test_unrecognized_content_is_unknown_not_a_wipe(self, tmp_path):
         """Trash and leveling content isn't a wipe just because nothing

@@ -74,6 +74,11 @@ MIN_ENCOUNTER_SECONDS = 5.0
 # flattened without landing a hit still took damage, while a raid buffing up
 # between pulls does neither. See Encounter.is_real_fight().
 
+# What share of the group has to die before a failed pull counts as the
+# raid being DEFEATED rather than the group disengaging and re-pulling.
+# See Encounter.raid_was_defeated() for the measurement behind 0.5.
+RAID_DEFEATED_FRACTION = 0.5
+
 # Caps StatsTracker.history in memory, not just on disk. storage.py's
 # save_history()/append_history_entry() already trim the FILE to this many
 # pulls, but the in-memory list itself was never capped -- a long-running
@@ -387,6 +392,28 @@ class Encounter:
         """
         return any(p.damage_done > 0 or p.damage_taken > 0
                    for p in self.players.values())
+
+    def raid_was_defeated(self) -> bool:
+        """True if this pull ended with the raid wiped, as opposed to the
+        group disengaging and re-pulling.
+
+        Distinguishing the two matters because "we didn't kill it" covers
+        both, and lumping them together makes the failure population
+        meaningless: measured on the corpus, Styrak's 21 non-kills split
+        into 7 real wipes (6-9 deaths each) and 9 pulls where NOBODY died,
+        so the median "wipe" had half a death in it. Anything comparing
+        kills against wipes -- coaching especially -- reads that as noise.
+
+        The threshold is empirical, not a guess. Across all 385 non-kill
+        pulls in the corpus, the fraction of the group that died is
+        sharply bimodal: 142 pulls at 0.0 and 210 at 1.0, with only 33
+        anywhere in between and a genuine valley through the middle.
+        """
+        players = [p for p in self.players.values() if p.is_player]
+        if not players:
+            return False
+        died = sum(1 for p in players if p.deaths > 0)
+        return (died / len(players)) >= RAID_DEFEATED_FRACTION
 
     def past_trailing_window(self, now: float) -> bool:
         """True once the trailing grace window after ExitCombat has elapsed

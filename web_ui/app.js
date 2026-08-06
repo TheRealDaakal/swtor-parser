@@ -1354,6 +1354,8 @@ async function ddLoadBosses() {
       <td>${esc(b.boss || b.boss_id)}</td>
       <td>${b.pulls}</td>
       <td>${b.kills}</td>
+      <td>${b.wipes ?? 0}</td>
+      <td>${b.resets ?? 0}</td>
       <td>${b.kill_pct}%</td>
       <td>${dur(b.fastest_kill)}</td>
       <td>${dur(b.median)}</td>

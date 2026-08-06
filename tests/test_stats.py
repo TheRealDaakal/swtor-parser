@@ -432,3 +432,54 @@ class TestRealFightGate:
         completed = _heal_tick(tracker, sim_clock, 110.0 + 20.0, target="@Other#3")
         assert completed is None
         assert tracker.history == []
+
+
+class TestRaidWasDefeated:
+    """Splits a failed pull into "the raid died" and "the group walked
+    away". Without it, both are "wipe" and the wipe population is half
+    no-death resets -- which is what made Styrak's median wipe contain
+    half a death while its median KILL contained nine.
+
+    The 0.5 threshold is empirical. Across all 385 non-kill pulls in the
+    real corpus, the fraction of the group that died is sharply bimodal:
+    142 pulls at 0.0, 210 at 1.0, and only 33 anywhere in between.
+    """
+
+    def _encounter(self, total_players, died):
+        enc = Encounter()
+        for i in range(total_players):
+            p = enc._get(f"P{i}")
+            p.is_player = True
+            if i < died:
+                p.deaths = 1
+        return enc
+
+    def test_whole_group_dying_is_a_defeat(self):
+        assert self._encounter(8, 8).raid_was_defeated() is True
+
+    def test_nobody_dying_is_not_a_defeat(self):
+        """142 of the 385 real non-kill pulls look exactly like this."""
+        assert self._encounter(8, 0).raid_was_defeated() is False
+
+    def test_one_death_in_eight_is_not_a_defeat(self):
+        assert self._encounter(8, 1).raid_was_defeated() is False
+
+    def test_exactly_half_counts_as_a_defeat(self):
+        assert self._encounter(8, 4).raid_was_defeated() is True
+
+    def test_scales_with_group_size(self):
+        """8- and 16-player runs both have to work off the same rule."""
+        assert self._encounter(16, 8).raid_was_defeated() is True
+        assert self._encounter(16, 3).raid_was_defeated() is False
+
+    def test_npcs_do_not_count_toward_the_group(self):
+        """A pull kills dozens of adds; they are not the raid."""
+        enc = self._encounter(8, 0)
+        for i in range(20):
+            npc = enc._get(f"Add{i}")
+            npc.is_player = False
+            npc.deaths = 1
+        assert enc.raid_was_defeated() is False
+
+    def test_no_players_at_all_is_not_a_defeat(self):
+        assert Encounter().raid_was_defeated() is False
