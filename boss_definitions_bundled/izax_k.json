@@ -708,6 +708,9 @@
       "difficulties": [
         "master",
         "veteran"
+      ],
+      "group_sizes": [
+        8
       ]
     },
     {
@@ -749,6 +752,9 @@
       },
       "difficulties": [
         "veteran"
+      ],
+      "group_sizes": [
+        16
       ]
     },
     {
@@ -803,6 +809,9 @@
       },
       "difficulties": [
         "master"
+      ],
+      "group_sizes": [
+        16
       ]
     },
     {
@@ -840,6 +849,9 @@
       },
       "difficulties": [
         "master"
+      ],
+      "group_sizes": [
+        16
       ]
     },
     {

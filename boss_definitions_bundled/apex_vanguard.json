@@ -951,15 +951,6 @@
       }
     },
     {
-      "id": "apex_vanguard_orbs_acid_deluge_2",
-      "label": "Acid Deluge",
-      "duration_seconds": 122.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Acid Deluge"
-      }
-    },
-    {
       "id": "apex_vanguard_orbs_salvo_cancel",
       "label": "No salvo",
       "duration_seconds": 10.0,

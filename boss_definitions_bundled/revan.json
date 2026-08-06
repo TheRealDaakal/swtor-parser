@@ -421,15 +421,6 @@
       }
     },
     {
-      "id": "revan_orbs_heave",
-      "label": "Heave",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Heave"
-      }
-    },
-    {
       "id": "revan_orbs_overcharge",
       "label": "Overcharge",
       "duration_seconds": 16.0,
@@ -445,24 +436,6 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Force Wield"
-      }
-    },
-    {
-      "id": "revan_orbs_trail_of_agony",
-      "label": "Trail of Agony",
-      "duration_seconds": 32.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Trail of Agony"
-      }
-    },
-    {
-      "id": "revan_orbs_impel",
-      "label": "Impel",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Impel"
       }
     },
     {
@@ -515,15 +488,6 @@
       }
     },
     {
-      "id": "revan_orbs_unstable_aberration",
-      "label": "Unstable Aberration",
-      "duration_seconds": 40.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Unstable Aberration"
-      }
-    },
-    {
       "id": "revan_orbs_reactive_hp",
       "label": "Reactive HP",
       "duration_seconds": 10.0,
@@ -554,15 +518,6 @@
         "keyword": "Handful of Grenades"
       },
       "is_alert": true
-    },
-    {
-      "id": "revan_orbs_force_imbue",
-      "label": "Force Imbue",
-      "duration_seconds": 40.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "revan_orbs_adds_kill_shot"
-      }
     },
     {
       "id": "revan_orbs_adds_kill_shot",

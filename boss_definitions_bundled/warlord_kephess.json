@@ -329,24 +329,6 @@
         "timer_id": "warlord_kephess_orbs_hp_59"
       },
       "is_alert": true
-    },
-    {
-      "id": "warlord_kephess_orbs_mighty_leap",
-      "label": "Mighty Leap",
-      "duration_seconds": 40.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Mighty Leap"
-      }
-    },
-    {
-      "id": "warlord_kephess_orbs_savage_slash",
-      "label": "Savage Slash",
-      "duration_seconds": 18.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Savage Arcing Slash"
-      }
     }
   ]
 }

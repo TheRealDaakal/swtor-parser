@@ -321,15 +321,6 @@
         "type": "ability_cast",
         "keyword": "Inferno"
       }
-    },
-    {
-      "id": "tyrans_orbs_inferno",
-      "label": "Inferno",
-      "duration_seconds": 19.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Simplification"
-      }
     }
   ]
 }

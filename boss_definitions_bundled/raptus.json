@@ -729,15 +729,6 @@
       }
     },
     {
-      "id": "raptus_orbs_deadly_slash",
-      "label": "Deadly Slash",
-      "duration_seconds": 35.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Deadly Slash"
-      }
-    },
-    {
       "id": "raptus_orbs_challenge_end",
       "label": "Challenge END",
       "duration_seconds": 60.0,
@@ -762,15 +753,6 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Rising Slash"
-      }
-    },
-    {
-      "id": "raptus_orbs_driving_thrust",
-      "label": "Driving Thrust",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Driving Thrust"
       }
     }
   ]

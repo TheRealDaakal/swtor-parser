@@ -322,17 +322,6 @@
       }
     },
     {
-      "id": "brontes_orbs_fingers_knockback_1st",
-      "label": "Fingers Knockback 1st",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3303572879966208"
-        ]
-      }
-    },
-    {
       "id": "brontes_orbs_phase_5",
       "label": "Phase 5",
       "duration_seconds": 10.0,

@@ -184,37 +184,9 @@
       }
     },
     {
-      "id": "olok_orbs_stealthed",
-      "label": "Stealthed",
-      "duration_seconds": 5.5,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Escape"
-      }
-    },
-    {
-      "id": "olok_orbs_flashbang",
-      "label": "Flashbang",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "[flash_gate]"
-      },
-      "is_alert": true
-    },
-    {
       "id": "olok_orbs_flashbang_2",
       "label": "Flashbang_",
       "duration_seconds": 40.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "[flash_gate]"
-      }
-    },
-    {
-      "id": "olok_orbs_stealth",
-      "label": "Stealth",
-      "duration_seconds": 4.5,
       "trigger": {
         "type": "ability_cast",
         "keyword": "[flash_gate]"

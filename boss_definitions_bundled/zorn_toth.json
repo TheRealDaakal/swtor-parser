@@ -201,15 +201,6 @@
       }
     },
     {
-      "id": "zorn_toth_orbs_shriek",
-      "label": "Shriek",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Shriek"
-      }
-    },
-    {
       "id": "zorn_toth_orbs_shriek_1st",
       "label": "Shriek 1st",
       "duration_seconds": 10.0,
@@ -229,15 +220,6 @@
         "selector": [
           "Zorn"
         ]
-      }
-    },
-    {
-      "id": "zorn_toth_orbs_smash",
-      "label": "Smash",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Smash"
       }
     },
     {
@@ -353,18 +335,6 @@
       "trigger": {
         "type": "hp_below",
         "percent": 10.0,
-        "selector": [
-          "Toth"
-        ]
-      }
-    },
-    {
-      "id": "zorn_toth_orbs_soft_enrage",
-      "label": "Soft Enrage",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "hp_below",
-        "percent": 5.0,
         "selector": [
           "Toth"
         ]

@@ -666,24 +666,6 @@
       }
     },
     {
-      "id": "TYTT_K_orbs_energy_wave",
-      "label": "Energy Wave",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Energy Wave"
-      }
-    },
-    {
-      "id": "TYTT_K_orbs_sweep",
-      "label": "Sweep",
-      "duration_seconds": 6.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Sweep"
-      }
-    },
-    {
       "id": "TYTT_K_orbs_p3_alert",
       "label": "Phase 3",
       "duration_seconds": 10.0,

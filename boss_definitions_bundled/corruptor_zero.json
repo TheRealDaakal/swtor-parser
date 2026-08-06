@@ -254,55 +254,6 @@
       }
     },
     {
-      "id": "corruptor_zero_orbs_ranged_adds",
-      "label": "Ranged Adds",
-      "duration_seconds": 58.0,
-      "trigger": {
-        "type": "npc_appears",
-        "selector": [
-          "3282596259692544"
-        ]
-      }
-    },
-    {
-      "id": "corruptor_zero_orbs_melee_adds",
-      "label": "Melee Adds",
-      "duration_seconds": 58.0,
-      "trigger": {
-        "type": "npc_appears",
-        "selector": [
-          "3282639209365504"
-        ]
-      }
-    },
-    {
-      "id": "corruptor_zero_orbs_missile_barrage",
-      "label": "Missile Barrage",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Missile Barrage"
-      }
-    },
-    {
-      "id": "corruptor_zero_orbs_heavy_slash",
-      "label": "Heavy Slash",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Heavy Slash"
-      }
-    },
-    {
-      "id": "corruptor_zero_orbs_chest_laser",
-      "label": "Chest Laser",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Chest Laser"
-      }
-    },
-    {
       "id": "corruptor_zero_orbs_gravity_field",
       "label": "Gravity Field",
       "duration_seconds": 33.0,

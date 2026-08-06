@@ -505,17 +505,6 @@
       }
     },
     {
-      "id": "calphayus_orbs_dread_defiler",
-      "label": "Dread Defiler",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3319155021316096"
-        ]
-      }
-    },
-    {
       "id": "calphayus_orbs_crystal_death",
       "label": "Crystal Death",
       "duration_seconds": 10.0,

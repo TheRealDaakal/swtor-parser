@@ -244,6 +244,9 @@
       },
       "difficulties": [
         "master"
+      ],
+      "group_sizes": [
+        8
       ]
     },
     {
@@ -259,36 +262,10 @@
       },
       "difficulties": [
         "master"
+      ],
+      "group_sizes": [
+        16
       ]
-    },
-    {
-      "id": "cartel_warlords_orbs_horic_spray",
-      "label": "Horic Spray",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Spray and Pray"
-      }
-    },
-    {
-      "id": "cartel_warlords_orbs_horic_grenade",
-      "label": "Horic Grenade",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Corrosive Grenade"
-      }
-    },
-    {
-      "id": "cartel_warlords_orbs_garr_tp",
-      "label": "Garr TP",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3128772005986304"
-        ]
-      }
     },
     {
       "id": "cartel_warlords_orbs_garr_shivve",
@@ -297,24 +274,6 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Surprise Shivving"
-      }
-    },
-    {
-      "id": "cartel_warlords_orbs_sunder_fixate",
-      "label": "Sunder Fixate",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Fixate"
-      }
-    },
-    {
-      "id": "cartel_warlords_orbs_sunder_root",
-      "label": "Sunder Root",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Undeniable"
       }
     },
     {

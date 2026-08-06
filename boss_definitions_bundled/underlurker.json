@@ -117,35 +117,6 @@
       }
     },
     {
-      "id": "underlurker_orbs_collapse",
-      "label": "Collapse",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3512467204341760"
-        ]
-      }
-    },
-    {
-      "id": "underlurker_orbs_rage_storm",
-      "label": "Rage Storm",
-      "duration_seconds": 10.5,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Collapse"
-      }
-    },
-    {
-      "id": "underlurker_orbs_leap",
-      "label": "Leap",
-      "duration_seconds": 9.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Rage Storm"
-      }
-    },
-    {
       "id": "underlurker_orbs_adds",
       "label": "Adds 1st",
       "duration_seconds": 10.0,

@@ -173,15 +173,6 @@
       ]
     },
     {
-      "id": "titan6_orbs_reposition",
-      "label": "Reposition",
-      "duration_seconds": 16.5,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Launch"
-      }
-    },
-    {
       "id": "titan6_orbs_bunrn_hp",
       "label": "Bunrn HP",
       "duration_seconds": 10.0,

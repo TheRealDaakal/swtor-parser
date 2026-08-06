@@ -140,24 +140,6 @@
         "type": "ability_cast",
         "keyword": "Acidic Jet"
       }
-    },
-    {
-      "id": "red_orbs_hydrochloric_pool",
-      "label": "Hydrochloric Pool",
-      "duration_seconds": 47.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Hydrochloric Pool"
-      }
-    },
-    {
-      "id": "red_orbs_acidic_jet",
-      "label": "Acidic Jet",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Acidic Jet"
-      }
     }
   ]
 }

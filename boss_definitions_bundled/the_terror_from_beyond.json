@@ -648,15 +648,6 @@
       ]
     },
     {
-      "id": "the_terror_from_beyond_orbs_grasping_slam",
-      "label": "Grasping Slam",
-      "duration_seconds": 19.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Slam"
-      }
-    },
-    {
       "id": "the_terror_from_beyond_orbs_grasping_death",
       "label": "Grasping Death",
       "duration_seconds": 10.0,

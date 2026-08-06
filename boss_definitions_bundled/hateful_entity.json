@@ -104,60 +104,6 @@
       "difficulties": [
         "master"
       ]
-    },
-    {
-      "id": "hateful_entity_orbs_hateful_void",
-      "label": "Hateful Void",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Hateful Void"
-      }
-    },
-    {
-      "id": "hateful_entity_orbs_hate_pulse",
-      "label": "Hate Pulse",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Hate Pulse"
-      }
-    },
-    {
-      "id": "hateful_entity_orbs_grapple",
-      "label": "Grapple",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Grapple"
-      }
-    },
-    {
-      "id": "hateful_entity_orbs_dread_touch",
-      "label": "Dread Touch",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Dread Touch"
-      }
-    },
-    {
-      "id": "hateful_entity_orbs_death_mark",
-      "label": "Death Mark",
-      "duration_seconds": 62.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Death Mark"
-      }
-    },
-    {
-      "id": "hateful_entity_orbs_awakening",
-      "label": "Awakening",
-      "duration_seconds": 32.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Hateful Awakening"
-      }
     }
   ]
 }

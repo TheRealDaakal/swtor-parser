@@ -116,26 +116,6 @@
       ]
     },
     {
-      "id": "malaphar_orbs_adds",
-      "label": "Adds",
-      "duration_seconds": 45.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3469470286741504"
-        ]
-      }
-    },
-    {
-      "id": "malaphar_orbs_hammer_smash",
-      "label": "Hammer Smash",
-      "duration_seconds": 5.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Hammer Smash"
-      }
-    },
-    {
       "id": "malaphar_orbs_spear_toss",
       "label": "Spear Toss",
       "duration_seconds": 10.0,

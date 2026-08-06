@@ -202,15 +202,6 @@
       }
     },
     {
-      "id": "sword_squadron_orbs_rapid_fire",
-      "label": "Rapid Fire",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Rapid Fire"
-      }
-    },
-    {
       "id": "sword_squadron_orbs_gravity",
       "label": "Gravity",
       "duration_seconds": 40.0,

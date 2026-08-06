@@ -829,15 +829,6 @@
         "type": "ability_cast",
         "keyword": "Suppression Burst"
       }
-    },
-    {
-      "id": "nahut_k_orbs_mass_distortion",
-      "label": "Mass Distortion",
-      "duration_seconds": 12.5,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Mass Distortion"
-      }
     }
   ]
 }

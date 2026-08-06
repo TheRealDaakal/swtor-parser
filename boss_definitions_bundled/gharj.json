@@ -161,15 +161,6 @@
         "type": "ability_cast",
         "keyword": "Leaping Smash"
       }
-    },
-    {
-      "id": "gharj_orbs_pulverizing_slam",
-      "label": "Pulverizing Slam",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Pulverizing Slam"
-      }
     }
   ]
 }

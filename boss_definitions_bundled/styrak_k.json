@@ -516,6 +516,9 @@
       "difficulties": [
         "master",
         "veteran"
+      ],
+      "group_sizes": [
+        16
       ]
     },
     {
@@ -823,6 +826,9 @@
       "difficulties": [
         "master",
         "veteran"
+      ],
+      "group_sizes": [
+        8
       ]
     },
     {
@@ -846,6 +852,9 @@
       "difficulties": [
         "master",
         "veteran"
+      ],
+      "group_sizes": [
+        16
       ]
     },
     {
@@ -1262,15 +1271,6 @@
       }
     },
     {
-      "id": "Styrak_k_orbs_spines",
-      "label": "Spines",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Spines"
-      }
-    },
-    {
       "id": "Styrak_k_orbs_choke_clone_d",
       "label": "Choke Clone D",
       "duration_seconds": 60.0,
@@ -1313,26 +1313,6 @@
       "group_sizes": [
         16
       ]
-    },
-    {
-      "id": "Styrak_k_orbs_leap_slam",
-      "label": "Leap Slam",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Leap Slam"
-      }
-    },
-    {
-      "id": "Styrak_k_orbs_charge_clone",
-      "label": "Charge Clone",
-      "duration_seconds": 40.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "3141656907874304"
-        ]
-      }
     },
     {
       "id": "Styrak_k_orbs_thundering_blast_1st",

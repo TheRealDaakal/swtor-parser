@@ -870,24 +870,6 @@
       }
     },
     {
-      "id": "kanoth_orbs_abduct",
-      "label": "Abduct",
-      "duration_seconds": 27.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Repel"
-      }
-    },
-    {
-      "id": "kanoth_orbs_seed_of_echoes",
-      "label": "Seed of Echoes",
-      "duration_seconds": 18.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Seed of Echoes"
-      }
-    },
-    {
       "id": "kanoth_orbs_rng_growth",
       "label": "RNG Growth",
       "duration_seconds": 18.0,
@@ -950,15 +932,6 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Shock Apparition Wave"
-      }
-    },
-    {
-      "id": "kanoth_orbs_growth_seed",
-      "label": "Growth Seed",
-      "duration_seconds": 7.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Fortify Ground"
       }
     },
     {

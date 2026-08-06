@@ -1013,15 +1013,6 @@
       ]
     },
     {
-      "id": "SCYVA_K_orbs_upheaval",
-      "label": "Upheaval",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Upheaval"
-      }
-    },
-    {
       "id": "SCYVA_K_orbs_1st_beam",
       "label": "1st beam",
       "duration_seconds": 16.0,

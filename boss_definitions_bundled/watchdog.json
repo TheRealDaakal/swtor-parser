@@ -319,15 +319,6 @@
       ]
     },
     {
-      "id": "watchdog_orbs_wd_protocol_end",
-      "label": "WD Protocol END",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "watchdog_orbs_wd_protocol_swap"
-      }
-    },
-    {
       "id": "watchdog_orbs_burn_hp",
       "label": "Burn HP",
       "duration_seconds": 10.0,
@@ -337,15 +328,6 @@
         "selector": [
           "Watchdog"
         ]
-      }
-    },
-    {
-      "id": "watchdog_orbs_wd_protocol_swap",
-      "label": "WD Protocol Swap",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Watchdog Protocol"
       }
     },
     {
@@ -367,15 +349,6 @@
         "keyword": "Degauss"
       },
       "is_alert": true
-    },
-    {
-      "id": "watchdog_orbs_invert",
-      "label": "Invert",
-      "duration_seconds": 19.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Stalker Protocol"
-      }
     },
     {
       "id": "watchdog_orbs_burn_phase",

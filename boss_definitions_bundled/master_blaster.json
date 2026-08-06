@@ -882,33 +882,6 @@
       }
     },
     {
-      "id": "master_blaster_orbs_rain_of_pain",
-      "label": "Rain of Pain",
-      "duration_seconds": 49.4,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "master_blaster_orbs_rop_shield_down"
-      }
-    },
-    {
-      "id": "master_blaster_orbs_fire_wheel",
-      "label": "Fire Wheel",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "master_blaster_orbs_ion_cutter"
-      }
-    },
-    {
-      "id": "master_blaster_orbs_ion_cutter",
-      "label": "Ion Cutter",
-      "duration_seconds": 12.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Fire Wheel of Death"
-      }
-    },
-    {
       "id": "master_blaster_orbs_1st_rop_dmg",
       "label": "1st ROP DMG",
       "duration_seconds": 11.6,

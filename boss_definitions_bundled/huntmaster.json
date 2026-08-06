@@ -462,117 +462,12 @@
       ]
     },
     {
-      "id": "huntmaster_orbs_p3_jump",
-      "label": "P3 jump",
-      "duration_seconds": 43.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Holdout Cover"
-      }
-    },
-    {
       "id": "huntmaster_orbs_firestorm_grenade_p3_vm",
       "label": "Firestorm Grenade P3 VM",
       "duration_seconds": 16.0,
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_orbs_p3_jump"
-      },
-      "difficulties": [
-        "veteran"
-      ]
-    },
-    {
-      "id": "huntmaster_orbs_firestorm_grenade",
-      "label": "Firestorm Grenade",
-      "duration_seconds": 32.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Firestorm Grenade"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_flying_fortress",
-      "label": "Flying Fortress",
-      "duration_seconds": 75.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "huntmaster_orbs_p3_jump"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_scat_pv_pen",
-      "label": "Scat/PV/Pen",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Flying Fortress"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_powershot_volley",
-      "label": "Powershot Volley",
-      "duration_seconds": 53.1,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Powershot Volley"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_powershot_scatter_p3_vm",
-      "label": "Powershot/Scatter P3 VM",
-      "duration_seconds": 48.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "huntmaster_orbs_p3_jump"
-      },
-      "difficulties": [
-        "veteran"
-      ]
-    },
-    {
-      "id": "huntmaster_orbs_egg_snipe_p3",
-      "label": "Egg Snipe P3",
-      "duration_seconds": 28.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "huntmaster_orbs_p3_jump"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_primal_fear_p3",
-      "label": "Primal Fear P3",
-      "duration_seconds": 34.0,
-      "trigger": {
-        "type": "timer_expires",
-        "timer_id": "huntmaster_orbs_p3_jump"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_scatterblast",
-      "label": "Scatterblast",
-      "duration_seconds": 53.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Scatterblast"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_penetrating_shot",
-      "label": "Penetrating Shot",
-      "duration_seconds": 37.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Penetrating Shot"
-      }
-    },
-    {
-      "id": "huntmaster_orbs_primal_fear_vm",
-      "label": "Primal Fear VM",
-      "duration_seconds": 34.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Primal Fear"
       },
       "difficulties": [
         "veteran"

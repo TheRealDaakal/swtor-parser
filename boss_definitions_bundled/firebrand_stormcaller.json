@@ -399,15 +399,6 @@
       }
     },
     {
-      "id": "firebrand_stormcaller_orbs_mortar_volley",
-      "label": "Mortar Volley",
-      "duration_seconds": 25.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Mortar Volley"
-      }
-    },
-    {
       "id": "firebrand_stormcaller_orbs_firebrand_cleave_m",
       "label": "Firebrand Cleave M",
       "duration_seconds": 10.0,
@@ -465,15 +456,6 @@
       }
     },
     {
-      "id": "firebrand_stormcaller_orbs_firebrand_cleave",
-      "label": "Firebrand Cleave",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Missile Barrage"
-      }
-    },
-    {
       "id": "firebrand_stormcaller_orbs_incinerate_armor_vm",
       "label": "Incinerate Armor VM",
       "duration_seconds": 49.0,
@@ -486,15 +468,6 @@
       ]
     },
     {
-      "id": "firebrand_stormcaller_orbs_targeted_missile",
-      "label": "Targeted Missile",
-      "duration_seconds": 16.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Targeted"
-      }
-    },
-    {
       "id": "firebrand_stormcaller_orbs_double_destruction_vm",
       "label": "Double Destruction VM",
       "duration_seconds": 30.0,
@@ -505,15 +478,6 @@
       "difficulties": [
         "veteran"
       ]
-    },
-    {
-      "id": "firebrand_stormcaller_orbs_storm_cleave",
-      "label": "Storm Cleave",
-      "duration_seconds": 10.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Electric Discharge"
-      }
     },
     {
       "id": "firebrand_stormcaller_orbs_storm_cleave_m",

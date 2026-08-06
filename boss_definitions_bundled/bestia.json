@@ -608,33 +608,6 @@
       }
     },
     {
-      "id": "bestia_orbs_swelling_despair",
-      "label": "Swelling Despair",
-      "duration_seconds": 24.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Swelling Despair"
-      }
-    },
-    {
-      "id": "bestia_orbs_dread_strike",
-      "label": "Dread Strike",
-      "duration_seconds": 24.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Dread Strike"
-      }
-    },
-    {
-      "id": "bestia_orbs_combusting_seed",
-      "label": "Combusting Seed",
-      "duration_seconds": 24.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "[ranged_aoe_targeter]"
-      }
-    },
-    {
       "id": "bestia_orbs_dread_pool",
       "label": "Dread Pool",
       "duration_seconds": 24.0,

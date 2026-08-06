@@ -18,6 +18,8 @@ stole the one-time trigger first. A full scan of boss_definitions_bundled
 found this exact collision in 23 different bosses, 55 colliding key
 groups -- this was not a Soa-specific gap.
 """
+import json
+
 import pytest
 
 from boss_definitions import Condition, EvalContext, _definition_from_dict
@@ -340,3 +342,75 @@ class TestAbilityIdTriggers:
         })
         assert definition.timers[0].announce_on_start is True
         assert definition.timers[1].announce_on_start is False
+
+
+class TestBundledTimerInvariants:
+    """Data invariants over the 163 bundled definitions. These are not
+    hypotheticals -- both were measured firing on real kills.
+
+    The app merges timers from two upstreams (BARAS and ORBS), and neither
+    knows about the other. When both describe the same mechanic, the raid
+    hears it twice: a real Torque kill fired 79 timers, 44 of which were a
+    label repeating at the identical instant ("Vents" 19 times).
+    """
+
+    def _definitions(self):
+        from pathlib import Path
+        import glob
+        root = Path(__file__).resolve().parent.parent / "boss_definitions_bundled"
+        for path in sorted(glob.glob(str(root / "*.json"))):
+            yield json.load(open(path, encoding="utf-8"))
+
+    def test_no_orbs_timer_duplicates_a_baras_one(self):
+        """The cross-source duplicate. Timers come from two upstreams that
+        don't know about each other, so when both describe a mechanic the
+        raid hears it twice: a real Torque kill fired 79 timers, 44 of them
+        a label repeating at the identical instant ("Vents" 19 times).
+        torque_vents (BARAS, 30s, veteran-only) and torque_orbs_vents
+        (30s, no difficulty at all) had the same trigger and duration.
+
+        Scoped to ORBS-vs-BARAS pairs on purpose. BARAS ships plenty of
+        same-label timers of its own -- per-difficulty variants, per-phase
+        variants, first-cast vs recurring -- and those are deliberate; only
+        one is ever live. Asserting a rule over upstream data this suite
+        hasn't validated would just encode a guess.
+
+        Label matching keeps punctuation: BARAS uses a trailing underscore
+        for a mechanic's recurring form (Olok's "Flashbang" 10s vs
+        "Flashbang_" 40s), which are genuinely different timers.
+        """
+        def is_orbs(t):
+            return "orbs" in (t.get("id") or "").lower()
+
+        def key(t):
+            trigger = t.get("trigger") or {}
+            return (" ".join((t.get("label") or "").lower().split()),
+                    trigger.get("type"),
+                    " ".join((trigger.get("keyword") or "").lower().split()))
+
+        offenders = []
+        for d in self._definitions():
+            timers = d.get("timers") or []
+            baras = {key(t): t.get("id") for t in timers if not is_orbs(t)}
+            for t in timers:
+                if is_orbs(t) and key(t) in baras:
+                    offenders.append(
+                        f"{d.get('name')}: {t.get('id')} duplicates {baras[key(t)]}")
+        assert not offenders, (
+            "ORBS timers duplicating a BARAS one (same label + trigger):\n"
+            + "\n".join(offenders[:15]))
+
+    def test_group_size_suffixed_timers_declare_their_group_size(self):
+        """BARAS names 8- and 16-player variants of a mechanic with _8m /
+        _16m and gives them different durations (Cartel Warlords' Sunder
+        The End: 16.0s at 8, 11.0s at 16). If the scoping is dropped, both
+        fire on every pull and one of them is simply the wrong time."""
+        import re
+        pattern = re.compile(r"_(8|16)m(?:_|$)")
+        offenders = []
+        for d in self._definitions():
+            for t in d.get("timers") or []:
+                m = pattern.search(t.get("id") or "")
+                if m and not t.get("group_sizes"):
+                    offenders.append(f"{d.get('name')}: {t.get('id')}")
+        assert not offenders, "timers whose id encodes a group size but don't declare it:\n" + "\n".join(offenders)

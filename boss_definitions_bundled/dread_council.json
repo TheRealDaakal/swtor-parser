@@ -827,24 +827,6 @@
       }
     },
     {
-      "id": "dread_council_orbs_whirlwind",
-      "label": "Whirlwind",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Whirlwind"
-      }
-    },
-    {
-      "id": "dread_council_orbs_deadly_slash",
-      "label": "Deadly Slash",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Deadly Slash"
-      }
-    },
-    {
       "id": "dread_council_orbs_force_pull",
       "label": "Force Pull",
       "duration_seconds": 60.0,

@@ -112,60 +112,6 @@
         "master",
         "veteran"
       ]
-    },
-    {
-      "id": "operations_chief_orbs_flash_bang",
-      "label": "Flash Bang",
-      "duration_seconds": 30.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Flash Bang"
-      }
-    },
-    {
-      "id": "operations_chief_orbs_terminate",
-      "label": "Terminate",
-      "duration_seconds": 24.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Terminate"
-      }
-    },
-    {
-      "id": "operations_chief_orbs_explosive_probe",
-      "label": "Explosive Probe",
-      "duration_seconds": 32.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Mass Explosive Probe"
-      }
-    },
-    {
-      "id": "operations_chief_orbs_turrets",
-      "label": "Turrets",
-      "duration_seconds": 32.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Summon Rail Turrets"
-      }
-    },
-    {
-      "id": "operations_chief_orbs_impulse",
-      "label": "Impulse",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Impulse"
-      }
-    },
-    {
-      "id": "operations_chief_orbs_thermal_grenade",
-      "label": "Thermal Grenade",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Thermal Grenade"
-      }
     }
   ]
 }

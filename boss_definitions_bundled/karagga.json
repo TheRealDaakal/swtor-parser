@@ -119,53 +119,6 @@
         "type": "timer_started",
         "timer_id": "cluster_bombs"
       }
-    },
-    {
-      "id": "karagga_orbs_cluster_bombs",
-      "label": "Cluster Bombs",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Cluster Bombs"
-      }
-    },
-    {
-      "id": "karagga_orbs_unstable_energy",
-      "label": "Unstable Energy",
-      "duration_seconds": 20.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Unstable Energy"
-      }
-    },
-    {
-      "id": "karagga_orbs_burning_oil",
-      "label": "Burning Oil",
-      "duration_seconds": 15.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Burning Oil"
-      }
-    },
-    {
-      "id": "karagga_orbs_tunneling_drill",
-      "label": "Tunneling Drill",
-      "duration_seconds": 24.0,
-      "trigger": {
-        "type": "ability_cast",
-        "keyword": "Tunneling Drill"
-      }
-    },
-    {
-      "id": "karagga_orbs_mouse_droids",
-      "label": "Mouse Droids",
-      "duration_seconds": 60.0,
-      "trigger": {
-        "type": "ability_cast",
-        "ability_ids": [
-          "2778268314894336"
-        ]
-      }
     }
   ]
 }
