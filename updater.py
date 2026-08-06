@@ -157,6 +157,11 @@ function Log($m) {
     try { Add-Content -LiteralPath $logPath -Value "$(Get-Date -Format o)  $m" } catch { }
 }
 
+# Never stand inside the directory we're about to rename. stage_relaunch
+# already launches us with a neutral cwd; this is the second line of defence
+# in case anything (a profile, a future caller) puts us back there.
+Set-Location -LiteralPath ([System.IO.Path]::GetTempPath())
+
 Log "helper started (pid to wait for: $targetPid)"
 Log "installDir=$installDir"
 Log "stagedDir=$stagedDir"
@@ -173,6 +178,22 @@ if (Get-Process -Id $targetPid -ErrorAction SilentlyContinue) {
     exit 1
 }
 Log "old process has exited"
+
+# The app spawns child processes (the webview host among them) which inherit
+# its working directory -- the install directory -- and can outlive the
+# parent, keeping that directory locked exactly the same way. Waiting only on
+# the launching pid isn't enough.
+$waitKids = (Get-Date).AddSeconds(30)
+while ((Get-Date) -lt $waitKids) {
+    $holders = @(Get-Process -ErrorAction SilentlyContinue | Where-Object {
+        $p = $null
+        try { $p = $_.Path } catch { }
+        $p -and $p.StartsWith($installDir, [System.StringComparison]::OrdinalIgnoreCase)
+    })
+    if ($holders.Count -eq 0) { break }
+    Log "still waiting on $($holders.Count) process(es) running from the install dir: $(($holders | Select-Object -Expand Name -Unique) -join ', ')"
+    Start-Sleep -Milliseconds 500
+}
 
 $backup = "$installDir.old"
 if (Test-Path $backup) {
@@ -287,4 +308,15 @@ def stage_relaunch(staged_app_dir: Path) -> None:
         creationflags=CREATE_NO_WINDOW,
         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         close_fds=True,
+        # THE fix for "it closed and never came back". A child process
+        # inherits the parent's working directory, and this app's working
+        # directory IS its install directory (the Start Menu shortcut sets
+        # no WorkingDir, so Windows defaults it to the exe's own folder).
+        # The helper was therefore standing inside the very folder it had to
+        # rename, and Windows refuses to rename a directory that is any
+        # process's cwd -- "Cannot rename the item ... because it is in
+        # use", exactly what the field log showed, on all 10 retries. That
+        # made it a guaranteed failure rather than a race: no amount of
+        # retrying could ever succeed. Start the helper somewhere neutral.
+        cwd=tempfile.gettempdir(),
     )

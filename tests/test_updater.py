@@ -8,6 +8,7 @@ paths, and that stage_relaunch() writes a correctly-substituted script
 import hashlib
 import os
 import zipfile
+from pathlib import Path
 
 import pytest
 
@@ -243,3 +244,47 @@ class TestRelaunchScriptRobustness:
     def test_relaunch_sets_the_working_directory(self):
         """The app resolves its own bundled data relative to where it starts."""
         assert "-WorkingDirectory $installDir" in updater._RELAUNCH_SCRIPT_TEMPLATE
+
+
+class TestHelperDoesNotLockTheInstallDir:
+    """The third and final cause of "it closed and never came back".
+
+    A child process inherits its parent's working directory, and this app's
+    working directory IS its install directory (the Start Menu shortcut sets
+    no WorkingDir, so Windows defaults it to the exe's folder). The relaunch
+    helper was therefore launched standing inside the very directory it had
+    to rename. Windows refuses to rename a directory that is any process's
+    cwd, so this failed 100% of the time -- the field log showed the same
+    "because it is in use" error on all 10 retry attempts. Retrying could
+    never have helped; only moving out of the directory can.
+    """
+
+    def test_helper_is_launched_from_a_neutral_working_directory(self, tmp_path, monkeypatch):
+        install = tmp_path / "install"
+        monkeypatch.setattr(updater.tempfile, "gettempdir", lambda: str(tmp_path))
+        monkeypatch.setattr(updater, "install_dir", lambda: install)
+        monkeypatch.setattr(updater.sys, "executable", str(install / "MyApp.exe"))
+
+        captured = {}
+        monkeypatch.setattr(updater.subprocess, "Popen",
+                             lambda cmd, **kw: captured.update(kw))
+
+        staged = tmp_path / "staged_app"
+        staged.mkdir()
+        updater.stage_relaunch(staged)
+
+        cwd = captured.get("cwd")
+        assert cwd is not None, "must pass an explicit cwd, not inherit the app's"
+        assert Path(cwd).resolve() != install.resolve(), (
+            "the helper must not run from inside the directory it renames"
+        )
+
+    def test_script_also_moves_itself_out_of_the_install_dir(self):
+        assert "Set-Location" in updater._RELAUNCH_SCRIPT_TEMPLATE
+
+    def test_script_waits_for_child_processes_too(self):
+        """Killing the launching pid isn't enough -- its children inherit the
+        same working directory and hold the same lock."""
+        script = updater._RELAUNCH_SCRIPT_TEMPLATE
+        assert "still waiting on" in script
+        assert "StartsWith($installDir" in script
