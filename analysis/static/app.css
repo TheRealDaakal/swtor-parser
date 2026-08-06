@@ -304,3 +304,15 @@ svg .axis { stroke: var(--baseline); stroke-width: 1; }
 #dd-bosses tbody tr.selected, #dd-pulls tbody tr.selected {
   background: var(--surface-2); box-shadow: inset 2px 0 0 var(--s1);
 }
+
+/* A History row whose numbers couldn't be re-derived from its own log --
+   see history_migration.py. Marked rather than hidden: the row is real,
+   but its death count may still be the old parser's inflated one, and
+   quietly showing it as if it were verified is the thing this whole
+   migration exists to stop. */
+.unverified {
+  display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 9px;
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--warning); border: 1px solid rgba(250,178,25,.4);
+  background: rgba(250,178,25,.10); cursor: help; vertical-align: middle;
+}

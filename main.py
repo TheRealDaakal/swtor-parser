@@ -362,6 +362,30 @@ def main():
         timer_engine.add_rule(rule)
     loaded_history = storage.load_history()
     if loaded_history:
+        # Rows written by an older parser are rebuilt from their own logs
+        # before anything gets to display them -- otherwise the History tab
+        # shows one set of numbers and Deep Dive, which re-reads the raw
+        # log, shows another. See history_migration.py. One-time: rebuilt
+        # rows are stamped with the current version, so the next launch
+        # skips this entirely.
+        import history_migration
+        if history_migration.needs_migration(loaded_history):
+            status.text = "Updating saved history to the current parser…"
+            # Taken before anything is rewritten: the migration legitimately
+            # drops rows that were never fights, and a wrong call there
+            # would otherwise be unrecoverable.
+            backup = storage.backup_history("pre-v1-migration.bak")
+            try:
+                loaded_history, report = history_migration.migrate(loaded_history)
+            except Exception as exc:
+                # A failed migration must never stop the app coming up --
+                # worst case the user sees the old numbers for another
+                # launch, which is where they already were.
+                print(f"history migration failed, leaving history as-is: {exc}")
+            else:
+                storage.save_history(loaded_history)
+                print(f"history migration: {report}"
+                      + (f" (backup: {backup})" if backup else ""))
         from stats import HISTORY_LIMIT
         tracker.history = (loaded_history + tracker.history)[-HISTORY_LIMIT:]
 

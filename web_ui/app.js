@@ -194,7 +194,7 @@ async function loadHistory() {
     <tr>
       <td><input type="checkbox" onclick="event.stopPropagation(); togglePullSelected(${r.pull}, this.checked)"
         ${selectedPulls.has(r.pull) ? 'checked' : ''}></td>
-      <td class="clickable" onclick="openPull(${r.pull})">${r.pull}</td>
+      <td class="clickable" onclick="openPull(${r.pull})">${r.pull}${r.unverified ? ' <span class="unverified" title="This pull&rsquo;s numbers could not be re-checked against its log file, so they may still be from an older parser. Deep Dive re-reads the raw log and is accurate.">unverified</span>' : ''}</td>
       <td class="clickable dim" onclick="openPull(${r.pull})">${historyDate(r.real_start_time)}</td>
       <td class="clickable" onclick="openPull(${r.pull})">${r.duration.toFixed(1)}s</td>
       <td class="clickable dim" onclick="openPull(${r.pull})">${r.top.map(p => `${esc(p.name)} ${fmt(p.dps)}`).join(', ')}</td>

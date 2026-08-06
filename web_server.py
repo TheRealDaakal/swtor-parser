@@ -123,8 +123,19 @@ def build_history_list(tracker) -> list:
     out = []
     for pull_num, duration, player_rows, real_start_time in rows:
         top = [{"name": n, "dps": round(d)} for n, d, _h, _t, _m, _dth in player_rows[:3]]
+        # A row whose numbers could not be re-derived from its own log --
+        # its (log_path, line range) doesn't resolve, which happens to
+        # rows recorded around a log-file rollover. Flagged rather than
+        # hidden or quietly deleted: these still carry the old parser's
+        # inflated death counts, and the user deserves to know which rows
+        # those are. See history_migration.py.
+        idx = pull_num - 1
+        unverified = bool(
+            0 <= idx < len(tracker.history)
+            and getattr(tracker.history[idx], "unverified", False)
+        )
         out.append({"pull": pull_num, "duration": round(duration, 1), "top": top,
-                    "real_start_time": real_start_time})
+                    "real_start_time": real_start_time, "unverified": unverified})
     out.reverse()  # oldest-first, matching the old Tk tree's insert order
     return out
 

@@ -25,6 +25,7 @@ lose everything already flushed to disk.
 
 import json
 import os
+import shutil
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -110,6 +111,32 @@ def _backfill_real_start_times(encounters: List[Encounter]) -> None:
                     break
     if changed:
         save_history(encounters)
+
+
+def backup_history(suffix: str) -> Optional[Path]:
+    """Copies history.json aside before something rewrites it wholesale,
+    and returns the backup path (None if there was nothing to copy, or the
+    copy failed).
+
+    Exists for the one-time migration that rebuilds every stored row from
+    its original log (see history_migration.py): that legitimately DROPS
+    rows -- 56 of 200 on this developer's own history, all of them
+    between-pull healing segments that were never fights -- and a bad
+    judgment call there would otherwise be unrecoverable. Never overwrites
+    an existing backup, so the pre-migration state survives even if the
+    migration somehow runs twice.
+    """
+    src = _history_path()
+    if not src.exists():
+        return None
+    dst = src.with_name(f"{src.name}.{suffix}")
+    if dst.exists():
+        return dst
+    try:
+        shutil.copy2(src, dst)
+    except OSError:
+        return None
+    return dst
 
 
 def save_history(encounters: List[Encounter]) -> None:

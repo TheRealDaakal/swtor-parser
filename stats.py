@@ -74,6 +74,17 @@ MIN_ENCOUNTER_SECONDS = 5.0
 # flattened without landing a hit still took damage, while a raid buffing up
 # between pulls does neither. See Encounter.is_real_fight().
 
+# Bumped whenever a parser/aggregation change alters what a STORED history
+# row means, so rows written by an older build can be spotted and rebuilt
+# from their own log rather than sitting there quietly wrong. See
+# history_migration.py.
+#
+# 1: the first version to carry the field at all. Everything written before
+#    it counted "Deathmark" (and every other ability with "death" in its
+#    name) as a player death, and kept between-pull segments -- the raid
+#    healing up with no damage anywhere -- as if they were pulls.
+HISTORY_DATA_VERSION = 1
+
 # What share of the group has to die before a failed pull counts as the
 # raid being DEFEATED rather than the group disengaging and re-pulling.
 # See Encounter.raid_was_defeated() for the measurement behind 0.5.
@@ -363,6 +374,14 @@ class Encounter:
         # seen before/at this encounter (Parsely needs that line for context
         # even if it happened before this encounter's own first line).
         self.log_path: Optional[str] = None
+        # Which parser generation produced these numbers -- see
+        # HISTORY_DATA_VERSION. A live encounter is by definition current.
+        self.data_version: int = HISTORY_DATA_VERSION
+        # Set when a rebuild was attempted and could not be completed --
+        # the row's (log_path, line range) no longer resolves, so its
+        # numbers can't be re-derived. Kept rather than deleted, but never
+        # retried and never presented as verified. See history_migration.
+        self.unverified: bool = False
         self.start_line: Optional[int] = None
         self.end_line: Optional[int] = None
         self.area_entered_line: Optional[int] = None
@@ -587,6 +606,8 @@ class Encounter:
             "end_line": self.end_line,
             "area_entered_line": self.area_entered_line,
             "real_start_time": self.real_start_time,
+            "data_version": self.data_version,
+            "unverified": self.unverified,
         }
 
     @classmethod
@@ -601,6 +622,11 @@ class Encounter:
         enc.end_line = d.get("end_line")
         enc.area_entered_line = d.get("area_entered_line")
         enc.real_start_time = d.get("real_start_time")
+        # Absent on anything written before the field existed -- which is
+        # exactly what marks a row as needing rebuilding. See
+        # history_migration.py.
+        enc.data_version = d.get("data_version", 0)
+        enc.unverified = bool(d.get("unverified", False))
         return enc
 
 
