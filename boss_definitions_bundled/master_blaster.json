@@ -93,7 +93,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_rop"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_2nd_rop_dmg",
@@ -102,7 +105,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "master_blaster_1st_rop_dmg"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_3rd_rop_dmg",
@@ -111,7 +117,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "master_blaster_2nd_rop_dmg"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rop_shield_down",
@@ -120,7 +129,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "master_blaster_3rd_rop_dmg"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rain_of_pain",
@@ -133,7 +145,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p3_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rain_of_pain_1st",
@@ -142,7 +157,10 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Calling The Boss"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_scatterblast_p1",
@@ -179,7 +197,10 @@
             "timer_id": "master_blaster_sb_p1_r"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_scatterblast_p2",
@@ -239,7 +260,10 @@
             "timer_id": "master_blaster_sb_p2_r"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_scatterblast_m",
@@ -255,7 +279,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p2_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_ep_p1",
@@ -280,7 +307,10 @@
             "phase_id": "master_blaster_p2_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rm_p1",
@@ -296,7 +326,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p2_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rm_p1_1st",
@@ -304,7 +337,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_ep_p1_s",
@@ -337,7 +373,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p2_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_sb_p1_r",
@@ -364,7 +403,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p2_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_p2_us",
@@ -373,7 +415,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Calling The Boss"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_scatterblast_1st",
@@ -381,7 +426,10 @@
       "duration_seconds": 6.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_ion_cutter",
@@ -406,7 +454,10 @@
             "phase_id": "master_blaster_p3_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_fire_wheel",
@@ -431,7 +482,10 @@
             "phase_id": "master_blaster_p3_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_epm_p2",
@@ -440,7 +494,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_rop"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_knock",
@@ -452,7 +509,10 @@
         "ability_ids": [
           "3420615033749504"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_epm_p3",
@@ -469,6 +529,9 @@
             "master_blaster_burn"
           ]
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -524,7 +587,10 @@
             "timer_id": "master_blaster_ep_p2_s"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rm_p2",
@@ -540,7 +606,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p3_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_ep_p2_s",
@@ -582,7 +651,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p3_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rop_d",
@@ -591,7 +663,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_rop"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_rep_rop",
@@ -630,7 +705,10 @@
             "phase_id": "master_blaster_p3_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_sb_p2_r",
@@ -708,7 +786,10 @@
             "phase_id": "master_blaster_p3_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_fw_1st",
@@ -717,7 +798,10 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Calling The Boss"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_fw_rop",
@@ -726,7 +810,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "master_blaster_3rd_rop_dmg"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_sb_p2_rop",
@@ -750,7 +837,10 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "master_blaster_sb_p2_r"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_p3",
@@ -759,7 +849,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "master_blaster_p3_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "master_blaster_orbs_2n_rop_dmg",

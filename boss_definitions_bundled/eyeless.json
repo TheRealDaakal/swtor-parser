@@ -24,7 +24,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "eyeless_crush",
@@ -36,7 +39,10 @@
         "ability_ids": [
           "3328277531852800"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     }
   ]
 }

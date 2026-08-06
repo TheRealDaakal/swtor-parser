@@ -101,7 +101,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "op_ix_blue"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_orange_cd",
@@ -114,7 +118,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "op_ix_orange"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_purple_scalene",
@@ -127,7 +135,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "op_ix_purple"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_yellow_scalene",
@@ -140,7 +152,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "op_ix_yellow"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_core_under_10",
@@ -153,7 +169,10 @@
           "Data Core"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "op_ix_adds",
@@ -192,7 +211,11 @@
           }
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_blue_deletion",
@@ -205,7 +228,11 @@
           "2959348431060992"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_orange_deletion",
@@ -218,7 +245,11 @@
           "2959357020995584"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_purple_deletion",
@@ -231,7 +262,11 @@
           "2959361315962880"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_yellow_deletion",
@@ -244,7 +279,11 @@
           "2959369905897472"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "op_ix_orbs_black_obtuse_1st_hp",

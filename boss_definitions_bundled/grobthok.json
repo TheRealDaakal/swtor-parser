@@ -24,7 +24,11 @@
       "duration_seconds": 61.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_pipe_smash",
@@ -36,7 +40,11 @@
         "ability_ids": [
           "3307601559289856"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_adds_hp",
@@ -49,7 +57,11 @@
           "Grob'thok"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_adds",
@@ -61,7 +73,11 @@
         "ability_ids": [
           "3315585903493120"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_lava_start",
@@ -74,7 +90,11 @@
           "Grob'thok"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_lava_dot",
@@ -85,7 +105,11 @@
         "ability_ids": [
           "3294703772499968"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_dot_debuff",
@@ -96,7 +120,11 @@
         "keyword": "Mining Droid",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_overhead_smash",
@@ -108,7 +136,11 @@
         "ability_ids": [
           "3285993578823680"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_roar",
@@ -120,7 +152,11 @@
         "ability_ids": [
           "3285997873790976"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "grobthok_stunned",
@@ -129,7 +165,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Lifted"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     }
   ]
 }

@@ -69,7 +69,11 @@
       "duration_seconds": 480.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_simplification",
@@ -87,6 +91,10 @@
           "operator": "gt",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -100,7 +108,11 @@
           "3277841730895872",
           "3349606339444736"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_1st_simplification",
@@ -108,7 +120,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_af_1st",
@@ -116,7 +132,11 @@
       "duration_seconds": 11.5,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_sm_1st",
@@ -124,7 +144,11 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_af",
@@ -136,7 +160,11 @@
         "ability_ids": [
           "3299170538487808"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_sm",
@@ -148,7 +176,11 @@
         "ability_ids": [
           "3299200603258880"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_thundering_blast",
@@ -160,7 +192,11 @@
         "ability_ids": [
           "3279619847356416"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_sim_chain",
@@ -183,6 +219,10 @@
           "operator": "lte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -193,7 +233,11 @@
         "type": "counter_reaches",
         "counter_id": "tyrans_tb_1st",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_simp_alert",
@@ -204,7 +248,11 @@
         "keyword": "Simplification",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_jd",
@@ -215,7 +263,10 @@
         "keyword": "Marked for Death",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "tyrans_ind",
@@ -226,7 +277,11 @@
         "keyword": "Inferno",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_ine",
@@ -237,7 +292,11 @@
         "keyword": "Inferno",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_afd",
@@ -248,7 +307,11 @@
         "keyword": "Affliction",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tyrans_orbs_simplification",

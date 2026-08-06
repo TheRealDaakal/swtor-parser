@@ -27,7 +27,11 @@
         "selector": [
           "D-13 Corruption Droid"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_melee_adds",
@@ -38,7 +42,11 @@
         "selector": [
           "D-15 Corruption Droid"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_missile_barrage",
@@ -50,7 +58,11 @@
         "ability_ids": [
           "3286483205095424"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_heavy_slash",
@@ -62,7 +74,11 @@
         "ability_ids": [
           "3286530449735680"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_chest_laser",
@@ -74,7 +90,11 @@
         "ability_ids": [
           "3285409463271424"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_beam_melee_mode",
@@ -83,7 +103,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Ranged Mode"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_gravity_ranged_mode",
@@ -100,7 +124,11 @@
             "keyword": "Melee Mode"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_concussion_mine",
@@ -118,7 +146,11 @@
             "keyword": "Concussion Mine"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_gravity_delay",
@@ -152,6 +184,10 @@
             }
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -177,7 +213,11 @@
             "timer_id": "corruptor_zero_gravity_ranged_mode"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "corruptor_zero_orbs_adds_1st",

@@ -36,7 +36,11 @@
         "ability_ids": [
           "3152269772062720"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan_6_huge_grenade",
@@ -57,7 +61,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "titan_6_burn"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan_6_airstrike",
@@ -78,7 +86,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "titan_6_burn"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan_6_lots_of_missiles",
@@ -99,7 +111,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "titan_6_burn"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan_6_kick_lom",
@@ -120,7 +136,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "titan_6_burn"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan_6_huge_grenade_b",
@@ -132,7 +152,11 @@
         "ability_ids": [
           "3255761304027136"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan6_huge_grenade_on_you",
@@ -142,7 +166,11 @@
         "type": "effect_applied",
         "keyword": "Huge Grenade",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "titan6_orbs_reposition",

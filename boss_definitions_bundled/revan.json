@@ -107,7 +107,11 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_blades",
@@ -122,7 +126,11 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_overcharge",
@@ -137,7 +145,11 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_heave",
@@ -162,7 +174,10 @@
             "phase_id": "revan_p3"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_trail",
@@ -177,7 +192,10 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_corruption_alert",
@@ -188,7 +206,10 @@
         "keyword": "Essence Corruption",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_killshot",
@@ -203,7 +224,10 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_force_imbue",
@@ -215,7 +239,10 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_grenades",
@@ -228,7 +255,11 @@
           "3447669032747008"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_reactive_hp",
@@ -241,7 +272,10 @@
           "HK-47"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_aberration_p3",
@@ -255,7 +289,11 @@
       },
       "cancel_trigger": {
         "type": "any_phase_change"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_push_p3",
@@ -279,7 +317,10 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "revan_p3"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_unstable",
@@ -291,7 +332,11 @@
         "ability_ids": [
           "3449073487052800"
         ]
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "rev_push_p4",
@@ -300,7 +345,10 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Resonance"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_heave_p4",
@@ -309,7 +357,10 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Resonance"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_corruption_cs",
@@ -317,7 +368,10 @@
       "duration_seconds": 10,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "rev_cleanse_pools_cs",
@@ -325,7 +379,10 @@
       "duration_seconds": 50,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "revan_orbs_phase_2_hp",

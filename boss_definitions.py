@@ -445,9 +445,26 @@ class BossTimerDef:
     # the cast AND the prediction would just say the same thing twice.
     # See timers.py's ActiveTimer.announce_on_start.
     announce_on_start: bool = True
+    # Which instance difficulties this mechanic exists in ("story",
+    # "veteran", "master"), straight from BARAS -- 953 of its 994 timers
+    # carry this and the engine used to drop it entirely, so a Story-mode
+    # group got 759 Veteran/Master-only mechanics called out at them.
+    # Empty means "applies everywhere", which is also the safe fallback for
+    # any timer whose source didn't say.
+    difficulties: List[str] = field(default_factory=list)
 
     def active_in(self, phase_id: Optional[str]) -> bool:
         return not self.phases or phase_id in self.phases
+
+    def applies_to_difficulty(self, difficulty: Optional[str]) -> bool:
+        """Unscoped timers apply everywhere. An UNKNOWN difficulty (no
+        AreaEntered seen yet, or an area that doesn't report one) also
+        passes everything -- silently dropping real mechanics because we
+        couldn't identify the mode would be far worse than the extra
+        callouts this field is meant to remove."""
+        if not self.difficulties or difficulty is None:
+            return True
+        return difficulty in self.difficulties
 
     def matches(self, ctx: EvalContext) -> bool:
         if self.trigger is None:
@@ -566,6 +583,7 @@ def _definition_from_dict(data: dict) -> BossDefinition:
             cancel_trigger=_load_condition(t.get("cancel_trigger")),
             is_alert=t.get("is_alert", False),
             announce_on_start=t.get("announce_on_start", True),
+            difficulties=t.get("difficulties", []),
         )
         for t in data.get("timers", [])
     ]

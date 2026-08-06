@@ -241,7 +241,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_aa",
@@ -255,7 +259,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_hds_1st",
@@ -269,7 +277,11 @@
         "type": "ability_cast",
         "keyword": "Head Swipe"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_lsl_1st",
@@ -283,7 +295,11 @@
         "type": "ability_cast",
         "keyword": "Leap Slam"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_vpl_1st",
@@ -298,7 +314,11 @@
         "keyword": "Vomit Pool"
       },
       "is_alert": true,
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_sps_1st",
@@ -312,7 +332,11 @@
         "type": "ability_cast",
         "keyword": "Spines"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_ccl_1st",
@@ -321,7 +345,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_hbt_1st",
@@ -335,7 +363,11 @@
         "type": "ability_cast",
         "keyword": "Headbutt"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_skb_1st",
@@ -351,7 +383,10 @@
           "3294763902042112"
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "Styrak_k_gcd_1_5",
@@ -368,7 +403,11 @@
           "3144513061126144"
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_hds",
@@ -385,7 +424,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_lsl",
@@ -402,7 +445,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_vpl",
@@ -420,7 +467,10 @@
         "phase_id": "Styrak_k_p2_int"
       },
       "is_alert": true,
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "Styrak_k_kd_vpl_vm",
@@ -438,7 +488,10 @@
         "phase_id": "Styrak_k_p2_int"
       },
       "is_alert": true,
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_vpl_16m",
@@ -456,7 +509,11 @@
         "phase_id": "Styrak_k_p2_int"
       },
       "is_alert": true,
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_sps",
@@ -473,7 +530,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_ccl",
@@ -488,7 +549,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_hbt",
@@ -514,7 +579,11 @@
           }
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_smn",
@@ -540,7 +609,11 @@
           }
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_skb",
@@ -556,7 +629,10 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "Styrak_k_kd_smn_hb",
@@ -582,7 +658,11 @@
           }
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_hbt_sm",
@@ -608,7 +688,11 @@
           }
         ]
       },
-      "voice_alert": false
+      "voice_alert": false,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_cmf_1st",
@@ -618,7 +702,11 @@
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_stk_r"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_lmf_1st",
@@ -628,7 +716,11 @@
         "type": "timer_expires",
         "timer_id": "Styrak_k_st_fpnm_lmf"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_p2_cmf_t",
@@ -640,7 +732,11 @@
         "ability_ids": [
           "3144508766158848"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_cmf_rvl",
@@ -655,7 +751,11 @@
         "selector": [
           3147154466013184
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_p2_lmf_t",
@@ -667,7 +767,11 @@
         "ability_ids": [
           "3144513061126144"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_lmf_rvl",
@@ -689,7 +793,11 @@
             "timer_id": "Styrak_k_st_lmf_end_16m"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_lmf_end_8m",
@@ -708,6 +816,10 @@
             "Styrak_k_p2_lmf"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -727,6 +839,10 @@
             "Styrak_k_p2_lmf"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -739,7 +855,11 @@
         "ability_ids": [
           "3232766049124352"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_kbk_1st",
@@ -748,7 +868,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_kbk",
@@ -764,7 +888,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_kd_chk",
@@ -780,7 +908,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_int"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_thb_t_1st_mm",
@@ -799,7 +931,10 @@
           }
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "Styrak_k_st_thb_t_1st_vm",
@@ -808,7 +943,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_stk"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_thb_t_2nd_mm",
@@ -818,7 +956,10 @@
         "type": "counter_reaches",
         "counter_id": "Styrak_k_2nd_thb",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "Styrak_k_st_flg_t_1st",
@@ -827,7 +968,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_stk"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_fpnm_1st",
@@ -847,6 +992,10 @@
             "Styrak_k_p2_stk"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -867,6 +1016,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -887,6 +1040,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -913,6 +1070,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -939,6 +1100,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -948,7 +1113,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "Styrak_k_p2_stk_r"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "Styrak_k_st_fl_fp",
@@ -974,6 +1143,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -1000,6 +1173,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -1020,6 +1197,10 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {

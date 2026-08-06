@@ -111,7 +111,10 @@
         "keyword": "Positional Adjustment Grenade: Major",
         "target": "local_player"
       },
-      "warn_seconds_before": 3.0
+      "warn_seconds_before": 3.0,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_back_wall_not_safe",
@@ -131,7 +134,10 @@
             "value": 18
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_side_wall_not_safe",
@@ -151,7 +157,10 @@
             "value": 16
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_exit_not_safe",
@@ -161,7 +170,10 @@
         "type": "counter_reaches",
         "counter_id": "ip_cpt_big_bombs",
         "value": 10
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_entrance_not_safe",
@@ -171,7 +183,10 @@
         "type": "counter_reaches",
         "counter_id": "ip_cpt_big_bombs",
         "value": 20
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_at_4_stacks",
@@ -182,7 +197,10 @@
         "counter_id": "ip_cpt_stacks",
         "value": 4
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_1st_intrusion_units",
@@ -192,7 +210,11 @@
         "type": "counter_reaches",
         "counter_id": "ip_cpt_big_bombs",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_1st_droids",
@@ -201,7 +223,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_1st_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_2nd_intrusion_units",
@@ -210,7 +236,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_1st_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_3rd_intrusion_units",
@@ -219,7 +249,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_2nd_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_4th_intrusion_units",
@@ -228,7 +262,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_3rd_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_2nd_droids",
@@ -237,7 +275,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_4th_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_leave_consoles",
@@ -247,7 +289,11 @@
         "type": "timer_expires",
         "timer_id": "ip_cpt_bomb_explosion"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_boss_returning",
@@ -265,7 +311,11 @@
             "timer_id": "ip_cpt_4th_intrusion_units"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "ip_cpt_boss_returning_burn_start",
@@ -274,7 +324,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "ip_cpt_4th_intrusion_units"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     }
   ]
 }

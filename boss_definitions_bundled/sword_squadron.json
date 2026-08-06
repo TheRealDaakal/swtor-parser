@@ -36,7 +36,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ss_shield",
@@ -58,7 +61,10 @@
             "timer_id": "ss_shield"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ss_gravity_cs",
@@ -66,7 +72,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ss_gravity",
@@ -75,7 +84,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Gravity Missile"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "sword_squadron_gravity_dmg",
@@ -84,7 +96,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Gravity Missile"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ss_shield_down",
@@ -102,7 +117,10 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "sword_squadron_rapid_fire",
@@ -114,7 +132,10 @@
         "ability_ids": [
           "3448046989869056"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "sword_squadron_grenade Explodes",
@@ -124,7 +145,10 @@
         "type": "effect_applied",
         "keyword": "Huge Grenade",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ss_rain_of_missiles",
@@ -134,7 +158,10 @@
         "type": "counter_reaches",
         "counter_id": "rain_damage",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "sword_squadron_orbs_shield",

@@ -28,7 +28,11 @@
         "ability_ids": [
           "3146325537325056"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "operations_chief_terminate",
@@ -40,7 +44,10 @@
         "ability_ids": [
           "3146334127259648"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "operations_chief_explosive_probe",
@@ -52,7 +59,11 @@
         "ability_ids": [
           "3146329832292352"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "operations_chief_turrets",
@@ -64,7 +75,11 @@
         "ability_ids": [
           "3158012143337472"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "operations_chief_impulse",
@@ -76,7 +91,11 @@
         "ability_ids": [
           "2166591957499904"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "operations_chief_thermal_grenade",
@@ -88,7 +107,11 @@
         "ability_ids": [
           "3145707062034432"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "operations_chief_orbs_flash_bang",

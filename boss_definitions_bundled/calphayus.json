@@ -125,7 +125,11 @@
       "duration_seconds": 540.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_in_1st",
@@ -138,7 +142,11 @@
           "Dread Master Calphayus"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_tree",
@@ -147,7 +155,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "calphayus_p2"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "calphayus_p_adds1",
@@ -165,7 +176,11 @@
             "timer_id": "calphayus_tree_vm"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p_adds2",
@@ -174,7 +189,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "calphayus_p_adds1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p_adds3",
@@ -183,7 +202,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "calphayus_p_adds2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_tree_vm",
@@ -192,7 +215,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "calphayus_p2"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_ps",
@@ -213,7 +239,11 @@
             "type": "any_phase_change"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_dp_m",
@@ -222,7 +252,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "calphayus_main"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_in_m",
@@ -231,7 +265,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "calphayus_main"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p2_tp",
@@ -240,7 +278,11 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Pure Seed"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p3_tp",
@@ -260,7 +302,11 @@
             "value": 3
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p4_add",
@@ -271,7 +317,11 @@
         "selector": [
           3350598476890112
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p4_he",
@@ -284,7 +334,10 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Mental Exhaustion"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "calphayus_p4_hd",
@@ -293,7 +346,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Mental Exhaustion"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p4_ve",
@@ -302,7 +359,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Backlash"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_p2_def",
@@ -325,7 +386,11 @@
             "keyword": "Intangible Vision"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "calphayus_orbs_tree_phase_hp",

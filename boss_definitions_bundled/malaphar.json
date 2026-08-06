@@ -39,7 +39,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "mal_adds",
@@ -50,7 +53,10 @@
         "ability_ids": [
           "3469470286741504"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "mal_hammer_smash",
@@ -62,7 +68,10 @@
         "ability_ids": [
           "3437760543195136"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "mal_spear_toss",
@@ -74,7 +83,10 @@
         "ability_ids": [
           "3437799197900800"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "mal_spear_fixate",
@@ -84,7 +96,10 @@
         "type": "effect_removed",
         "keyword": "Spear Toss",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "mal_savagery",
@@ -95,7 +110,10 @@
         "counter_id": "malaphar_savagery",
         "value": 10
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "malaphar_orbs_adds",

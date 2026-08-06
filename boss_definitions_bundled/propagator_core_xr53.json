@@ -45,7 +45,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_lethal_strike_rc",
@@ -57,7 +62,12 @@
         "ability_ids": [
           "4832241934925824"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_cleanse_flood_add",
@@ -66,7 +76,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "propagator_core_xr53_lethal_strike_rc"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "propagator_core_xr53_clean_target",
@@ -77,7 +90,10 @@
         "keyword": "Accompanied by the Collection Droid",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "propagator_core_xr53_collection_droid_selfdestruct",
@@ -87,7 +103,10 @@
         "type": "effect_removed",
         "keyword": "Collecting"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "propagator_core_xr53_1st_prime_directive",
@@ -95,7 +114,12 @@
       "duration_seconds": 120.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_prime_directive",
@@ -104,7 +128,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "propagator_core_xr53_cleanse_flood_add"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_prepare_for_harvest",
@@ -129,7 +158,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_hungering_bite",
@@ -153,7 +187,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_acidic_rocketry",
@@ -178,7 +217,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_extraneous_expulsion",
@@ -203,7 +247,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_hunting_grounds",
@@ -228,7 +277,11 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "propagator_core_xr53_prey_seeker",
@@ -253,7 +306,12 @@
             "timer_id": "propagator_core_xr53_prime_directive"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     }
   ]
 }

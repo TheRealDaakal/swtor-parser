@@ -75,7 +75,11 @@
         "ability_ids": [
           "3008070540066816"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "kephess_first_nanites",
@@ -86,7 +90,11 @@
         "ability_ids": [
           "3008070540066816"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "kephess_cascade_jump",
@@ -96,7 +104,11 @@
         "type": "phase_entered",
         "phase_id": "kephess_cascade"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "kephess_targeted",
@@ -129,7 +141,11 @@
         "keyword": "Corrupted Nanites",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "kephess_the_undying_cleanse_feet",
@@ -140,7 +156,11 @@
         "keyword": "Ignored",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "kephess_laser_blast",
@@ -160,6 +180,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -180,6 +204,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -200,6 +228,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -220,6 +251,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -240,6 +274,10 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -261,6 +299,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -282,6 +324,10 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {

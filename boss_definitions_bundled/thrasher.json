@@ -29,7 +29,11 @@
           "Thrasher"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_adds_1st",
@@ -37,7 +41,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_adds",
@@ -49,7 +57,11 @@
         "ability_ids": [
           "3060692479377408"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_firebug",
@@ -67,7 +79,11 @@
             "keyword": "Spawn Adds"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_knockback_180",
@@ -79,7 +95,11 @@
         "ability_ids": [
           "3045857662337024"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_knockback_360",
@@ -91,7 +111,11 @@
         "ability_ids": [
           "3262208049938432"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "thrasher_orbs_double_wave",

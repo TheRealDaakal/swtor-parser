@@ -151,7 +151,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "TYTT_K_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_p2_vm",
@@ -172,6 +176,9 @@
             "TYTT_K_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -193,6 +200,9 @@
             "TYTT_K_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -203,7 +213,10 @@
         "type": "counter_reaches",
         "counter_id": "TYTT_K_a_w_c",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "TYTT_K_adds_d_vm",
@@ -213,7 +226,10 @@
         "type": "counter_reaches",
         "counter_id": "TYTT_K_a_w_c",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_adds_mm",
@@ -230,6 +246,9 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -247,6 +266,9 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -265,7 +287,10 @@
             "timer_id": "TYTT_K_adds_mm"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "TYTT_K_adds_s_vm_p1",
@@ -313,6 +338,9 @@
             }
           ]
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -345,6 +373,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -354,7 +385,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Inversion Resonance (Short Wave)"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_l_r",
@@ -378,6 +413,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -408,6 +447,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -432,6 +475,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -448,7 +495,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "TYTT_K_ew_i"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_sw",
@@ -473,7 +524,11 @@
             "timer_id": "TYTT_K_sw_i"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_p3",
@@ -494,6 +549,10 @@
             "TYTT_K_p2"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -517,6 +576,10 @@
             "value": 9.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -541,7 +604,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "TYTT_K_ew_i"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_s_u",
@@ -551,7 +618,11 @@
         "type": "effect_applied",
         "keyword": "Aivela's Grace"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_s_d",
@@ -561,7 +632,11 @@
         "type": "effect_removed",
         "keyword": "Aivela's Grace"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "TYTT_K_orbs_adds_setup",

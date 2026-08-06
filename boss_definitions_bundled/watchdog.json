@@ -80,7 +80,10 @@
       "duration_seconds": 14.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_wd_protocol_cs",
@@ -88,7 +91,10 @@
       "duration_seconds": 28.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_wd_protocol_swap",
@@ -100,7 +106,10 @@
         "ability_ids": [
           "4472272135913472"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_wd_protocol_end",
@@ -109,7 +118,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "watchdog_wd_protocol_swap"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_degauss_1st",
@@ -118,7 +130,10 @@
       "trigger": {
         "type": "combat_start"
       },
-      "warn_seconds_before": 3.0
+      "warn_seconds_before": 3.0,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_stalker_protocol",
@@ -138,7 +153,10 @@
             "value": 3
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_invert",
@@ -150,7 +168,10 @@
         "ability_ids": [
           "4472963625648128"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_stalker_ending",
@@ -159,7 +180,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "watchdog_invert"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_avoid_circles",
@@ -168,7 +193,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "watchdog_stalker_protocol"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_bombs_2nd",
@@ -180,7 +209,10 @@
         "ability_ids": [
           "4473247093489664"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_bombs_3rd",
@@ -200,6 +232,9 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -211,7 +246,10 @@
         "counter_id": "wd_beam_counter",
         "value": 4
       },
-      "warn_seconds_before": 3.0
+      "warn_seconds_before": 3.0,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_1st_beam",
@@ -235,7 +273,11 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "REPLACE_WITH_REAL_ABILITY_NAME_4511772950134784"
-      }
+      },
+      "difficulties": [
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_missiles_pb",
@@ -255,6 +297,9 @@
           "operator": "lt",
           "value": 4
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -268,7 +313,10 @@
           "Watchdog"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "watchdog_orbs_wd_protocol_end",

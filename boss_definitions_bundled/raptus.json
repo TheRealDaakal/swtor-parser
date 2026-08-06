@@ -190,7 +190,11 @@
       "duration_seconds": 450.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_void_alert",
@@ -201,7 +205,11 @@
         "keyword": "Into The Void",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_spinning_ending",
@@ -210,7 +218,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Spinning Attack"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "raptus_shield",
@@ -219,7 +230,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "raptus_p1_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_sa",
@@ -228,7 +243,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "raptus_spinning_ending"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "raptus_chal",
@@ -237,7 +255,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "raptus_shield"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_t_s",
@@ -254,6 +276,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -265,7 +291,11 @@
         "counter_id": "raptus_cpc",
         "value": 3
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_c_e",
@@ -278,7 +308,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "raptus_c_p"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_c_f",
@@ -288,7 +322,11 @@
         "type": "timer_expires",
         "timer_id": "raptus_c_e"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_dps_chal",
@@ -304,7 +342,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "raptus_dps_chal_p"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_dps_chal_p",
@@ -323,6 +365,9 @@
           "operator": "gte",
           "value": 0.0
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -333,7 +378,11 @@
         "type": "counter_changes",
         "counter_id": "raptus_dfc"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_dps_chal_p_vm",
@@ -352,6 +401,9 @@
           "operator": "gte",
           "value": 0.0
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -367,7 +419,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "raptus_h_chal_f"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_h_chal_f",
@@ -377,7 +433,11 @@
         "type": "counter_changes",
         "counter_id": "raptus_hfc"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_h_chal_p",
@@ -387,7 +447,11 @@
         "type": "timer_expires",
         "timer_id": "raptus_h_chal"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_t_chal",
@@ -402,7 +466,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "raptus_t_chal_f"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_t_chal_f",
@@ -412,7 +480,11 @@
         "type": "counter_changes",
         "counter_id": "raptus_tfc"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_t_chal_p",
@@ -422,7 +494,11 @@
         "type": "timer_expires",
         "timer_id": "raptus_t_chal"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_ns1",
@@ -440,6 +516,9 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -457,6 +536,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -474,6 +556,10 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -490,7 +576,11 @@
       "cancel_trigger": {
         "type": "ability_cast",
         "keyword": "Spinning Attack"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_ditv",
@@ -503,7 +593,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "raptus_challenges"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_ds",
@@ -519,7 +613,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "raptus_challenges"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "raptus_orbs_challenge",

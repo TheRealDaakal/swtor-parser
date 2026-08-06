@@ -34,7 +34,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "zorn_toth_murdok"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "label": "Shriek",

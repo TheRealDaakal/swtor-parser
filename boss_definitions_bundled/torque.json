@@ -24,7 +24,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_vents_knockback_1st",
@@ -32,7 +35,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_jump_to_console_1st",
@@ -40,7 +46,10 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_side_turrets_1st",
@@ -48,7 +57,10 @@
       "duration_seconds": 50.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_magnetic_clamp",
@@ -60,7 +72,10 @@
         "ability_ids": [
           "3430678142124032"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_cleanse",
@@ -73,7 +88,10 @@
           "3430678142124032"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_flame_turret",
@@ -84,7 +102,10 @@
         "ability_ids": [
           "3406531835985920"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_laser_turret",
@@ -96,7 +117,10 @@
         "ability_ids": [
           "3406527541018624"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_tank_swap",
@@ -109,7 +133,10 @@
           "3409211895578624"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_knockback",
@@ -121,7 +148,10 @@
         "ability_ids": [
           "3409211895578624"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_vents",
@@ -133,7 +163,10 @@
         "ability_ids": [
           "3406488886312960"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_jump_to_console",
@@ -144,7 +177,10 @@
         "ability_ids": [
           "3412583444905984"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_side_turrets",
@@ -155,7 +191,10 @@
         "ability_ids": [
           "3513382032375808"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_magnetic_hp",
@@ -168,7 +207,10 @@
           "Torque"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "torque_orbs_magnetic_hp",

@@ -39,7 +39,10 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_inspiration_cs",
@@ -47,7 +50,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_inspiration",
@@ -59,7 +65,10 @@
         "ability_ids": [
           "4377748495663104"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_crush_the_weak",
@@ -71,7 +80,11 @@
         "ability_ids": [
           "4256239575891968"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_crush_the_weak_1st_vm",
@@ -82,7 +95,10 @@
         "selector": [
           "Titax"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "trandos_titax_strike",
@@ -94,7 +110,10 @@
         "ability_ids": [
           "4256733497131008"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_titax_strike_1st",
@@ -102,7 +121,10 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_titax_strike_1st_vm",
@@ -113,7 +135,10 @@
         "selector": [
           "Titax"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "trandos_titax_strike_vm",
@@ -125,7 +150,10 @@
         "ability_ids": [
           "4256733497131008"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "trandos_divebomb_1st",
@@ -136,7 +164,10 @@
         "selector": [
           "Greus"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_divebomb",
@@ -148,7 +179,11 @@
         "ability_ids": [
           "4377413488214016"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_ayhis_eru",
@@ -160,7 +195,11 @@
         "ability_ids": [
           "4255208783740928"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_fire_blast_1st",
@@ -171,7 +210,10 @@
         "selector": [
           "Greus"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_fire_blast_1st_vm",
@@ -179,7 +221,10 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "trandos_fire_blast",
@@ -191,7 +236,11 @@
         "ability_ids": [
           "4250359765663744"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_endothermic",
@@ -203,7 +252,11 @@
         "ability_ids": [
           "4250291046187008"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_train_arrive",
@@ -215,7 +268,11 @@
         "ability_ids": [
           "833455583657984"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_caustic_plume",
@@ -235,6 +292,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -245,7 +306,11 @@
         "type": "timer_expires",
         "timer_id": "trandos_caustic_plume"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_cleanse_hissy_tank",
@@ -255,7 +320,11 @@
         "type": "effect_applied",
         "keyword": "Venom of Hissyphis (Any)"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "trandos_irradiated_fire_blast_1st",
@@ -266,7 +335,10 @@
         "selector": [
           "Ultimate Hunter"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_irradiated_fire_blast_db",
@@ -278,7 +350,10 @@
         "ability_ids": [
           "4381059915448320"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_irradiated_fire_blast",
@@ -290,7 +365,10 @@
         "ability_ids": [
           "4381072800350208"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "trandos_divebomb_u",
@@ -302,7 +380,10 @@
         "ability_ids": [
           "4381059915448320"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     }
   ]
 }

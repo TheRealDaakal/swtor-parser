@@ -89,7 +89,11 @@
         "selector": [
           "Horic"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_horic_grenade",
@@ -107,7 +111,11 @@
         "selector": [
           "Horic"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_cleanse_destroy_armor",
@@ -116,7 +124,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Destroy Armor (Any)"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "cartel_warlords_garr_tp",
@@ -133,7 +144,11 @@
         "selector": [
           "Garr"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_garr_shivve",
@@ -151,7 +166,11 @@
         "selector": [
           "Garr"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_sunder_fixate",
@@ -169,7 +188,11 @@
         "selector": [
           "Sunder"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_sunder_root",
@@ -187,7 +210,11 @@
         "selector": [
           "Sunder"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_sunder_the_end_vm",
@@ -199,7 +226,10 @@
         "ability_ids": [
           "3145926105366528"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "cartel_warlords_sunder_the_end_8m",
@@ -211,7 +241,10 @@
         "ability_ids": [
           "3145926105366528"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "cartel_warlords_sunder_the_end_16m",
@@ -223,7 +256,10 @@
         "ability_ids": [
           "3145926105366528"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "cartel_warlords_orbs_horic_spray",

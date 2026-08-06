@@ -81,7 +81,11 @@
           "Dread Master Brontes"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_clone",
@@ -97,7 +101,11 @@
       "cancel_trigger": {
         "type": "timer_expires",
         "timer_id": "brontes_cant_clone"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_cant_clone",
@@ -118,6 +126,10 @@
             "kebus"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -128,7 +140,11 @@
         "type": "counter_reaches",
         "counter_id": "brontes_hand_deaths_p1",
         "value": 2
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_hands_finger_spawn",
@@ -151,7 +167,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "hands"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_enraged_finger",
@@ -161,7 +181,11 @@
         "type": "effect_applied",
         "keyword": "Focused Incineration"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_fingers_knock_1st",
@@ -172,7 +196,11 @@
         "ability_ids": [
           "3303572879966208"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_fingers_knock",
@@ -186,7 +214,11 @@
         "type": "counter_reaches",
         "counter_id": "finger_deaths",
         "value": 6
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_arcing_assault",
@@ -198,7 +230,12 @@
         "ability_ids": [
           "3308920114249728"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "brontes_orbs_clone_hp_1st",

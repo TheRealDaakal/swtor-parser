@@ -264,7 +264,11 @@
           3025267589120000,
           3025280474021888
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_tunneling_slam",
@@ -290,7 +294,11 @@
             "phase_id": "the_terror_from_beyond_p2t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_void_disturbance_debuff",
@@ -300,7 +308,11 @@
         "type": "effect_applied",
         "keyword": "Void Disturbance",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_1st_adds",
@@ -309,7 +321,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "tfb_tunneling_slam_first"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_p1int",
@@ -318,7 +335,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "the_terror_from_beyond_p1_intermission"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_adds",
@@ -342,7 +364,11 @@
             "phase_id": "the_terror_from_beyond_p2t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_vdz",
@@ -359,6 +385,11 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
       ]
     },
     {
@@ -381,7 +412,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "the_terror_from_beyond_p2t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_vdz2",
@@ -403,7 +439,12 @@
             "phase_id": "the_terror_from_beyond_p2t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_vdz_check",
@@ -421,6 +462,11 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
       ]
     },
     {
@@ -430,7 +476,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "tfb_phase1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_grasping_slam",
@@ -456,7 +507,11 @@
             "phase_id": "tfb_burn"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_faded_reality",
@@ -466,7 +521,11 @@
         "type": "phase_entered",
         "phase_id": "tfb_burn"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_p2_tentacles",
@@ -475,7 +534,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "the_terror_from_beyond_p2_intermission"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_spit_pool_first",
@@ -484,7 +548,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "tfb_phase2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "tfb_spit_pool",
@@ -506,7 +574,11 @@
             "phase_id": "tfb_burn"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_spit_pool_p2int",
@@ -515,7 +587,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "the_terror_from_beyond_phase2_1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_inconsistency",
@@ -526,7 +603,10 @@
         "keyword": "Inconsistency",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "the_terror_from_beyond_tentacle_under_10",
@@ -539,7 +619,11 @@
           "Tunneling Tentacle"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_enraged_tentacle",
@@ -556,7 +640,12 @@
         "selector": [
           "Tunneling Tentacle"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "the_terror_from_beyond_orbs_grasping_slam",

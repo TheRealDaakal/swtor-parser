@@ -121,6 +121,14 @@ class CombatEvent:
     # Burrow). Keyword matching can never reach those, so triggers that
     # need them match on this instead. See boss_definitions' ability_ids.
     ability_id: Optional[str] = None
+    # On AreaEntered lines only: the instance's difficulty ("story",
+    # "veteran", "master") and group size, parsed from e.g.
+    # "[AreaEntered {id}: Darvannis {id} 8 Player Master {id}]".
+    # BARAS scopes 953 of its 994 timers by difficulty; without this the
+    # engine has no way to honour that and fires Master-mode mechanics at
+    # a Story-mode group. None on every other line.
+    difficulty: Optional[str] = None
+    group_size: Optional[int] = None
 
     # Derived, filled in by classify()
     is_damage: bool = False
@@ -209,6 +217,11 @@ class CombatEvent:
 
 
 ABILITY_ID_RE = re.compile(r"\{(\d+)\}")
+
+# "8 Player Master", "4 Player Veteran", "16 Player Story" -- the instance
+# difficulty SWTOR records on every AreaEntered line. Matched on the
+# id-stripped text, so "Darvannis  8 Player Master" reduces cleanly.
+DIFFICULTY_RE = re.compile(r"(\d+)\s+Player\s+([A-Za-z_]+)", re.IGNORECASE)
 
 
 def _extract_id(text: str) -> Optional[str]:
@@ -503,6 +516,12 @@ def _classify(event: CombatEvent, tail: str) -> None:
     event.is_combat_start = any(k in tight for k in COMBAT_START_KEYWORDS)
     event.is_combat_end = any(k in tight for k in COMBAT_END_KEYWORDS)
     event.is_area_entered = any(k in tight for k in AREA_ENTERED_KEYWORDS)
+    if event.is_area_entered and event.effect_name:
+        m = DIFFICULTY_RE.search(event.effect_name)
+        if m:
+            event.group_size = int(m.group(1))
+            # BARAS spells these lowercase in its `difficulties` lists.
+            event.difficulty = m.group(2).lower()
     effect_type_tight = (event.effect_type or "").lower().replace(" ", "")
     event.is_effect_removed = any(k in effect_type_tight for k in EFFECT_REMOVED_KEYWORDS)
     event.is_charges_modified = any(k in effect_type_tight for k in MODIFY_CHARGES_KEYWORDS)

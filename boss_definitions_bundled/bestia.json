@@ -112,7 +112,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "bestisa_main"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_dread_strike",
@@ -124,7 +128,11 @@
         "ability_ids": [
           "3294841211453440"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_tentacle_cs",
@@ -132,7 +140,11 @@
       "duration_seconds": 16.5,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_dread_monster",
@@ -141,7 +153,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_tentacle_cs"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_cs",
@@ -153,7 +169,11 @@
         "ability_ids": [
           "3294102477078528"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_dp",
@@ -165,7 +185,11 @@
         "ability_ids": [
           "3294102477078528"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_ds",
@@ -176,7 +200,11 @@
         "counter_id": "bestia_a_c",
         "value": 2
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_sd",
@@ -188,7 +216,11 @@
         "ability_ids": [
           "3294098182111232"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_sd_swap",
@@ -198,7 +230,11 @@
         "type": "effect_applied",
         "keyword": "Swelling Despair"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_te",
@@ -220,7 +256,11 @@
         "type": "counter_reaches",
         "counter_id": "bestia_tac",
         "value": 0
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add3",
@@ -229,7 +269,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_dread_monster"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add4",
@@ -238,7 +282,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add5",
@@ -247,7 +295,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add6",
@@ -256,7 +308,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_phase_3",
@@ -268,7 +324,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "bestia_plus_monsters"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "bestia_phase_3_vm",
@@ -280,7 +339,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "bestia_phase_3_vm"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "bestia_se",
@@ -288,7 +350,11 @@
       "duration_seconds": 480.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_se_adds",
@@ -306,7 +372,11 @@
             "timer_id": "bestia_se_adds"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add7",
@@ -325,7 +395,11 @@
           }
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add8",
@@ -343,7 +417,11 @@
             "phase_id": "bestia_phase_3_vm"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add9",
@@ -352,7 +430,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add8"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add10",
@@ -361,7 +443,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add9"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add11",
@@ -370,7 +456,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add10"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_add12",
@@ -379,7 +469,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "bestia_add11"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_cs_d",
@@ -389,7 +483,11 @@
         "type": "effect_applied",
         "keyword": "Combusting Seed",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_pm1",
@@ -398,7 +496,11 @@
       "trigger": {
         "type": "ability_cast",
         "keyword": "Pulverize"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "bestia_pm2",
@@ -415,6 +517,10 @@
           "operator": "gte",
           "value": 0.0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -438,6 +544,10 @@
           "operator": "gte",
           "value": 0.0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -467,6 +577,10 @@
           "operator": "gte",
           "value": 0.0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {

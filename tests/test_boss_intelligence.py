@@ -229,3 +229,87 @@ class TestCombatStartTimers:
         sim_clock(1.0)
         state.feed(_ev("@Tank#1", "TestBoss"), timer_engine=engine)
         assert engine.snapshot() == [], "no combat start recorded for THIS pull yet"
+
+
+class TestDifficultyScoping:
+    """BARAS scopes 953 of its 994 timers by instance difficulty and the
+    translation dropped that field entirely -- so a Story-mode group got
+    759 Veteran/Master-only mechanics called out at them. SWTOR records
+    the mode on every AreaEntered line ("8 Player Master"), so this is
+    knowable; it just wasn't being read."""
+
+    def _boss(self, difficulties):
+        return BossDefinition(
+            id="test_boss", name="Test Boss", boss_names=["TestBoss"],
+            phases=[BossPhase(id="p1", name="Phase 1",
+                              start_trigger=Condition(type="combat_start"))],
+            timers=[BossTimerDef(label="HardModeOnly", duration_seconds=5.0,
+                                 trigger=Condition(type="ability_cast", keyword="Slam"),
+                                 difficulties=difficulties)],
+        )
+
+    def _area(self, text):
+        raw = (f"[00:00:00.000] [@Tank#1|(0,0,0,0)|(1/1)] [] [] "
+               f"[AreaEntered {{836045448953664}}: {text}]")
+        return parse_line(raw, line_number=1)
+
+    def _cast(self):
+        return parse_line(
+            log_line("00:00:01.000", "TestBoss", target="@Tank#1", ability="Slam {1}",
+                      effect_name="AbilityActivate {2}"),
+            line_number=2,
+        )
+
+    def test_difficulty_is_read_from_the_area_line(self, sim_clock):
+        state = BossEncounterState({"test_boss": self._boss(["master"])})
+        state.feed(self._area("Darvannis {1} 8 Player Master {2}"))
+        assert state.difficulty == "master"
+        assert state.group_size == 8
+
+    def test_timer_fires_in_its_own_difficulty(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(["master"])})
+        sim_clock(0.0)
+        state.feed(self._area("Darvannis {1} 8 Player Master {2}"), timer_engine=engine)
+        state.feed(self._cast(), timer_engine=engine)
+        assert [r[0] for r in engine.snapshot()] == ["HardModeOnly"]
+
+    def test_timer_is_suppressed_in_a_difficulty_it_does_not_exist_in(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(["master"])})
+        sim_clock(0.0)
+        state.feed(self._area("Darvannis {1} 8 Player Story {2}"), timer_engine=engine)
+        state.feed(self._cast(), timer_engine=engine)
+        assert engine.snapshot() == [], "a Master-only mechanic must not fire in Story"
+
+    def test_unscoped_timers_still_fire_everywhere(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss([])})
+        sim_clock(0.0)
+        state.feed(self._area("Darvannis {1} 8 Player Story {2}"), timer_engine=engine)
+        state.feed(self._cast(), timer_engine=engine)
+        assert len(engine.snapshot()) == 1
+
+    def test_unknown_difficulty_fires_everything(self, sim_clock):
+        """Never silently drop real mechanics because the mode couldn't be
+        identified -- that's far worse than the extra callouts this is
+        meant to remove."""
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(["master"])})
+        sim_clock(0.0)
+        state.feed(self._cast(), timer_engine=engine)   # no AreaEntered at all
+        assert len(engine.snapshot()) == 1
+
+    def test_difficulty_survives_pull_rollover(self, sim_clock):
+        """You zone into an operation once and then do many pulls inside
+        it, so reset() between pulls must not forget the mode."""
+        state = BossEncounterState({"test_boss": self._boss(["master"])})
+        state.feed(self._area("Darvannis {1} 8 Player Master {2}"))
+        state.reset()
+        assert state.difficulty == "master"
+
+    def test_group_size_variants_collapse_to_the_base_mode(self):
+        """BARAS writes "veteran_16"; the log only ever says "Veteran"."""
+        from boss_definitions import BossTimerDef as T
+        assert T(label="x", duration_seconds=1.0,
+                 difficulties=["veteran"]).applies_to_difficulty("veteran") is True

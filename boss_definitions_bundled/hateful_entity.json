@@ -25,7 +25,10 @@
         "ability_ids": [
           "3265820117434368"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_hate_pulse",
@@ -37,7 +40,10 @@
         "ability_ids": [
           "3265811527499776"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_grapple",
@@ -49,7 +55,10 @@
         "ability_ids": [
           "3264750670577664"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_dread_touch",
@@ -61,7 +70,10 @@
         "ability_ids": [
           "3265798642597888"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_death_mark",
@@ -73,7 +85,10 @@
         "ability_ids": [
           "3265764282859520"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_awakening",
@@ -85,7 +100,10 @@
         "ability_ids": [
           "3265794347630592"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "hateful_entity_orbs_hateful_void",

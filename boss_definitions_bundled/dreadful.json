@@ -30,7 +30,10 @@
             "keyword": "Dreadful Awakening"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     }
   ]
 }

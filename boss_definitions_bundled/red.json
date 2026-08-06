@@ -57,7 +57,11 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "red_bull_gives_u_wings",
@@ -68,7 +72,11 @@
         "timer_id": "red_bull_cs"
       },
       "repeat_interval_seconds": 60.0,
-      "repeat_count": 4
+      "repeat_count": 4,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "red_enrage_bull",
@@ -78,7 +86,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "red_bull_gives_u_wings"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "label": "Flower buff expired",
@@ -95,7 +107,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "label": "Hydrochloric Pool",
@@ -111,7 +127,11 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "label": "Acidic Jet",

@@ -273,6 +273,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -294,6 +297,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -303,7 +309,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p3_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_adds_init",
@@ -312,7 +322,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "IZAX_K_p3_init"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_rep",
@@ -321,7 +335,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p3_int"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_t_d_1",
@@ -344,7 +362,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_t_d_2",
@@ -373,7 +395,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_t_d_3",
@@ -408,7 +434,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_t_d_4",
@@ -449,7 +479,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_init",
@@ -461,7 +495,11 @@
         "ability_ids": [
           "4164142592163840"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_mm",
@@ -482,6 +520,9 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -503,6 +544,9 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -524,6 +568,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -545,6 +593,10 @@
           "operator": "eq",
           "value": 3
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -564,6 +616,10 @@
             "IZAX_K_p5"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -573,7 +629,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p1_ic_1st",
@@ -582,7 +642,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p1_slam",
@@ -595,7 +659,11 @@
       "cancel_trigger": {
         "type": "phase_ended",
         "phase_id": "IZAX_K_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_ic_8m",
@@ -636,7 +704,11 @@
             "phase_id": "IZAX_K_p5_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_ic_16m",
@@ -674,7 +746,10 @@
             "phase_id": "IZAX_K_p5_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_ic_16m_mm",
@@ -725,7 +800,10 @@
             "timer_id": "IZAX_K_p4_ic_im"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_ic_16m_mm_p2",
@@ -759,7 +837,10 @@
             "phase_id": "IZAX_K_p2_sd"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p2_hc",
@@ -768,7 +849,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p2_a"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p2_sv_1st",
@@ -780,7 +865,11 @@
         "ability_ids": [
           "4168794041745408"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p2_sv_2nd",
@@ -789,7 +878,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "IZAX_K_p2_sv_1st"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p2_ic_a",
@@ -809,6 +902,10 @@
             "value": 23.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -822,7 +919,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p3_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_ic_1st",
@@ -840,7 +941,11 @@
             "phase_id": "IZAX_K_p3_int"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_sd",
@@ -849,7 +954,11 @@
       "trigger": {
         "type": "effect_removed",
         "keyword": "Damaged Deflector Shield"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_it",
@@ -859,7 +968,11 @@
         "type": "effect_removed",
         "keyword": "Damaged Deflector Shield"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p3_adds",
@@ -868,7 +981,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "IZAX_K_p3_rep"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_ic_self",
@@ -879,7 +996,11 @@
         "keyword": "Induction Cascade",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_ic_1st",
@@ -888,7 +1009,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p4_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_hc_1st",
@@ -897,7 +1022,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p4_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_rep_1st",
@@ -906,7 +1035,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p4_t"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p4_rep_1st_vm",
@@ -915,7 +1047,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p4_t"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_hc",
@@ -940,7 +1075,11 @@
             "phase_id": "IZAX_K_p5_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_rep",
@@ -953,7 +1092,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p5_t"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p4_im",
@@ -962,7 +1104,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p4_int"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p4_hc_im",
@@ -982,6 +1128,10 @@
             "value": 10.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -1019,6 +1169,10 @@
             ]
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -1041,7 +1195,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p5_1st_mv",
@@ -1053,7 +1210,11 @@
         "ability_ids": [
           "4163854829355008"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p5_mv",
@@ -1070,6 +1231,10 @@
           "operator": "lt",
           "value": 4
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -1080,7 +1245,11 @@
         "type": "counter_reaches",
         "counter_id": "IZAX_K_mv_c",
         "value": 4
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p5_p6_t",
@@ -1089,7 +1258,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p5_truck",
@@ -1098,7 +1271,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p6_rad",
@@ -1111,7 +1288,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_w"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p6_rad_vm",
@@ -1124,7 +1304,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_w"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_p6_wipe",
@@ -1137,7 +1320,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_w"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "IZAX_K_p6_wipe_vm",
@@ -1150,7 +1336,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "IZAX_K_p6_w"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "IZAX_K_orbs_induction",

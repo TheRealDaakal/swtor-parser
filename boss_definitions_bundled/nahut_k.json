@@ -200,7 +200,11 @@
             "phase_id": "nahut_k_p4"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_md_p",
@@ -209,7 +213,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p1_p"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_es",
@@ -234,7 +242,11 @@
             "phase_id": "nahut_k_p2"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_adds_p2_1st",
@@ -243,7 +255,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_r_p2_c",
@@ -266,7 +282,11 @@
             "timer_id": "nahut_k_p3_t"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_gsw_p2",
@@ -291,7 +311,11 @@
       "cancel_trigger": {
         "type": "timer_expires",
         "timer_id": "nahut_k_p3_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_r_p2_1st",
@@ -300,7 +324,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "nahut_k_adds_p2_1st"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_gsw_p2_1st",
@@ -309,7 +337,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_gsw_p2_d",
@@ -331,7 +363,11 @@
       "cancel_trigger": {
         "type": "timer_expires",
         "timer_id": "nahut_k_p3_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_r_p2_sw",
@@ -353,7 +389,11 @@
       "cancel_trigger": {
         "type": "timer_expires",
         "timer_id": "nahut_k_p3_t"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p3_t",
@@ -362,7 +402,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p2_gcd",
@@ -371,7 +415,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Railgun Snipe"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p3_t1",
@@ -392,6 +440,10 @@
             "value": 0.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -413,6 +465,10 @@
             "value": 0.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -422,7 +478,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p3_md_1st",
@@ -431,7 +491,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p3_gsw_1st",
@@ -440,7 +504,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p3_adds",
@@ -455,7 +523,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p4_dis",
@@ -477,7 +549,11 @@
             "keyword": "Oppressive Gravity"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_cn_pw",
@@ -496,6 +572,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -515,6 +595,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -525,7 +609,11 @@
         "type": "effect_applied",
         "keyword": "Candle Suppressed",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_sup_off",
@@ -543,6 +631,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -556,7 +648,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "nahut_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nahut_k_p2_mm",
@@ -574,6 +670,9 @@
           "operator": "gte",
           "value": 3
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -592,6 +691,9 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -610,6 +712,9 @@
           "operator": "lt",
           "value": 3
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -628,6 +733,9 @@
           "operator": "lt",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {

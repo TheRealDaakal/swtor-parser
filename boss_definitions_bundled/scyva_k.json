@@ -226,6 +226,10 @@
             "SCYVA_K_p2"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -235,7 +239,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p4_t",
@@ -252,6 +260,10 @@
           "operator": "eq",
           "value": 7
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -269,6 +281,10 @@
           "operator": "eq",
           "value": 6
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -286,6 +302,10 @@
           "operator": "eq",
           "value": 5
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -303,6 +323,10 @@
           "operator": "eq",
           "value": 4
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -320,6 +344,10 @@
           "operator": "eq",
           "value": 3
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -337,6 +365,10 @@
           "operator": "eq",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -354,6 +386,10 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -371,6 +407,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -384,7 +424,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "SCYVA_K_e_e"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_e_c",
@@ -411,6 +455,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -429,6 +477,10 @@
             "SCYVA_K_p4_e"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -438,7 +490,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p5_i"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p5_a_e",
@@ -447,7 +503,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p5_e"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p5_a_c",
@@ -467,6 +527,10 @@
             "SCYVA_K_p5_e"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -493,7 +557,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p1_beam_2nd",
@@ -506,7 +574,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "SCYVA_K_p1_beam"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_s_g",
@@ -517,7 +589,11 @@
         "keyword": "Amplify Gravity",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_l_g",
@@ -528,7 +604,11 @@
         "keyword": "Escape Velocity",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_n_g",
@@ -563,6 +643,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -572,7 +656,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_2nd",
@@ -581,7 +669,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_1st"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_3rd",
@@ -590,7 +682,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_2nd"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_4th",
@@ -599,7 +695,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_3rd"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_5th",
@@ -608,7 +708,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_4th"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_6th",
@@ -617,7 +721,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_5th"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_beam_7th",
@@ -626,7 +734,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_6th"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_p2_ds",
@@ -635,7 +747,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "SCYVA_K_p2_beam_7th"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_df_m",
@@ -646,7 +762,11 @@
         "keyword": "Deflection Field Module",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_gr_m",
@@ -657,7 +777,11 @@
         "keyword": "Gravity Distortion Module",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_uph",
@@ -673,7 +797,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "SCYVA_K_e_e"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_rad_s",
@@ -685,7 +813,11 @@
         "ability_ids": [
           "4144050735153152"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_rad",
@@ -734,7 +866,11 @@
             "phase_id": "SCYVA_K_p5_i"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_rad_c",
@@ -757,6 +893,10 @@
             "SCYVA_K_p5_c"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -783,6 +923,10 @@
           "operator": "gte",
           "value": 1.1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -792,7 +936,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Dampening Field"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_b_t_a",
@@ -801,7 +949,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Dampening Field"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_o_v",
@@ -819,6 +971,10 @@
             "SCYVA_K_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -837,6 +993,10 @@
             "SCYVA_K_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -846,7 +1006,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "SCYVA_K_p4_c"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "SCYVA_K_orbs_upheaval",

@@ -124,7 +124,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_soe_p1_1st",
@@ -133,7 +138,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_lg_p1_1st",
@@ -142,7 +152,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_vg_p1_1st",
@@ -151,7 +166,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_dg_p1_1st",
@@ -160,7 +180,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_fp_r_p1_1st",
@@ -169,7 +194,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p1"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_fg",
@@ -193,7 +223,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_gs",
@@ -209,7 +244,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_soe",
@@ -225,7 +265,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_vg",
@@ -249,7 +294,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_lg",
@@ -273,7 +323,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_dg",
@@ -297,7 +352,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_abduct",
@@ -313,7 +373,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_repel",
@@ -338,7 +403,12 @@
             "timer_id": "kanoth_abduct"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_repel_n",
@@ -360,7 +430,12 @@
             "timer_id": "kanoth_p_s"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_burn_stun",
@@ -372,7 +447,12 @@
         "ability_ids": [
           "4602435414786048"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_fp_p2_1st",
@@ -381,7 +461,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_p2_rng_g",
@@ -394,7 +479,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_gs_p2_1st",
@@ -407,7 +497,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_repel_p2_1st",
@@ -420,7 +515,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_beckon_p2_1st",
@@ -433,7 +533,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_beckon",
@@ -457,7 +562,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_dg_p2",
@@ -482,7 +592,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_lg_vg_p2",
@@ -506,7 +621,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_p3",
@@ -522,7 +642,12 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "kanoth_p_s"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_soe_p3_1st",
@@ -535,7 +660,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_cg_p3_1st",
@@ -548,7 +678,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_gs_p3_2nd",
@@ -572,7 +707,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_repel_p3_1st",
@@ -585,7 +725,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_beckon_p3",
@@ -598,7 +743,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_apparitions",
@@ -611,7 +761,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_gs_b_1st",
@@ -620,7 +775,12 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_p_s",
@@ -655,7 +815,12 @@
           }
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_p3_cg",
@@ -679,7 +844,12 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "kanoth_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "kanoth_orbs_repel",

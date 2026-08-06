@@ -62,6 +62,14 @@ class BossEncounterState:
         # _fire_combat_start_timers().
         self._combat_start_event: Optional[CombatEvent] = None
         self._combat_start_at: Optional[float] = None
+        # Instance difficulty from the most recent AreaEntered line
+        # ("story"/"veteran"/"master"). Deliberately NOT cleared by reset():
+        # you enter an operation once and then do many pulls inside it, so
+        # the mode has to survive pull rollover. It only changes when you
+        # actually zone somewhere else, which is exactly when a new
+        # AreaEntered arrives.
+        self.difficulty: Optional[str] = None
+        self.group_size: Optional[int] = None
         # Best-effort local player detection: first player entity seen this
         # whole run (not reset between pulls). Same heuristic BARAS itself
         # uses -- not a guaranteed-correct identification in a full group,
@@ -166,6 +174,9 @@ class BossEncounterState:
     def feed(self, event: CombatEvent, timer_engine=None) -> Optional[PhaseChange]:
         self._note_local_player(event)
         self._update_hp_and_target(event)
+        if event.is_area_entered and event.difficulty:
+            self.difficulty = event.difficulty
+            self.group_size = event.group_size
         if event.is_combat_start:
             self._combat_start_event = event
             self._combat_start_at = time.time()
@@ -302,6 +313,8 @@ class BossEncounterState:
                 timer_engine.cancel_by_definition_id(t.id)
             if not t.active_in(self.active_phase_id):
                 continue
+            if not t.applies_to_difficulty(self.difficulty):
+                continue
             # combat_start timers are handled by _fire_combat_start_timers()
             # instead -- they can't fire here, since recognition happens on a
             # LATER event than the EnterCombat they trigger on.
@@ -354,6 +367,8 @@ class BossEncounterState:
             if t.trigger is None or t.trigger.type != "combat_start":
                 continue
             if not t.active_in(self.active_phase_id):
+                continue
+            if not t.applies_to_difficulty(self.difficulty):
                 continue
             if not t.matches(ctx):
                 continue

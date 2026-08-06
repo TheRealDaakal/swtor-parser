@@ -118,7 +118,11 @@
           "Apex Vanguard"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_acid",
@@ -126,7 +130,11 @@
       "duration_seconds": 10.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_acid_blast",
@@ -138,7 +146,12 @@
         "ability_ids": [
           "4305094828883968"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_contagion",
@@ -150,7 +163,11 @@
         "ability_ids": [
           "4306117031100416"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_contagion",
@@ -158,7 +175,11 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_2nd_deluge",
@@ -170,7 +191,12 @@
         "ability_ids": [
           "4330254747303936"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_bloodlust",
@@ -182,7 +208,10 @@
         "ability_ids": [
           "4297819154284544"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "apex_vanguard_bloodlust",
@@ -194,7 +223,10 @@
         "ability_ids": [
           "4385835919081472"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "apex_vanguard_1st_red_venom",
@@ -206,7 +238,12 @@
         "ability_ids": [
           "4297819154284544"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_mass_target",
@@ -215,7 +252,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_1st_red_venom"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_voltinator",
@@ -224,7 +265,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_1st_mass_target"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_venom_or_target",
@@ -233,7 +279,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_1st_voltinator"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_first_venom_or_target_part_2",
@@ -254,7 +305,12 @@
             ]
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_venom_or_volt_split",
@@ -263,7 +319,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_first_venom_or_target_part_2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_venom_or_volt_part_2",
@@ -272,7 +333,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_venom_or_volt_split"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_target_or_volt_split",
@@ -281,7 +347,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_venom_or_volt_part_2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_target_or_volt_part_2",
@@ -290,7 +361,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_target_or_volt_split"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_ultraviolence",
@@ -302,7 +378,12 @@
         "ability_ids": [
           "4409239195877376"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_deluge",
@@ -311,7 +392,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_target_or_volt_part_2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_zone_defense",
@@ -323,7 +409,11 @@
         "ability_ids": [
           "4333050771013632"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_zone",
@@ -344,7 +434,12 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Caustic Fumes"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_target_lock_p3",
@@ -356,7 +451,12 @@
         "ability_ids": [
           "4330254747303936"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_voltinator_p3",
@@ -365,7 +465,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_target_lock_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_red_venom_p4",
@@ -374,7 +479,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_voltinator_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_target_and_venom",
@@ -395,7 +505,12 @@
             ]
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_target_lock_p4",
@@ -404,7 +519,12 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "apex_vanguard_target_and_venom"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_rockets",
@@ -412,7 +532,11 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rockets",
@@ -437,7 +561,11 @@
             "keyword": "Caustic Fumes"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rocket_after_photogenesis",
@@ -449,7 +577,12 @@
         "ability_ids": [
           "4297819154284544"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rocket_after_volt",
@@ -462,7 +595,12 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Mass Target Lock"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rockets_cd_not_displayed",
@@ -474,7 +612,12 @@
         "ability_ids": [
           "4308741256118272"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rockets_after_zone",
@@ -490,7 +633,12 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Caustic Fumes"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rockets_after_broken_mass_or_zone",
@@ -534,7 +682,12 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Caustic Fumes"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_rockets_after_broken_mass_or_zone_alt",
@@ -567,7 +720,12 @@
       "cancel_trigger": {
         "type": "effect_applied",
         "keyword": "Caustic Fumes"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_1st_flare",
@@ -579,7 +737,12 @@
           4297557161279488
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_flare",
@@ -591,7 +754,11 @@
         "ability_ids": [
           "4296410405011456"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_flares_crafted",
@@ -603,7 +770,12 @@
         "ability_ids": [
           "4326784413728768"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_bombardment",
@@ -617,7 +789,12 @@
       "cancel_trigger": {
         "type": "effect_removed",
         "keyword": "Mass Target Lock"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_last_ditch",
@@ -627,7 +804,12 @@
         "type": "phase_entered",
         "phase_id": "apex_burn"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "apex_vanguard_orbs_apx_contagion",

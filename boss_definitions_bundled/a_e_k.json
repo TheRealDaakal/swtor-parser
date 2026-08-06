@@ -189,6 +189,9 @@
             "a&e_k_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -210,6 +213,9 @@
             "a&e_k_p1"
           ]
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -219,7 +225,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_cf_mm",
@@ -249,7 +259,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "a&e_k_cf_vm",
@@ -279,7 +292,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_jmp_1st",
@@ -288,7 +304,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_inv",
@@ -318,7 +338,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_jmp",
@@ -339,7 +363,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_syn_1st",
@@ -348,7 +376,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_syn_e",
@@ -361,7 +393,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_syn",
@@ -374,7 +410,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_inv_p2",
@@ -383,7 +423,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_cf_p3_1st",
@@ -396,7 +440,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_cf_p3_mm",
@@ -418,7 +466,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "a&e_k_cf_p3_vm",
@@ -440,7 +491,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_rad_h",
@@ -458,6 +512,10 @@
           "operator": "gte",
           "value": 2
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -467,7 +525,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "a&e_k_pf_p4_1st_vm",
@@ -476,7 +537,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_pf_gcd_init_p4",
@@ -485,7 +549,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "a&e_k_pf_gcd_p4",
@@ -523,7 +590,11 @@
             "timer_id": "a&e_k_pf_p5_cd_vm"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_pf_p4_cd",
@@ -544,7 +615,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_phase_5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_pf_p4",
@@ -565,7 +640,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_phase_5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_a_es",
@@ -580,7 +659,11 @@
         "selector": [
           4088525397950464
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_e_es",
@@ -595,7 +678,11 @@
         "selector": [
           4088538282852352
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_p5_gcd_c1",
@@ -615,6 +702,10 @@
             "value": 0.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -638,6 +729,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -655,6 +750,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -672,6 +770,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -681,7 +782,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "a&e_k_p4"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "a&e_k_pf_p5_1st_c1",
@@ -701,6 +805,10 @@
             "value": 0.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -724,6 +832,10 @@
           "operator": "eq",
           "value": 0
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -741,6 +853,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -758,6 +873,9 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "veteran"
       ]
     },
     {
@@ -793,6 +911,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -828,6 +950,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {

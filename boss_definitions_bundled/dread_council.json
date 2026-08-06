@@ -214,7 +214,10 @@
       "duration_seconds": 700.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_calp",
@@ -222,7 +225,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_rap",
@@ -231,7 +237,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "dread_council_calp"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_tyr",
@@ -240,7 +249,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "dread_council_rap"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_1st_deathmark",
@@ -248,7 +260,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_deathmarks",
@@ -270,7 +285,11 @@
             "phase_id": "dread_council_p4"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_1st_p3_deathmark",
@@ -283,7 +302,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_se_cal",
@@ -297,7 +320,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_se_bes",
@@ -311,7 +337,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_se_rap",
@@ -325,7 +354,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_se_tyr",
@@ -339,7 +371,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_p1_failed",
@@ -350,7 +385,11 @@
         "counter_id": "dread_council_p2_fail",
         "value": 1
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p1_reset",
@@ -415,6 +454,10 @@
             "value": 0.0
           }
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -428,7 +471,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p2_rea",
@@ -441,7 +488,10 @@
           "Dread Master Brontes"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_p2_beam",
@@ -454,7 +504,11 @@
           "Dread Master Brontes"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p2_tp",
@@ -469,7 +523,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "dread_council_p2_beam"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p2_tp_1st",
@@ -478,7 +536,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p1_bts",
@@ -489,7 +551,10 @@
         "counter_id": "dread_council_bts",
         "value": 3
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_p1_bts_vm",
@@ -500,7 +565,10 @@
         "counter_id": "dread_council_bts",
         "value": 5
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_fp_1st",
@@ -517,7 +585,11 @@
             "keyword": "Fury of the Masters"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_fc",
@@ -539,7 +611,11 @@
             "phase_id": "dread_council_p4"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_fc_1st",
@@ -556,7 +632,10 @@
             "keyword": "Fury of the Masters"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dread_council_fc_1st_vm",
@@ -574,7 +653,10 @@
             "keyword": "Fury of the Masters"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_cp_1st",
@@ -592,7 +674,11 @@
             "timer_id": "dread_council_fc_1st_vm"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_ww",
@@ -617,7 +703,11 @@
             "phase_id": "dread_council_p4"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_ds",
@@ -642,7 +732,11 @@
             "phase_id": "dread_council_p4"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_dm_1st_vm",
@@ -651,7 +745,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "dread_council_tyr"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_ww_1st_vm",
@@ -669,7 +766,10 @@
             "keyword": "Fury of the Masters"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_dm_d",
@@ -680,7 +780,11 @@
         "keyword": "Imminent Death",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_p2_bsa",
@@ -689,7 +793,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dread_council_p2_brontes_styrak"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dread_council_orbs_force_push",

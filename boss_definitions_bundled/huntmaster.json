@@ -84,7 +84,10 @@
       "duration_seconds": 48.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_primal_fear_cs",
@@ -92,7 +95,10 @@
       "duration_seconds": 42.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_primal_fear_1st_vm",
@@ -100,7 +106,10 @@
       "duration_seconds": 36.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_shotroll_cs",
@@ -108,7 +117,10 @@
       "duration_seconds": 54.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_penetratign_shot_p3_vm",
@@ -117,7 +129,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_p3_jump",
@@ -129,7 +144,11 @@
         "ability_ids": [
           "4277787426816000"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_firestorm_grenade_p3_vm",
@@ -138,7 +157,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_firestorm_grenade_p3",
@@ -147,7 +169,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_firestorm_grenade_1st",
@@ -155,7 +180,11 @@
       "duration_seconds": 16.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_firestorm_grenade",
@@ -167,7 +196,11 @@
         "ability_ids": [
           "4271559724236800"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_fortress",
@@ -175,7 +208,11 @@
       "duration_seconds": 75.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_flying_fortress",
@@ -184,7 +221,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_scat_pv_pen",
@@ -196,7 +237,11 @@
         "ability_ids": [
           "4387871733579776"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_powershot_volley_1st",
@@ -204,7 +249,11 @@
       "duration_seconds": 8.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_powershot_volley",
@@ -216,7 +265,11 @@
         "ability_ids": [
           "4269773017841664"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_powershot_scatter_p3_vm",
@@ -225,7 +278,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_egg_snipe_p3",
@@ -234,7 +290,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_penetratign_shot_p3",
@@ -243,7 +302,10 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_primal_fear_p3",
@@ -252,7 +314,11 @@
       "trigger": {
         "type": "timer_expires",
         "timer_id": "huntmaster_p3_jump"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_egg_snipe_1st",
@@ -260,7 +326,10 @@
       "duration_seconds": 36.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_scatterblast_1st",
@@ -268,7 +337,11 @@
       "duration_seconds": 24.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_scatterblast",
@@ -280,7 +353,11 @@
         "ability_ids": [
           "4335125240217600"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_penetrating_shot_1st",
@@ -288,7 +365,11 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_penetrating_shot",
@@ -300,7 +381,11 @@
         "ability_ids": [
           "4269777312808960"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_primal_fear",
@@ -312,7 +397,10 @@
         "ability_ids": [
           "4335425887928320"
         ]
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "huntmaster_primal_fear_vm",
@@ -324,7 +412,10 @@
         "ability_ids": [
           "4335425887928320"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_power_scater",
@@ -336,7 +427,11 @@
         "ability_ids": [
           "4336065838055424"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_grenade",
@@ -347,7 +442,12 @@
         "keyword": "Firestorm Grenade",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "huntmaster_orbs_penetratign_shot_p3_vm",

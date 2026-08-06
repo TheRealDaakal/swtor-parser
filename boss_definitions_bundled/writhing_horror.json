@@ -33,7 +33,11 @@
       "duration_seconds": 20.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "wh_burrow",
@@ -48,7 +52,11 @@
         "selector": [
           "The Writhing Horror"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "label": "Jealous Male",

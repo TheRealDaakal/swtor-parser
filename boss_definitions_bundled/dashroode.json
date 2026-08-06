@@ -24,7 +24,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dash_roode_xuvvas",
@@ -35,7 +39,11 @@
         "ability_ids": [
           "3121285877989376"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dash_roode_updraft_1st",
@@ -43,7 +51,11 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dash_groundshatter",
@@ -55,7 +67,11 @@
         "ability_ids": [
           "3063810625634304"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dash_roode_updraft",
@@ -67,7 +83,11 @@
         "ability_ids": [
           "3134548736999424"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dash_roode_kick",
@@ -85,7 +105,11 @@
             "keyword": "Groundshatter"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dashroode_orbs_updraft_g",

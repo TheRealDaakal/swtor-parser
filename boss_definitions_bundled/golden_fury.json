@@ -141,7 +141,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "golden_fury_phases_burn"
-      }
+      },
+      "difficulties": [
+        "story"
+      ]
     },
     {
       "id": "golden_fury_add_spawn_vm_decreasing",
@@ -164,7 +167,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "golden_fury_phases_burn"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "golden_fury_add_spawn_vm",
@@ -187,7 +193,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "golden_fury_phases_burn"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "golden_fury_enrage",

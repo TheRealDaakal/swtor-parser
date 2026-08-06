@@ -81,7 +81,11 @@
         "ability_ids": [
           "3132057655967744"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "olok_the_shadow_flashbang",
@@ -94,7 +98,11 @@
           "3131215842377728"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "olok_the_shadow_flashbang_2",
@@ -106,7 +114,11 @@
         "ability_ids": [
           "3131215842377728"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "olok_the_shadow_stealth",
@@ -118,7 +130,11 @@
         "ability_ids": [
           "3131215842377728"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "olok_w2",

@@ -57,7 +57,12 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "dg_barrier",
@@ -79,7 +84,12 @@
             "phase_id": "dg_ciphas"
           }
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "dg_choke_cs",
@@ -88,7 +98,11 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "dg_ciphas"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_choke",
@@ -101,7 +115,11 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dg_kelsara"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_doom_hm",
@@ -116,7 +134,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dg_kelsara"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "dg_doom_nim",
@@ -131,7 +152,10 @@
       "cancel_trigger": {
         "type": "phase_entered",
         "phase_id": "dg_kelsara"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dg_doom_sm",
@@ -141,7 +165,10 @@
         "type": "effect_applied",
         "keyword": "Doom"
       },
-      "warn_seconds_before": 3.0
+      "warn_seconds_before": 3.0,
+      "difficulties": [
+        "story"
+      ]
     },
     {
       "id": "dg_vitality_ext",
@@ -152,7 +179,11 @@
         "keyword": "Vitality Extraction",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_circle_tracker_not_displayed",
@@ -161,7 +192,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Vitality Extraction"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "dg_at_12_circles",
@@ -179,6 +213,9 @@
             "dg_ciphas"
           ]
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -200,6 +237,10 @@
             "dg_ciphas"
           ]
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -212,7 +253,12 @@
           3013344759906304
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "dg_1st_leech_soon",
@@ -222,7 +268,11 @@
         "type": "phase_entered",
         "phase_id": "dg_kelsara"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_leech",
@@ -235,7 +285,11 @@
       "cancel_trigger": {
         "type": "effect_removed",
         "keyword": "Mark of Death"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_wither",
@@ -244,7 +298,11 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Force Leech"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "dg_overload",
@@ -253,7 +311,12 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Force Leech"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "dread_guard_orbs_choke",

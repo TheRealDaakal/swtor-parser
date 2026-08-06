@@ -70,7 +70,10 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_ricochet",
@@ -81,7 +84,10 @@
         "ability_ids": [
           "3372880767221760"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_ricochet_on_local",
@@ -92,7 +98,10 @@
         "keyword": "Double Down",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_multi_charge_1st",
@@ -100,7 +109,10 @@
       "duration_seconds": 25.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_cannon_shot_1st",
@@ -108,7 +120,10 @@
       "duration_seconds": 35.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_cannon_shot",
@@ -119,7 +134,10 @@
         "ability_ids": [
           "3374298106429440"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_split",
@@ -130,7 +148,10 @@
         "keyword": "Split City",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_split_removed",
@@ -141,7 +162,10 @@
         "keyword": "Split City",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_dcd_pearl_is_loose",
@@ -151,7 +175,10 @@
         "type": "effect_applied",
         "keyword": "Taunt Immunity"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_phase_2_hp",
@@ -164,7 +191,10 @@
           "Coratanni"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_phase_3_hp",
@@ -177,7 +207,10 @@
           "Coratanni"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_jet_boost_1st",
@@ -186,7 +219,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "coratanni_ruugar"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_grapple_1st",
@@ -195,7 +231,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "coratanni_ruugar"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_death_mouse_1st",
@@ -204,7 +243,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "coratanni_ruugar"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_cull_1st",
@@ -213,7 +255,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "coratanni_ruugar"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_focus_hostage_1st",
@@ -222,7 +267,10 @@
       "trigger": {
         "type": "phase_entered",
         "phase_id": "coratanni_ruugar"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_stop_dps_for_5s",
@@ -232,7 +280,10 @@
         "type": "effect_applied",
         "keyword": "Hostage"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_jet_boost",
@@ -244,7 +295,10 @@
         "ability_ids": [
           "3514734947074048"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_grapple",
@@ -256,7 +310,10 @@
         "ability_ids": [
           "3378185051832320"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_cull",
@@ -268,7 +325,10 @@
         "ability_ids": [
           "3438778450444288"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_death_mouse",
@@ -279,7 +339,10 @@
         "ability_ids": [
           "3438825695084544"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_focus",
@@ -291,7 +354,10 @@
         "ability_ids": [
           "3438829990051840"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_hostage",
@@ -303,7 +369,10 @@
         "ability_ids": [
           "3438765565542400"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_cant_grapple",
@@ -315,7 +384,10 @@
         "ability_ids": [
           "3441853647028224"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "coratanni_orbs_phase_2_hp",

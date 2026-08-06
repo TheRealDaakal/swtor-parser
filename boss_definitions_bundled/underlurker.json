@@ -38,7 +38,10 @@
         "ability_ids": [
           "3512467204341760"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ul_rage_storm",
@@ -50,7 +53,10 @@
         "ability_ids": [
           "3411423803736064"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ul_leap",
@@ -62,7 +68,10 @@
         "ability_ids": [
           "3411569832624128"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ul_devastation",
@@ -74,7 +83,10 @@
         "ability_ids": [
           "3413575582351360"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "ul_adds_hp",
@@ -87,7 +99,10 @@
           "The Underlurker"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "underlurker_orbs_adds_hp",

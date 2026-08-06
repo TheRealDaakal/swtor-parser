@@ -84,7 +84,11 @@
       "cancel_trigger": {
         "type": "timer_expires",
         "timer_id": "draxus_escape"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_suppressive",
@@ -100,7 +104,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_escape"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_escape",
@@ -132,7 +140,11 @@
           }
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w1",
@@ -144,7 +156,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w2"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w2",
@@ -158,7 +174,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w3"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w3",
@@ -172,7 +192,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w4"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w4",
@@ -186,7 +210,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w5"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w5",
@@ -200,7 +228,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w6"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w6",
@@ -214,7 +246,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w7"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w7",
@@ -228,7 +264,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w8"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w8",
@@ -242,7 +282,11 @@
       "cancel_trigger": {
         "type": "timer_started",
         "timer_id": "draxus_w9"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_w9",
@@ -257,7 +301,11 @@
         "type": "counter_reaches",
         "counter_id": "draxus_corrupter_count",
         "value": 10
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_shield_on",
@@ -267,7 +315,11 @@
         "type": "effect_applied",
         "keyword": "Emergency Shielding"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_shield_off",
@@ -277,7 +329,11 @@
         "type": "effect_removed",
         "keyword": "Emergency Shielding"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "draxus_orbs_escape_hp_90",

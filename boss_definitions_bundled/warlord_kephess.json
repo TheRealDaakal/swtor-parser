@@ -156,7 +156,11 @@
         "ability_ids": [
           "2877069742571520"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "warlord_kephess_dot_is_on_you",
@@ -166,7 +170,11 @@
         "type": "effect_applied",
         "keyword": "Savage Wounding",
         "target": "local_player"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "wk_savage_slash",
@@ -178,7 +186,11 @@
         "ability_ids": [
           "2877048267735040"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "wk_breath_pull",
@@ -187,7 +199,10 @@
       "trigger": {
         "type": "effect_applied",
         "keyword": "Breath of the Masters"
-      }
+      },
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "warlord_kephess_bomb",
@@ -198,7 +213,12 @@
         "keyword": "Baradium Explosive Pack",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "wk_trandos",
@@ -208,7 +228,11 @@
         "type": "counter_reaches",
         "counter_id": "wk_trando_spawns",
         "value": 1
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "warlord_kephess_walker_enrage",
@@ -222,7 +246,11 @@
         "selector": [
           "Warstrider Battlewalker"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "warlord_kephess_walker_enrage_16",
@@ -236,7 +264,11 @@
         "selector": [
           "Warstrider Battlewalker"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "wk_baradium_countdown",
@@ -253,7 +285,11 @@
         "selector": [
           "Baradium Bomber"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "warlord_kephess_pull_in_soon",
@@ -266,7 +302,11 @@
           "Warlord Kephess"
         ]
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "warlord_kephess_orbs_hp_59",

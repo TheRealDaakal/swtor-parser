@@ -84,7 +84,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nefra_voice",
@@ -96,7 +100,11 @@
         "ability_ids": [
           "3270007710547968"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nefra_local_taunt",
@@ -107,7 +115,10 @@
         "counter_id": "nefra_curse_stacks_local",
         "value": 3
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master"
+      ]
     },
     {
       "id": "nefra_dps_add_1st",
@@ -115,7 +126,11 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nefra_tank_add_1st",
@@ -123,7 +138,10 @@
       "duration_seconds": 45.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "nefra_dps_add_vm",
@@ -134,7 +152,10 @@
         "ability_ids": [
           "3308460552749056"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "nefra_tank_add_vm",
@@ -145,7 +166,10 @@
         "ability_ids": [
           "3308164200005632"
         ]
-      }
+      },
+      "difficulties": [
+        "veteran"
+      ]
     },
     {
       "id": "nefra_tank_add",
@@ -164,6 +188,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -183,6 +210,9 @@
           "operator": "eq",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -203,6 +233,9 @@
           "operator": "eq",
           "value": 12
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {
@@ -214,7 +247,11 @@
         "counter_id": "nefra_twin_stacks",
         "value": 14
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "nefra_raid_cleave",
@@ -235,6 +272,9 @@
           "operator": "eq",
           "value": 15
         }
+      ],
+      "difficulties": [
+        "master"
       ]
     },
     {

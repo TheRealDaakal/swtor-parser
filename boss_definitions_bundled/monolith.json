@@ -98,7 +98,11 @@
       "duration_seconds": 15.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_gs_1st",
@@ -106,7 +110,12 @@
       "duration_seconds": 18.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ts_1st",
@@ -114,7 +123,11 @@
       "duration_seconds": 23.5,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_cotm_1st",
@@ -122,7 +135,11 @@
       "duration_seconds": 26.5,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_sy_1st",
@@ -130,7 +147,11 @@
       "duration_seconds": 30.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ld_1st",
@@ -138,7 +159,12 @@
       "duration_seconds": 40.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ep_1st",
@@ -146,7 +172,11 @@
       "duration_seconds": 60.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_br_1st",
@@ -154,7 +184,11 @@
       "duration_seconds": 80.0,
       "trigger": {
         "type": "combat_start"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_bw",
@@ -166,7 +200,11 @@
         "ability_ids": [
           "3546045258661888"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_gs",
@@ -178,7 +216,11 @@
         "ability_ids": [
           "3543287889657856"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ts",
@@ -189,7 +231,11 @@
         "ability_ids": [
           "3565583064891392"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_cotm",
@@ -201,7 +247,11 @@
         "ability_ids": [
           "3545963654283264"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_sy",
@@ -213,7 +263,11 @@
         "ability_ids": [
           "3545242099777536"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ld",
@@ -225,7 +279,11 @@
         "ability_ids": [
           "3546341611405312"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_ep",
@@ -237,7 +295,11 @@
         "ability_ids": [
           "3545272164548608"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_br",
@@ -249,7 +311,11 @@
         "ability_ids": [
           "3553398242672640"
         ]
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_rc",
@@ -265,7 +331,11 @@
       "cancel_trigger": {
         "type": "effect_removed",
         "keyword": "Taunt Immunity"
-      }
+      },
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_not_red",
@@ -286,6 +356,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -307,6 +381,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -328,6 +406,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -349,6 +431,10 @@
           "operator": "gte",
           "value": 1
         }
+      ],
+      "difficulties": [
+        "master",
+        "veteran"
       ]
     },
     {
@@ -360,7 +446,11 @@
         "counter_id": "monolith_bw",
         "value": 3
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_cursed",
@@ -371,7 +461,11 @@
         "keyword": "Curse of the Monolith",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "veteran"
+      ]
     },
     {
       "id": "monolith_kite",
@@ -382,7 +476,12 @@
         "keyword": "Lingering Destruction",
         "target": "local_player"
       },
-      "is_alert": true
+      "is_alert": true,
+      "difficulties": [
+        "master",
+        "story",
+        "veteran"
+      ]
     }
   ]
 }
