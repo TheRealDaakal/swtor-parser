@@ -465,6 +465,12 @@ class BossTimerDef:
     # 16-player variants alongside the 8-player ones; firing both means the
     # wrong one is always shouting. Empty = applies at any size.
     group_sizes: List[int] = field(default_factory=list)
+    # Speak WHO the effect landed on, not just what it was. For a raid-wide
+    # mechanic a healer has to react to -- "Corrosive Slime" tells you
+    # nothing actionable when it lands on 8 different people across a fight;
+    # "Corrosive Slime: Wunderscone" tells you exactly who to cleanse.
+    # Timers scoped to target=local_player don't need this (it's you).
+    announce_target: bool = False
 
     def applies_to_group_size(self, size: Optional[int]) -> bool:
         if not self.group_sizes or size is None:
@@ -604,6 +610,7 @@ def _definition_from_dict(data: dict) -> BossDefinition:
             announce_on_start=t.get("announce_on_start", True),
             difficulties=t.get("difficulties", []),
             group_sizes=[int(g) for g in t.get("group_sizes", [])],
+            announce_target=t.get("announce_target", False),
         )
         for t in data.get("timers", [])
     ]

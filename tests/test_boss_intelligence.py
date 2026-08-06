@@ -313,3 +313,76 @@ class TestDifficultyScoping:
         from boss_definitions import BossTimerDef as T
         assert T(label="x", duration_seconds=1.0,
                  difficulties=["veteran"]).applies_to_difficulty("veteran") is True
+
+
+class TestAnnounceTarget:
+    """Reported live after a TFB night: "TFB last night had a cleanse
+    fighting the horror that landed on different people." The Writhing
+    Horror's Corrosive Slime timer was scoped target=local_player, so it
+    only spoke when the debuff hit YOU. Measured on that night's log: 88
+    applications across 8 players, only 11 on the local player -- as a
+    healer you were told about 12% of them, and never who to cleanse."""
+
+    def _boss(self, announce_target):
+        return BossDefinition(
+            id="test_boss", name="Test Boss", boss_names=["TestBoss"],
+            phases=[BossPhase(id="p1", name="Phase 1",
+                              start_trigger=Condition(type="combat_start"))],
+            timers=[BossTimerDef(
+                label="Cleanse", duration_seconds=3.0, is_alert=True,
+                announce_target=announce_target,
+                trigger=Condition(type="effect_applied", keyword="Slime"),
+            )],
+        )
+
+    def _slime_on(self, who):
+        return parse_line(
+            log_line("00:00:01.000", "TestBoss", target=who,
+                      ability="Slime {1}", effect_name="Slime {2}"),
+            line_number=2,
+        )
+
+    def _recognize(self, state, engine):
+        state.feed(parse_line(
+            log_line("00:00:00.000", "@Tank#1", target="TestBoss",
+                      ability="Hit {1}", effect_name="Damage {2}", amount="1"),
+            line_number=1), timer_engine=engine)
+
+    def test_the_callout_names_who_it_landed_on(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(True)})
+        sim_clock(0.0)
+        self._recognize(state, engine)
+        state.feed(self._slime_on("@Wunderscone#9"), timer_engine=engine)
+        assert [r[0] for r in engine.snapshot()] == ["Cleanse: Wunderscone"]
+
+    def test_several_people_afflicted_at_once_are_separate_rows(self, sim_clock):
+        """The same mechanic is genuinely up on several people at a time --
+        one row overwriting the next would hide everyone but the latest."""
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(True)})
+        sim_clock(0.0)
+        self._recognize(state, engine)
+        for who in ("@Wunderscone#9", "@Emmilynna#8", "@Echolya#7"):
+            state.feed(self._slime_on(who), timer_engine=engine)
+        labels = sorted(r[0] for r in engine.snapshot())
+        assert labels == ["Cleanse: Echolya", "Cleanse: Emmilynna", "Cleanse: Wunderscone"]
+
+    def test_the_same_person_re_afflicted_refreshes_rather_than_stacking(self, sim_clock):
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(True)})
+        sim_clock(0.0)
+        self._recognize(state, engine)
+        state.feed(self._slime_on("@Wunderscone#9"), timer_engine=engine)
+        sim_clock(1.0)
+        state.feed(self._slime_on("@Wunderscone#9"), timer_engine=engine)
+        assert len(engine.snapshot()) == 1, "one row per person, refreshed"
+
+    def test_without_the_flag_the_label_is_unchanged(self, sim_clock):
+        """Timers scoped to you don't need a name attached -- it's you."""
+        engine = TimerEngine()
+        state = BossEncounterState({"test_boss": self._boss(False)})
+        sim_clock(0.0)
+        self._recognize(state, engine)
+        state.feed(self._slime_on("@Wunderscone#9"), timer_engine=engine)
+        assert [r[0] for r in engine.snapshot()] == ["Cleanse"]

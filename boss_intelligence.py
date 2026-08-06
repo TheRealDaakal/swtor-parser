@@ -327,12 +327,21 @@ class BossEncounterState:
             if t.trigger is not None and t.trigger.type == "combat_start":
                 continue
             if t.matches(ctx):
+                label = t.label
+                dedupe = None
+                if t.announce_target and ctx.event.target:
+                    # Name the person, and key on them: the same mechanic can
+                    # be up on several people at once (88 Corrosive Slimes
+                    # across 8 players in one real fight), so they must be
+                    # separate rows rather than one overwriting the next.
+                    label = f"{t.label}: {ctx.event.target}"
+                    dedupe = ctx.event.target
                 timer_engine.start_timer(
-                    t.label, t.duration_seconds, t.warn_seconds_before, t.voice_alert,
+                    label, t.duration_seconds, t.warn_seconds_before, t.voice_alert,
                     repeat_interval_seconds=t.repeat_interval_seconds,
                     repeat_count=t.repeat_count, definition_id=t.id, category="boss",
                     is_alert=t.is_alert, announce_on_start=t.announce_on_start,
-                    boss_id=self.active_boss.id,
+                    boss_id=self.active_boss.id, dedupe_key=dedupe,
                 )
 
     def _fire_combat_start_timers(self, timer_engine) -> None:
