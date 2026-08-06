@@ -23,30 +23,14 @@ pull started, so it errs toward "was available" -- flagged in the output as
 
 from typing import Dict, List, Optional
 
+from analysis.events import load_encounter_events
 from cooldowns import DEFENSIVE_COOLDOWNS
 from log_merger import _seconds_of_day
-from log_parser import parse_line
 
 # How far back to reconstruct before the killing blow.
 WINDOW_SECONDS = 12.0
 
 _CD_BY_NAME = {d.label: d for d in DEFENSIVE_COOLDOWNS}
-
-
-def _iter_encounter_events(path: str, start_line: Optional[int], end_line: Optional[int]):
-    """Yields parsed events for one encounter's line range (inclusive).
-    Falls back to the whole file when the range is unknown."""
-    lo = start_line or 1
-    hi = end_line or float("inf")
-    with open(path, "r", encoding="cp1252", errors="replace") as f:
-        for i, line in enumerate(f, 1):
-            if i < lo:
-                continue
-            if i > hi:
-                break
-            event = parse_line(line, line_number=i)
-            if event is not None:
-                yield event
 
 
 def analyze_deaths(path: str, start_line: Optional[int], end_line: Optional[int],
@@ -63,7 +47,7 @@ def analyze_deaths(path: str, start_line: Optional[int], end_line: Optional[int]
     pull kills dozens of adds -- "what killed this Grey Swarm Thrall" is
     noise, and on a typical pull it outnumbers real player deaths ~20:1.
     """
-    events = list(_iter_encounter_events(path, start_line, end_line))
+    events = load_encounter_events(path, start_line, end_line)
     if not events:
         return []
 

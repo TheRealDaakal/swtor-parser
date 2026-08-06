@@ -17,10 +17,10 @@ after the fact).
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from analysis.events import load_encounter_events
 from boss_definitions import load_definitions
 from boss_intelligence import BossEncounterState
 from log_merger import _seconds_of_day
-from log_parser import parse_line
 
 BUNDLED_BOSS_DIR = Path(__file__).resolve().parent.parent / "boss_definitions_bundled"
 
@@ -30,20 +30,6 @@ BUNDLED_BOSS_DIR = Path(__file__).resolve().parent.parent / "boss_definitions_bu
 TARGET_BUCKETS = 90
 MIN_BUCKET_SECONDS = 1.0
 MAX_BUCKET_SECONDS = 20.0
-
-
-def _iter_encounter_events(path: str, start_line: Optional[int], end_line: Optional[int]):
-    lo = start_line or 1
-    hi = end_line or float("inf")
-    with open(path, "r", encoding="cp1252", errors="replace") as f:
-        for i, line in enumerate(f, 1):
-            if i < lo:
-                continue
-            if i > hi:
-                break
-            event = parse_line(line, line_number=i)
-            if event is not None:
-                yield event
 
 
 def build_timeline(path: str, start_line: Optional[int], end_line: Optional[int],
@@ -56,7 +42,7 @@ def build_timeline(path: str, start_line: Optional[int], end_line: Optional[int]
     can assume every player's arrays line up index-for-index with every
     other player's and with the phase offsets, no per-row length checks.
     """
-    events = list(_iter_encounter_events(path, start_line, end_line))
+    events = load_encounter_events(path, start_line, end_line)
     if not events:
         return {"duration": 0.0, "bucket_seconds": 1.0, "players": {}, "phases": []}
 

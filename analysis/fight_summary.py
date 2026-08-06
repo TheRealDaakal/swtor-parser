@@ -20,26 +20,12 @@ tracking everything live for every pull ever played.
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from analysis.events import load_encounter_events
+from analysis.forensics import analyze_deaths
 from boss_definitions import load_definitions
 from boss_intelligence import BossEncounterState
-from log_parser import parse_line
-from analysis.forensics import analyze_deaths
 
 BUNDLED_BOSS_DIR = Path(__file__).resolve().parent.parent / "boss_definitions_bundled"
-
-
-def _iter_encounter_events(path: str, start_line: Optional[int], end_line: Optional[int]):
-    lo = start_line or 1
-    hi = end_line or float("inf")
-    with open(path, "r", encoding="cp1252", errors="replace") as f:
-        for i, line in enumerate(f, 1):
-            if i < lo:
-                continue
-            if i > hi:
-                break
-            event = parse_line(line, line_number=i)
-            if event is not None:
-                yield event
 
 
 def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional[int],
@@ -62,7 +48,7 @@ def build_fight_summary(path: str, start_line: Optional[int], end_line: Optional
     phases_seen: List[str] = []
     boss_died = False
 
-    for event in _iter_encounter_events(path, start_line, end_line):
+    for event in load_encounter_events(path, start_line, end_line):
         change = boss_state.feed(event, timer_engine=None)
         if change is not None and change.phase_name not in phases_seen:
             phases_seen.append(change.phase_name)
