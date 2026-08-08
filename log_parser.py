@@ -33,11 +33,23 @@ mistake it for the event's amount).
 If this mis-parses your real logs, send a raw sample line and the regexes
 below (BRACKET_RE / PAREN_RE / TIME_RE / entity grammar in _parse_entity)
 are the only things that need adjusting.
+
+Event classification (is_death, is_damage, ...) and the value-extraction
+helpers (amount, crit, shield absorbed, ...) now live in parser_core/ --
+this module imports them so the tokenizer above and that classification
+stay in one place for callers, without duplicating the logic.
 """
 
 import re
 from dataclasses import dataclass, field
 from typing import List, Optional, Tuple
+
+from parser_core.classifier import _classify
+from parser_core.field_extractors import (
+    _extract_id, _clean_name, _first_balanced_paren, _extract_angle_value,
+    _extract_amount, _extract_is_critical, _extract_avoidance,
+    _extract_shield_absorbed, _extract_overheal,
+)
 
 BRACKET_RE = re.compile(r"\[([^\[\]]*)\]")
 PAREN_RE = re.compile(r"\(([^()]*)\)")
@@ -239,150 +251,6 @@ ABILITY_ID_RE = re.compile(r"\{(\d+)\}")
 DIFFICULTY_RE = re.compile(r"(\d+)\s+Player\s+([A-Za-z_]+)", re.IGNORECASE)
 
 
-def _extract_id(text: str) -> Optional[str]:
-    """The numeric {id} out of a bracket field, e.g.
-    'Force Leap {812105301229568}' -> '812105301229568'. Kept as a string:
-    it's only ever compared for equality, and these are 16-digit values
-    that have no business being arithmetic."""
-    if not text:
-        return None
-    m = ABILITY_ID_RE.search(text)
-    return m.group(1) if m else None
-
-
-def _clean_name(text: str) -> Optional[str]:
-    """Strip trailing {id} tags and leading '@' from a bracket field, e.g.
-    'Force Leap {812105301229568}' -> 'Force Leap'
-    '@Idrurrez' -> 'Idrurrez'
-    """
-    if text is None:
-        return None
-    text = ENTITY_ID_RE.sub("", text).strip()
-    text = text.lstrip("@").strip()
-    return text or None
-
-
-LEADING_NUMBER_RE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)")
-
-
-def _first_balanced_paren(text: str) -> Optional[str]:
-    """Returns the content of the first top-level parenthesized group in
-    text (honoring nesting), or None if there isn't a balanced one. Needed
-    because SWTOR sometimes nests a sub-annotation inside the value group,
-    e.g. '(3238 energy {id} -shield {id} (4121 absorbed {id}))' or
-    '(488 kinetic {id}(reflected {id}))' -- a naive non-nesting regex
-    matches only the inner '(4121 absorbed {id})' / '(reflected {id})'
-    piece, which silently substitutes the wrong number (the absorbed
-    sub-amount, or even a stray {id} digit string when there's no leading
-    number at all) for the real damage/heal amount.
-    """
-    start = text.find("(")
-    if start == -1:
-        return None
-    depth = 0
-    for i in range(start, len(text)):
-        if text[i] == "(":
-            depth += 1
-        elif text[i] == ")":
-            depth -= 1
-            if depth == 0:
-                return text[start + 1 : i]
-    return None  # unbalanced -- truncated/malformed line
-
-
-SHIELD_ABSORBED_RE = re.compile(r"-shield\b.*?\((\d+(?:\.\d+)?)\s+absorbed", re.DOTALL)
-
-# The trailing "<N>" value SWTOR appends to most lines, outside any paren
-# group -- e.g. "... ModifyThreat {id}] <406.0>" or "... Damage {id}]
-# (1878 energy {id}) <1878.0>". Only ModifyThreat's use of it is read today;
-# for damage/heal lines it duplicates the paren amount and isn't needed.
-ANGLE_VALUE_RE = re.compile(r"<(-?\d+(?:\.\d+)?)>")
-
-
-def _extract_angle_value(tail: str) -> float:
-    match = ANGLE_VALUE_RE.search(tail)
-    return float(match.group(1)) if match else 0.0
-
-
-def _extract_amount(tail: str) -> float:
-    """Pulls the event's primary amount out of the trailing value text
-    (everything after the core brackets). The real amount is always the
-    leading numeric token of the FIRST top-level parenthesized group, even
-    when that group carries a nested reflected/absorbed-damage annotation
-    (see _first_balanced_paren) -- e.g. '1234 energy...' or '1234*' (crit).
-    """
-    group = _first_balanced_paren(tail)
-    if group is None:
-        return 0.0
-    match = LEADING_NUMBER_RE.match(group)
-    return float(match.group(1)) if match else 0.0
-
-
-def _extract_is_critical(tail: str) -> bool:
-    """The leading number in the value group carries the crit marker
-    directly, e.g. '9578* energy {id}' -> True, '9578 energy {id}' -> False.
-    """
-    group = _first_balanced_paren(tail)
-    if group is None:
-        return False
-    match = LEADING_NUMBER_RE.match(group)
-    if not match:
-        return False
-    return group[match.end():match.end() + 1] == "*"
-
-
-AVOIDANCE_RE = re.compile(r"-(miss|dodge|parry|deflect|resist)\b")
-
-
-def _extract_avoidance(tail: str) -> Optional[str]:
-    """Pulls the defense-roll outcome out of the same value group
-    `_extract_amount` reads, e.g. '(0 -dodge {id})' -> "dodge". Always
-    accompanies a 0 amount -- the attack never landed, as opposed to a
-    landed hit that got shielded down to 0 (see _extract_shield_absorbed).
-    """
-    group = _first_balanced_paren(tail)
-    if group is None:
-        return None
-    match = AVOIDANCE_RE.search(group)
-    return match.group(1) if match else None
-
-
-def _extract_shield_absorbed(tail: str) -> float:
-    """Pulls the tank shield-mitigation amount out of the same value group
-    `_extract_amount` reads, e.g. '3238 energy {id} -shield {id} (4121
-    absorbed {id})' -> 4121. `amount` above already captured the 3238 that
-    got through; this is the part that didn't.
-
-    Deliberately keyed on the literal '-shield' marker, not just the
-    presence of "(N absorbed {id})" alone: a bare "(N absorbed {id})" with
-    no '-shield' sibling is a different mechanic entirely (a hard
-    absorb-shield BUFF like Static Barrier/Force Armor covering its full
-    hit, already tracked separately in dots_hots.py) -- conflating the two
-    would misattribute a healer's shield buff as tank stat mitigation.
-    """
-    group = _first_balanced_paren(tail)
-    if group is None:
-        return 0.0
-    match = SHIELD_ABSORBED_RE.search(group)
-    return float(match.group(1)) if match else 0.0
-
-
-OVERHEAL_RE = re.compile(r"~(\d+(?:\.\d+)?)")
-
-
-def _extract_overheal(tail: str) -> float:
-    """Pulls a heal's wasted-overheal amount out of the same value group
-    `_extract_amount` reads, e.g. '10926* ~7382' -> 7382. Zero overheal
-    (target wasn't near full) doesn't get a '~0' suffix on every line --
-    it does in practice (SWTOR always emits it), but treat absence the
-    same as explicit zero either way."""
-    group = _first_balanced_paren(tail)
-    if group is None:
-        return 0.0
-    match = OVERHEAL_RE.search(group)
-    return float(match.group(1)) if match else 0.0
-
-
 def _parse_entity(
     field: str, self_name: Optional[str] = None,
     self_is_player: bool = False, self_npc_id: Optional[str] = None,
@@ -517,70 +385,3 @@ def parse_line(line: str, line_number: Optional[int] = None) -> Optional[CombatE
     event.hp_current, event.hp_max = hp_current, hp_max
     _classify(event, tail)
     return event
-
-
-def _classify(event: CombatEvent, tail: str) -> None:
-    # Classify from the EVENT-TYPE fields only, never the ability name. The
-    # ability is what was cast; the effect fields are what actually happened.
-    # Including the ability name here misclassifies any ability whose name
-    # merely contains a keyword -- "Death Field" / "Death From Above" ticks
-    # were being counted as deaths, and because stats.apply() returns early
-    # on a death, their damage was silently dropped from DPS as well.
-    haystack = " ".join(
-        filter(None, [event.effect_type, event.effect_name])
-    ).lower()
-
-    # Collapse whitespace so "Enter Combat" and "EnterCombat" both match
-    tight = haystack.replace(" ", "")
-
-    event.is_damage = any(k in haystack for k in DAMAGE_KEYWORDS)
-    event.is_heal = any(k in haystack for k in HEAL_KEYWORDS)
-    event.is_death = (
-        (event.effect_type or "").strip().lower() == DEATH_EVENT_TYPE
-        and (event.effect_name or "").strip().lower() == DEATH_EFFECT_NAME
-    )
-    event.is_combat_start = any(k in tight for k in COMBAT_START_KEYWORDS)
-    event.is_combat_end = any(k in tight for k in COMBAT_END_KEYWORDS)
-    event.is_area_entered = any(k in tight for k in AREA_ENTERED_KEYWORDS)
-    if event.is_area_entered and event.effect_name:
-        m = DIFFICULTY_RE.search(event.effect_name)
-        if m:
-            event.group_size = int(m.group(1))
-            # BARAS spells these lowercase in its `difficulties` lists.
-            event.difficulty = m.group(2).lower()
-    effect_type_tight = (event.effect_type or "").lower().replace(" ", "")
-    event.is_effect_removed = any(k in effect_type_tight for k in EFFECT_REMOVED_KEYWORDS)
-    event.is_charges_modified = any(k in effect_type_tight for k in MODIFY_CHARGES_KEYWORDS)
-    effect_name_tight = (event.effect_name or "").lower().replace(" ", "")
-    event.is_ability_activate = any(
-        k in effect_name_tight for k in ABILITY_ACTIVATE_KEYWORDS
-    )
-    event.is_threat_modified = any(
-        k in effect_name_tight for k in THREAT_MODIFIED_KEYWORDS
-    )
-    event.is_interrupted = any(
-        k in effect_name_tight for k in ABILITY_INTERRUPT_KEYWORDS
-    )
-    event.is_hard_cc = (
-        event.source_is_player and not event.target_is_player
-        and not event.is_effect_removed
-        and any(k in effect_name_tight for k in HARD_CC_KEYWORDS)
-    )
-    event.is_raid_buff_cast = (
-        event.is_ability_activate and event.source_is_player
-        and event.ability in RAID_BUFF_ABILITY_NAMES
-    )
-
-    if event.is_damage or event.is_heal:
-        event.amount = _extract_amount(tail)
-        event.is_critical = _extract_is_critical(tail)
-    if event.is_heal:
-        event.overheal = _extract_overheal(tail)
-    if event.is_damage:
-        # Shield Chance mitigation and avoidance (miss/dodge/parry/deflect/
-        # resist) only ever apply to incoming damage, not healing -- no need
-        # to scan the tail on every heal tick too.
-        event.shield_absorbed = _extract_shield_absorbed(tail)
-        event.avoidance = _extract_avoidance(tail)
-    if event.is_threat_modified:
-        event.threat_delta = _extract_angle_value(tail)

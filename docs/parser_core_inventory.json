@@ -1,0 +1,98 @@
+{
+  "file": "log_parser.py",
+  "total_lines": 586,
+  "symbols": [
+    {
+      "name": "CombatEvent",
+      "type": "ClassDef",
+      "line": 123,
+      "end_line": 231,
+      "lines": 109
+    },
+    {
+      "name": "_extract_id",
+      "type": "FunctionDef",
+      "line": 242,
+      "end_line": 250,
+      "lines": 9
+    },
+    {
+      "name": "_clean_name",
+      "type": "FunctionDef",
+      "line": 253,
+      "end_line": 262,
+      "lines": 10
+    },
+    {
+      "name": "_first_balanced_paren",
+      "type": "FunctionDef",
+      "line": 268,
+      "end_line": 290,
+      "lines": 23
+    },
+    {
+      "name": "_extract_angle_value",
+      "type": "FunctionDef",
+      "line": 302,
+      "end_line": 304,
+      "lines": 3
+    },
+    {
+      "name": "_extract_amount",
+      "type": "FunctionDef",
+      "line": 307,
+      "end_line": 318,
+      "lines": 12
+    },
+    {
+      "name": "_extract_is_critical",
+      "type": "FunctionDef",
+      "line": 321,
+      "end_line": 331,
+      "lines": 11
+    },
+    {
+      "name": "_extract_avoidance",
+      "type": "FunctionDef",
+      "line": 337,
+      "end_line": 347,
+      "lines": 11
+    },
+    {
+      "name": "_extract_shield_absorbed",
+      "type": "FunctionDef",
+      "line": 350,
+      "end_line": 367,
+      "lines": 18
+    },
+    {
+      "name": "_extract_overheal",
+      "type": "FunctionDef",
+      "line": 373,
+      "end_line": 383,
+      "lines": 11
+    },
+    {
+      "name": "_parse_entity",
+      "type": "FunctionDef",
+      "line": 386,
+      "end_line": 451,
+      "lines": 66
+    },
+    {
+      "name": "parse_line",
+      "type": "FunctionDef",
+      "line": 454,
+      "end_line": 519,
+      "lines": 66
+    },
+    {
+      "name": "_classify",
+      "type": "FunctionDef",
+      "line": 522,
+      "end_line": 586,
+      "lines": 65
+    }
+  ],
+  "long_methods": []
+}

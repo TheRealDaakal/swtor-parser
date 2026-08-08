@@ -1,9 +1,4 @@
-"""Compatibility facade for the overlay implementations.
-
-Concrete overlay classes live in the ``overlays`` package. The historical
-``overlay`` module remains import-compatible for existing callers.
-"""
-
+"""Overlay implementations extracted from the legacy overlay module."""
 from overlays.bar_overlay import BarOverlay
 from overlays.hot_overlay import HotOverlay
 from overlays.hot_grid_overlay import HotGridOverlay

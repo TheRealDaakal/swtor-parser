@@ -12,16 +12,12 @@ Optional:  python main.py "C:\\path\\to\\CombatLogs"
 """
 
 import os
-import queue
 import sys
 import threading
-from datetime import datetime, timezone
-from typing import Optional
 from pathlib import Path
 
 import log_watcher
 import storage
-import update_check
 from version import __version__
 from log_parser import parse_line
 from stats import StatsTracker
@@ -34,6 +30,14 @@ from alacrity import register_alacrity_buffs
 from taunt_tracker import TauntTracker
 from aggro_tracker import AggroTracker
 from gui import OverlayManager
+from app_runtime import (
+    CharacterSettingsHolder,
+    HistoryWriter,
+    StatusHolder,
+    UpdateHolder,
+    archive_old_logs_once,
+    check_for_update_once,
+)
 
 BUNDLED_BOSS_DIR = Path(__file__).parent / "boss_definitions_bundled"
 USER_BOSS_DIR = Path(storage.data_dir()) / "boss_definitions"
@@ -45,143 +49,6 @@ USER_BOSS_DIR = Path(storage.data_dir()) / "boss_definitions"
 # just ones named "Burn"/"Enrage": which phase matters is a per-fight,
 # per-strat judgment call, not something to hardcode by name.
 PHASE_ALERT_SECONDS = 5.0
-
-
-class StatusHolder:
-    """Replaces the old status_q -- that only ever had one consumer (the Tk
-    toolbar's status label), and the web UI just wants "whatever the latest
-    status text is" on each poll, not a queue to drain."""
-
-    def __init__(self):
-        self.text = "Waiting for combat log..."
-
-
-class UpdateHolder:
-    """Holds the result of the one-shot startup update check (see
-    update_check.py) -- None until that background thread finishes, then
-    either stays None (nothing newer / check failed) or holds
-    {"version", "url"} for the web UI's update banner to read via
-    /api/update. Never re-checked after startup."""
-
-    def __init__(self):
-        self.result = None
-
-
-class CharacterSettingsHolder:
-    """The one per-character setting that isn't overlay-layout-shaped:
-    Alacrity %, used to scale DoT/HoT durations (see timers.apply_alacrity
-    -- SWTOR's combat log never reports a character's actual Alacrity
-    Rating/% directly, so this has to be typed in manually). Still
-    persisted alongside the overlay layout blob (storage.py's
-    load_overlay_layout/save_overlay_layout already key everything by
-    character; no reason for a second per-character file).
-
-    Read from the background log-reader thread (background_reader, every
-    event) and written from web_server.py's HTTP handler thread (the
-    Overlays tab's Alacrity % field) -- a plain float attribute read/write
-    is atomic enough under the GIL for this (worst case, one event uses
-    the old value a moment longer), so this doesn't need its own lock the
-    way StatsTracker/TimerEngine do for their multi-step mutations."""
-
-    def __init__(self):
-        self.alacrity_pct: float = 0.0
-        self._character: Optional[str] = None
-
-    def sync_for_character(self, character: Optional[str]) -> None:
-        """Called every event from background_reader -- cheap (just a
-        comparison) unless the character actually changed, in which case
-        it reloads from disk once. Without this, an alt-swap mid-session
-        would keep using the PREVIOUS character's alacrity setting."""
-        if character == self._character:
-            return
-        self._character = character
-        if character:
-            layout = storage.load_overlay_layout(character)
-            try:
-                self.alacrity_pct = float(layout.get("alacrity_pct", 0.0) or 0.0)
-            except (TypeError, ValueError):
-                self.alacrity_pct = 0.0
-        else:
-            self.alacrity_pct = 0.0
-
-    def set_alacrity_pct(self, pct: float) -> None:
-        """From the web UI's Save button -- updates the in-memory value
-        immediately (the very next dot/hot to fire uses it, no restart
-        needed) and persists it for next launch."""
-        self.alacrity_pct = pct
-        if self._character:
-            layout = storage.load_overlay_layout(self._character)
-            layout["alacrity_pct"] = pct
-            storage.save_overlay_layout(layout, character=self._character)
-
-    @property
-    def character(self) -> Optional[str]:
-        return self._character
-
-
-def _check_for_update_once(holder: "UpdateHolder"):
-    holder.result = update_check.check_for_update(__version__)
-
-
-def _archive_old_logs_once(log_dir: Optional[str]):
-    """Runs once at startup, off the main thread -- a folder with years of
-    logs could take a moment to scan/compress, and this must never delay
-    the reader actually starting to tail the live log. Disabled by default
-    (retention_days=0, see storage.load_cleanup_settings) -- a fresh
-    install shouldn't start silently rewriting the user's files."""
-    if not log_dir:
-        return
-    settings = storage.load_cleanup_settings()
-    retention_days = settings.get("retention_days") or 0
-    if retention_days <= 0:
-        return
-    import log_archive
-    archived = log_archive.archive_old_logs(log_dir, retention_days)
-    if archived:
-        settings["last_run"] = datetime.now(timezone.utc).isoformat()
-        settings["last_archived_count"] = len(archived)
-        storage.save_cleanup_settings(settings)
-
-
-class HistoryWriter:
-    """Persists completed encounters on a dedicated background thread, so
-    the log-reader loop never blocks on disk I/O.
-
-    storage.append_history_entry() does a full read-modify-write of
-    history.json on every call -- on a real 200-pull, 15.8MB history file
-    that's ~330ms. Calling it directly from background_reader() means every
-    pull completion stalls live event processing for that long, right when
-    the next pull is often already starting. This queues the write instead:
-    submit() only appends to an in-memory queue (effectively instant), and
-    a single worker thread drains it and calls the real (still synchronous)
-    append_history_entry() one at a time -- one writer, so concurrent
-    submissions can't race each other into a corrupted file.
-
-    Deliberately NOT used for storage.append_history_entry() callers outside
-    the live reader (e.g. the Import Logs HTTP endpoints) -- those already
-    return their HTTP response only once the write actually lands, and
-    making that async would let the response claim success before the data
-    is durably on disk. This class exists for the one caller where blocking
-    is a real, measured problem: the live reader thread."""
-
-    def __init__(self, status: "StatusHolder"):
-        self._queue: "queue.Queue" = queue.Queue()
-        self._status = status
-        threading.Thread(target=self._run, daemon=True).start()
-
-    def submit(self, encounter) -> None:
-        self._queue.put(encounter)
-
-    def _run(self):
-        while True:
-            encounter = self._queue.get()
-            try:
-                storage.append_history_entry(encounter)
-            except OSError as exc:
-                # Visible, not silent -- same convention background_reader
-                # uses for its own errors. A dropped write shouldn't crash
-                # the app, but it also shouldn't vanish with no trace.
-                self._status.text = f"Failed to save a completed pull: {exc}"
 
 
 def background_reader(
@@ -352,8 +219,8 @@ def main():
     history_writer = HistoryWriter(status)
     update_holder = UpdateHolder()
     character_settings = CharacterSettingsHolder()
-    threading.Thread(target=_check_for_update_once, args=(update_holder,), daemon=True).start()
-    threading.Thread(target=_archive_old_logs_once, args=(log_dir,), daemon=True).start()
+    threading.Thread(target=check_for_update_once, args=(update_holder,), daemon=True).start()
+    threading.Thread(target=archive_old_logs_once, args=(log_dir,), daemon=True).start()
 
     # Custom (Timers-tab) rules and completed pulls both need to survive a
     # restart. This used to happen in gui.py's MeterWindow.__init__; now
