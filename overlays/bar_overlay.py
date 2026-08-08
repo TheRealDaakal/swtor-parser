@@ -29,8 +29,6 @@ import os
 import tkinter as tk
 import tkinter.font as tkfont
 
-from .backdrop import try_enable_acrylic
-
 # Any colour that will never be drawn deliberately. Pure magenta is the
 # convention; a near-black is used here so the fallback (opaque) case still
 # looks like a dark panel rather than a magenta slab.
@@ -279,18 +277,14 @@ class BarOverlay:
             self.transparent = False
             self.win.attributes("-alpha", 0.88)
 
-        # Real Windows acrylic blur behind the panel, on top of the existing
-        # colour-key transparency -- best-effort, see backdrop.py's own
-        # docstring for why every failure mode here just leaves the flat
-        # panel instead of doing anything visible.
+        # Windows acrylic blur was tried here (backdrop.py) and pulled back
+        # out: confirmed live, DwmExtendFrameIntoClientArea breaks this
+        # window's colour-key transparency outright -- the areas that
+        # should be punched-through invisible render as solid opaque white
+        # instead, which is worse than the flat panel this was meant to
+        # improve on. backdrop.py is left in place in case a way to
+        # reconcile the two is found later, but nothing calls it right now.
         self.acrylic = False
-        if self.transparent:
-            try:
-                self.win.update_idletasks()
-                hwnd = ctypes.windll.user32.GetAncestor(self.win.winfo_id(), _GA_ROOT)
-                self.acrylic = try_enable_acrylic(hwnd)
-            except Exception:
-                pass
 
         # An explicit height (restoring a previously resized frame) wins;
         # otherwise derive it from `rows` the way this always worked.
