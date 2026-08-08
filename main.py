@@ -14,12 +14,14 @@ Optional:  python main.py "C:\\path\\to\\CombatLogs"
 import os
 import sys
 import threading
+import time
 from pathlib import Path
 
 import log_watcher
 import storage
 from version import __version__
 from log_parser import parse_line
+from log_merger import LogClock
 from stats import StatsTracker
 from timers import TimerEngine
 from boss_definitions import load_definitions
@@ -64,6 +66,9 @@ def background_reader(
     character_settings: "CharacterSettingsHolder",
 ):
     status.text = f"Watching: {log_dir}"
+    log_clock = LogClock()
+    last_wall_time = None   # our corrected estimate of the previous event's real time
+    last_log_time = None    # that previous event's LogClock reading, same file only
     try:
         for path, line_number, raw_line in log_watcher.watch_folder(log_dir):
             if path != tracker.current_log_path:
@@ -76,10 +81,40 @@ def background_reader(
                     seeded_name = log_watcher.find_local_player_name(path)
                     if seeded_name is not None:
                         boss_state.local_player_name = seeded_name
+                # A new file's timestamps aren't comparable to the old
+                # file's (different session, possibly a different day), so
+                # don't try to bridge them -- the first event of a new file
+                # just falls back to a plain wall-clock reading below, same
+                # as it always has.
+                log_clock = LogClock()
+                last_log_time = None
             event = parse_line(raw_line, line_number=line_number)
             if event is not None:
                 character_settings.sync_for_character(boss_state.local_player_name)
-                completed = tracker.feed(event)
+
+                # SWTOR can buffer its combat-log writes and flush a burst
+                # of lines late -- confirmed against a real raid log where a
+                # post-wipe stretch of buff/movement events all landed in
+                # one delayed write. A raw time.time() gap across that stall
+                # reads as several seconds (sometimes far more) of quiet and
+                # closes the current pull early, even though the lines'
+                # own in-log timestamps are seconds apart. Capping the
+                # measured gap at what the log itself shows (never widening
+                # it -- only narrowing) keeps pull-boundary detection honest
+                # without giving up wall-clock's other job of eventually
+                # closing a pull when nothing is being written at all.
+                wall_now = time.time()
+                log_now = log_clock(event.timestamp or "")
+                if last_wall_time is not None and last_log_time is not None:
+                    wall_gap = wall_now - last_wall_time
+                    log_gap = log_now - last_log_time
+                    at_time = last_wall_time + min(wall_gap, log_gap)
+                else:
+                    at_time = wall_now
+                last_wall_time = at_time
+                last_log_time = log_now
+
+                completed = tracker.feed(event, at_time=at_time, real_time=wall_now)
                 if completed is not None:
                     # Reset BEFORE feeding, not after: the event that rolls a
                     # pull over is the FIRST event of the NEXT one (usually

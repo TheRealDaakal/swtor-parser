@@ -64,12 +64,21 @@ class StatsTracker:
         with self._lock:
             self._append_history_unlocked(encounter)
 
-    def feed(self, event: CombatEvent) -> Optional[Encounter]:
+    def feed(self, event: CombatEvent, at_time: Optional[float] = None,
+              real_time: Optional[float] = None) -> Optional[Encounter]:
         """Feeds one event in. Returns the just-completed Encounter if this
         call caused a rollover (useful for persisting it immediately),
-        otherwise None."""
+        otherwise None.
+
+        at_time/real_time let the live reader hand in a corrected wall-clock
+        estimate instead of a raw time.time() read -- see background_reader()
+        in main.py for why: SWTOR can buffer combat-log writes and flush a
+        burst late, and a raw wall-clock gap across that stall reads as a
+        long quiet period even though the buffered lines' own timestamps are
+        close together. Defaults to time.time() so every other caller
+        (tests, anything replaying without its own clock) is unaffected."""
         with self._lock:
-            now = time.time()
+            now = at_time if at_time is not None else time.time()
             completed = None
 
             if event.is_area_entered and event.line_number is not None:
@@ -112,7 +121,7 @@ class StatsTracker:
             if self.current.area_entered_line is None:
                 self.current.area_entered_line = self.last_area_entered_line
 
-            self.current.apply(event)
+            self.current.apply(event, at_time=at_time, real_time=real_time)
             return completed
 
     def flush_current(self) -> Optional[Encounter]:
