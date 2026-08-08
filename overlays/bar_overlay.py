@@ -29,6 +29,8 @@ import os
 import tkinter as tk
 import tkinter.font as tkfont
 
+from .backdrop import try_enable_acrylic
+
 # Any colour that will never be drawn deliberately. Pure magenta is the
 # convention; a near-black is used here so the fallback (opaque) case still
 # looks like a dark panel rather than a magenta slab.
@@ -97,7 +99,11 @@ FONT_SMALL = ("Segoe UI", 9)
 # the panel reads as translucent while the region around it stays fully
 # absent. Tk can't do per-pixel alpha, and this combination is the only way
 # to get "dim slab, no window edges" -- which is what BARAS actually does.
-PANEL_ALPHA = 0.85
+# Pushed well down from an earlier 0.85: at that level the panel was still
+# closer to a flat dark card than a see-through tint. StarParse's own
+# overlay reads much closer to this -- the game stays crisp and legible
+# right through the panel, not just visible at the edges.
+PANEL_ALPHA = 0.55
 
 KIND_COLOURS = {"dps": DAMAGE_BAR, "hps": HEAL_BAR, "taken": TAKEN_BAR,
                 "absorbed": ABSORBED_BAR, "alerts": "#ff7a68", "threat": THREAT_BAR,
@@ -165,6 +171,78 @@ def compact(v):
     return f"{v:,.0f}"
 
 
+# ---- gradient/glow meter fills -----------------------------------------
+# Tk canvas has no native gradient fill and no per-shape alpha (only the
+# whole-window PANEL_ALPHA), so both a soft glow and a left-to-right
+# gradient are faked with plain solid-colour strokes/rects stacked next to
+# each other -- stdlib only, no new dependency.
+
+_METER_SEGMENTS = 10  # smooth enough at overlay scale, cheap enough for a
+                       # 500ms refresh across every row of every panel
+
+
+def _hex_to_rgb(colour):
+    colour = colour.lstrip("#")
+    return tuple(int(colour[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _rgb_to_hex(rgb):
+    return "#%02x%02x%02x" % tuple(max(0, min(255, round(c))) for c in rgb)
+
+
+def _blend(colour_a, colour_b, t):
+    a, b = _hex_to_rgb(colour_a), _hex_to_rgb(colour_b)
+    return _rgb_to_hex(a[i] + (b[i] - a[i]) * t for i in range(3))
+
+
+def _lighten(colour, amount):
+    return _blend(colour, "#ffffff", amount)
+
+
+def draw_meter_line(canvas, x1, x2, y, colour, frac):
+    """Thin rounded-cap track meter (DPS/HPS/HoT/Timer-style rows): empty
+    track, a soft glow under the filled portion, then the fill itself as a
+    gradient from `colour` toward a lighter tip."""
+    canvas.create_line(x1, y, x2, y, fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
+    if frac <= 0:
+        return
+    fill_x2 = x1 + (x2 - x1) * frac
+    glow_colour = _blend(colour, PANEL, 0.35)
+    canvas.create_line(x1, y, fill_x2, y, fill=glow_colour, width=TRACK_H + 4, capstyle=tk.ROUND)
+    highlight = _lighten(colour, 0.45)
+    span = fill_x2 - x1
+    step = span / _METER_SEGMENTS
+    for i in range(_METER_SEGMENTS):
+        t = i / (_METER_SEGMENTS - 1) if _METER_SEGMENTS > 1 else 0
+        sx1 = x1 + i * step
+        sx2 = fill_x2 if i == _METER_SEGMENTS - 1 else x1 + (i + 1) * step
+        canvas.create_line(sx1, y, sx2, y, fill=_blend(colour, highlight, t),
+                           width=TRACK_H, capstyle=tk.PROJECTING)
+    canvas.create_oval(fill_x2 - TRACK_H / 2, y - TRACK_H / 2,
+                       fill_x2 + TRACK_H / 2, y + TRACK_H / 2,
+                       fill=highlight, outline="")
+
+
+def draw_meter_bar(canvas, x1, y1, x2, y2, colour, frac):
+    """Thick filled-rectangle meter (Boss Health-style): empty track, a
+    gradient fill, and a lighter glossy strip across the top third for a
+    glass-like sheen -- same faked-gradient technique as draw_meter_line."""
+    canvas.create_rectangle(x1, y1, x2, y2, fill=PANEL_EDGE, outline="")
+    if frac <= 0:
+        return
+    fill_x2 = x1 + (x2 - x1) * frac
+    highlight = _lighten(colour, 0.35)
+    span = fill_x2 - x1
+    step = span / _METER_SEGMENTS
+    for i in range(_METER_SEGMENTS):
+        t = i / (_METER_SEGMENTS - 1) if _METER_SEGMENTS > 1 else 0
+        sx1 = x1 + i * step
+        sx2 = fill_x2 if i == _METER_SEGMENTS - 1 else x1 + (i + 1) * step
+        canvas.create_rectangle(sx1, y1, sx2, y2, fill=_blend(colour, highlight, t), outline="")
+    sheen_bottom = y1 + max(1, (y2 - y1) * 0.3)
+    canvas.create_rectangle(x1, y1, fill_x2, sheen_bottom, fill=_lighten(colour, 0.55), outline="")
+
+
 class BarOverlay:
     """One floating metric list (DPS, HPS, ...). Drag anywhere to move, drag
     the bottom-right corner grip to resize."""
@@ -200,6 +278,19 @@ class BarOverlay:
             # not Windows -- keep an opaque dark panel rather than failing
             self.transparent = False
             self.win.attributes("-alpha", 0.88)
+
+        # Real Windows acrylic blur behind the panel, on top of the existing
+        # colour-key transparency -- best-effort, see backdrop.py's own
+        # docstring for why every failure mode here just leaves the flat
+        # panel instead of doing anything visible.
+        self.acrylic = False
+        if self.transparent:
+            try:
+                self.win.update_idletasks()
+                hwnd = ctypes.windll.user32.GetAncestor(self.win.winfo_id(), _GA_ROOT)
+                self.acrylic = try_enable_acrylic(hwnd)
+            except Exception:
+                pass
 
         # An explicit height (restoring a previously resized frame) wins;
         # otherwise derive it from `rows` the way this always worked.
@@ -362,8 +453,8 @@ class BarOverlay:
         return self.canvas.create_polygon(points, smooth=True, **kwargs)
 
     def content_x(self):
-        """Left edge for text/tracks -- clears the accent stripe."""
-        return PAD_X + STRIPE_W + 6
+        """Left edge for text/tracks."""
+        return PAD_X
 
     def _truncate_to_width(self, text, max_width, font=FONT_SMALL):
         """Shrinks text (appending an ellipsis as needed) until it actually
@@ -390,19 +481,17 @@ class BarOverlay:
         return (text + "...") if text else ""
 
     def _panel(self, rows_drawn, has_total):
-        """Rounded card sized to the content actually drawn, with a
-        coloured left accent stripe (rounded-cap line, not a hard-edged
-        block) so each overlay reads at a glance even before the title is
-        legible. Sizing to max_rows instead would leave a dead translucent
-        block hanging below a short raid, which reads as a broken window."""
+        """Flat, plainly see-through panel sized to the content actually
+        drawn -- no rounded corners, no accent stripe, no border while
+        unlocked. StarParse-style: floating numbers over a dark tint the
+        game stays crisp behind, not a card sitting on top of it. Sizing to
+        max_rows instead would leave a dead translucent block hanging below
+        a short raid, which reads as a broken window."""
         h = PAD_TOP + HEADER_H + rows_drawn * ROW_H + (ROW_H if has_total else 0) + PAD_BOTTOM
-        edge = LOCK_EDGE if self.locked else PANEL_EDGE
-        width = 2 if self.locked else 1
-        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
-                           fill=PANEL, outline=edge, width=width)
-        stripe_colour = KIND_COLOURS.get(self.kind, DAMAGE_BAR)
-        self.canvas.create_line(6, 12, 6, h - 12, fill=stripe_colour,
-                                width=STRIPE_W, capstyle=tk.ROUND)
+        if self.locked:
+            self.canvas.create_rectangle(0, 0, self.width, h, fill=PANEL, outline=LOCK_EDGE, width=2)
+        else:
+            self.canvas.create_rectangle(0, 0, self.width, h, fill=PANEL, outline="")
         self.canvas.create_line(self.content_x(), PAD_TOP + HEADER_H - 6,
                                 self.width - PAD_X, PAD_TOP + HEADER_H - 6, fill=DIVIDER)
         return h
@@ -433,7 +522,6 @@ class BarOverlay:
 
         y = PAD_TOP + HEADER_H
         top = max((r[1] for r in rows), default=0) or 1
-        track_w = self.width - PAD_X - cx
         for row in rows:
             name, value = row[0], row[1]
             crit_pct = row[2] if len(row) > 2 else None
@@ -444,15 +532,11 @@ class BarOverlay:
                            fill=TEXT_DIM, font=FONT_SMALL)
             self._text(self.width - PAD_X, y + 12, compact(value),
                        fill=colour, anchor="e", font=FONT_VALUE)
-            # Thin rounded-cap meter, not a full-height block -- shows the
-            # same relative-magnitude comparison without the flat-rectangle
-            # "old utility app" look.
-            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
-                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
+            # Thin rounded-cap gradient meter, not a full-height block --
+            # shows the same relative-magnitude comparison without the
+            # flat-rectangle "old utility app" look.
             frac = max(0.0, min(1.0, value / top))
-            if frac > 0:
-                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
-                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
+            draw_meter_line(c, cx, self.width - PAD_X, y + 26, colour, frac)
             y += ROW_H
 
         if total is not None:

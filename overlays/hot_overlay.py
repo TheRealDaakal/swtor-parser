@@ -1,4 +1,4 @@
-from .bar_overlay import BarOverlay
+from .bar_overlay import BarOverlay, draw_meter_line
 """
 overlay.py
 
@@ -201,7 +201,6 @@ class HotOverlay(BarOverlay):
             self._text(cx, y + 12, "all covered", fill=TEXT_DIM, font=FONT_SMALL)
             return
 
-        track_w = self.width - PAD_X - cx
         for r in rows:
             remaining, duration = r["remaining"], max(r["duration"], 0.001)
             if remaining <= self.URGENT:
@@ -214,10 +213,6 @@ class HotOverlay(BarOverlay):
             self._text(cx, y + 12, r["target"][:14], font=FONT)
             self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
                        fill=colour, anchor="e", font=FONT_VALUE)
-            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
-                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
             frac = max(0.0, min(1.0, remaining / duration))
-            if frac > 0:
-                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
-                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
+            draw_meter_line(c, cx, self.width - PAD_X, y + 26, colour, frac)
             y += ROW_H

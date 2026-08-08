@@ -1,4 +1,4 @@
-from .bar_overlay import BarOverlay
+from .bar_overlay import BarOverlay, draw_meter_bar
 """
 overlay.py
 
@@ -191,12 +191,10 @@ class BossHealthOverlay(BarOverlay):
         c = self.canvas
         c.delete("all")
         h = self.height
-        edge = LOCK_EDGE if self.locked else PANEL_EDGE
-        border = 2 if self.locked else 1
-        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
-                           fill=PANEL, outline=edge, width=border)
-        self.canvas.create_line(6, 12, 6, h - 12, fill=BOSS_DAMAGE_BAR,
-                                width=STRIPE_W, capstyle=tk.ROUND)
+        if self.locked:
+            c.create_rectangle(0, 0, self.width, h, fill=PANEL, outline=LOCK_EDGE, width=2)
+        else:
+            c.create_rectangle(0, 0, self.width, h, fill=PANEL, outline="")
         cx = self.content_x()
 
         head = (boss_name or "Boss Health")[:26]
@@ -224,12 +222,8 @@ class BossHealthOverlay(BarOverlay):
                 colour = "#d9a53a"
             else:
                 colour = "#3aa876"
-            c.create_rectangle(cx, bar_y, bar_right, bar_y + self.BAR_H,
-                               fill=PANEL_EDGE, outline="")
             frac = max(0.0, min(1.0, hp_percent / 100.0))
-            if frac > 0:
-                c.create_rectangle(cx, bar_y, cx + (bar_right - cx) * frac, bar_y + self.BAR_H,
-                                   fill=colour, outline="")
+            draw_meter_bar(c, cx, bar_y, bar_right, bar_y + self.BAR_H, colour, frac)
             # Phase-transition tick marks -- see
             # BossDefinition.hp_phase_markers(). Dark outline behind a thin
             # white line so it stays visible against every fill colour

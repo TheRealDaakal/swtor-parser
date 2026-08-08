@@ -251,12 +251,10 @@ class HotGridOverlay(HotOverlay):
         content_h = grid_rows * self.CELL_H + (grid_rows - 1) * self.CELL_GAP
         h = PAD_TOP + HEADER_H + content_h + PAD_BOTTOM
 
-        edge = LOCK_EDGE if self.locked else PANEL_EDGE
-        border = 2 if self.locked else 1
-        self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
-                           fill=PANEL, outline=edge, width=border)
-        self.canvas.create_line(6, 12, 6, h - 12, fill=KIND_COLOURS.get("hots"),
-                                width=STRIPE_W, capstyle=tk.ROUND)
+        if self.locked:
+            self.canvas.create_rectangle(0, 0, self.width, h, fill=PANEL, outline=LOCK_EDGE, width=2)
+        else:
+            self.canvas.create_rectangle(0, 0, self.width, h, fill=PANEL, outline="")
         self.canvas.create_line(cx, PAD_TOP + HEADER_H - 6, self.width - PAD_X,
                                 PAD_TOP + HEADER_H - 6, fill=DIVIDER)
 

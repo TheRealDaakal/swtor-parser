@@ -243,14 +243,13 @@ class NotesOverlay(BarOverlay):
         c = self.canvas
         c.delete("chrome")
         h = self.height
-        edge = LOCK_EDGE if self.locked else PANEL_EDGE
-        border = 2 if self.locked else 1
-        panel_id = self._rounded_rect(0, 0, self.width, h, CORNER_RADIUS,
-                                      fill=PANEL, outline=edge, width=border,
-                                      tags=("chrome",))
+        if self.locked:
+            panel_id = c.create_rectangle(0, 0, self.width, h, fill=PANEL,
+                                          outline=LOCK_EDGE, width=2, tags=("chrome",))
+        else:
+            panel_id = c.create_rectangle(0, 0, self.width, h, fill=PANEL,
+                                          outline="", tags=("chrome",))
         c.tag_lower(panel_id)  # keep the Text widget visible on top of it
-        c.create_line(6, 12, 6, h - 12, fill=NOTES_BAR, width=STRIPE_W,
-                      capstyle=tk.ROUND, tags=("chrome",))
         cx = self.content_x()
         head = "\U0001F512 Notes" if self.locked else "Notes"
         self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE, tags=("chrome",))

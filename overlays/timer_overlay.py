@@ -1,4 +1,4 @@
-from .bar_overlay import BarOverlay
+from .bar_overlay import BarOverlay, draw_meter_line
 """
 overlay.py
 
@@ -196,7 +196,6 @@ class TimerOverlay(BarOverlay):
         self._text(cx, PAD_TOP + 12, head, fill=TEXT, font=FONT_TITLE)
 
         y = PAD_TOP + HEADER_H
-        track_w = self.width - PAD_X - cx
         palette = {"boss": "#3170b8", "cooldown": "#d9a53a",
                    "dot": "#3aa876", "hot": "#3aa876"}
         for row in timers:
@@ -232,10 +231,6 @@ class TimerOverlay(BarOverlay):
                        font=FONT)
             self._text(self.width - PAD_X, y + 12, f"{remaining:.1f}s",
                        fill=colour, anchor="e", font=FONT_VALUE)
-            c.create_line(cx, y + 26, self.width - PAD_X, y + 26,
-                          fill=PANEL_EDGE, width=TRACK_H, capstyle=tk.ROUND)
             frac = max(0.0, min(1.0, remaining / total_s)) if total_s else 0
-            if frac > 0:
-                c.create_line(cx, y + 26, cx + track_w * frac, y + 26,
-                              fill=colour, width=TRACK_H, capstyle=tk.ROUND)
+            draw_meter_line(c, cx, self.width - PAD_X, y + 26, colour, frac)
             y += ROW_H
