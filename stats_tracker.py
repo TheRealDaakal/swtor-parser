@@ -70,13 +70,11 @@ class StatsTracker:
         call caused a rollover (useful for persisting it immediately),
         otherwise None.
 
-        at_time/real_time let the live reader hand in a corrected wall-clock
-        estimate instead of a raw time.time() read -- see background_reader()
-        in main.py for why: SWTOR can buffer combat-log writes and flush a
-        burst late, and a raw wall-clock gap across that stall reads as a
-        long quiet period even though the buffered lines' own timestamps are
-        close together. Defaults to time.time() so every other caller
-        (tests, anything replaying without its own clock) is unaffected."""
+        at_time/real_time let the live reader hand in the log's own embedded
+        timestamp instead of a raw time.time() read -- see background_reader()
+        in main.py for why boundary/duration math needs that, not wall-clock.
+        Defaults to time.time() so every other caller (tests, anything
+        replaying without its own clock) is unaffected."""
         with self._lock:
             now = at_time if at_time is not None else time.time()
             completed = None

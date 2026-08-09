@@ -15,6 +15,7 @@ import os
 import sys
 import threading
 import time
+from datetime import datetime
 from pathlib import Path
 
 import log_watcher
@@ -22,6 +23,7 @@ import storage
 from version import __version__
 from log_parser import parse_line
 from log_merger import LogClock
+from analysis.corpus import session_datetime
 from stats import StatsTracker
 from timers import TimerEngine
 from boss_definitions import load_definitions
@@ -67,8 +69,7 @@ def background_reader(
 ):
     status.text = f"Watching: {log_dir}"
     log_clock = LogClock()
-    last_wall_time = None   # our corrected estimate of the previous event's real time
-    last_log_time = None    # that previous event's LogClock reading, same file only
+    midnight_epoch = None  # real Unix epoch of this file's own midnight, for real_time below
     try:
         for path, line_number, raw_line in log_watcher.watch_folder(log_dir):
             if path != tracker.current_log_path:
@@ -82,39 +83,38 @@ def background_reader(
                     if seeded_name is not None:
                         boss_state.local_player_name = seeded_name
                 # A new file's timestamps aren't comparable to the old
-                # file's (different session, possibly a different day), so
-                # don't try to bridge them -- the first event of a new file
-                # just falls back to a plain wall-clock reading below, same
-                # as it always has.
+                # file's (different session, possibly a different day) --
+                # fresh clock per file, exactly like the offline replay path
+                # (analysis/corpus.py's replay_pulls) uses.
                 log_clock = LogClock()
-                last_log_time = None
+                date_str, _time_str = session_datetime(os.path.basename(path))
+                midnight_epoch = (
+                    time.mktime(datetime.strptime(date_str, "%Y-%m-%d").timetuple())
+                    if date_str else None
+                )
             event = parse_line(raw_line, line_number=line_number)
             if event is not None:
                 character_settings.sync_for_character(boss_state.local_player_name)
 
-                # SWTOR can buffer its combat-log writes and flush a burst
-                # of lines late -- confirmed against a real raid log where a
-                # post-wipe stretch of buff/movement events all landed in
-                # one delayed write. A raw time.time() gap across that stall
-                # reads as several seconds (sometimes far more) of quiet and
-                # closes the current pull early, even though the lines'
-                # own in-log timestamps are seconds apart. Capping the
-                # measured gap at what the log itself shows (never widening
-                # it -- only narrowing) keeps pull-boundary detection honest
-                # without giving up wall-clock's other job of eventually
-                # closing a pull when nothing is being written at all.
-                wall_now = time.time()
-                log_now = log_clock(event.timestamp or "")
-                if last_wall_time is not None and last_log_time is not None:
-                    wall_gap = wall_now - last_wall_time
-                    log_gap = log_now - last_log_time
-                    at_time = last_wall_time + min(wall_gap, log_gap)
-                else:
-                    at_time = wall_now
-                last_wall_time = at_time
-                last_log_time = log_now
+                # Pull-boundary/duration math runs on the log's own embedded
+                # timestamps, not wall-clock -- the same clock the offline
+                # replay path uses. Wall-clock was tried here and pulled
+                # back out: log_watcher.watch_folder() drains any lines
+                # already sitting in the file in a tight loop (it only
+                # sleeps once it's caught up), so whenever there's a
+                # backlog -- which is routine, not rare -- the real
+                # wall-clock gap between consecutive feed() calls is near
+                # zero even though the lines' own timestamps span several
+                # real seconds. A wall-clock-based (or wall-clock-hybrid)
+                # "now" reads that as almost no time passing, which starves
+                # the 30s/8s/4s rollover thresholds and can leave a pull
+                # never closing out. Log-timestamps don't have that problem
+                # by construction: they're what really happened in-game,
+                # regardless of how fast this loop happens to be reading.
+                at_time = log_clock(event.timestamp or "")
+                real_time = midnight_epoch + at_time if midnight_epoch is not None else None
 
-                completed = tracker.feed(event, at_time=at_time, real_time=wall_now)
+                completed = tracker.feed(event, at_time=at_time, real_time=real_time)
                 if completed is not None:
                     # Reset BEFORE feeding, not after: the event that rolls a
                     # pull over is the FIRST event of the NEXT one (usually
