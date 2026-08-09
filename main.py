@@ -130,6 +130,7 @@ def background_reader(
                     boss_state.reset()
                     hot_tracker.reset()
                     aggro_tracker.reset()
+                    timer_engine.clear_boss_timers()
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
                 had_phase = boss_state.active_phase_id is not None
                 change = boss_state.feed(event, timer_engine=timer_engine)

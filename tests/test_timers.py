@@ -473,3 +473,26 @@ def test_boss_id_survives_a_repeat_rearm(monkeypatch, sim_clock):
     sim_clock(6.0)
     engine.tick()
     assert seen == ["soa", "soa"], "the re-armed announce must still carry the boss"
+
+
+def test_clear_boss_timers_drops_only_encounter_scoped_entries(sim_clock):
+    """Reported live: a mechanic countdown still ticking when the boss died
+    kept running through the between-pulls downtime and into the next
+    fight. main.py calls this on every pull rollover -- it must drop
+    anything tied to a boss encounter (boss_id set) while leaving personal/
+    custom timers (boss_id None: defensive cooldowns, manual Timers-tab
+    entries) alone, since those aren't tied to any one encounter."""
+    engine = TimerEngine()
+    sim_clock(0.0)
+    engine.start_timer("Enrage", 30.0, category="boss", boss_id="styrak_k")
+    engine.start_timer("Corrosive Dart", 15.0, category="dot", boss_id="styrak_k",
+                       dedupe_key="Boss")
+    engine.start_timer("Adrenaline Rush", 90.0, category="cooldown", boss_id=None,
+                       dedupe_key="@Dps#1")
+    engine.start_timer("Raid reminder", 60.0, category="custom", boss_id=None)
+
+    engine.clear_boss_timers()
+
+    remaining_labels = {t.label for t in engine.active}
+    assert remaining_labels == {"Adrenaline Rush", "Raid reminder"}, \
+        "boss-scoped timers must be dropped; personal/custom ones must survive"

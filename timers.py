@@ -298,6 +298,21 @@ class TimerEngine:
         with self._lock:
             self.active = [t for t in self.active if t.definition_id != definition_id]
 
+    def clear_boss_timers(self) -> None:
+        """Drops every active timer tied to a specific boss encounter
+        (boss_id is not None) -- called on pull rollover, same as
+        boss_state.reset()/hot_tracker.reset()/aggro_tracker.reset().
+        Without this, a mechanic countdown still ticking when the boss dies
+        (or the group wipes) just keeps running: through the between-pulls
+        downtime, and straight into the next pull if it starts before the
+        old timer would have naturally expired -- reported live as "timers
+        keep running after boss dead and before we even start fight".
+        Personal/custom timers (boss_id is None -- defensive cooldowns,
+        manual Timers-tab entries) are untouched; they aren't tied to any
+        one encounter and shouldn't reset just because a pull ended."""
+        with self._lock:
+            self.active = [t for t in self.active if t.boss_id is None]
+
     def pop_recently_expired_ids(self) -> List[str]:
         """Returns the definition_ids of boss timers that FINALLY expired
         (repeats exhausted, if any) since the last call, and clears the
