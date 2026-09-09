@@ -483,3 +483,42 @@ class TestRaidWasDefeated:
 
     def test_no_players_at_all_is_not_a_defeat(self):
         assert Encounter().raid_was_defeated() is False
+
+
+class TestDamageTakenByType:
+    def test_incoming_damage_is_split_by_type(self, sim_clock):
+        enc = Encounter()
+        sim_clock(0.0)
+        enc.apply(parse_line(log_line("00:00:00.000", "Boss", target="@Tank#1",
+                                       ability="Smash {1}", effect_name="Damage {2}",
+                                       amount="1000 kinetic {1}"), line_number=1))
+        enc.apply(parse_line(log_line("00:00:01.000", "Boss", target="@Tank#1",
+                                       ability="Blast {1}", effect_name="Damage {2}",
+                                       amount="500 elemental {1}"), line_number=2))
+        enc.apply(parse_line(log_line("00:00:02.000", "Boss", target="@Tank#1",
+                                       ability="Smash {1}", effect_name="Damage {2}",
+                                       amount="200 kinetic {1}"), line_number=3))
+        tank = enc.players["Tank"]
+        assert tank.damage_taken == 1700.0
+        assert tank.damage_taken_by_type == {"kinetic": 1200.0, "elemental": 500.0}
+
+    def test_an_avoided_attack_does_not_add_a_none_key(self, sim_clock):
+        enc = Encounter()
+        sim_clock(0.0)
+        enc.apply(parse_line(log_line("00:00:00.000", "Boss", target="@Tank#1",
+                                       ability="Smash {1}", effect_name="Damage {2}",
+                                       amount="0 -dodge {1}"), line_number=1))
+        tank = enc.players["Tank"]
+        assert tank.damage_taken_by_type == {}
+
+    def test_round_trips_through_to_dict_and_from_dict(self):
+        p = PlayerStats(name="Tank")
+        p.damage_taken_by_type = {"kinetic": 1200.0, "elemental": 500.0}
+        restored = PlayerStats.from_dict(p.to_dict())
+        assert restored.damage_taken_by_type == {"kinetic": 1200.0, "elemental": 500.0}
+
+    def test_old_history_rows_without_the_field_default_to_empty(self):
+        # Rows saved before this field existed just won't have it -- must
+        # not KeyError on load.
+        p = PlayerStats.from_dict({"name": "Tank", "damage_taken": 5000.0})
+        assert p.damage_taken_by_type == {}

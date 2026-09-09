@@ -127,6 +127,12 @@ class PlayerStats:
     # cast power (unaffected by this); effective_healing_done() subtracts it.
     healing_overheal: float = 0.0
     damage_taken: float = 0.0
+    # damage_taken split by SWTOR's own type word (kinetic/energy vs
+    # elemental/internal) -- see CombatEvent.damage_type. Kinetic/energy is
+    # what armor mitigates; elemental/internal bypasses it, so a tank
+    # reading "most of what's hitting me is elemental" knows stacking more
+    # armor won't help, in a way the single damage_taken total can't show.
+    damage_taken_by_type: Dict[str, float] = field(default_factory=dict)
     # Damage prevented by Shield Chance mitigation -- see CombatEvent.shield_
     # absorbed. damage_taken above is already post-mitigation (what actually
     # landed); this is the part that didn't, which no existing number showed
@@ -278,6 +284,7 @@ class PlayerStats:
             "healing_done": self.healing_done,
             "healing_overheal": self.healing_overheal,
             "damage_taken": self.damage_taken,
+            "damage_taken_by_type": self.damage_taken_by_type,
             "damage_absorbed": self.damage_absorbed,
             "threat": self.threat,
             "deaths": self.deaths,
@@ -309,6 +316,7 @@ class PlayerStats:
             healing_done=d.get("healing_done", 0.0),
             healing_overheal=d.get("healing_overheal", 0.0),
             damage_taken=d.get("damage_taken", 0.0),
+            damage_taken_by_type=dict(d.get("damage_taken_by_type", {})),
             damage_absorbed=d.get("damage_absorbed", 0.0),
             threat=d.get("threat", 0.0),
             deaths=d.get("deaths", 0),
@@ -487,7 +495,12 @@ class Encounter:
                     )
                 _append_bucketed(p.damage_events, now, event.amount)
             if event.target:
-                self._get(event.target).damage_taken += event.amount
+                taken = self._get(event.target)
+                taken.damage_taken += event.amount
+                if event.damage_type:
+                    taken.damage_taken_by_type[event.damage_type] = (
+                        taken.damage_taken_by_type.get(event.damage_type, 0.0) + event.amount
+                    )
 
         # Separate condition from the amount check above: a fully-shielded
         # hit can log a 0 post-mitigation amount with the entire hit

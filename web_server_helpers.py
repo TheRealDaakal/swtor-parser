@@ -269,6 +269,8 @@ def build_ability_breakdown(encounter, player_name, boss_state):
         "damage_by_ability": [{"ability": a, "amount": round(v)} for a, v in dmg_rows],
         "healing_by_ability": [{"ability": a, "amount": round(v)} for a, v in heal_rows],
         "damage_by_target": [{"target": t, "amount": round(v)} for t, v in target_dmg_rows],
+        "damage_taken_by_type": [{"type": t, "amount": round(v)} for t, v in
+                                  sorted(player.damage_taken_by_type.items(), key=lambda kv: -kv[1])],
         "cc_by_ability": [{"ability": a, "amount": n} for a, n in
                            sorted(player.cc_by_ability.items(), key=lambda kv: -kv[1])],
         "raid_buff_by_ability": [{"ability": a, "amount": n} for a, n in

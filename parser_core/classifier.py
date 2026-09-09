@@ -6,6 +6,7 @@ from .field_extractors import (
     _extract_amount,
     _extract_angle_value,
     _extract_avoidance,
+    _extract_damage_type,
     _extract_is_critical,
     _extract_overheal,
     _extract_shield_absorbed,
@@ -95,5 +96,6 @@ def _classify(event: CombatEvent, tail: str) -> None:
         # to scan the tail on every heal tick too.
         event.shield_absorbed = _extract_shield_absorbed(tail)
         event.avoidance = _extract_avoidance(tail)
+        event.damage_type = _extract_damage_type(tail)
     if event.is_threat_modified:
         event.threat_delta = _extract_angle_value(tail)

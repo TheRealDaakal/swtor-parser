@@ -5,6 +5,7 @@ from typing import Optional
 ABILITY_ID_RE = re.compile(r"\{(\d+)\}")
 ANGLE_VALUE_RE = re.compile(r"<(-?\d+(?:\.\d+)?)>")
 AVOIDANCE_RE = re.compile(r"-(miss|dodge|parry|deflect|resist)\b")
+DAMAGE_TYPE_RE = re.compile(r"^\s*-?\d+(?:\.\d+)?\*?\s+(?:~\d+(?:\.\d+)?\s+)?([a-zA-Z]+)\b")
 ENTITY_ID_RE = re.compile(r"\{[^{}]*\}")
 LEADING_NUMBER_RE = re.compile(r"^\s*(-?\d+(?:\.\d+)?)")
 OVERHEAL_RE = re.compile(r"~(\d+(?:\.\d+)?)")
@@ -114,6 +115,35 @@ def _extract_shield_absorbed(tail: str) -> float:
         return 0.0
     match = SHIELD_ABSORBED_RE.search(group)
     return float(match.group(1)) if match else 0.0
+
+def _extract_damage_type(tail: str) -> Optional[str]:
+    """Pulls SWTOR's own damage-type word out of the same value group
+    `_extract_amount` reads, e.g. '1234 energy {id}' -> "energy",
+    '9578* elemental {id}' -> "elemental". Confirmed against a real 268-file
+    corpus: the only four words that ever appear here are energy, kinetic,
+    elemental, and internal -- SWTOR's tech/ranged vs melee/force split,
+    each with its own armor/resistance mitigation.
+
+    Some hits carry an extra '~N' token between the amount and the type,
+    e.g. '44833 ~0 kinetic {id} (6411 absorbed {id})' -- found by checking
+    real coverage, not assumed: a first version of this regex silently
+    returned None for every line shaped like that (90% of one player's
+    incoming hits in a real pull), since it expected the type word right
+    after the amount. Skipped, not interpreted -- what '~N' means on a
+    damage line (as opposed to '~N' after a *heal's* amount, which is a
+    real, separately-tracked overheal marker -- see _extract_overheal) is
+    not something this log format documents, and nothing here needs to
+    know: the type word after it is what's being extracted.
+
+    None for an avoided attack ('0 -dodge {id}' has no type word, just the
+    avoidance marker right after the number -- the required word-boundary
+    after the number is what keeps this from matching '-dodge' as if it
+    were a type) and for heals, which never carry a type word at all."""
+    group = _first_balanced_paren(tail)
+    if group is None:
+        return None
+    match = DAMAGE_TYPE_RE.match(group)
+    return match.group(1) if match else None
 
 def _extract_overheal(tail: str) -> float:
     """Pulls a heal's wasted-overheal amount out of the same value group

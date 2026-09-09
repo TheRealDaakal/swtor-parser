@@ -48,7 +48,7 @@ from parser_core.classifier import _classify
 from parser_core.field_extractors import (
     _extract_id, _clean_name, _first_balanced_paren, _extract_angle_value,
     _extract_amount, _extract_is_critical, _extract_avoidance,
-    _extract_shield_absorbed, _extract_overheal,
+    _extract_shield_absorbed, _extract_overheal, _extract_damage_type,
 )
 
 BRACKET_RE = re.compile(r"\[([^\[\]]*)\]")
@@ -202,6 +202,12 @@ class CombatEvent:
     # only ever mentions inside a nested "(N absorbed {id})" group tagged
     # with a sibling "-shield" marker -- see _extract_amount_and_shield.
     shield_absorbed: float = 0.0
+    # SWTOR's own damage-type word for a landed hit: "kinetic"/"energy"
+    # (weapon/tech-ranged, mitigated by armor) or "elemental"/"internal"
+    # (force/tech, bypasses armor) -- confirmed against a real corpus, no
+    # other values appear. None for an avoided attack (no type word logged)
+    # and for heals (which never carry one).
+    damage_type: Optional[str] = None
     # Portion of a heal that couldn't land because the target was already
     # near/at full HP. SWTOR logs a heal's full cast power as the primary
     # amount and this as a nested "~N" suffix -- e.g. "(10926* ~7382)" is a

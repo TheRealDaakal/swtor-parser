@@ -274,6 +274,20 @@ class TestBuildAbilityBreakdown:
             {"ability": "Ability B", "amount": 2000},
         ]
 
+    def test_damage_taken_by_type_sorted_descending(self):
+        enc, p = self._encounter_with_player()
+        p.damage_taken_by_type = {"elemental": 500.0, "kinetic": 1200.0}
+        result = build_ability_breakdown(enc, "Dps", None)
+        assert result["damage_taken_by_type"] == [
+            {"type": "kinetic", "amount": 1200},
+            {"type": "elemental", "amount": 500},
+        ]
+
+    def test_damage_taken_by_type_empty_when_nothing_recorded(self):
+        enc, _p = self._encounter_with_player()
+        result = build_ability_breakdown(enc, "Dps", None)
+        assert result["damage_taken_by_type"] == []
+
     def test_boss_dps_matched_by_encounter_label_not_live_active_boss(self):
         """A historical pull's boss DPS must reflect ITS OWN boss (matched
         via encounter.label), never whatever boss happens to be active

@@ -575,7 +575,7 @@ async function openBreakdown(pullNum, name) {
 
   const abilityTable = (rows, keyLabel) => rows.length ? `
     <div class="tw"><table><thead><tr><th>${keyLabel}</th><th>Total</th></tr></thead><tbody>
-      ${rows.map(r => `<tr><td class="name">${esc(r.ability ?? r.target)}</td><td>${fmt(r.amount)}</td></tr>`).join('')}
+      ${rows.map(r => `<tr><td class="name">${esc(r.ability ?? r.target ?? r.type)}</td><td>${fmt(r.amount)}</td></tr>`).join('')}
     </tbody></table></div>` : '<p class="empty">none</p>';
 
   $('#modal-body').innerHTML = `
@@ -591,6 +591,10 @@ async function openBreakdown(pullNum, name) {
     ${abilityTable(b.healing_by_ability, 'Ability')}
     <h2 style="font-size:13px;margin-top:14px">Damage by target</h2>
     ${abilityTable(b.damage_by_target, 'Target')}
+    <h2 style="font-size:13px;margin-top:14px">Damage taken by type</h2>
+    <div class="sub" style="margin-bottom:8px">Kinetic/energy is what armor mitigates; elemental/internal
+      bypasses it -- a lot of elemental/internal here means more armor won't help.</div>
+    ${abilityTable(b.damage_taken_by_type, 'Type')}
     <h2 style="font-size:13px;margin-top:14px">Crowd control applied</h2>
     ${abilityTable(b.cc_by_ability, 'Ability')}
     <h2 style="font-size:13px;margin-top:14px">Raid buffs used</h2>
