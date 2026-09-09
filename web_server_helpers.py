@@ -75,7 +75,14 @@ def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status
         taunts.append({"hit": result.hit, "text": text, "ago": round(ago, 1)})
 
     return {
-        "boss": boss_state.status_text() if boss_state else None,
+        # None (not "No boss encounter active") when idle -- the frontend's
+        # own fallback ("Waiting for combat...", app.js) only kicks in for
+        # a falsy value. Without this, every idle poll sent the backend's
+        # more clinical placeholder string instead, which is truthy and so
+        # silently overrode the nicer one the UI already had ready. Matches
+        # gui.py's _refresh_bar_overlays, which has always gated on
+        # active_boss for the exact same reason on the floating overlays.
+        "boss": boss_state.status_text() if boss_state and boss_state.active_boss else None,
         "watching": status.text,
         "duration": round(duration, 1),
         "players": players,

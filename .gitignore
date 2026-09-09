@@ -5,6 +5,7 @@ __pycache__/
 venv/
 *.egg-info/
 .pytest_cache/
+.coverage
 
 # combat logs, corpus cache, and any exported/scratch artifacts a run might
 # drop in the project folder -- never intended to be committed, and could be

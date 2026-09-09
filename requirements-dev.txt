@@ -15,3 +15,7 @@
 # stops being read.
 pytest
 requests
+
+# For `coverage run -m pytest` -- not needed to run the suite itself,
+# only to measure what it does and doesn't reach.
+coverage
