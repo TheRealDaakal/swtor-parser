@@ -10,6 +10,8 @@ Isolated from the real %APPDATA%\\swtor-parser the same way other tests
 avoid depending on real machine state: APPDATA is monkeypatched to a
 pytest tmp_path before any storage.py call.
 """
+import pytest
+
 import storage
 from conftest import log_line
 from main import CharacterSettingsHolder, background_reader, PHASE_ALERT_SECONDS
@@ -195,3 +197,106 @@ def test_a_real_phase_transition_starts_an_is_alert_phase_timer(monkeypatch, tmp
         assert t.is_alert is True
         assert t.voice_alert is True
         assert t.duration_seconds == PHASE_ALERT_SECONDS
+
+
+def test_pull_duration_and_boss_timers_survive_a_real_reader_pass(monkeypatch, tmp_path, sim_clock):
+    """Regression test for two real, live-reported bugs, both fixed in
+    background_reader() itself rather than in isolation:
+
+    1. Pull duration/boundary math must come from the log's own embedded
+       timestamps, not wall-clock -- see the "buffered log writes" fix.
+       This test's own synthetic line-feed is the adversarial case that
+       exposed the bug: log_watcher.watch_folder() (faked here, just like
+       the phase-transition test above) yields every line back-to-back in
+       a tight loop with no real delay between them, exactly like draining
+       a backlog after a poll cycle catches up. If duration math ever
+       reads wall-clock again, this test's pull would compute a near-zero
+       duration (the whole synthetic feed runs in a fraction of a real
+       second) instead of the ~6s the log lines actually span.
+
+    2. A boss-scoped timer still active when a pull rolls over must be
+       cleared (TimerEngine.clear_boss_timers()), not left running into
+       the next pull -- reported live as "timers keep running after boss
+       dead and before we even start fight".
+    """
+    import main
+    import log_watcher
+    from stats import StatsTracker
+    from timers import TimerEngine
+    from boss_definitions import _definition_from_dict
+    from boss_intelligence import BossEncounterState
+    from dots_hots import HotTracker
+    from taunt_tracker import TauntTracker
+    from aggro_tracker import AggroTracker
+    from main import StatusHolder, CharacterSettingsHolder
+
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+
+    definition = _definition_from_dict({
+        "id": "test_boss", "name": "Test Boss", "boss_names": ["Test Boss"],
+        "phases": [{"id": "p1", "name": "Phase 1"}],
+        # Deliberately long -- must still be "active" (not naturally
+        # expired) when pull 2 starts, so its absence afterward can only be
+        # explained by clear_boss_timers() actually firing on rollover.
+        "timers": [{
+            "id": "enrage", "label": "Enrage", "duration_seconds": 120.0,
+            "trigger": {"type": "combat_start"},
+        }],
+    })
+
+    tracker = StatsTracker()
+    timer_engine = TimerEngine()
+    boss_state = BossEncounterState({"test_boss": definition})
+    hot_tracker = HotTracker()
+    taunt_tracker = TauntTracker()
+    aggro_tracker = AggroTracker()
+    status = StatusHolder()
+    character_settings = CharacterSettingsHolder()
+
+    log_path = tmp_path / "combat.txt"
+    log_path.write_text("", encoding="cp1252")
+
+    lines = [
+        log_line("00:00:00.000", "@Player#1", effect_type="Event", effect_name="EnterCombat {1}"),
+        # Names the boss so it gets recognized (recognition needs a later
+        # event than EnterCombat itself -- see _fire_combat_start_timers'
+        # own docstring on why that matters).
+        log_line("00:00:00.500", "Test Boss", ability="Intro {1}", effect_name="AbilityActivate {1}"),
+        log_line("00:00:01.000", "@Player#1", target="Test Boss", ability="Smash {1}",
+                 effect_name="Damage {2}", amount="50000"),
+        log_line("00:00:05.000", "@Player#1", target="Test Boss", ability="Smash {1}",
+                 effect_name="Damage {2}", amount="50000"),
+        log_line("00:00:06.000", "@Player#1", effect_type="Event", effect_name="ExitCombat {1}"),
+        # 40s after pull 1's OWN EnterCombat -- past NEW_PULL_MIN_GAP_SECONDS
+        # (30s) regardless of exactly when ExitCombat landed, so this must
+        # roll pull 1 over into history and start a fresh pull 2.
+        log_line("00:00:40.000", "@Player#1", effect_type="Event", effect_name="EnterCombat {1}"),
+    ]
+
+    def fake_watch_folder(log_dir, poll_interval=0.25):
+        for i, raw in enumerate(lines, 1):
+            yield (str(log_path), i, raw)
+
+    monkeypatch.setattr(log_watcher, "watch_folder", fake_watch_folder)
+
+    main.background_reader(
+        str(tmp_path), tracker, timer_engine, boss_state, hot_tracker, taunt_tracker,
+        aggro_tracker, status, _NullHistoryWriter(), character_settings,
+    )
+
+    assert status.text == f"Watching: {tmp_path}", f"reader loop hit an unexpected error: {status.text}"
+
+    assert len(tracker.history) == 1, "pull 1 must have rolled over into history"
+    completed = tracker.history[0]
+    assert completed.duration() == pytest.approx(6.0, abs=0.01), (
+        "duration must come from the log's own timestamps (00:00:00 -> "
+        "00:00:06), not wall-clock -- this whole synthetic feed runs in a "
+        f"fraction of a real second; got {completed.duration()}"
+    )
+    assert completed.players["Player"].damage_done == 100000.0
+
+    boss_timers_still_active = [t for t in timer_engine.active if t.boss_id == "test_boss"]
+    assert boss_timers_still_active == [], (
+        "the Enrage timer from pull 1 must be cleared on rollover, not "
+        f"still running into pull 2; found {boss_timers_still_active}"
+    )
