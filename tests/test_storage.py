@@ -33,6 +33,19 @@ def test_audio_path_round_trips_through_save_and_load(monkeypatch, tmp_path):
     assert reloaded[1].audio_path is None
 
 
+def test_countdown_from_round_trips_through_save_and_load(monkeypatch, tmp_path):
+    _isolate_appdata(monkeypatch, tmp_path)
+    rules = [
+        TimerRule(keyword="Slam", label="Slam", duration_seconds=10.0, countdown_from=5),
+        TimerRule(keyword="Taunt", label="Taunt", duration_seconds=5.0),  # default (0/off)
+    ]
+    storage.save_timer_rules(rules)
+
+    reloaded = storage.load_timer_rules()
+    assert reloaded[0].countdown_from == 5
+    assert reloaded[1].countdown_from == 0
+
+
 def test_cleanup_settings_default_to_disabled(monkeypatch, tmp_path):
     _isolate_appdata(monkeypatch, tmp_path)
     settings = storage.load_cleanup_settings()

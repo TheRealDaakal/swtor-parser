@@ -233,6 +233,26 @@ class TestTimerRules:
         status, body = _get(base, "/api/timer_rules")
         assert body == []
 
+    def test_countdown_from_persists_through_get_and_the_real_rule(self, env):
+        base, _tracker, timer_engine, *_ = env
+        status, body = _post(base, "/api/timer_rules",
+                              {"keyword": "Slam", "duration": 10.0, "countdown_from": 5})
+        assert status == 200
+
+        status, body = _get(base, "/api/timer_rules")
+        assert body[0]["countdown_from"] == 5
+
+        rule = next(r for r in timer_engine.rules if r.category == "custom")
+        assert rule.countdown_from == 5
+
+    def test_countdown_from_defaults_to_zero_and_rejects_garbage_quietly(self, env):
+        base, *_ = env
+        status, body = _post(base, "/api/timer_rules",
+                              {"keyword": "Slam", "duration": 10.0, "countdown_from": "not a number"})
+        assert status == 200
+        status, body = _get(base, "/api/timer_rules")
+        assert body[0]["countdown_from"] == 0
+
     def test_add_rejects_missing_keyword(self, env):
         base, *_ = env
         status, body = _post(base, "/api/timer_rules", {"duration": 10.0})

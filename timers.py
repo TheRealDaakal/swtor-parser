@@ -135,6 +135,14 @@ class TimerRule:
     # caster's alacrity. See apply_alacrity() for the formula and why only
     # some dots/hots qualify (tick-based, not charge-based).
     alacrity_affected: bool = False
+    # Speaks the last N whole seconds as a countdown ("5, 4, 3, 2, 1") on
+    # top of the normal start/warn/expiry alerts -- 0 (the default) is off.
+    # See ActiveTimer.countdown_from for why this is a distinct field from
+    # warn_seconds_before rather than an extension of it: they answer
+    # different questions ("one heads-up at a custom mark" vs "count me
+    # down through the final stretch") and a timer can reasonably want
+    # both, or either alone.
+    countdown_from: int = 0
 
     def armed_for(self, boss_id: Optional[str], phase_id: Optional[str]) -> bool:
         if self.required_boss is None:
@@ -184,6 +192,20 @@ class ActiveTimer:
     # (see audio.should_announce). None for custom/personal timers, which
     # no encounter toggle should ever be able to silence.
     boss_id: Optional[str] = None
+    # Speaks the last N whole seconds as a countdown -- see TimerRule's own
+    # field for why this is separate from warn_seconds_before. 0 = off.
+    countdown_from: int = 0
+    # Next number due to be spoken, counting down from countdown_from to 1
+    # then done (0). Sits inside a `while remaining <= countdown_next`
+    # check in _prune_and_warn rather than a fixed per-second scheduler:
+    # tick() only runs every ~500ms (gui.py's refresh loop) or on a log
+    # event, so this has to notice "we're now at or past N" whenever it
+    # happens to be checked, and speak every number skipped over in one
+    # gap rather than silently drop them.
+    countdown_next: int = field(init=False, default=0)
+
+    def __post_init__(self):
+        self.countdown_next = self.countdown_from
 
     def remaining(self, now: Optional[float] = None) -> float:
         now = now if now is not None else time.time()
@@ -226,7 +248,7 @@ class TimerEngine:
         repeat_count: int = 0, definition_id: Optional[str] = None, category: str = "custom",
         is_alert: bool = False, dedupe_key: Optional[str] = None, audio_path: Optional[str] = None,
         announce_on_start: bool = True, elapsed_seconds: float = 0.0,
-        boss_id: Optional[str] = None,
+        boss_id: Optional[str] = None, countdown_from: int = 0,
     ) -> None:
         """Directly starts a countdown, bypassing keyword matching -- used
         by boss_intelligence.py for the richer (non-keyword) trigger types.
@@ -262,6 +284,8 @@ class TimerEngine:
                         t.audio_path = audio_path
                         t.announce_on_start = announce_on_start
                         t.boss_id = boss_id
+                        t.countdown_from = countdown_from
+                        t.countdown_next = countdown_from
                         if announce_on_start:
                             _announce(label, audio_path, voice_alert, category=category,
                                       is_alert=is_alert, boss_id=boss_id)
@@ -282,6 +306,7 @@ class TimerEngine:
                     dedupe_key=dedupe_key,
                     announce_on_start=announce_on_start,
                     boss_id=boss_id,
+                    countdown_from=countdown_from,
                 )
             )
             if definition_id:
@@ -427,6 +452,7 @@ class TimerEngine:
                     # instead of refreshing the one already counting down.
                     dedupe_key=event.target if rule.category in ("dot", "hot", "cooldown") else None,
                     boss_id=rule.required_boss,
+                    countdown_from=rule.countdown_from,
                 )
 
             self._prune_and_warn()
@@ -447,6 +473,7 @@ class TimerEngine:
                     t.duration_seconds = t.repeat_interval_seconds
                     t.repeats_remaining -= 1
                     t.warned = False
+                    t.countdown_next = t.countdown_from
                     _announce(t.label, t.audio_path, t.voice_alert, category=t.category,
                               is_alert=t.is_alert, boss_id=t.boss_id)
                     still_active.append(t)
@@ -473,6 +500,17 @@ class TimerEngine:
                 _announce(warn_text, t.audio_path, True, category=t.category,
                           is_alert=t.is_alert, boss_id=t.boss_id)
                 t.warned = True
+            # Speaks each whole second from countdown_from down to 1 as the
+            # timer approaches zero -- a while loop, not an if, so a real
+            # gap between tick() calls (only ~2/sec, from gui.py's refresh
+            # loop) that skips past more than one threshold announces every
+            # number it skipped instead of silently dropping some. No .wav
+            # override here -- a custom sound doesn't make sense per-number,
+            # only voice_alert gates whether this speaks at all.
+            while t.countdown_next > 0 and t.remaining(now) <= t.countdown_next:
+                _announce(str(t.countdown_next), None, t.voice_alert, category=t.category,
+                          is_alert=t.is_alert, boss_id=t.boss_id)
+                t.countdown_next -= 1
             still_active.append(t)
         self.active = still_active
 

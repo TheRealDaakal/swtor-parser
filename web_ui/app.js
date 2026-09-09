@@ -676,7 +676,8 @@ async function loadTimerRules() {
   tbody.innerHTML = rules.map(r => `
     <tr>
       <td>${esc(r.keyword)}</td><td>${esc(r.label)}</td><td>${r.duration}</td>
-      <td>${r.warn || '-'}</td><td>${r.voice ? 'on' : 'off'}</td>
+      <td>${r.warn || '-'}</td><td>${r.countdown_from ? `last ${r.countdown_from}s` : '-'}</td>
+      <td>${r.voice ? 'on' : 'off'}</td>
       <td>${r.audio_path ? esc(basename(r.audio_path)) : '-'}</td>
       <td><button class="rule-del" onclick="deleteRule(${r.index})">remove</button></td>
     </tr>`).join('');
@@ -712,10 +713,11 @@ $('#t-add').addEventListener('click', async () => {
   await post('/api/timer_rules', {
     keyword, label: $('#t-label').value.trim(), duration,
     warn: parseFloat($('#t-warn').value) || 0, voice: $('#t-voice').checked,
+    countdown_from: parseInt($('#t-countdown').value, 10) || 0,
     audio_path: pendingAudioPath,
   });
   $('#t-keyword').value = ''; $('#t-label').value = '';
-  $('#t-duration').value = ''; $('#t-warn').value = '';
+  $('#t-duration').value = ''; $('#t-warn').value = ''; $('#t-countdown').value = '';
   pendingAudioPath = null;
   $('#t-audio-name').textContent = 'None (TTS)';
   $('#t-audio-clear').style.display = 'none';

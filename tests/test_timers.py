@@ -496,3 +496,123 @@ def test_clear_boss_timers_drops_only_encounter_scoped_entries(sim_clock):
     remaining_labels = {t.label for t in engine.active}
     assert remaining_labels == {"Adrenaline Rush", "Raid reminder"}, \
         "boss-scoped timers must be dropped; personal/custom ones must survive"
+
+
+class TestVoiceCountdown:
+    def _spoken(self, monkeypatch):
+        import timers as timers_mod
+        seen = []
+        monkeypatch.setattr(timers_mod.audio, "speak",
+                            lambda text, category=None, layer=None, boss_id=None: seen.append(text))
+        return seen
+
+    def test_speaks_five_down_to_one_at_the_right_thresholds(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Enrage", 10.0, voice_alert=True, countdown_from=5,
+                           announce_on_start=False)
+        seen.clear()  # only care about the countdown itself, not the start announce
+
+        # One tick per whole-second mark, stopping short of full expiry (at
+        # 10.0 announce_on_start=False's own "speak the label at zero"
+        # behaviour would also fire "Enrage" -- a real, separate mechanic,
+        # not part of what this test is isolating).
+        for t in (5.0, 6.0, 7.0, 8.0, 9.0):
+            sim_clock(t)
+            engine.tick()
+        assert seen == ["5", "4", "3", "2", "1"]
+
+    def test_never_speaks_a_number_twice(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Enrage", 10.0, countdown_from=5, announce_on_start=False)
+        seen.clear()
+        sim_clock(5.0)  # remaining == 5.0 -- crosses the "5" threshold
+        engine.tick()
+        engine.tick()
+        engine.tick()
+        assert seen == ["5"], "ticking repeatedly at the same instant must not re-speak it"
+
+    def test_a_real_gap_between_ticks_announces_every_number_it_skipped(self, monkeypatch, sim_clock):
+        """tick() only runs ~2x/sec (gui.py's refresh loop) or on a log
+        event -- a slow poll or a burst of events can easily jump past
+        several whole-second thresholds in one call. Every number in
+        between must still be spoken, not just the one it landed on."""
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Enrage", 10.0, countdown_from=5, announce_on_start=False)
+        seen.clear()
+        sim_clock(9.0)  # jumps straight from 10s remaining to 1s remaining
+        engine.tick()
+        assert seen == ["5", "4", "3", "2", "1"]
+
+    def test_zero_means_off_no_countdown_at_all(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Enrage", 10.0, countdown_from=0, announce_on_start=True)
+        seen.clear()
+        sim_clock(9.9)  # short of expiry, so only the countdown (or lack of it) is in play
+        engine.tick()
+        assert seen == []
+
+    def test_voice_alert_false_stays_silent(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Enrage", 10.0, voice_alert=False, countdown_from=5,
+                           announce_on_start=False)
+        seen.clear()
+        sim_clock(6.0)
+        engine.tick()
+        assert seen == []
+
+    def test_dedupe_refresh_resets_the_countdown(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Kolto Probe", 10.0, countdown_from=5, dedupe_key="Boss",
+                           announce_on_start=False)
+        sim_clock(6.0)
+        engine.tick()  # speaks "5"
+        seen.clear()
+        # Re-lands on the same target well before expiry -- refreshes in
+        # place, must start counting down from 5 again, not resume at 4.
+        sim_clock(7.0)
+        engine.start_timer("Kolto Probe", 10.0, countdown_from=5, dedupe_key="Boss",
+                           announce_on_start=False)
+        sim_clock(12.0)  # 5s after the refresh -- exactly the "5" mark again
+        engine.tick()
+        assert seen == ["5"]
+
+    def test_repeat_rearm_resets_the_countdown_each_cycle(self, monkeypatch, sim_clock):
+        seen = self._spoken(monkeypatch)
+        engine = TimerEngine()
+        sim_clock(0.0)
+        engine.start_timer("Adds", 5.0, countdown_from=2, repeat_interval_seconds=5.0,
+                           repeat_count=1, announce_on_start=False)
+        sim_clock(3.0)
+        engine.tick()  # 2.0s remaining in cycle 1 -- speaks "2"
+        sim_clock(4.0)
+        engine.tick()  # 1.0s remaining in cycle 1 -- speaks "1"
+        sim_clock(5.0)
+        engine.tick()  # expires, re-arms for a second 5s cycle (5.0 -> 10.0)
+        seen.clear()
+        sim_clock(8.0)  # 2.0s remaining in cycle 2
+        engine.tick()
+        sim_clock(9.0)  # 1.0s remaining in cycle 2
+        engine.tick()
+        assert seen == ["2", "1"], "the second cycle must count down too, not stay exhausted"
+
+    def test_timer_rule_countdown_from_reaches_the_engine(self, sim_clock):
+        engine = TimerEngine()
+        sim_clock(0.0)
+        rule = TimerRule(keyword="Slam", label="Slam", duration_seconds=10.0, countdown_from=3)
+        engine.add_rule(rule)
+        ev = parse_line(log_line("00:00:00.000", "Boss", effect_name="Slam {1}"), line_number=1)
+        engine.feed(ev)
+        assert engine.active[0].countdown_from == 3
+        assert engine.active[0].countdown_next == 3

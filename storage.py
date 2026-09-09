@@ -280,6 +280,7 @@ def load_timer_rules() -> List[TimerRule]:
                 voice_alert=d.get("voice_alert", True),
                 warn_seconds_before=d.get("warn_seconds_before", 0.0),
                 audio_path=d.get("audio_path"),
+                countdown_from=d.get("countdown_from", 0),
             )
         )
     return rules
@@ -296,6 +297,7 @@ def save_timer_rules(rules: List[TimerRule]) -> None:
             "voice_alert": r.voice_alert,
             "warn_seconds_before": r.warn_seconds_before,
             "audio_path": r.audio_path,
+            "countdown_from": r.countdown_from,
         }
         for r in rules
     ]

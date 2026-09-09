@@ -331,7 +331,8 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                 return self._json([
                     {"index": i, "keyword": r.keyword, "label": r.label,
                      "duration": r.duration_seconds, "warn": r.warn_seconds_before,
-                     "voice": r.voice_alert, "audio_path": r.audio_path}
+                     "voice": r.voice_alert, "audio_path": r.audio_path,
+                     "countdown_from": r.countdown_from}
                     for i, r in enumerate(custom)
                 ])
 
@@ -427,11 +428,15 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
                     warn = float(body.get("warn") or 0.0)
                 except (TypeError, ValueError):
                     warn = 0.0
+                try:
+                    countdown_from = max(0, int(body.get("countdown_from") or 0))
+                except (TypeError, ValueError):
+                    countdown_from = 0
                 audio_path = (body.get("audio_path") or "").strip() or None
                 rule = TimerRule(
                     keyword=keyword, label=label, duration_seconds=duration,
                     voice_alert=bool(body.get("voice", True)), warn_seconds_before=warn,
-                    audio_path=audio_path,
+                    audio_path=audio_path, countdown_from=countdown_from,
                 )
                 timer_engine.add_rule(rule)
                 self._save_custom_rules()
