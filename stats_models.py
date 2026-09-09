@@ -200,6 +200,14 @@ class PlayerStats:
     # e.g. 15,514 "deaths" across 96 Styrak pulls, which is add spawns, not
     # the raid wiping 161 times a pull.
     is_player: bool = False
+    # Current class/spec, from the log's own DisciplineChanged broadcast --
+    # see CombatEvent.is_discipline_changed. None until the first broadcast
+    # for this entity is seen, which for every OTHER raid member usually
+    # lands within the first few seconds of a pull (it repeats often, not
+    # just once). Always the most RECENT value seen, so a mid-session
+    # respec is reflected, not stuck at pull start.
+    advanced_class: Optional[str] = None
+    discipline: Optional[str] = None
 
     def dps(self, duration: float) -> float:
         return self.damage_done / duration if duration > 0 else 0.0
@@ -295,6 +303,8 @@ class PlayerStats:
             "heal_events": self.heal_events,
             "healing_by_target": self.healing_by_target,
             "is_player": self.is_player,
+            "advanced_class": self.advanced_class,
+            "discipline": self.discipline,
             "damage_attempts": self.damage_attempts,
             "damage_avoided": self.damage_avoided,
             "damage_crits": self.damage_crits,
@@ -327,6 +337,8 @@ class PlayerStats:
             heal_events=[tuple(x) for x in d.get("heal_events", [])],
             healing_by_target=dict(d.get("healing_by_target", {})),
             is_player=d.get("is_player", False),
+            advanced_class=d.get("advanced_class"),
+            discipline=d.get("discipline"),
             damage_attempts=d.get("damage_attempts", 0),
             damage_avoided=d.get("damage_avoided", 0),
             damage_crits=d.get("damage_crits", 0),
@@ -463,6 +475,11 @@ class Encounter:
             self._get(event.source).is_player = True
         if event.target and event.target_is_player:
             self._get(event.target).is_player = True
+
+        if event.is_discipline_changed and event.source and event.discipline:
+            p = self._get(event.source)
+            p.advanced_class = event.advanced_class
+            p.discipline = event.discipline
 
         if event.is_combat_end and self.exit_combat_time is None:
             self.exit_combat_time = now

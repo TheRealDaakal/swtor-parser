@@ -164,6 +164,17 @@ class CombatEvent:
     is_combat_start: bool = False
     is_combat_end: bool = False
     is_area_entered: bool = False
+    # True for the log's own DisciplineChanged event -- broadcast to every
+    # client in the group, not just the player's own (see log_watcher.py's
+    # own note on this), so it's a reliable way to learn every raid
+    # member's current class/spec, not just the local player's. Fires
+    # periodically throughout a session, not just once, so the values
+    # below are always the player's CURRENT class -- a respec mid-session
+    # is reflected on the next broadcast, not stuck on whatever it was at
+    # pull start.
+    is_discipline_changed: bool = False
+    advanced_class: Optional[str] = None   # e.g. "Sniper", "Vanguard"
+    discipline: Optional[str] = None        # e.g. "Engineering", "Plasmatech"
     amount: float = 0.0
     line_number: Optional[int] = None
     # HP snapshot, if a parenthetical group looked like "current/max" -- used

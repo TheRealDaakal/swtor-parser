@@ -20,6 +20,7 @@ COMBAT_START_KEYWORDS = ("entercombat",)
 DAMAGE_KEYWORDS = ("damage",)
 DEATH_EFFECT_NAME = "death"
 DEATH_EVENT_TYPE = "event"
+DISCIPLINE_CHANGE_KEYWORDS = ("disciplinechanged",)
 DIFFICULTY_RE = re.compile(r"(\d+)\s+Player\s+([A-Za-z_]+)", re.IGNORECASE)
 EFFECT_REMOVED_KEYWORDS = ("removeeffect",)
 HARD_CC_KEYWORDS = ("stunned", "incapacitated", "asleep", "sleeping", "lifted")
@@ -62,6 +63,15 @@ def _classify(event: CombatEvent, tail: str) -> None:
             event.group_size = int(m.group(1))
             # BARAS spells these lowercase in its `difficulties` lists.
             event.difficulty = m.group(2).lower()
+    event.is_discipline_changed = any(k in tight for k in DISCIPLINE_CHANGE_KEYWORDS)
+    if event.is_discipline_changed and event.effect_name:
+        # effect_name is already "AdvancedClass /Discipline" by this point
+        # (_clean_name stripped both {id} tags out of the raw "Sniper
+        # {id}/Engineering {id}", leaving a stray space where the first one
+        # was) -- split once, strip both sides.
+        advanced_class, _sep, discipline = event.effect_name.partition("/")
+        event.advanced_class = advanced_class.strip() or None
+        event.discipline = discipline.strip() or None
     effect_type_tight = (event.effect_type or "").lower().replace(" ", "")
     event.is_effect_removed = any(k in effect_type_tight for k in EFFECT_REMOVED_KEYWORDS)
     event.is_charges_modified = any(k in effect_type_tight for k in MODIFY_CHARGES_KEYWORDS)

@@ -47,6 +47,8 @@ def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status
             "mitigated": mitigated, "deaths": deaths,
             "boss_dps": p.boss_dps(boss_names, duration) if p else 0.0,
             "effective_hps": p.effective_hps(duration) if p else 0.0,
+            "advanced_class": p.advanced_class if p else None,
+            "discipline": p.discipline if p else None,
         })
 
     all_timers = timer_engine.snapshot()
@@ -94,9 +96,10 @@ def build_live_snapshot(tracker, timer_engine, boss_state, taunt_tracker, status
     }
 
 
-def _player_row(name, dps, hps, taken, mitigated, deaths):
+def _player_row(name, dps, hps, taken, mitigated, deaths, advanced_class=None, discipline=None):
     return {"name": name, "dps": dps, "hps": hps, "taken": taken,
-            "mitigated": mitigated, "deaths": deaths}
+            "mitigated": mitigated, "deaths": deaths,
+            "advanced_class": advanced_class, "discipline": discipline}
 
 
 def build_history_list(tracker) -> list:
@@ -209,7 +212,11 @@ def build_history_detail(tracker, idx: int):
     if not (0 <= idx < len(tracker.history)):
         return None
     encounter = tracker.history[idx]
-    players = [_player_row(*row) for row in encounter.snapshot()]
+    players = []
+    for row in encounter.snapshot():
+        p = encounter.players.get(row[0])
+        players.append(_player_row(*row, advanced_class=p.advanced_class if p else None,
+                                   discipline=p.discipline if p else None))
     return {
         "pull": idx + 1,
         "label": encounter.label,

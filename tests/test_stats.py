@@ -522,3 +522,40 @@ class TestDamageTakenByType:
         # not KeyError on load.
         p = PlayerStats.from_dict({"name": "Tank", "damage_taken": 5000.0})
         assert p.damage_taken_by_type == {}
+
+
+class TestDisciplineTracking:
+    def _discipline_line(self, t, source, advanced_class, discipline):
+        return log_line(
+            f"{int(t // 3600):02d}:{int(t % 3600 // 60):02d}:{t % 60:06.3f}",
+            source, effect_type="DisciplineChanged",
+            effect_name=f"{advanced_class} {{1}}/{discipline} {{2}}",
+        )
+
+    def test_apply_records_class_and_discipline(self, sim_clock):
+        enc = Encounter()
+        sim_clock(0.0)
+        enc.apply(parse_line(self._discipline_line(0.0, "@Dps#1", "Sniper", "Engineering"), line_number=1))
+        p = enc.players["Dps"]
+        assert p.advanced_class == "Sniper"
+        assert p.discipline == "Engineering"
+
+    def test_a_later_broadcast_updates_it_a_respec_mid_session(self, sim_clock):
+        enc = Encounter()
+        sim_clock(0.0)
+        enc.apply(parse_line(self._discipline_line(0.0, "@Dps#1", "Sniper", "Engineering"), line_number=1))
+        sim_clock(1.0)
+        enc.apply(parse_line(self._discipline_line(1.0, "@Dps#1", "Sniper", "Marksmanship"), line_number=2))
+        p = enc.players["Dps"]
+        assert p.discipline == "Marksmanship"
+
+    def test_round_trips_through_to_dict_and_from_dict(self):
+        p = PlayerStats(name="Dps", advanced_class="Sniper", discipline="Engineering")
+        restored = PlayerStats.from_dict(p.to_dict())
+        assert restored.advanced_class == "Sniper"
+        assert restored.discipline == "Engineering"
+
+    def test_old_history_rows_without_the_field_default_to_none(self):
+        p = PlayerStats.from_dict({"name": "Dps"})
+        assert p.advanced_class is None
+        assert p.discipline is None

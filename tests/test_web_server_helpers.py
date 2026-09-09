@@ -160,6 +160,21 @@ class TestBuildLiveSnapshot:
         row = result["players"][0]
         assert row["boss_dps"] == pytest.approx(100.0)  # 1000 dmg / 10s
 
+    def test_advanced_class_and_discipline_are_attached_per_player(self):
+        tracker = StatsTracker()
+        stale = Encounter()
+        stale.start_time = 0.0
+        stale.last_activity = 10.0
+        dps = PlayerStats(name="Dps", is_player=True, advanced_class="Sniper", discipline="Engineering")
+        dps.damage_done = 1000.0
+        stale.players["Dps"] = dps
+        tracker.current = stale
+
+        result = build_live_snapshot(tracker, TimerEngine(), None, TauntTracker(), _Status())
+        row = result["players"][0]
+        assert row["advanced_class"] == "Sniper"
+        assert row["discipline"] == "Engineering"
+
 
 # --------------------------------------------------------------- build_history_list
 
@@ -235,6 +250,21 @@ class TestBuildHistoryDetail:
         detail = build_history_detail(tracker, 0)
         assert detail["pull"] == 1
         assert detail["label"] == "Test Boss"
+
+    def test_player_rows_carry_class_and_discipline(self):
+        tracker = StatsTracker()
+        enc = Encounter()
+        enc.start_time = 0.0
+        enc.last_activity = 5.0
+        p = PlayerStats(name="Dps", is_player=True, advanced_class="Sniper", discipline="Engineering")
+        p.damage_done = 1000.0
+        enc.players["Dps"] = p
+        tracker.history.append(enc)
+
+        detail = build_history_detail(tracker, 0)
+        row = detail["players"][0]
+        assert row["advanced_class"] == "Sniper"
+        assert row["discipline"] == "Engineering"
 
 
 # --------------------------------------------------------------- build_ability_breakdown

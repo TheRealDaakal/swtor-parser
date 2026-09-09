@@ -17,6 +17,12 @@ const parselyLinkHtml = link => {
   return `Uploaded. <a class="btn-link" href="${esc(href)}" target="_blank" rel="noopener">Go to Parsely &rarr;</a>`;
 };
 const fmt = n => n == null ? '—' : Math.round(n).toLocaleString();
+// Small "Sniper/Engineering" subtitle under a player's name, from the
+// log's own DisciplineChanged broadcast -- blank (not "Unknown/Unknown")
+// until the first broadcast for that player has actually been seen, which
+// for a teammate usually lands within the first few seconds of a pull.
+const classTag = p => (p.advanced_class && p.discipline)
+  ? ` <span class="sub">${esc(p.advanced_class)}/${esc(p.discipline)}</span>` : '';
 // Stat-tile contract: 1,284 / 12.9K / $4.2M -- anything under 10K keeps its
 // exact digits. Compacting 1,983 to "2K" throws away real precision.
 const compact = n => {
@@ -95,7 +101,7 @@ function renderMeter(players) {
   tbody.innerHTML = players.map(p => {
     const mitText = (p.taken > 0 || p.mitigated > 0) ? `${Math.round(p.mitigated)}%` : '—';
     return `<tr>
-      <td class="name">${esc(p.name)}</td>
+      <td class="name">${esc(p.name)}${classTag(p)}</td>
       <td class="accent">${fmt(p.dps)}</td>
       <td class="accent">${fmt(p.boss_dps)}</td>
       <td class="good">${fmt(p.hps)}</td>
@@ -295,7 +301,7 @@ function renderPullModal(d) {
   const rows = d.players.map(p => {
     const mitText = (p.taken > 0 || p.mitigated > 0) ? `${Math.round(p.mitigated)}%` : '—';
     return `<tr class="clickable" onclick="openBreakdown(${d.pull}, '${esc(p.name).replace(/'/g, "\\'")}')">
-      <td class="name">${esc(p.name)}</td>
+      <td class="name">${esc(p.name)}${classTag(p)}</td>
       <td class="accent">${fmt(p.dps)}</td>
       <td class="good">${fmt(p.hps)}</td>
       <td>${fmt(p.taken)}</td>

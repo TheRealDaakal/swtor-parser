@@ -167,3 +167,27 @@ class TestSelfTargetIdentity:
                         line_number=1)
         assert ev.target == "Boss"
         assert ev.target_is_player is False
+
+
+class TestDisciplineChanged:
+    def test_a_real_discipline_changed_line_is_split_correctly(self):
+        # Real shape: SWTOR broadcasts this to every client in the group,
+        # repeatedly, not just once -- see is_discipline_changed's own
+        # docstring. The raw text nests an {id} inside each half, which
+        # _clean_name strips, leaving a stray space before the slash.
+        raw = ("[05:10:23.367] [@Kajuunn#690078345639354|(0,0,0,0)|(1/418004)] [] [] "
+               "[DisciplineChanged {836045448953665}: Sniper {16141046347418927959}"
+               "/Engineering {2031339142381592}]")
+        ev = parse_line(raw, line_number=1)
+        assert ev.is_discipline_changed is True
+        assert ev.source == "Kajuunn"
+        assert ev.advanced_class == "Sniper"
+        assert ev.discipline == "Engineering"
+
+    def test_unrelated_events_are_not_discipline_changes(self):
+        ev = parse_line(log_line("00:00:00.000", "@Dps#1", target="Boss",
+                                 effect_name="Damage {2}", amount="100"),
+                        line_number=1)
+        assert ev.is_discipline_changed is False
+        assert ev.advanced_class is None
+        assert ev.discipline is None
