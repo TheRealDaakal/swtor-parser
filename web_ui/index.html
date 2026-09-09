@@ -293,6 +293,21 @@
       <div id="overlay-groups" class="live-grid"></div>
     </div>
     <div class="panel">
+      <h2>Profiles</h2>
+      <p class="sub">Save the current set of frames -- which ones are up, where, locked or not -- under
+        a name, then switch the whole layout at once, e.g. a "Healing" profile with the HoT grid up vs.
+        a "DPS" profile with the boss-DPS bar instead.</p>
+      <div class="filters">
+        <input type="text" id="ovp-name" placeholder="Profile name" size="20" maxlength="60">
+        <button id="ovp-save">Save current as...</button>
+      </div>
+      <div class="tw"><table id="ovp-table">
+        <thead><tr><th>Name</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="empty" id="ovp-empty" style="display:none">No saved profiles yet.</p>
+    </div>
+    <div class="panel">
       <h2>Character Settings</h2>
       <p class="sub" id="cs-character">No character detected yet -- start watching a live log first.</p>
       <div class="filters">

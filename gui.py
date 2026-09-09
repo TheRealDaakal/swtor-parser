@@ -104,6 +104,41 @@ class OverlayManager:
             self._overlay_state[key] = False
         self._commands.put(("clear", None))
 
+    # ---------- named overlay profiles (save/switch a whole layout at once) ----------
+
+    def list_profiles(self) -> list:
+        """Pure storage read (no live Tk state involved) -- safe to call
+        directly from a web-handler thread, unlike save/apply below."""
+        return storage.list_overlay_profiles()
+
+    def save_profile(self, name: str) -> None:
+        """Snapshots the CURRENT live layout (frame positions/sizes, lock
+        state, notes text, hot-grid slots) under a name, so it can be
+        switched back to later -- e.g. a "Healing" profile with the HoT
+        grid up vs. a "DPS" profile with the boss-DPS bar instead. Reading
+        window geometry means this has to run on the Tk thread."""
+        name = (name or "").strip()
+        if not name:
+            return
+        self._commands.put(("save_profile", name))
+
+    def apply_profile(self, name: str) -> None:
+        """Switches every floating frame to whatever a saved profile has
+        up, tearing down and rebuilding Toplevels -- must run on the Tk
+        thread."""
+        name = (name or "").strip()
+        if not name:
+            return
+        self._commands.put(("apply_profile", name))
+
+    def delete_profile(self, name: str) -> None:
+        """No live frames are touched by deleting a saved profile -- safe
+        off the Tk thread."""
+        name = (name or "").strip()
+        if not name:
+            return
+        storage.delete_overlay_profile(name)
+
     # ---------- floating bar overlays (Tk thread only past this point) ----------
 
     def _restore_overlay_layout(self, character=None):
@@ -143,13 +178,19 @@ class OverlayManager:
     def _current_character(self):
         return self.boss_state.local_player_name if self.boss_state else None
 
-    def _persist_overlay_layout(self):
-        # Seed from what's already saved so a frame the user just closed
-        # keeps its last position on disk -- only overwrite entries for
-        # frames that are currently open. Otherwise disabling a frame wipes
-        # its saved spot, and re-enabling it later drops back to the
-        # default stacked position (reported by a tester: overlays "return
-        # to their original positions" after a disable/re-enable).
+    def _current_layout_snapshot(self) -> dict:
+        """Builds the {"locked", "frames", "notes", "hot_grid_slots"} shape
+        both _persist_overlay_layout (per-character, automatic) and the
+        named-profile save/apply methods below save -- one place that
+        knows how to read live frame positions/sizes off Tk so the two
+        paths can't drift apart.
+
+        Seeds "frames" from what's already saved so a frame the user just
+        closed keeps its last position on disk -- only overwrite entries
+        for frames that are currently open. Otherwise disabling a frame
+        wipes its saved spot, and re-enabling it later drops back to the
+        default stacked position (reported by a tester: overlays "return
+        to their original positions" after a disable/re-enable)."""
         frames = dict(storage.load_overlay_layout(self._current_character()).get("frames", {}))
         notes_text = None
         hot_grid_slots = None
@@ -168,12 +209,15 @@ class OverlayManager:
             notes_text = storage.load_overlay_layout(self._current_character()).get("notes", "")
         if hot_grid_slots is None:
             hot_grid_slots = storage.load_overlay_layout(self._current_character()).get("hot_grid_slots", [])
-        storage.save_overlay_layout({
+        return {
             "locked": self._locked,
             "frames": frames,
             "notes": notes_text,
             "hot_grid_slots": hot_grid_slots,
-        }, character=self._current_character())
+        }
+
+    def _persist_overlay_layout(self):
+        storage.save_overlay_layout(self._current_layout_snapshot(), character=self._current_character())
 
     def _on_notes_changed(self, _text: str) -> None:
         """FocusOut on the Notes text widget -- save immediately rather
@@ -274,6 +318,27 @@ class OverlayManager:
         for key in self._overlay_state:
             self._overlay_state[key] = False
         self._persist_overlay_layout()
+
+    def _save_profile_now(self, name):
+        storage.save_overlay_profile(name, self._current_layout_snapshot())
+
+    def _apply_profile_now(self, name):
+        """Loads a saved profile and makes it the current character's live
+        layout. Overwrites the character's saved layout with the profile's
+        contents first, then reuses _restore_overlay_layout to actually
+        rebuild the frames -- that's the same code path a character switch
+        already takes, so notes text / hot-grid slots / frame positions all
+        come from one place instead of a second, easily-divergent one."""
+        layout = storage.load_overlay_profile(name)
+        if layout is None:
+            return  # deleted from another tab / race with delete -- no-op
+        for o in list(self.bar_overlays):
+            o.win.destroy()
+        self.bar_overlays = []
+        for key in self._overlay_state:
+            self._overlay_state[key] = False
+        storage.save_overlay_layout(layout, character=self._current_character())
+        self._restore_overlay_layout(character=self._current_character())
 
     def _refresh_bar_overlays(self):
         if not self.bar_overlays:
@@ -388,6 +453,10 @@ class OverlayManager:
                 self._apply_lock_state()
             elif action == "clear":
                 self._clear_overlays()
+            elif action == "save_profile":
+                self._save_profile_now(key)
+            elif action == "apply_profile":
+                self._apply_profile_now(key)
 
     def _refresh(self):
         """Drives all state forward on a fixed cadence, independent of the

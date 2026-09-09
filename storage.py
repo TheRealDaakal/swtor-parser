@@ -319,6 +319,46 @@ def _normalize_layout(data: dict) -> dict:
     return layout
 
 
+def _read_overlay_layout_root() -> dict:
+    """Raw {"default": {...}, "characters": {...}, "profiles": {...}} shape
+    on disk, migrating an old flat single-layout file (or one saved before
+    "profiles" existed) in place on first read so every caller -- per-
+    character load/save and the named-profile functions below -- sees the
+    same shape without repeating the migration logic."""
+    path = _overlay_layout_path()
+    if not path.exists():
+        return {"default": {}, "characters": {}, "profiles": {}}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {"default": {}, "characters": {}, "profiles": {}}
+
+    changed = False
+    if "characters" not in data and "frames" in data:
+        # Old flat single-layout file -- migrate in place, once, on read.
+        data = {"default": data, "characters": {}}
+        changed = True
+    if not isinstance(data.get("characters"), dict):
+        data["characters"] = {}
+        changed = True
+    if not isinstance(data.get("default"), dict):
+        data["default"] = {}
+        changed = True
+    if not isinstance(data.get("profiles"), dict):
+        data["profiles"] = {}
+        changed = True
+    if changed:
+        try:
+            path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        except OSError:
+            pass
+    return data
+
+
+def _write_overlay_layout_root(data: dict) -> None:
+    _overlay_layout_path().write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
 def load_overlay_layout(character: Optional[str] = None) -> dict:
     """Returns {"locked": bool, "frames": {key: {"x": int, "y": int}}} for
     the given character (a tank alt and a healer alt want different frames
@@ -327,51 +367,49 @@ def load_overlay_layout(character: Optional[str] = None) -> dict:
     the log yet. A frame's mere presence in "frames" is what the picker's
     checkboxes read on startup to decide which boxes start ticked -- this
     is both the position store and the "what was open" store, so there's
-    one source of truth instead of two files that could disagree.
-
-    The single flat file this used to be (one layout, no character
-    concept) becomes that same "default" entry the first time this reads
-    it under the new {"default": {...}, "characters": {...}} shape --
-    nothing existing gets silently discarded."""
-    path = _overlay_layout_path()
-    if not path.exists():
-        return dict(_DEFAULT_LAYOUT)
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return dict(_DEFAULT_LAYOUT)
-
-    if "characters" not in data and "frames" in data:
-        # Old flat single-layout file -- migrate in place, once, on read.
-        data = {"default": data, "characters": {}}
-        try:
-            path.write_text(json.dumps(data, indent=2), encoding="utf-8")
-        except OSError:
-            pass
-
-    characters = data.get("characters") if isinstance(data.get("characters"), dict) else {}
+    one source of truth instead of two files that could disagree."""
+    data = _read_overlay_layout_root()
     if character:
         # A specific character with no saved layout yet gets clean empty
         # defaults -- NOT the "default" slot's frames, which would mean a
         # freshly-seen alt inherits whatever the pre-character-known state
         # happened to have up, rather than starting from a blank slate.
-        return _normalize_layout(characters.get(character, {}))
-    return _normalize_layout(data.get("default", {}))
+        return _normalize_layout(data["characters"].get(character, {}))
+    return _normalize_layout(data["default"])
 
 
 def save_overlay_layout(layout: dict, character: Optional[str] = None) -> None:
-    path = _overlay_layout_path()
-    try:
-        existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    except (json.JSONDecodeError, OSError):
-        existing = {}
-    if "characters" not in existing:
-        existing = {"default": existing if "frames" in existing else {}, "characters": {}}
-    if not isinstance(existing.get("characters"), dict):
-        existing["characters"] = {}
-
+    data = _read_overlay_layout_root()
     if character:
-        existing["characters"][character] = layout
+        data["characters"][character] = layout
     else:
-        existing["default"] = layout
-    path.write_text(json.dumps(existing, indent=2), encoding="utf-8")
+        data["default"] = layout
+    _write_overlay_layout_root(data)
+
+
+def list_overlay_profiles() -> list:
+    """Names of saved overlay profiles (e.g. "Healing", "DPS Burn"),
+    sorted -- a named, hand-saved snapshot a player switches to on
+    purpose, distinct from the automatic per-character layout above."""
+    return sorted(_read_overlay_layout_root()["profiles"].keys())
+
+
+def load_overlay_profile(name: str) -> Optional[dict]:
+    """Returns the saved layout for a named profile, or None if no
+    profile by that name exists."""
+    profiles = _read_overlay_layout_root()["profiles"]
+    if name not in profiles:
+        return None
+    return _normalize_layout(profiles[name])
+
+
+def save_overlay_profile(name: str, layout: dict) -> None:
+    data = _read_overlay_layout_root()
+    data["profiles"][name] = layout
+    _write_overlay_layout_root(data)
+
+
+def delete_overlay_profile(name: str) -> None:
+    data = _read_overlay_layout_root()
+    data["profiles"].pop(name, None)
+    _write_overlay_layout_root(data)

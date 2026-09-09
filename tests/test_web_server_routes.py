@@ -49,6 +49,17 @@ class _FakeOverlayManager:
     toggle_overlay = OverlayManager.toggle_overlay
     set_lock = OverlayManager.set_lock
     clear_all = OverlayManager.clear_all
+    # list_profiles/delete_profile are pure storage reads/writes in the real
+    # class too; save_profile/apply_profile just validate and enqueue (the
+    # part that actually touches Tk -- reading window geometry, tearing
+    # down/rebuilding Toplevels -- runs on the Tk thread via _drain_commands,
+    # which nothing here ever drives, so these routes are only checked for
+    # correct validation/wiring; full save->apply persistence is covered
+    # against a real _Manager stand-in in test_overlay_layout.py).
+    list_profiles = OverlayManager.list_profiles
+    save_profile = OverlayManager.save_profile
+    apply_profile = OverlayManager.apply_profile
+    delete_profile = OverlayManager.delete_profile
 
     def __init__(self):
         self._overlay_state = {"dps": False, "hps": False}
@@ -314,6 +325,55 @@ class TestOverlaysRoutes:
         assert status == 200
         _, body = _get(base, "/api/overlays")
         assert all(i["on"] is False for i in body["items"])
+
+
+class TestOverlayProfilesRoutes:
+    def test_save_apply_delete_all_require_a_name(self, env):
+        base, *_ = env
+        for path in ("/api/overlay_profiles/save", "/api/overlay_profiles/apply",
+                     "/api/overlay_profiles/delete"):
+            status, body = _post(base, path, {"name": "  "})
+            assert status == 400
+            assert "name" in body["error"]
+
+    def test_save_and_apply_are_accepted_and_queued_for_the_tk_thread(self, monkeypatch, tmp_path):
+        # Needs the raw overlay_manager (not exposed by the shared `env`
+        # fixture) to inspect what got queued -- see _FakeOverlayManager's
+        # comment on why save/apply can't be verified end-to-end here.
+        monkeypatch.setenv("APPDATA", str(tmp_path))
+        overlay_manager = _FakeOverlayManager()
+        srv = make_server(StatsTracker(), TimerEngine(), BossEncounterState({}),
+                          TauntTracker(), overlay_manager, _Status(), port=0)
+        port = srv.server_address[1]
+        thread = threading.Thread(target=srv.serve_forever, daemon=True)
+        thread.start()
+        try:
+            base = f"http://127.0.0.1:{port}"
+            status, body = _post(base, "/api/overlay_profiles/save", {"name": "Healing"})
+            assert status == 200 and body["ok"] is True
+            assert overlay_manager._commands.get_nowait() == ("save_profile", "Healing")
+
+            status, body = _post(base, "/api/overlay_profiles/apply", {"name": "Healing"})
+            assert status == 200 and body["ok"] is True
+            assert overlay_manager._commands.get_nowait() == ("apply_profile", "Healing")
+        finally:
+            srv.shutdown()
+            srv.server_close()
+            thread.join(timeout=5)
+
+    def test_list_reflects_storage_and_delete_removes_from_it(self, env):
+        import storage
+        base, *_ = env
+        assert _get(base, "/api/overlay_profiles") == (200, [])
+
+        storage.save_overlay_profile("Healing", {"locked": False, "frames": {}, "notes": "",
+                                                   "hot_grid_slots": []})
+        status, body = _get(base, "/api/overlay_profiles")
+        assert status == 200 and body == ["Healing"]
+
+        status, body = _post(base, "/api/overlay_profiles/delete", {"name": "Healing"})
+        assert status == 200 and body["ok"] is True
+        assert _get(base, "/api/overlay_profiles") == (200, [])
 
 
 # --------------------------------------------------------------- character_settings

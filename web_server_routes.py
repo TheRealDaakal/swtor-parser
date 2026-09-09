@@ -339,6 +339,9 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
             if u.path == "/api/overlays":
                 return self._json(overlay_manager.overlay_state())
 
+            if u.path == "/api/overlay_profiles":
+                return self._json(overlay_manager.list_profiles())
+
             if u.path == "/api/parsely_settings":
                 settings = dict(storage.load_parsely_settings())
                 settings.pop("password", None)  # never echo the stored password back
@@ -469,6 +472,27 @@ def make_handler(tracker, timer_engine, boss_state, taunt_tracker, overlay_manag
 
             if u.path == "/api/overlays/clear":
                 overlay_manager.clear_all()
+                return self._json({"ok": True})
+
+            if u.path == "/api/overlay_profiles/save":
+                name = (body.get("name") or "").strip()
+                if not name:
+                    return self._json({"error": "name required"}, 400)
+                overlay_manager.save_profile(name)
+                return self._json({"ok": True})
+
+            if u.path == "/api/overlay_profiles/apply":
+                name = (body.get("name") or "").strip()
+                if not name:
+                    return self._json({"error": "name required"}, 400)
+                overlay_manager.apply_profile(name)
+                return self._json({"ok": True})
+
+            if u.path == "/api/overlay_profiles/delete":
+                name = (body.get("name") or "").strip()
+                if not name:
+                    return self._json({"error": "name required"}, 400)
+                overlay_manager.delete_profile(name)
                 return self._json({"ok": True})
 
             if u.path == "/api/character_settings":

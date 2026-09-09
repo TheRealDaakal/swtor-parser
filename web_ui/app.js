@@ -82,7 +82,7 @@ function refreshActiveTab() {
   else if (activeView === 'deepdive') loadDeepDive();
   else if (activeView === 'timers') loadTimerRules();
   else if (activeView === 'encounters') loadEncounters();
-  else if (activeView === 'overlays') { loadOverlays(); loadCharacterSettings(); }
+  else if (activeView === 'overlays') { loadOverlays(); loadOverlayProfiles(); loadCharacterSettings(); }
   else if (activeView === 'import') loadCleanupSettings();
   else if (activeView === 'parsely') loadParselySettings();
   else if (activeView === 'settings') loadAudioSettings();
@@ -751,6 +751,53 @@ $('#ov-lock').addEventListener('change', async e => {
 $('#ov-clear').addEventListener('click', async () => {
   await post('/api/overlays/clear');
   loadOverlays();
+});
+
+// ------------------------------------------------------- overlay profiles
+async function loadOverlayProfiles() {
+  const names = await api('/api/overlay_profiles');
+  const tbody = $('#ovp-table tbody');
+  const empty = $('#ovp-empty');
+  if (!names.length) { tbody.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = names.map(name => `
+    <tr>
+      <td>${esc(name)}</td>
+      <td>
+        <button onclick="applyOverlayProfile('${esc(name)}')">Apply</button>
+        <button class="rule-del" onclick="deleteOverlayProfile('${esc(name)}')">remove</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function applyOverlayProfile(name) {
+  await post('/api/overlay_profiles/apply', { name });
+  // The Tk thread applies the frames asynchronously (see gui.py's command
+  // queue) -- give it a beat before re-reading state that depends on it.
+  setTimeout(loadOverlays, 300);
+}
+window.applyOverlayProfile = applyOverlayProfile;
+
+async function deleteOverlayProfile(name) {
+  await post('/api/overlay_profiles/delete', { name });
+  loadOverlayProfiles();
+}
+window.deleteOverlayProfile = deleteOverlayProfile;
+
+$('#ovp-save').addEventListener('click', async () => {
+  const name = $('#ovp-name').value.trim();
+  if (!name) return;
+  const btn = $('#ovp-save');
+  const original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+  await post('/api/overlay_profiles/save', { name });
+  $('#ovp-name').value = '';
+  btn.textContent = original;
+  btn.disabled = false;
+  // Same async-apply caveat as above -- the save itself runs on the Tk
+  // thread too, so the list needs a beat to reflect it.
+  setTimeout(loadOverlayProfiles, 300);
 });
 
 // ---------------------------------------------------- character settings
