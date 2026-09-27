@@ -151,6 +151,7 @@ AVAILABLE_OVERLAYS = [
     ("hots",          "HoTs expiring",                "Effects"),
     ("hots_grid",     "HoTs expiring (grid)",         "Effects"),
     ("dots",          "DoT tracker",                  "Effects"),
+    ("resource",      "Resource Flow (Energy/Rage/etc)", "Effects"),
     ("notes",         "Notes",                        "Effects"),
 ]
 OVERLAY_GROUPS = ["Metrics", "Encounter", "Effects"]

@@ -18,3 +18,4 @@ from overlays.timer_overlay import TimerOverlay
 from overlays.alert_overlay import AlertOverlay
 from overlays.boss_health_overlay import BossHealthOverlay
 from overlays.notes_overlay import NotesOverlay
+from overlays.resource_overlay import ResourceOverlay

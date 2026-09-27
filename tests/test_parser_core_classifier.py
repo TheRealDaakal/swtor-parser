@@ -24,6 +24,10 @@ class DummyEvent:
         self.is_interrupted = False
         self.is_hard_cc = False
         self.is_raid_buff_cast = False
+        self.is_resource_spend = False
+        self.is_resource_restore = False
+        self.resource_type = None
+        self.resource_amount = 0.0
         self.amount = 0.0
         self.is_critical = False
         self.overheal = 0.0
@@ -44,3 +48,32 @@ def test_classifier_sets_damage_from_effect_type():
     _classify(event, "(1234 energy {1})")
     assert event.is_damage is True
     assert event.amount == 1234
+
+
+def test_classifier_sets_resource_spend():
+    event = DummyEvent(effect_type="Spend", effect_name="energy")
+    _classify(event, "(15.0)")
+    assert event.is_resource_spend is True
+    assert event.is_resource_restore is False
+    assert event.resource_type == "energy"
+    assert event.resource_amount == 15.0
+
+
+def test_classifier_sets_resource_restore():
+    event = DummyEvent(effect_type="Restore", effect_name="rage point")
+    _classify(event, "(3.0)")
+    assert event.is_resource_restore is True
+    assert event.is_resource_spend is False
+    assert event.resource_type == "rage point"
+    assert event.resource_amount == 3.0
+
+
+def test_classifier_does_not_confuse_an_ability_named_restoration_for_a_resource_event():
+    # is_resource_restore matches the whole effect_type word ("Restore"),
+    # not a substring -- an ApplyEffect for an ability literally named
+    # "Restoration" must not false-positive.
+    event = DummyEvent(effect_type="ApplyEffect", effect_name="Restoration")
+    _classify(event, "")
+    assert event.is_resource_restore is False
+    assert event.is_resource_spend is False
+    assert event.resource_type is None

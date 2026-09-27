@@ -26,6 +26,8 @@ EFFECT_REMOVED_KEYWORDS = ("removeeffect",)
 HARD_CC_KEYWORDS = ("stunned", "incapacitated", "asleep", "sleeping", "lifted")
 HEAL_KEYWORDS = ("heal",)
 MODIFY_CHARGES_KEYWORDS = ("modifycharges",)
+RESOURCE_SPEND_EVENT_TYPE = "spend"
+RESOURCE_RESTORE_EVENT_TYPE = "restore"
 RAID_BUFF_ABILITY_NAMES = frozenset({
     "Transcendence", "Aegis Shield", "Predation", "Warding Shield",
     "Unlimited Power", "Inspiration", "Tactical Superiority",
@@ -109,3 +111,11 @@ def _classify(event: CombatEvent, tail: str) -> None:
         event.damage_type = _extract_damage_type(tail)
     if event.is_threat_modified:
         event.threat_delta = _extract_angle_value(tail)
+    # effect_type is the whole word here ("Spend"/"Restore"), not a
+    # substring keyword match like the others above -- "restore" could
+    # otherwise false-match an ability literally named e.g. "Restoration".
+    event.is_resource_spend = (event.effect_type or "").strip().lower() == RESOURCE_SPEND_EVENT_TYPE
+    event.is_resource_restore = (event.effect_type or "").strip().lower() == RESOURCE_RESTORE_EVENT_TYPE
+    if event.is_resource_spend or event.is_resource_restore:
+        event.resource_type = event.effect_name
+        event.resource_amount = _extract_amount(tail)

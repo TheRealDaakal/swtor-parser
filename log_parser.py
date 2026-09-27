@@ -258,6 +258,18 @@ class CombatEvent:
     # RAID_BUFF_ABILITY_NAMES ability -- one per activation, so casting
     # Predation on 15 people counts as 1, not 15. See RAID_BUFF_ABILITY_NAMES.
     is_raid_buff_cast: bool = False
+    # True for the log's own Spend/Restore resource events (energy, rage
+    # point, ammo, heat, Force -- whatever the source's class pool is
+    # called). SWTOR only ever logs these as DELTAS, never a current/max
+    # value anywhere in the log -- there is no absolute amount to recover,
+    # by design (see resource_tracker.py, which only tracks net flow for
+    # exactly this reason, never a guessed "you're at N%").
+    is_resource_spend: bool = False
+    is_resource_restore: bool = False
+    # e.g. "energy", "rage point", "ammo", "Force", "heat" -- whatever the
+    # source's own resource pool is called, taken directly from the log.
+    resource_type: Optional[str] = None
+    resource_amount: float = 0.0
 
 
 ABILITY_ID_RE = re.compile(r"\{(\d+)\}")

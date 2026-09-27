@@ -37,7 +37,7 @@ REFRESH_MS = 500
 
 class OverlayManager:
     def __init__(self, tracker, timer_engine, boss_state=None, hot_tracker=None, taunt_tracker=None,
-                 aggro_tracker=None):
+                 aggro_tracker=None, resource_tracker=None):
         self.tracker = tracker
         self.timer_engine = timer_engine
         self.boss_state = boss_state
@@ -55,6 +55,10 @@ class OverlayManager:
             from aggro_tracker import AggroTracker
             aggro_tracker = AggroTracker()
         self.aggro_tracker = aggro_tracker
+        if resource_tracker is None:
+            from resource_tracker import ResourceTracker
+            resource_tracker = ResourceTracker()
+        self.resource_tracker = resource_tracker
         # Which character's overlay layout is currently loaded -- None until
         # boss_state identifies the local player from the log. A tank alt
         # and a healer alt want different frames up, so the layout swaps in
@@ -275,6 +279,8 @@ class OverlayManager:
                                   initial_slots=saved_slots, **size_kwargs)
         elif key == "boss_hp":
             o = ov.BossHealthOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
+        elif key == "resource":
+            o = ov.ResourceOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
         elif key in ("cooldowns", "dots"):
             o = ov.TimerOverlay(self.root, x=x, y=y, on_close=drop, on_move=moved, **size_kwargs)
             o.kind = key
@@ -429,6 +435,8 @@ class OverlayManager:
                     subtitle=phase_name,
                     hp_markers=active.hp_phase_markers() if active else [],
                 )
+            elif kind == "resource":
+                o.render(self.resource_tracker.snapshot())
             elif kind == "cooldowns":
                 o.render(self.timer_engine.snapshot("cooldown"))
             elif kind == "dots":

@@ -33,6 +33,7 @@ from dots_hots import register_dots_hots, HotTracker
 from alacrity import register_alacrity_buffs
 from taunt_tracker import TauntTracker
 from aggro_tracker import AggroTracker
+from resource_tracker import ResourceTracker
 from gui import OverlayManager
 from app_runtime import (
     CharacterSettingsHolder,
@@ -63,6 +64,7 @@ def background_reader(
     hot_tracker: HotTracker,
     taunt_tracker: TauntTracker,
     aggro_tracker: AggroTracker,
+    resource_tracker: ResourceTracker,
     status: StatusHolder,
     history_writer: "HistoryWriter",
     character_settings: "CharacterSettingsHolder",
@@ -130,6 +132,7 @@ def background_reader(
                     boss_state.reset()
                     hot_tracker.reset()
                     aggro_tracker.reset()
+                    resource_tracker.reset()
                     timer_engine.clear_boss_timers()
                 timer_engine.tick()  # prune/detect expiries before boss_state reads them
                 had_phase = boss_state.active_phase_id is not None
@@ -161,6 +164,7 @@ def background_reader(
                 hot_tracker.feed(event, local_player_name=boss_state.local_player_name,
                                   alacrity_pct=character_settings.alacrity_pct)
                 taunt_tracker.feed(event, local_player_name=boss_state.local_player_name)
+                resource_tracker.feed(event, local_player_name=boss_state.local_player_name)
     except Exception as exc:  # keep the app alive even if the reader dies
         status.text = f"Reader error: {exc}"
 
@@ -251,6 +255,10 @@ def main():
     # OverlayManager's periodic refresh tick (gui.py), not per-event here,
     # so the live log-tailing hot path never pays for it.
     aggro_tracker = AggroTracker()
+    # Net Spend/Restore flow for the local player's resource pool (energy/
+    # rage/ammo/heat/Force) -- see resource_tracker.py for why this is only
+    # ever a running net, never an absolute current/max bar.
+    resource_tracker = ResourceTracker()
     status = StatusHolder()
     history_writer = HistoryWriter(status)
     update_holder = UpdateHolder()
@@ -302,7 +310,7 @@ def main():
         thread = threading.Thread(
             target=background_reader,
             args=(log_dir, tracker, timer_engine, boss_state, hot_tracker, taunt_tracker,
-                  aggro_tracker, status, history_writer, character_settings),
+                  aggro_tracker, resource_tracker, status, history_writer, character_settings),
             daemon=True,
         )
         thread.start()
@@ -326,7 +334,7 @@ def main():
     def _run_tk():
         manager = OverlayManager(tracker, timer_engine, boss_state=boss_state,
                                   hot_tracker=hot_tracker, taunt_tracker=taunt_tracker,
-                                  aggro_tracker=aggro_tracker)
+                                  aggro_tracker=aggro_tracker, resource_tracker=resource_tracker)
         overlay_manager_ref["manager"] = manager
         overlay_manager_ready.set()
         manager.run()
